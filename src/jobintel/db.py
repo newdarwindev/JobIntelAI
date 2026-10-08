@@ -101,7 +101,7 @@ class EvaluationRun(Base):
 
 
 def session_factory(url: str):
-    engine = create_engine(url)
+    engine = create_engine(url, hide_parameters=True)
     # Enforce foreign keys in SQLite as PostgreSQL does by default.
     if engine.dialect.name == "sqlite":
         from sqlalchemy import event

@@ -12,6 +12,16 @@ evidence in issue #9.
 
 ## Regression references
 
+V01/V39-V42 regressions in `integration/test_persistence_privacy.py` exercise
+canonical-URL batch atomicity, SQL failures after writes, mid-match/provider failures,
+unreachable readiness, migration downgrade/re-upgrade, foreign keys and source/profile
+provenance on migrated SQLite and disposable PostgreSQL. Outcome logging waits for
+transaction commit and excludes private fields, parameters and exception text.
+V43-V44 regressions in `unit/test_ci_evidence.py` and `scripts/check_evidence.py`
+check leaf JUnit counts, deliberately failing diagnostic publication, licensed
+source/wheel contents and exclusion of private runtime files. These probe skips
+test skip reporting only and do not establish any feature acceptance.
+
 V19/V21-V23 regressions are in `unit/test_extraction_v2.py` and
 `integration/test_extraction_boundary_v2.py`. They cover non-BMP metadata offsets,
 irrelevant/company evidence, independent obligations, version branches, alias

@@ -75,13 +75,16 @@ jobs:
           else
             result=$?
           fi
+          printf '%s\n' "$result" >work/ci/exit-code.txt
           cat work/ci/check.log
           exit "$result"
       - name: Summarize actual test counts and provenance
         if: always()
         env:
           PYTHON_VERSION: ${{ matrix.python-version }}
-        run: python scripts/summarize_tests.py --junit work/ci/junit.xml --output work/ci/summary.json
+        run: |
+          result="$(cat work/ci/exit-code.txt 2>/dev/null || echo 1)"
+          python scripts/summarize_tests.py --junit work/ci/junit.xml --output work/ci/summary.json --exit-code "$result"
       - name: Upload machine-readable results and failure diagnostics
         if: always()
         uses: actions/upload-artifact@v4

@@ -4,39 +4,52 @@ import argparse
 import json
 import os
 import subprocess
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
+
+
+def test_counts(path):
+    if not path.is_file():
+        return dict.fromkeys(["tests", "passed", "failed", "errors", "skipped"])
+    # Count leaf testcases rather than suite attributes, which can be nested totals.
+    cases = list(ET.parse(path).getroot().iter("testcase"))
+    counts = {
+        "tests": len(cases),
+        "failed": sum(case.find("failure") is not None for case in cases),
+        "errors": sum(case.find("error") is not None for case in cases),
+        "skipped": sum(case.find("skipped") is not None for case in cases),
+    }
+    counts["passed"] = counts["tests"] - sum(counts[k] for k in ["failed", "errors", "skipped"])
+    return counts
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--junit", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--command",
+        default="python scripts/check.py --require-postgres --junitxml work/ci/junit.xml",
+    )
+    parser.add_argument("--exit-code", type=int)
     args = parser.parse_args()
     report = {
         "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-        "python": os.getenv("PYTHON_VERSION"),
-        "config": "fake providers / synthetic corpus / disposable PostgreSQL",
-        "command": "python scripts/check.py --require-postgres --junitxml work/ci/junit.xml",
-        "tests": None,
-        "passed": None,
-        "failed": None,
-        "errors": None,
-        "skipped": None,
-    }
-    if args.junit.is_file():
-        suites = list(ET.parse(args.junit).getroot().iter("testsuite"))
-        counts = {
-            key: sum(int(s.attrib.get(key, 0)) for s in suites)
-            for key in ["tests", "failures", "errors", "skipped"]
-        }
-        report.update(
-            tests=counts["tests"],
-            failed=counts["failures"],
-            errors=counts["errors"],
-            skipped=counts["skipped"],
-            passed=counts["tests"] - counts["failures"] - counts["errors"] - counts["skipped"],
+        "python": os.getenv("PYTHON_VERSION", sys.version.split()[0]),
+        "run_id": os.getenv("GITHUB_RUN_ID"),
+        "run_attempt": os.getenv("GITHUB_RUN_ATTEMPT"),
+        "run_url": (
+            f"{os.getenv('GITHUB_SERVER_URL', 'https://github.com')}/"
+            f"{os.getenv('GITHUB_REPOSITORY')}/actions/runs/{os.getenv('GITHUB_RUN_ID')}"
         )
+        if os.getenv("GITHUB_RUN_ID")
+        else None,
+        "config": "fake providers / synthetic corpus / disposable PostgreSQL",
+        "command": args.command,
+        "exit_code": args.exit_code,
+        **test_counts(args.junit),
+    }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps(report, indent=2))
