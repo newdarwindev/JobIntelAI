@@ -6,3 +6,7 @@ __pycache__
 .pytest_cache
 *.egg-info
 .env
+node_modules
+test-results
+playwright-report
+work
