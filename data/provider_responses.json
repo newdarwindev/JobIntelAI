@@ -18,7 +18,11 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       },
       {
         "raw_text": "Postgres is nice to have.",
@@ -37,12 +41,18 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "5ee1986e49ae498513ed22558deef8e112735c4c6b0453bc32be66079609ee48": {
     "requirements": [
@@ -64,12 +74,18 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "56b616fc79415f14dff6d251514cf029d163ed11deb818c71b173e6fafbb6524": {
     "requirements": [
@@ -91,12 +107,18 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "3d5131652fbfa997e3b1ee5b4a357b92e929e96f7fd389bf6b2af9dc4babdc2a": {
     "requirements": [
@@ -117,12 +139,18 @@
         "explicit_production_required": true,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "MUST",
+        "production_obligation": "MUST",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "3795d951e88afba11395d1d0326ea1ee3ff4799b0c2d85ad5be094dfe510b3ed": {
     "requirements": [
@@ -146,12 +174,18 @@
           "maximum": null
         },
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "MUST",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "0ae3915c63dcf21ab244697455ba1a8010cbf383ef82ed98394b56724657c69d": {
     "requirements": [
@@ -175,12 +209,18 @@
           "maximum": 4
         },
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "MUST",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "e2725c681559cb74c04de9c3cab07d3f292c59a050d7bb495aed1932ec16f8da": {
     "requirements": [
@@ -201,12 +241,18 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "8f5ed8413b55ee7ae82321f13a30367ca7e91bf8af4a3128809f0ae3a7695d24": {
     "requirements": [
@@ -227,7 +273,11 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       },
       {
         "raw_text": "AWS is preferred.",
@@ -246,12 +296,18 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "dbd7a7bf6a72b1a3a4e11c5d24377aa69001ed7ded7bb52c64b98b147aeca652": {
     "requirements": [
@@ -272,12 +328,18 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "3886eed9e82152d3c934be49cd4a45b4c7ae823a65e0afefde8e6e6bfbfb8724": {
     "requirements": [
@@ -298,12 +360,32 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
-    "geography": "Georgia",
-    "work_mode": "remote"
+    "schema_version": 2,
+    "geography": {
+      "value": "Georgia",
+      "evidence": {
+        "start": 111,
+        "end": 143,
+        "quote": "Remote work within Georgia only."
+      }
+    },
+    "work_mode": {
+      "value": "remote",
+      "evidence": {
+        "start": 111,
+        "end": 143,
+        "quote": "Remote work within Georgia only."
+      }
+    },
+    "filters": null
   },
   "3dba50011b4aea9115dcc0ad1d4d8f4f99b9e980443b895df242e8684bfa8973": {
     "requirements": [
@@ -324,12 +406,32 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
-    "geography": "Berlin",
-    "work_mode": "onsite"
+    "schema_version": 2,
+    "geography": {
+      "value": "Berlin",
+      "evidence": {
+        "start": 111,
+        "end": 146,
+        "quote": "Onsite in Berlin three days weekly."
+      }
+    },
+    "work_mode": {
+      "value": "onsite",
+      "evidence": {
+        "start": 111,
+        "end": 146,
+        "quote": "Onsite in Berlin three days weekly."
+      }
+    },
+    "filters": null
   },
   "53cdfdd955c1912d4b33a42618ab5eafe577cd9d62585b0c243fa337d09480c0": {
     "requirements": [
@@ -350,12 +452,28 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": [
+      {
+        "kind": "work_authorization",
+        "value": "EU work authorization",
+        "evidence": {
+          "start": 111,
+          "end": 154,
+          "quote": "Existing EU work authorization is required."
+        }
+      }
+    ]
   },
   "f368cbc3a4786ca3029d35e64caaa050c0c9eca2aa2d06e629c4fe59aebfddb9": {
     "requirements": [
@@ -376,12 +494,28 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": [
+      {
+        "kind": "travel",
+        "value": "up to 20 percent",
+        "evidence": {
+          "start": 111,
+          "end": 147,
+          "quote": "Travel up to 20 percent is required."
+        }
+      }
+    ]
   },
   "58231692c47df6b44ed0082a039215c9a2a61cf24d83c7ac2c016ac1f83e2091": {
     "requirements": [
@@ -402,7 +536,11 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       },
       {
         "raw_text": "Production experience with Docker is preferred.",
@@ -418,41 +556,67 @@
           "end": 178,
           "quote": "Production experience with Docker is preferred."
         },
-        "explicit_production_required": true,
+        "explicit_production_required": false,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "PREFERRED",
+        "production_obligation": "PREFERRED",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
-  "c6e7f5f5d47cab127b2f205fabf05d7e4949537810dd80e022cfce06b8754e61": {
+  "b15922f9b3b3f8c785c1b0d375d4ef1951862098b0e43cf3b4d32fb8eec6784e": {
     "requirements": [
       {
-        "raw_text": "Golang is required.",
-        "normalized_skill_or_requirement": "Golang",
+        "raw_text": "Golang 1.23+ is required.",
+        "normalized_skill_or_requirement": "Golang 1.23+",
         "skills": [
-          "Golang"
+          "Golang 1.23+"
         ],
         "operator": "SINGLE",
         "requirement_type": "MUST",
         "category": "backend",
         "evidence": {
           "start": 111,
-          "end": 130,
-          "quote": "Golang is required."
+          "end": 136,
+          "quote": "Golang 1.23+ is required."
         },
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [
+          {
+            "skill": "Golang 1.23+",
+            "product": "Golang",
+            "source_product": "Golang",
+            "raw_text": "Golang 1.23+",
+            "comparator": "GTE",
+            "version": "1.23",
+            "evidence": {
+              "start": 111,
+              "end": 123,
+              "quote": "Golang 1.23+"
+            }
+          }
+        ],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "8d2cc457e69d35fa0267b63ac7d09b7f0ca15586ffc03c5fa5593ffa136dcab9": {
     "requirements": [
@@ -473,12 +637,18 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "3d2ea1d3d838dfe8e26111e202fc15e94d6c5c45310d53426da3adcfa4ef9e97": {
     "requirements": [
@@ -499,18 +669,26 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "c17781eef7cead8bc2fa6b1f87b02da4dea0a21d97910ed6d48dcc262cd8fee2": {
     "requirements": [],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "eca3c0c0e0cacc362d58148fb00ac02744316a9290a8ba7432be408ad90e152e": {
     "requirements": [
@@ -531,12 +709,18 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   },
   "0fd492dd6a2fcdccde629e9d19135e6b38cf12ba21d9db71f1371001bfea6cfe": {
     "requirements": [
@@ -557,11 +741,17 @@
         "explicit_production_required": null,
         "years_required": null,
         "confidence": 1.0,
-        "notes": "Synthetic fixture confidence; not model calibrated."
+        "notes": "Synthetic fixture confidence; not model calibrated.",
+        "experience_obligation": "UNKNOWN",
+        "production_obligation": "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": null
       }
     ],
     "responsibilities": [],
+    "schema_version": 2,
     "geography": null,
-    "work_mode": null
+    "work_mode": null,
+    "filters": null
   }
 }

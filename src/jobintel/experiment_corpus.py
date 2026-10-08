@@ -6,10 +6,11 @@ from pathlib import Path
 
 from pydantic import Field, model_validator
 
+from jobintel.compatibility import stored_extraction
 from jobintel.schemas import Extraction, StrictModel
 from jobintel.snapshots import content_hash, validate_grounding
 
-BUNDLED_CORPUS_SHA256 = "8ecb4b2db7575a2a1600c7f61231b400637efa974b13a0bcd5d7593baeb48784"
+BUNDLED_CORPUS_SHA256 = "b1d30841e406ced48f382e0c4c05b32e5bd0a39c0c37b9b63e9a9e1c39214c15"
 
 
 def digest(value) -> str:
@@ -39,6 +40,13 @@ class FrozenCase(StrictModel):
     text: str = Field(min_length=1)
     snapshot_sha256: str
     gold: Extraction
+
+    @model_validator(mode="before")
+    @classmethod
+    def compatible_gold(cls, value):
+        if isinstance(value, dict) and isinstance(value.get("gold"), dict):
+            return {**value, "gold": stored_extraction(value["gold"])}
+        return value
 
     @model_validator(mode="after")
     def verify(self):
@@ -85,7 +93,7 @@ def freeze_bundled(root: Path) -> FrozenCorpus:
             )
         )
     corpus = FrozenCorpus(
-        revision="authored-synthetic-v1",
+        revision="authored-synthetic-v2",
         public=True,
         source_labels_sha256=hashlib.sha256(labels_path.read_bytes()).hexdigest(),
         taxonomy=read_json(root / "taxonomy.json"),

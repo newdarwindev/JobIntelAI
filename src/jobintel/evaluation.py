@@ -12,6 +12,14 @@ def semantic_key(requirement) -> tuple:
         requirement.operator,
         tuple(sorted(requirement.skills)),
         requirement.explicit_production_required,
+        requirement.experience_obligation,
+        requirement.production_obligation,
+        tuple(
+            sorted(
+                (v.skill, v.product, v.comparator, v.version)
+                for v in requirement.version_constraints
+            )
+        ),
         None
         if requirement.years_required is None
         else (requirement.years_required.minimum, requirement.years_required.maximum),
@@ -63,6 +71,8 @@ def score(predictions: list[Extraction], gold: list[Extraction], texts: list[str
 def run_evaluation(provider, root, configurations: list[str]) -> dict:
     labels = json.loads((root / "golden_dataset.json").read_text())
     texts = [(root / record["fixture"]).read_text() for record in labels]
+    if any(record["extraction"].get("schema_version") != 2 for record in labels):
+        raise ValueError("golden labels require extraction schema v2")
     gold = [Extraction.model_validate(record["extraction"]) for record in labels]
     for text, extraction in zip(texts, gold, strict=True):
         validate_grounding(text, extraction)

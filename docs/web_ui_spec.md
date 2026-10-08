@@ -34,6 +34,13 @@ quality. The separate `jobintel experiment` CLI preserves `/evaluate` and cannot
 enable paid browser calls. The journey checks the exported mode and null usage,
 cost, semantic and abstention metrics.
 
+UI03 inspects schema-v2 geography/work-mode/filter values with exact source quotes,
+highlights metadata evidence, exports explicit version comparators with raw wording,
+and verifies that preferred production experience is displayed as preferred.
+Experience obligation is shown separately from requirement type and years.
+UI04 verifies that a versioned requirement remains UNKNOWN until sourced candidate
+version predicates are supported. Missing or ambiguous metadata is shown as unknown.
+
 All screens require visible busy/error/empty states, labelled controls, keyboard
 access, responsive layouts, deep links to postings, and escaped untrusted content.
 Failing mutations preserve the source/prior run, enable retry, and never show a
