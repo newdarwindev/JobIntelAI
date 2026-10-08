@@ -29,5 +29,17 @@ Portfolio complete: every required release gate in `specification.md` §14 plus
 measured live results. Frontend, auth, browser, deployment and additional providers
 remain optional. The follow-on project in the brief is out of scope.
 
-Current validation: 34 tests passed including PostgreSQL; offline Docker and a
-functional API trace passed. [Validation details](validation.md) record limitations.
+Current validation: 38 Python tests passed including PostgreSQL and 16 desktop/mobile
+browser journeys passed. GitHub Actions verified quality, both Python versions,
+Docker/API smoke and browser recordings. [Validation details](validation.md) record limitations.
+
+## Authorized mock UI extension
+
+The 2026-10-08 user request adds the interfaces in [web UI spec](web_ui_spec.md).
+Six screens use the existing fixture-backed service, with immutable history reads,
+strict candidate validation and explicit applied slicing. Complete UI01–UI08 browser
+journeys run on desktop/mobile Chromium with successful-attempt video publication,
+README provenance and mandatory `AGENTS.md` maintenance rules. UI-only group gaps
+and category projections do not complete the planned persisted/live backend gates.
+See `docs/ui-recordings/manifest.json` and validation notes for actual execution;
+an Actions workflow file alone is not proof of a remote Actions run.

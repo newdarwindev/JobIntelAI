@@ -1,0 +1,13 @@
+import {createHash} from 'node:crypto';
+import {readFile,readdir} from 'node:fs/promises';
+import {join} from 'node:path';
+
+// This deliberately excludes generated videos, README, caches and local databases.
+export async function uiSourceHash(){
+  const directories=['src/jobintel','tests/e2e','data','alembic'];
+  const inputs=[...directories,'alembic.ini','pyproject.toml','requirements.lock.txt','scripts/serve_ui.py','scripts/ui_source_hash.mjs','scripts/ui_evidence.mjs','scripts/publish_ui_recordings.mjs','scripts/check_ui_contract.mjs','tests/unit/ui_recordings.test.mjs','docs/web_ui_workflows.json','docs/web_ui_spec.md','playwright.config.mjs','package.json','package-lock.json','.github/workflows/web-ui.yml'];
+  const files=[];
+  async function walk(path){const entries=await readdir(path,{withFileTypes:true});for(const entry of entries){if(entry.name==='__pycache__')continue;const file=join(path,entry.name);if(entry.isDirectory())await walk(file);else if(entry.isFile())files.push(file);}}
+  for(const path of inputs){if(directories.includes(path))await walk(path);else files.push(path);}
+  const hash=createHash('sha256');for(const file of files.sort()){hash.update(file);hash.update('\0');hash.update(await readFile(file));hash.update('\0');}return hash.digest('hex');
+}

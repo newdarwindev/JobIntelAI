@@ -21,6 +21,7 @@ from jobintel.schemas import (
 )
 from jobintel.service import Conflict, Service
 from jobintel.snapshots import GroundingError
+from jobintel.web_api import configure_web_ui
 
 router = APIRouter()
 
@@ -75,6 +76,21 @@ def import_jobs(payload: ImportInput, svc: ServiceDependency):
     )
 
 
+@router.get("/jobs")
+def jobs(svc: ServiceDependency):
+    return {"jobs": svc.list_jobs()}
+
+
+@router.get("/jobs/{job_id}/history")
+def history(job_id: str, svc: ServiceDependency):
+    return svc.history(job_id)
+
+
+@router.post("/candidate/validate")
+def validate_candidate(payload: CandidateProfile):
+    return payload.model_dump()
+
+
 @router.post("/jobs/{job_id}/snapshots", status_code=201)
 def snapshots(job_id: str, payload: SnapshotInput, svc: ServiceDependency):
     snapshot = svc.snapshot(job_id, payload)
@@ -108,8 +124,8 @@ def match(job_id: str, payload: CandidateProfile, svc: ServiceDependency):
 
 
 @router.get("/analytics/skills")
-def analytics(svc: ServiceDependency):
-    return svc.analytics()
+def analytics(svc: ServiceDependency, applied: bool | None = None):
+    return svc.analytics(applied)
 
 
 @router.post("/evaluate")
@@ -123,7 +139,7 @@ def evaluate(payload: EvaluateInput, request: Request, svc: ServiceDependency):
     return {"evaluation_run_id": record.id, **report}
 
 
-def create_app(url: str | None = None, root=None) -> FastAPI:
+def create_app(url: str | None = None, root=None, *, demo: bool = False) -> FastAPI:
     if os.getenv("JOBINTEL_PROVIDER", "fixture") != "fixture":
         raise RuntimeError(
             "Only fixture provider is implemented; live providers must not silently fall back"
@@ -134,6 +150,7 @@ def create_app(url: str | None = None, root=None) -> FastAPI:
     app.state.fixture_root = root
     app.state.provider = FixtureProvider(root)
     app.include_router(router)
+    configure_web_ui(app, demo)
     return app
 
 

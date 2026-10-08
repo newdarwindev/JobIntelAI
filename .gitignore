@@ -222,3 +222,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Browser tooling and intermediate evidence; approved success videos are tracked.
+node_modules/
+test-results/
+playwright-report/
+work/
