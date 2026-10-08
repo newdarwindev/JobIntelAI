@@ -3,7 +3,10 @@ from sqlalchemy import select
 from jobintel import db
 from jobintel.analytics import skill_counts
 from jobintel.compatibility import stored_extraction, stored_requirement
+from jobintel.config import fixture_root
 from jobintel.matching import match_requirement
+from jobintel.normalization import Taxonomy
+from jobintel.providers import extract_result
 from jobintel.registry import identity, normalize_url
 from jobintel.schemas import CandidateProfile, Extraction, JobInput, SnapshotInput
 from jobintel.snapshots import clean_text, content_hash, validate_grounding
@@ -14,9 +17,10 @@ class Conflict(ValueError):
 
 
 class Service:
-    def __init__(self, session, provider):
+    def __init__(self, session, provider, taxonomy=None):
         self.session = session
         self.provider = provider
+        self.taxonomy = taxonomy or Taxonomy(fixture_root() / "taxonomy.json")
 
     def job(self, job_id: str):
         job = self.session.get(db.Job, job_id)
@@ -104,7 +108,8 @@ class Service:
         snapshot = self.latest_snapshot(job_id)
         if snapshot is None:
             raise Conflict("create a snapshot before extraction")
-        extraction = self.provider.extract(snapshot.clean_text, configuration)
+        result = extract_result(self.provider, snapshot.clean_text, configuration)
+        extraction = result.extraction
         # The persistence boundary revalidates even a replaceable/misbehaving provider.
         payload = (
             extraction.model_dump(mode="json") if hasattr(extraction, "model_dump") else extraction
@@ -118,6 +123,7 @@ class Service:
             snapshot_id=snapshot.id,
             configuration=configuration,
             schema_version=extraction.schema_version,
+            provenance=result.provenance,
             payload=extraction.model_dump(mode="json"),
         )
         self.session.add(run)
@@ -131,6 +137,7 @@ class Service:
             "run_id": run.id,
             "snapshot_id": snapshot.id,
             "configuration": configuration,
+            "provenance": run.provenance,
             **run.payload,
         }
 
@@ -168,7 +175,7 @@ class Service:
             select(db.RequirementRow).where(db.RequirementRow.run_id == run.id)
         ):
             result = match_requirement(
-                stored_requirement(row.payload, run.schema_version), profile, self.provider.taxonomy
+                stored_requirement(row.payload, run.schema_version), profile, self.taxonomy
             )
             result["requirement_id"] = row.id
             self.session.add(
@@ -229,11 +236,12 @@ class Service:
             "run_id": run.id,
             "configuration": run.configuration,
             "stored_schema_version": run.schema_version,
+            "provenance": run.provenance,
             **stored_extraction(run.payload).model_dump(mode="json"),
         }
 
     def validate_version_products(self, extraction):
-        taxonomy = getattr(self.provider, "taxonomy", None)
+        taxonomy = self.taxonomy
         for requirement in extraction.requirements:
             for version in requirement.version_constraints:
                 canonical = (
@@ -255,6 +263,6 @@ class Service:
         return skill_counts(jobs)
 
     def seed_taxonomy(self):
-        for record in self.provider.taxonomy.records:
+        for record in self.taxonomy.records:
             if self.session.get(db.Skill, record["canonical"]) is None:
                 self.session.add(db.Skill(canonical=record["canonical"], payload=record))

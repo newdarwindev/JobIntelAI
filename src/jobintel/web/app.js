@@ -16,6 +16,7 @@ const currentMatches = job => {
 const metric = (label, value, note) => `<div class="metric"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div><small>${esc(note)}</small></div>`;
 function tell(text, error=false){ notice.textContent=text; notice.className=error?'error':''; notice.hidden=false; }
 function readableError(data){
+  if (data.detail?.code) return `${data.detail.message} (${data.detail.retryable?'Retry is available':'Review the failure before retrying'})`;
   if (typeof data.detail==='string') return data.detail;
   if (Array.isArray(data.detail)) return data.detail.map(x=>`${x.loc.filter(y=>y!=='body').join('.')}: ${x.msg}`).join('; ');
   return 'The operation could not be completed.';

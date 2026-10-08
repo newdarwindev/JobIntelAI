@@ -1,16 +1,17 @@
-import os
 from contextlib import asynccontextmanager
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
-from sqlalchemy import text
+from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from jobintel import db
 from jobintel.acquisition import FetchNotImplemented, HttpAcquirer
 from jobintel.config import database_url, fixture_root
 from jobintel.evaluation import run_evaluation
-from jobintel.providers import FixtureProvider, ProviderUnavailable
+from jobintel.normalization import Taxonomy
+from jobintel.openai_transport import ProviderError
+from jobintel.providers import ProviderUnavailable, selected_configuration, selected_provider
 from jobintel.registry import parse_csv
 from jobintel.schemas import (
     CandidateProfile,
@@ -36,7 +37,7 @@ async def lifespan(app: FastAPI):
 def service(request: Request):
     with request.app.state.session_factory() as session:
         try:
-            yield Service(session, request.app.state.provider)
+            yield Service(session, request.app.state.provider, request.app.state.taxonomy)
             session.commit()
         except KeyError as error:
             session.rollback()
@@ -44,6 +45,9 @@ def service(request: Request):
         except (Conflict, IntegrityError) as error:
             session.rollback()
             raise HTTPException(409, "registry conflict or missing prerequisite") from error
+        except ProviderError as error:
+            session.rollback()
+            raise HTTPException(error.status, error.detail()) from error
         except ProviderUnavailable as error:
             session.rollback()
             raise HTTPException(501, str(error)) from error
@@ -64,9 +68,18 @@ def health(request: Request):
         with request.app.state.session_factory() as session:
             session.execute(text("SELECT 1"))
             session.execute(text("SELECT job_id FROM jobs LIMIT 1"))
+            session.execute(select(db.ExtractionRun.provenance).limit(1))
     except SQLAlchemyError as error:
         raise HTTPException(503, "database unavailable or migrations required") from error
-    return {"status": "ok", "database": "ok", "provider": "fixture", "live_llm": False}
+    provider = request.app.state.provider
+    return {
+        "status": "ok",
+        "database": "ok",
+        "provider": provider.name,
+        "live_llm": provider.name == "openai",
+        "provider_ready": True,
+        "configuration": request.app.state.configuration,
+    }
 
 
 @router.post("/jobs/import")
@@ -109,8 +122,9 @@ def fetch(job_id: str, svc: ServiceDependency):
 
 
 @router.post("/jobs/{job_id}/extract")
-def extract(job_id: str, payload: ExtractInput, svc: ServiceDependency):
-    return svc.extract(job_id, payload.configuration)
+def extract(job_id: str, payload: ExtractInput, request: Request, svc: ServiceDependency):
+    configuration = payload.configuration or request.app.state.configuration
+    return svc.extract(job_id, configuration)
 
 
 @router.get("/jobs/{job_id}")
@@ -130,8 +144,11 @@ def analytics(svc: ServiceDependency, applied: bool | None = None):
 
 @router.post("/evaluate")
 def evaluate(payload: EvaluateInput, request: Request, svc: ServiceDependency):
+    configurations = payload.configurations or [request.app.state.configuration]
+    if payload.configurations is None and request.app.state.provider.name == "fixture":
+        configurations = ["fixture_raw", "fixture_normalized"]
     report = run_evaluation(
-        request.app.state.provider, request.app.state.fixture_root, payload.configurations
+        request.app.state.provider, request.app.state.fixture_root, configurations
     )
     record = db.EvaluationRun(payload=report)
     svc.session.add(record)
@@ -139,16 +156,25 @@ def evaluate(payload: EvaluateInput, request: Request, svc: ServiceDependency):
     return {"evaluation_run_id": record.id, **report}
 
 
-def create_app(url: str | None = None, root=None, *, demo: bool = False) -> FastAPI:
-    if os.getenv("JOBINTEL_PROVIDER", "fixture") != "fixture":
-        raise RuntimeError(
-            "Only fixture provider is implemented; live providers must not silently fall back"
-        )
+def create_app(
+    url: str | None = None,
+    root=None,
+    *,
+    demo: bool = False,
+    provider_name=None,
+    configuration=None,
+    transport=None,
+    model=None,
+) -> FastAPI:
     root = root or fixture_root()
     app = FastAPI(title="JobIntel AI", version="0.1.0", lifespan=lifespan)
     app.state.session_factory = db.session_factory(url or database_url())
     app.state.fixture_root = root
-    app.state.provider = FixtureProvider(root)
+    app.state.provider = selected_provider(root, provider_name, transport=transport, model=model)
+    app.state.configuration = selected_configuration(app.state.provider, configuration)
+    app.state.taxonomy = Taxonomy(root / "taxonomy.json")
+    if demo and app.state.provider.name != "fixture":
+        raise ValueError("the synthetic demo requires fixture provider")
     app.include_router(router)
     configure_web_ui(app, demo)
     return app

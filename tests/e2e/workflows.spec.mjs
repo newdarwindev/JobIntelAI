@@ -65,6 +65,9 @@ test('UI03 | Grounded extraction, aliases and operators',async({page})=>{
   await expect(page.locator('.requirement').filter({hasText:'PostgreSQL'})).toContainText('PREFERRED');
   await page.getByRole('button',{name:'Highlight source quote',exact:true}).first().click();await expect(page.locator('mark')).toHaveText('Python is required.');
   const exported=JSON.parse(await download(page,'Export evidence JSON'));
+  expect(exported.extraction.provenance).toMatchObject({provider:'fixture',configuration:'fixture_normalized',schema_version:2,model:null,usage:null,prompt_version:null});
+  expect(exported.extraction.provenance.source_sha256).toBe(exported.snapshot.content_hash);
+  expect(exported.extraction.provenance.taxonomy_sha256).toHaveLength(64);
   for(const r of exported.extraction.requirements)expect(Array.from(exported.snapshot.clean_text).slice(r.evidence.start,r.evidence.end).join('')).toBe(r.evidence.quote);
   await page.getByLabel('Replay configuration').selectOption('fixture_raw');await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Postgres',exact:true})).toBeVisible();
   await capture(page,'SYN-02');await expect(page.locator('.requirement')).toContainText('ANY');await expect(page.getByRole('heading',{name:'AWS OR Azure',exact:true})).toBeVisible();
@@ -157,6 +160,15 @@ test('UI07 | Provider and connection failure recovery',async({page,request})=>{
   await click(page,'Extract requirements');await expect(notice(page)).toContainText('503:');await expect(page.getByRole('button',{name:'Extract requirements',exact:true})).toBeEnabled();
   await page.unroute('**/jobs/SYN-01/extract');await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
   await page.route('**/jobs/SYN-01/extract',route=>route.abort('connectionrefused'));await click(page,'Extract requirements');await expect(notice(page)).toContainText('Connection unavailable');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();await page.unroute('**/jobs/SYN-01/extract');
+  // Typed live-adapter failures use authored API errors and preserve the last saved run.
+  for(const [httpStatus,code,retryable] of [[504,'timeout',true],[502,'quota',false],[422,'refusal',false]]){
+    await page.route('**/jobs/SYN-01/extract',route=>route.fulfill({status:httpStatus,json:{detail:{code,retryable,message:`extraction provider: ${code}`}}}));
+    await click(page,'Extract requirements');await expect(notice(page)).toContainText(`${httpStatus}: extraction provider: ${code}`);
+    await expect(notice(page)).toContainText(retryable?'Retry is available':'Review the failure before retrying');
+    await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
+    expect((await (await request.get('/jobs/SYN-01')).json()).extraction.run_id).toBe(original.extraction.run_id);
+    await page.unroute('**/jobs/SYN-01/extract');
+  }
   const history=await (await request.get('/jobs/SYN-01/history')).json();expect(history.snapshots.some(s=>s.runs.some(r=>r.run_id===original.extraction.run_id))).toBeTruthy();
   await click(page,'Extract requirements');await expect(notice(page)).toContainText('Extraction saved');
 });
