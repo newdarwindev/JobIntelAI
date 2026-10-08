@@ -4,7 +4,7 @@
   "workflows": [
     {"id":"UI01","title":"Atomic registry import and discovery","spec_sections":[5,12],"scenarios":["S01","S02","S05","S06","S07"]},
     {"id":"UI02","title":"Source capture, URL fallback and immutable history","spec_sections":[6,7],"scenarios":["S08","S09","S10","S34"]},
-    {"id":"UI03","title":"Grounded extraction, aliases and operators","spec_sections":[7,8],"scenarios":["S12","S14","S15","S23","S26"]},
+    {"id":"UI03","title":"Grounded extraction, aliases and operators","spec_sections":[7,8],"scenarios":["S12","S14","S15","S23","S26","V19","V21","V22","V23"]},
     {"id":"UI04","title":"Candidate evidence and four matching states","spec_sections":[9],"scenarios":["S18","S19","S20","S21","S22","S23","S24"]},
     {"id":"UI05","title":"Corpus slices, gaps and safe provenance exports","spec_sections":[10],"scenarios":["S25","S26","S27","V27","V28","V30","V31","V32"]},
     {"id":"UI06","title":"Fixture evaluation and honest unavailable metrics","spec_sections":[11],"scenarios":["S28","S29","S30","S31"]},

@@ -71,6 +71,22 @@ test('UI03 | Grounded extraction, aliases and operators',async({page})=>{
   await capture(page,'SYN-03');await expect(page.locator('.requirement')).toContainText('ALL');await expect(page.getByRole('heading',{name:'Python AND SQL',exact:true})).toBeVisible();
   // Every bundled posting is replayed through the browser-driven corpus action.
   await nav(page,'Overview');await click(page,'Load synthetic corpus');
+  await inspect(page,'SYN-10');
+  await expect(page.locator('.metadata-facts')).toContainText('Geography: Georgia');
+  await expect(page.locator('.metadata-facts')).toContainText('Work mode: remote');
+  await click(page,'Highlight Geography quote');await expect(page.locator('mark')).toHaveText('Remote work within Georgia only.');
+  const metadataExport=JSON.parse(await download(page,'Export evidence JSON'));
+  expect(metadataExport.extraction.schema_version).toBe(2);
+  for(const f of [metadataExport.extraction.geography,metadataExport.extraction.work_mode])
+    expect(Array.from(metadataExport.snapshot.clean_text).slice(f.evidence.start,f.evidence.end).join('')).toBe(f.evidence.quote);
+  await inspect(page,'SYN-12');await expect(page.locator('.metadata-facts')).toContainText('EU work authorization');
+  const filterExport=JSON.parse(await download(page,'Export evidence JSON'));
+  expect(filterExport.extraction.filters[0].kind).toBe('work_authorization');
+  await inspect(page,'SYN-14');await expect(page.locator('.requirement').filter({hasText:'Production experience'})).toContainText('Production: Preferred');
+  await expect(page.locator('.requirement').filter({hasText:'Production experience'})).toContainText('Experience obligation: PREFERRED');
+  await inspect(page,'SYN-15');await expect(page.locator('.requirement')).toContainText('Go 1.23+');
+  const versionExport=JSON.parse(await download(page,'Export evidence JSON'));
+  expect(versionExport.extraction.requirements[0].version_constraints[0]).toMatchObject({product:'Go',comparator:'GTE',version:'1.23',raw_text:'Golang 1.23+'});
   await inspect(page,'SYN-18');await expect(page.getByText('No candidate requirements',{exact:true})).toBeVisible();
   await inspect(page,'SYN-20');
   const unicodeExport=JSON.parse(await download(page,'Export evidence JSON'));
@@ -91,6 +107,7 @@ test('UI04 | Candidate evidence and four matching states',async({page})=>{
   await expect(page.locator('main')).toContainText('Authored and operated a Python service.');
   await page.getByLabel('Selected posting').selectOption('SYN-04');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('PARTIAL 1');await expect(page.locator('main')).toContainText('production limited');
   await page.getByLabel('Selected posting').selectOption('SYN-05');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('UNKNOWN 1');
+  await page.getByLabel('Selected posting').selectOption('SYN-15');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('UNKNOWN 1');
   await page.getByLabel('Selected posting').selectOption('SYN-02');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('PARTIAL 1');
   const complete={...(await candidate()),complete:true};await saveProfile(page,complete);await page.getByLabel('Selected posting').selectOption('SYN-03');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('MISSING 1');
   const any={profile_id:'authored-any',complete:true,evidence:[{skill:'Azure',current_capability:'strong',production_evidence:'none',source:'synthetic://azure',quote:'Explicit strong Azure capability in this authored example.'}]};

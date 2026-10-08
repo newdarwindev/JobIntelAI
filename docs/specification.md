@@ -134,6 +134,8 @@ tests. Respect the environment's supported egress proxy rather than bypassing it
 
 ## 7. Structured extraction contract
 
+The executable field and compatibility contract is [extraction schema v2](extraction_schema.md).
+
 Provider input is the exact immutable clean snapshot + versioned configuration.
 It returns `Extraction`: requirements, responsibilities with evidence, geography
 and work_mode (unknown if absent). A requirement contains:

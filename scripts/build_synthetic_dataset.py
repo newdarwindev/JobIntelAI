@@ -136,11 +136,11 @@ CASES = [
             ["Docker"],
             "infrastructure",
             "SINGLE",
-            True,
+            False,
             None,
         ),
     ],
-    [("Golang is required.", "MUST", ["Golang"], "backend", "SINGLE", None, None)],
+    [("Golang 1.23+ is required.", "MUST", ["Golang 1.23+"], "backend", "SINGLE", None, None)],
     [("LLM evaluation is required.", "MUST", ["LLM evaluation"], "AI/LLM", "SINGLE", None, None)],
     [
         (
@@ -183,6 +183,68 @@ def write_json(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n")
 
 
+def predicates(quote, kind, production, years, evidence):
+    obligation = "PREFERRED" if kind == "PREFERRED" else "MUST"
+    result = {
+        "experience_obligation": obligation if years or production is not None else "UNKNOWN",
+        "production_obligation": obligation if production is not None else "UNKNOWN",
+        "version_constraints": [],
+        "source_skills": None,
+    }
+    if quote == "Golang 1.23+ is required.":
+        phrase = "Golang 1.23+"
+        result["version_constraints"] = [
+            {
+                "skill": phrase,
+                "product": "Golang",
+                "source_product": "Golang",
+                "raw_text": phrase,
+                "comparator": "GTE",
+                "version": "1.23",
+                "evidence": {
+                    "start": evidence["start"],
+                    "end": evidence["start"] + len(phrase),
+                    "quote": phrase,
+                },
+            }
+        ]
+    return result
+
+
+def metadata(number, requirements):
+    geography = work_mode = filters = None
+    if number in {10, 11}:
+        evidence = requirements[0]["evidence"]
+        geography = {"value": "Georgia" if number == 10 else "Berlin", "evidence": evidence}
+        work_mode = {"value": "remote" if number == 10 else "onsite", "evidence": evidence}
+    if number in {12, 13}:
+        filters = [
+            {
+                "kind": "work_authorization" if number == 12 else "travel",
+                "value": "EU work authorization" if number == 12 else "up to 20 percent",
+                "evidence": requirements[0]["evidence"],
+            }
+        ]
+    return {"schema_version": 2, "geography": geography, "work_mode": work_mode, "filters": filters}
+
+
+def canonical_requirement(requirement, aliases):
+    result = {**requirement}
+    versions = []
+    mapping = {}
+    for version in requirement["version_constraints"]:
+        product = aliases.get(version["product"].casefold(), version["product"])
+        skill = version["raw_text"].replace(version["source_product"], product, 1)
+        mapping[version["skill"]] = skill
+        versions.append({**version, "skill": skill, "product": product})
+    skills = [mapping.get(s, aliases.get(s.casefold(), s)) for s in requirement["skills"]]
+    result.update(skills=skills, version_constraints=versions, source_skills=requirement["skills"])
+    result["normalized_skill_or_requirement"] = (
+        " OR " if requirement["operator"] == "ANY" else " AND "
+    ).join(skills)
+    return result
+
+
 def main(root=ROOT):
     (root / "sample_jobs").mkdir(parents=True, exist_ok=True)
     taxonomy = [
@@ -220,21 +282,10 @@ def main(root=ROOT):
                 "confidence": 1.0,
                 "notes": "Synthetic fixture confidence; not model calibrated.",
             }
+            requirement.update(predicates(quote, kind, production, years, requirement["evidence"]))
             requirements.append(requirement)
-            canonical = [aliases.get(s.casefold(), s) for s in skills]
-            labels.append(
-                {
-                    **requirement,
-                    "skills": canonical,
-                    "normalized_skill_or_requirement": (
-                        " OR " if operator == "ANY" else " AND "
-                    ).join(canonical),
-                }
-            )
-        filters = {
-            "geography": "Georgia" if number == 10 else "Berlin" if number == 11 else None,
-            "work_mode": "remote" if number == 10 else "onsite" if number == 11 else None,
-        }
+            labels.append(canonical_requirement(requirement, aliases))
+        filters = metadata(number, requirements)
         responses[hashlib.sha256(text.encode()).hexdigest()] = {
             "requirements": requirements,
             "responsibilities": [],

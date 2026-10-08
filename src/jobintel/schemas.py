@@ -15,9 +15,18 @@ class RequirementType(StrEnum):
     OTHER = "OTHER"
 
 
+SCHEMA_VERSION = 2
+
+
+class Obligation(StrEnum):
+    MUST = "MUST"
+    PREFERRED = "PREFERRED"
+    UNKNOWN = "UNKNOWN"
+
+
 class Evidence(StrictModel):
-    start: int = Field(ge=0)
-    end: int = Field(gt=0)
+    start: int = Field(ge=0, strict=True)
+    end: int = Field(gt=0, strict=True)
     quote: str = Field(min_length=1)
 
     @model_validator(mode="after")
@@ -28,14 +37,40 @@ class Evidence(StrictModel):
 
 
 class Years(StrictModel):
-    minimum: float = Field(ge=0)
-    maximum: float | None = Field(default=None, ge=0)
+    minimum: float = Field(ge=0, allow_inf_nan=False)
+    maximum: float | None = Field(default=None, ge=0, allow_inf_nan=False)
 
     @model_validator(mode="after")
     def ordered(self):
         if self.maximum is not None and self.maximum < self.minimum:
             raise ValueError("invalid years range")
         return self
+
+
+class GeographyValue(StrictModel):
+    value: str = Field(min_length=1)
+    evidence: Evidence
+
+
+class WorkModeValue(StrictModel):
+    value: Literal["remote", "hybrid", "onsite"]
+    evidence: Evidence
+
+
+class FilterValue(StrictModel):
+    kind: Literal["work_authorization", "travel", "residency", "attendance"]
+    value: str = Field(min_length=1)
+    evidence: Evidence
+
+
+class VersionConstraint(StrictModel):
+    skill: str = Field(min_length=1)
+    product: str = Field(min_length=1)
+    source_product: str = Field(min_length=1)
+    raw_text: str = Field(min_length=1)
+    comparator: Literal["EQ", "GTE", "GT", "LTE", "LT"]
+    version: str = Field(pattern=r"^[0-9]+(?:\.[0-9]+)*$")
+    evidence: Evidence
 
 
 class Requirement(StrictModel):
@@ -46,8 +81,14 @@ class Requirement(StrictModel):
     requirement_type: RequirementType
     category: str = Field(min_length=1)
     evidence: Evidence
-    explicit_production_required: bool | None = None
+    experience_obligation: Obligation = Obligation.UNKNOWN
+    production_obligation: Obligation = Obligation.UNKNOWN
+    explicit_production_required: bool | None = Field(default=None, strict=True)
     years_required: Years | None = None
+    version_constraints: list[VersionConstraint] = Field(default_factory=list)
+    source_skills: list[Annotated[str, Field(min_length=1)]] | None = Field(
+        default=None, min_length=1
+    )
     confidence: float = Field(ge=0, le=1)
     notes: str | None = None
 
@@ -55,16 +96,23 @@ class Requirement(StrictModel):
     def group_shape(self):
         if len(self.skills) != len(set(self.skills)):
             raise ValueError("duplicate group skills")
-        if (self.operator == "SINGLE") != (len(self.skills) == 1):
-            raise ValueError("SINGLE has one skill; ANY/ALL have at least two")
+        original = self.source_skills or self.skills
+        if (self.operator == "SINGLE") != (len(original) == 1) or (
+            self.operator == "SINGLE" and len(self.skills) != 1
+        ):
+            raise ValueError("SINGLE has one source skill; ANY/ALL have at least two")
+        if any(v.skill not in self.skills for v in self.version_constraints):
+            raise ValueError("version constraints must reference a skill branch")
         return self
 
 
 class Extraction(StrictModel):
+    schema_version: Literal[2] = SCHEMA_VERSION
     requirements: list[Requirement]
     responsibilities: list[Evidence] = Field(default_factory=list)
-    geography: str | None = None
-    work_mode: Literal["remote", "hybrid", "onsite"] | None = None
+    geography: GeographyValue | None = None
+    work_mode: WorkModeValue | None = None
+    filters: list[FilterValue] | None = None
 
 
 class JobInput(StrictModel):

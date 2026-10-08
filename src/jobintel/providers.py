@@ -30,6 +30,8 @@ class FixtureProvider:
             raise ProviderUnavailable(
                 "fixture provider only supports bundled synthetic snapshots; live extraction is not implemented"
             )
+        if response.get("schema_version") != 2:
+            raise ValueError("fixture responses require extraction schema v2")
         result = Extraction.model_validate(response)
         validate_grounding(text, result)
         if configuration == "fixture_normalized":

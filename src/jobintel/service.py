@@ -2,9 +2,10 @@ from sqlalchemy import select
 
 from jobintel import db
 from jobintel.analytics import skill_counts
+from jobintel.compatibility import stored_extraction, stored_requirement
 from jobintel.matching import match_requirement
 from jobintel.registry import identity, normalize_url
-from jobintel.schemas import CandidateProfile, Extraction, JobInput, Requirement, SnapshotInput
+from jobintel.schemas import CandidateProfile, Extraction, JobInput, SnapshotInput
 from jobintel.snapshots import clean_text, content_hash, validate_grounding
 
 
@@ -105,11 +106,18 @@ class Service:
             raise Conflict("create a snapshot before extraction")
         extraction = self.provider.extract(snapshot.clean_text, configuration)
         # The persistence boundary revalidates even a replaceable/misbehaving provider.
-        extraction = Extraction.model_validate(extraction.model_dump(mode="json"))
+        payload = (
+            extraction.model_dump(mode="json") if hasattr(extraction, "model_dump") else extraction
+        )
+        if not isinstance(payload, dict) or payload.get("schema_version") != 2:
+            raise ValueError("providers must return extraction schema v2")
+        extraction = Extraction.model_validate(payload)
         validate_grounding(snapshot.clean_text, extraction)
+        self.validate_version_products(extraction)
         run = db.ExtractionRun(
             snapshot_id=snapshot.id,
             configuration=configuration,
+            schema_version=extraction.schema_version,
             payload=extraction.model_dump(mode="json"),
         )
         self.session.add(run)
@@ -142,9 +150,7 @@ class Service:
                 "fetch_status": snapshot.fetch_status,
                 "clean_text": snapshot.clean_text,
             },
-            "extraction": None
-            if run is None
-            else {"run_id": run.id, "configuration": run.configuration, **run.payload},
+            "extraction": None if run is None else self.run_output(run),
         }
 
     def match(self, job_id: str, profile: CandidateProfile):
@@ -162,7 +168,7 @@ class Service:
             select(db.RequirementRow).where(db.RequirementRow.run_id == run.id)
         ):
             result = match_requirement(
-                Requirement.model_validate(row.payload), profile, self.provider.taxonomy
+                stored_requirement(row.payload, run.schema_version), profile, self.provider.taxonomy
             )
             result["requirement_id"] = row.id
             self.session.add(
@@ -200,7 +206,7 @@ class Service:
                             "run_id": run.id,
                             "configuration": run.configuration,
                             "created_at": run.created_at,
-                            **run.payload,
+                            **self.run_output(run),
                         }
                         for run in self.session.scalars(
                             select(db.ExtractionRun)
@@ -214,6 +220,29 @@ class Service:
                 for snapshot in snapshots
             ],
         }
+
+    @staticmethod
+    def run_output(run):
+        if run.payload.get("schema_version", 1) != run.schema_version:
+            raise ValueError("stored extraction schema version mismatch")
+        return {
+            "run_id": run.id,
+            "configuration": run.configuration,
+            "stored_schema_version": run.schema_version,
+            **stored_extraction(run.payload).model_dump(mode="json"),
+        }
+
+    def validate_version_products(self, extraction):
+        taxonomy = getattr(self.provider, "taxonomy", None)
+        for requirement in extraction.requirements:
+            for version in requirement.version_constraints:
+                canonical = (
+                    taxonomy.canonical(version.source_product)
+                    if taxonomy
+                    else version.source_product
+                )
+                if version.product not in {version.source_product, canonical}:
+                    raise ValueError("version product differs from the sourced taxonomy product")
 
     def analytics(self, applied=None):
         jobs = []

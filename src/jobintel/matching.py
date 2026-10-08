@@ -1,3 +1,5 @@
+import re
+
 from jobintel.normalization import Taxonomy
 from jobintel.schemas import CandidateProfile, Requirement
 
@@ -46,7 +48,12 @@ def match_requirement(
         )
     # The scaffold has no candidate tenure/geography/work-authorization schema.
     # Never claim these predicates are covered merely because a skill is present.
-    if requirement.years_required is not None or requirement.requirement_type.value == "OTHER":
+    if (
+        requirement.years_required is not None
+        or requirement.version_constraints
+        or any(re.search(r"\d+\.\d+", skill) for skill in requirement.skills)
+        or requirement.requirement_type.value == "OTHER"
+    ):
         state = "UNKNOWN"
     return {
         "status": state,

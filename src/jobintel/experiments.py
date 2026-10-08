@@ -8,6 +8,7 @@ from typing import Literal, Protocol
 
 from pydantic import Field, ValidationError, model_validator
 
+from jobintel.compatibility import stored_extraction
 from jobintel.evaluation import score
 from jobintel.experiment_corpus import FrozenCorpus, digest
 from jobintel.normalization import Taxonomy
@@ -100,6 +101,16 @@ class CaseRecord(StrictModel):
     model: str | None
     request_id: str | None
     elapsed_seconds: float = Field(ge=0, allow_inf_nan=False)
+
+    @model_validator(mode="before")
+    @classmethod
+    def compatible_predictions(cls, value):
+        if isinstance(value, dict):
+            value = {**value}
+            for field in ["prediction", "raw_prediction"]:
+                if isinstance(value.get(field), dict):
+                    value[field] = stored_extraction(value[field])
+        return value
 
     @model_validator(mode="after")
     def coherent(self):
@@ -247,7 +258,7 @@ def configuration_result(records: list[dict], corpus: FrozenCorpus, spec: Experi
     metrics = None
     if successes:
         metrics = score(
-            [Extraction.model_validate(r["prediction"]) for r in successes],
+            [stored_extraction(r["prediction"]) for r in successes],
             [by_id[r["case_id"]].gold for r in successes],
             [by_id[r["case_id"]].text for r in successes],
         )
@@ -257,7 +268,7 @@ def configuration_result(records: list[dict], corpus: FrozenCorpus, spec: Experi
         if record["status"] == "succeeded":
             case = by_id[record["case_id"]]
             metrics_case = score(
-                [Extraction.model_validate(record["prediction"])], [case.gold], [case.text]
+                [stored_extraction(record["prediction"])], [case.gold], [case.text]
             )
         diagnostics.append(
             {
@@ -344,9 +355,9 @@ def rescore(report: dict) -> dict:
     """Reproduce metrics without constructing a provider or making another request."""
     corpus = FrozenCorpus.model_validate(report["corpus"])
     spec = ExperimentSpec.model_validate(report["spec"])
-    if report["corpus_sha256"] != digest(corpus.model_dump(mode="json")) or report[
-        "spec_sha256"
-    ] != digest(spec.model_dump(mode="json")):
+    if report["corpus_sha256"] != digest(report["corpus"]) or report["spec_sha256"] != digest(
+        spec.model_dump(mode="json")
+    ):
         raise ValueError("saved corpus/config provenance hash mismatch")
     if (
         not report["complete"]

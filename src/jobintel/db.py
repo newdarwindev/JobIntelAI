@@ -1,7 +1,7 @@
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from sqlalchemy import JSON, ForeignKey, String, Text, create_engine
+from sqlalchemy import JSON, ForeignKey, Integer, String, Text, create_engine, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
 
@@ -42,6 +42,7 @@ class ExtractionRun(Base):
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
     snapshot_id: Mapped[str] = mapped_column(ForeignKey("posting_snapshots.id"), index=True)
     configuration: Mapped[str] = mapped_column(String(100))
+    schema_version: Mapped[int] = mapped_column(Integer, default=2, server_default=text("1"))
     created_at: Mapped[str] = mapped_column(String(40), default=now)
     payload: Mapped[dict] = mapped_column(JSON)
 

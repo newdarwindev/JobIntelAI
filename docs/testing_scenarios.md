@@ -12,6 +12,12 @@ evidence in issue #9.
 
 ## Regression references
 
+V19/V21-V23 regressions are in `unit/test_extraction_v2.py` and
+`integration/test_extraction_boundary_v2.py`. They cover non-BMP metadata offsets,
+irrelevant/company evidence, independent obligations, version branches, alias
+collisions/deduplication, and atomic failures/legacy reads on migrated SQLite and
+PostgreSQL. UI03/UI04 inspect the corresponding evidence and abstention contracts.
+
 | ID / brief area | Given → when → expected | Test location |
 | --- | --- | --- |
 | S01 / registry | CSV with required headers + `applied=false` → import → typed false, optional fields unknown | unit/test_registry_normalization.py |
