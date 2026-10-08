@@ -5,18 +5,14 @@ system ingests postings, extracts structured requirements with source quotes,
 normalizes skills, matches candidate evidence and measures extraction quality.
 Every claim needs evidence; every corpus count needs an explicit denominator.
 
-**Current status: runnable offline scaffold.** Python/FastAPI, Pydantic v2,
-SQLAlchemy/Alembic and PostgreSQL are wired up. Twenty authored synthetic postings
-exercise fixture extraction, normalization, matching and evaluation without keys.
-Live OpenAI extraction and HTTP acquisition are explicit stubs. Fixture metrics
-demonstrate pipeline behavior; no live-model quality results are claimed.
+Implementation work and acceptance criteria are tracked in [GitHub issues](https://github.com/newdarwindev/JobIntelAI/issues). See [the issue map](docs/implementation_plan.md) for dependencies.
 
 ## Mock web workspace and recorded acceptance workflows
 
 The spec-driven UI exposes six screens: overview, CSV/JSON job registry, immutable
 source/evidence workbench, candidate evidence matching, corpus analytics/exports,
 and fixture evaluation. It uses the real API with the deterministic fixture
-provider; external acquisition and live-model calls remain explicit stubs. The
+provider. The
 authorized frontend scope extension and limitations are in
 [the UI acceptance specification](docs/web_ui_spec.md).
 
@@ -100,9 +96,7 @@ The synthetic candidate has explicit strong Python capability and production
 evidence, producing COVERED. PostgreSQL has no record in an incomplete profile,
 producing UNKNOWN. Nothing is inferred from an employer name.
 
-“AWS or Azure” remains one ANY group, not two independent must-haves. Candidate
-tenure and geography checks currently abstain. Quote integrity is enforced; semantic
-entailment still needs golden review. See [the full spec](docs/specification.md).
+“AWS or Azure” remains one ANY group, not two independent must-haves. Quote integrity is enforced. See [the full spec](docs/specification.md) for evidence and matching contracts.
 
 ## Quick start: offline, no Docker or API key
 
@@ -197,7 +191,7 @@ Create a manual source with `POST /jobs/{id}/snapshots` and `{"text":"..."}` or
 `{"text":"<main>...</main>","format":"html"}`. A fixture extractor accepts only
 bundled known content hashes; arbitrary manual text cannot be extracted yet.
 
-| Endpoint | Behavior now |
+| Endpoint | Interface |
 | --- | --- |
 | GET /health | DB connection + migrated schema readiness |
 | POST /jobs/import | Atomic JSON/CSV import, duplicate/conflict handling |
@@ -260,15 +254,14 @@ Type/evidence accuracy use aligned-pair denominators. Semantic hallucination,
 abstention, tokens and cost are unavailable, represented by null. Test cases inject
 wrong types, duplicate predictions and invalid evidence to verify metric failures.
 Read [evaluation methodology](docs/evaluation.md) and the saved
-[fixture report](results/fixture_evaluation.json). Actual A/B/C live experiments
-remain a release requirement; do not substitute this table for them.
+[fixture report](results/fixture_evaluation.json). Do not substitute fixture measurements for independently reviewed model results.
 
 After the demo, N=20 successful latest-source extractions. Python appears in 5/20
 jobs (MUST 3/20, PREFERRED 1/20, EXPERIENCE 1/20). AWS OR Azure appears as a separate
 alternative group, not two independent MUST frequencies. These are selected-corpus
 counts, not labor-market conclusions. [Example CSV](results/example_skill_counts.csv).
 
-## Trade-offs, privacy and next steps
+## Trade-offs and privacy
 
 Snapshots survive disappearing URLs and allow model/config changes without rewriting
 sources. Exact aliases are simple to audit; they do not erase distinct products or
@@ -281,13 +274,10 @@ postings belong in Git. Store private inputs outside the checkout or in `local_d
 This is unauthenticated single-user local tooling; do not expose it publicly.
 See [privacy and copyright](docs/privacy_and_copyright.md).
 
-Next: grounded metadata/experience obligation → bounded HTTP adapter → one structured
-OpenAI adapter → candidate predicates/gap analytics → independently reviewed live
-experiments. The mock UI is an explicitly authorized scope extension; SaaS,
-automatic applications and agent orchestration remain outside v1.
+Implementation priorities and release acceptance are maintained in [GitHub issues](https://github.com/newdarwindev/JobIntelAI/issues), linked by [the issue map](docs/implementation_plan.md).
 
 - [Full specification](docs/specification.md)
-- [Acceptance scenarios](docs/testing_scenarios.md): executable vs planned
+- [Acceptance scenarios](docs/testing_scenarios.md): regression references and issue traceability
 - [Implementation plan](docs/implementation_plan.md)
 - [Agent instructions](AGENTS.md)
 - [Original uploaded brief](docs/source_brief.txt)

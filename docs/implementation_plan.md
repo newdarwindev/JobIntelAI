@@ -1,45 +1,33 @@
-# Implementation plan and completion gates
+# Implementation issue map
 
-The scaffold implements an offline vertical slice. The source brief's overall
-portfolio target is 26–36 hours; estimates below are planning bounds, not logged
-work. If total effort approaches 40 hours, reduce optional scope first.
+GitHub issues are the source of truth for implementation status, remaining work,
+acceptance criteria and closure evidence. Keep this file as a navigation map;
+do not duplicate issue status or completion claims in source comments or documents.
 
-| Stage | Original estimate | Already scaffolded | Remaining exit condition |
-| --- | --- | --- | --- |
-| 1. Skeleton/DB/schemas | 3–4h | FastAPI, Pydantic, SQLAlchemy, migration, Compose | Expand grounded metadata/experience obligation; tested model↔migration compatibility |
-| 2. Registry/acquisition/snapshots | 4–6h | JSON/CSV, manual HTML/text, immutable service snapshots | HTTP fake transport + safety/retry/errors, real authorized fetch; two ingestion modes |
-| 3. Extraction/normalization | 5–7h | Protocol, replay provider, span guard, aliases | OpenAI schema adapter, failure contracts, versioned prompts, golden semantic regressions |
-| 4. Matching/analytics | 4–5h | Four states, two axes, alternatives, core counts/export | Candidate predicate schema, evidence explanations, gaps and clusters |
-| 5. Evaluation | 5–7h | 20 authored cases, exact-key scorer, replay comparison | Independent label review, full metrics/provenance and ≥2 measured live configs |
-| 6. Tests/CI | 2–3h | Unit/migrated API/PostgreSQL suite, Actions workflow | Add tests as target features land; inspect actual remote CI result |
-| 7. README/cleanup | 3–4h | Docs, trace/example, quick starts, synthetic report | Actual LLM results table, error analysis, release/privacy audit |
+| Issue | Implementation acceptance | Original scenario IDs |
+| --- | --- | --- |
+| [#2](https://github.com/newdarwindev/JobIntelAI/issues/2) | Ground extraction metadata, experience obligation, and version predicates in source evidence | V19, V21–V23 |
+| [#3](https://github.com/newdarwindev/JobIntelAI/issues/3) | Implement bounded HTTP acquisition with auditable outcomes and manual fallback | V02–V11; optional V08 excluded |
+| [#4](https://github.com/newdarwindev/JobIntelAI/issues/4) | Implement a structured OpenAI adapter and versioned provider configuration | V12–V19 |
+| [#5](https://github.com/newdarwindev/JobIntelAI/issues/5) | Persist reusable candidate revisions and match sourced tenure and eligibility predicates | V24–V26 |
+| [#6](https://github.com/newdarwindev/JobIntelAI/issues/6) | Implement persisted corpus gap analytics, coverage accounting, and explicit slices | V27–V30 |
+| [#7](https://github.com/newdarwindev/JobIntelAI/issues/7) | Expose provenance-preserving backend requirement and match exports with spreadsheet safety | V31–V32 |
+| [#8](https://github.com/newdarwindev/JobIntelAI/issues/8) | Build an independent golden evaluation with semantic, abstention, matching, and operations metrics | V20, V33–V37 |
+| [#9](https://github.com/newdarwindev/JobIntelAI/issues/9) | Run and publish at least two authorized live extraction experiments on a frozen corpus | V38 |
+| [#10](https://github.com/newdarwindev/JobIntelAI/issues/10) | Complete persistence and privacy regressions and publish backend CI test evidence | V01, V39–V44 |
 
-Implement in this order: V21 (metadata grounding) + experience obligation → V02–V07
-(HTTP with transport injection) → V12–V20 (one live provider with mock tests) →
-V25–V31 (predicates/gaps) → V33–V38 (real experiment) → release gates. No optional
-browser/second provider until the required trace and evaluation work.
+Dependency order: grounded schema (#2) precedes the structured provider (#4) and
+candidate predicates (#5). Acquisition (#3) can proceed independently with fake
+transports. Profile/match revisions (#5) feed persisted analytics (#6) and exports
+(#7). Independent evaluation (#8) and provider provenance (#4) precede authorized
+live experiments (#9). Reliability and result publication (#10) support every slice.
 
-Each slice should leave the offline demo usable. Keep a fake transport/provider in
-tests; do not substitute fixtures silently for a selected live provider. A working
-stub returns a clear unsupported operation, not a success-looking empty result.
+Optional browser rendering (V08) and a second provider (V45) remain outside these
+required implementation issues. The original brief and scope exclusions are retained
+in [the specification](specification.md).
 
-Scaffold complete: editable install, Alembic, replay demo, nontrivial tests, API
-functional request, PostgreSQL check, authored public dataset and honest docs.
-Portfolio complete: every required release gate in `specification.md` §14 plus
-measured live results. Frontend, auth, browser, deployment and additional providers
-remain optional. The follow-on project in the brief is out of scope.
-
-Current validation: 38 Python tests passed including PostgreSQL and 16 desktop/mobile
-browser journeys passed. GitHub Actions verified quality, both Python versions,
-Docker/API smoke and browser recordings. [Validation details](validation.md) record limitations.
-
-## Authorized mock UI extension
-
-The 2026-10-08 user request adds the interfaces in [web UI spec](web_ui_spec.md).
-Six screens use the existing fixture-backed service, with immutable history reads,
-strict candidate validation and explicit applied slicing. Complete UI01–UI08 browser
-journeys run on desktop/mobile Chromium with successful-attempt video publication,
-README provenance and mandatory `AGENTS.md` maintenance rules. UI-only group gaps
-and category projections do not complete the planned persisted/live backend gates.
-See `docs/ui-recordings/manifest.json` and validation notes for actual execution;
-an Actions workflow file alone is not proof of a remote Actions run.
+Each implementing PR must satisfy the tests and evidence requirements in its issue.
+Keep the offline demo usable, preserve immutable source/run history, and link actual
+final-commit CI results. API/provider/browser changes also require the complete
+mapped desktop/mobile journeys and successful-attempt recording provenance under
+[AGENTS.md](../AGENTS.md). Paid live experiments require separate explicit authorization.

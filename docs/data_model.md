@@ -16,12 +16,11 @@ The first migration is frozen generated SQLAlchemy DDL, not a call to current
 also enabled in SQLite service connections. Rows store JSON after Pydantic validation;
 SQL does not currently validate those JSON schemas independently.
 
-Current profile storage is one snapshot payload per matching request, rather than
-one row per evidence record; requirement rows are individually addressable. Target
-v1 can split evidence into indexed rows and promote type/skill/filter fields to
-columns in new migrations when queries justify it. Preserve historical IDs.
+Profile submissions are stored as snapshot payloads, while requirement rows are
+individually addressable. Preserve historical IDs across new migrations and query
+changes. Revision and predicate implementation requirements live in [issue #5](https://github.com/newdarwindev/JobIntelAI/issues/5).
 
 Snapshot immutability is enforced by supported service behavior (no update/delete
-endpoint); direct SQL writes are not guarded by a DB trigger in this scaffold.
+endpoint); this service contract does not guarantee protection against direct SQL writes.
 Do not claim a database-level guarantee. New source snapshots exclude stale runs
 from current views. Re-extraction appends runs; analytics selects only the latest.

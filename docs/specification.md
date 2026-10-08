@@ -10,7 +10,8 @@ UIs, complete Actions browser workflows, successful videos in README, and mandat
 agent recording updates. [Web UI specification](web_ui_spec.md) defines this
 authorized extension and its executable acceptance map. Original backend-only
 exclusions below describe the initial v1 brief, not a prohibition on this requested
-mock UI. Live integrations and portfolio experiment gates remain incomplete.
+mock UI. Implementation acceptance and dependencies are tracked in
+[GitHub issues](implementation_plan.md).
 
 ## 1. Purpose and audience
 
@@ -28,32 +29,32 @@ claim. Employer reputation is never candidate or job evidence.
 
 ## 2. Scope and implementation defaults
 
-| Component | Easiest v1 default | Scaffold status |
-| --- | --- | --- |
-| API / CLI | FastAPI sync endpoints; argparse CLI; no frontend | Working |
-| Schemas | Pydantic v2, reject extra fields | Working |
-| Storage | SQLAlchemy, Alembic, PostgreSQL 16 | Working; SQLite demo alternative |
-| Import | JSON or pasted CSV export; no Google OAuth integration | Working |
-| Manual acquisition | Text/HTML payload, local authored fixtures | Working |
-| URL acquisition | Bounded HTTP GET through httpx | Interface returns explicit 501 |
-| Browser | Optional fallback only after HTTP/manual modes | Deferred |
-| Snapshots | Append-only raw/clean text, SHA-256, UTC timestamp | Working service contract |
-| Extraction | Strict provider interface; fixture replay by hash | Working fixture path |
-| OpenAI | One adapter with schema-constrained output | Stub; no paid calls |
-| Anthropic | Optional comparison adapter | Deferred |
-| Skills | Exact case-insensitive alias map in versioned JSON | Working |
-| Candidate | Explicit capability + production axes, no embeddings | Working skills; tenure/filters abstain |
-| Analytics | Distinct-job SQL/service aggregation, JSON/CSV | Working core counts; gaps/slices planned |
-| Evaluation | Fixed labels, exact multiset alignment | Working fixture metrics; live experiment planned |
-| CI | pytest + PostgreSQL service; zero external AI calls | Workflow included |
+| Component | v1 contract |
+| --- | --- |
+| API / CLI | FastAPI sync endpoints; argparse CLI; no frontend |
+| Schemas | Pydantic v2, reject extra fields |
+| Storage | SQLAlchemy, Alembic, PostgreSQL 16 |
+| Import | JSON or pasted CSV export; no Google OAuth integration |
+| Manual acquisition | Text/HTML payload, local authored fixtures |
+| URL acquisition | Bounded HTTP GET through httpx |
+| Browser | Optional fallback only after HTTP/manual modes |
+| Snapshots | Append-only raw/clean text, SHA-256, UTC timestamp |
+| Extraction | Strict provider interface; fixture replay by hash |
+| OpenAI | One adapter with schema-constrained output |
+| Anthropic | Optional comparison adapter |
+| Skills | Exact case-insensitive alias map in versioned JSON |
+| Candidate | Explicit capability + production axes, no embeddings |
+| Analytics | Distinct-job SQL/service aggregation, JSON/CSV |
+| Evaluation | Fixed labels, exact multiset alignment |
+| CI | pytest + PostgreSQL service; zero external AI calls |
 
 No LangChain/LangGraph, multi-agent architecture, vector database, embeddings or
 rapidfuzz until measured errors justify them. Use synchronous SQLAlchemy and a
 simple request pipeline first; an async httpx adapter can be added without replacing
 the domain services. No queues or distributed workers in v1.
 
-The uploaded brief requests a portfolio-ready product. This task creates its
-scaffold and full contracts; **scaffold completion is not portfolio completion**.
+These contracts define the requested portfolio product. Issue acceptance and test
+evidence determine completion; this specification does not maintain feature status.
 
 ## 3. End-to-end use cases
 
@@ -61,7 +62,7 @@ Public demonstration: migrate → import synthetic registry → create local sna
 → replay structured responses → validate → normalize → match synthetic profile →
 export n/N counts → compare fixture configurations. Everything works without keys.
 
-Private production path to implement: import CSV → fetch official URLs → clean and
+Private workflow contract: import CSV → fetch official URLs → clean and
 snapshot → extract with OpenAI → validate and persist → normalize → candidate
 matching → filtered corpus analytics → JSON/CSV export → golden evaluation.
 
@@ -104,7 +105,7 @@ Same ID + identical metadata is idempotent. Same ID + changed metadata is 409.
 Different ID + same canonical URL or casefolded company+role is 409, requiring
 explicit resolution; do not silently drop distinct postings. Null URLs may repeat.
 The conservative company+role rule may flag separate openings; explicit duplicate
-resolution/update workflows are future work. Reject malformed rows with 422.
+resolution/update workflows require a separate scope decision. Reject malformed rows with 422.
 
 ## 6. Acquisition and snapshot contract
 
@@ -115,12 +116,11 @@ Retain raw HTML/text and clean text; simple cleaning can still lose information 
 unusual sites. Fixture tests precede expanding selectors.
 
 Snapshots include ID, job FK, URL, UTC `fetched_at`, raw content, clean content,
-SHA-256 of UTF-8 clean text, status (`manual` now; fetched/failed metadata planned).
+SHA-256 of UTF-8 clean text, acquisition status and outcome metadata.
 Offsets refer to clean Unicode text. Exact latest raw+clean+URL resubmission reuses
 the existing snapshot. Changed raw text with identical clean content can create a
 new provenance snapshot with the same hash. The service never edits a snapshot;
-database-level immutability permissions/triggers are deferred, so direct DB users
-can bypass this contract.
+the service contract does not protect against direct database mutation.
 
 HTTP adapter acceptance requirements: configurable connect/read timeouts; bounded
 retry on transient errors/429 with capped Retry-After; at most three redirects;
@@ -153,13 +153,11 @@ and work_mode (unknown if absent). A requirement contains:
 | notes | Optional ambiguity explanation only |
 
 EXPERIENCE marks tenure/experience predicates and is reported separately from MUST.
-The target schema should add a separate obligation field (MUST/PREFERRED/UNKNOWN)
-before mixing experience with mandatory counts. Production preference is not a
+Experience uses a separate obligation field (MUST/PREFERRED/UNKNOWN), rather than
+being counted automatically as mandatory. Production preference is not a
 mandatory production filter. Responsibilities are not requirements. Top-level
-geography/work-mode metadata must gain explicit evidence fields before live use;
-current fixtures also include grounded OTHER rows, but span validation currently
-checks requirements/responsibilities only. Do not generalize this limitation to
-live extraction.
+geography/work-mode metadata requires explicit source evidence. Validate populated
+metadata as well as requirements/responsibilities before persistence.
 
 Validate schema and every evidence slice before persistence. Fail the entire run
 on missing/invalid evidence with 422; retain the prior run. Exact source text can
@@ -181,7 +179,7 @@ Versioned `data/taxonomy.json`: canonical name, aliases, category. Exact whitesp
 trim + casefold first. Examples: Postgres→PostgreSQL, K8s→Kubernetes,
 GenAI→Generative AI. AWS remains distinct from AWS Bedrock. Preserve raw evidence.
 Unknown terms remain literal; no automatic semantic merging. Version requirements
-remain intact until a dedicated version predicate is implemented. Reject ambiguous
+retain their explicit predicates and raw wording. Reject ambiguous
 aliases. Normalization may deduplicate alias equivalents but must preserve ANY/ALL
 semantics. Embeddings/fuzzy matching are optional experiments, not v1 prerequisites.
 
@@ -191,7 +189,7 @@ Profile has ID, completeness flag (default false) and explicit records: skill,
 current_capability (`strong|basic|none|unknown`), production_evidence
 (`confirmed|limited|none|unknown`), source reference and quote. A source reference
 is supplied evidence, not proof that a third-party credential has been verified.
-No employer-name inference. Candidate import currently happens through match payload.
+No employer-name inference. Candidate import and revision selection use explicit sourced profile payloads.
 
 | Condition | State |
 | --- | --- |
@@ -203,34 +201,30 @@ No employer-name inference. Candidate import currently happens through match pay
 
 ANY chooses a sufficient branch; ALL requires every branch. Every match references
 the extraction requirement and stored profile snapshot, with explicit sources and
-explanation. Candidate tenure/geography/authorization/travel predicates are not in
-the scaffold: any years predicate or OTHER requirement returns UNKNOWN, even when
-a named skill is present. Target v1 extends candidate predicates only with sourced
-records and tests; no speculative coverage from generic capability.
+explanation. Tenure/geography/authorization/travel predicates require sourced candidate records
+and predicate-specific matching. Unsupported or absent predicates return UNKNOWN;
+generic skill capability cannot establish eligibility or years of experience.
 
 ## 10. Analytics and exports
 
 Default N = distinct jobs with a successful extraction on their latest snapshot,
 not total registry rows or number of requirements. Successfully extracted empty
-postings count in N. Report total registered, failed, pending and excluded counts
-in target v1. Each skill counts once per job and once per job/type. Must/Preferred
+postings count in N. Report total registered, failed, pending and excluded counts. Each skill counts once per job and once per job/type. Must/Preferred
 may overlap in one posting; their sum need not equal overall mentions.
 
 ANY groups are reported separately; no branch is counted as an independent MUST.
 ALL branches count as individual required mentions. EXPERIENCE and OTHER have
 separate breakdowns. Results are n/N integers, not unsupported market estimates.
 
-Planned: taxonomy cluster coverage, requirement-group gaps from the latest matching
+Analytics includes taxonomy cluster coverage, requirement-group gaps from the latest matching
 run for a selected profile, unknown counts separate from missing, and slices by
 applied state, remote and explicitly imported positive-response status. Do not
 infer “positive response” from generic notes. Recompute N after each slice. Counts
 are frequencies, not job suitability scores; no ranking without an explicit model.
 
-JSON export preserves provenance/alternatives. CSV exports core counts now; target
-also exports flattened requirement/match rows with run and snapshot identifiers.
+JSON export preserves provenance/alternatives. CSV includes core counts and flattened requirement/match rows with run and snapshot identifiers.
 For spreadsheet-facing exports neutralize formula prefixes in user-controlled
-strings; the scaffold exports authored taxonomy terms only, but private export
-hardening remains a target acceptance scenario.
+strings; test both authored terms and private user-controlled values.
 
 ## 11. Evaluation contract
 
@@ -239,34 +233,33 @@ years, production and OTHER filters. Live experiment labels must be reviewed
 independently from model output, not auto-generated from predictions. Record dataset
 hash, revision, prompt/schema/taxonomy versions, provider/model/config and run time.
 
-Implemented scorer uses an exact multiset key: operator, sorted skill group,
+The exact-key scorer uses an exact multiset key: operator, sorted skill group,
 production predicate, years range. It consumes each gold item at most once. Type
 and span are scored separately after alignment. This makes errors visible but is
-strict about aliases and groups; no fuzzy metric claims. Unknown filters and
-responsibilities need their own metrics in target v1.
+strict about aliases and groups; no fuzzy metric claims. Filters and responsibilities use their own metrics.
 
 - Precision = aligned predictions / all predicted requirements.
 - Recall = aligned predictions / all gold requirements.
 - F1 = harmonic mean when both denominators are defined, else null.
-- Type accuracy = correct types / aligned pairs; target adds MUST/PREFERRED-only
+- Type accuracy = correct types / aligned pairs; include a MUST/PREFERRED-only
   denominator and confusion matrix.
 - Evidence accuracy = exact gold evidence matches / aligned pairs.
 - Unsupported-span rate = invalid source slices / predicted items. This is **not**
   semantic hallucination rate; a valid irrelevant quote may still hallucinate.
-- Target semantic hallucination rate = unsupported claims after annotated entailment
+- Semantic hallucination rate = unsupported claims after annotated entailment
   review / all predictions; never rename unmatched aliases as hallucinations.
-- Target abstention quality: precision/recall of abstentions on annotated ambiguous
+- Abstention quality: precision/recall of abstentions on annotated ambiguous
   predicates; correct-unknown rates for missing geography/production.
-- Target matching: agreement across four states and false COVERED rate, including
+- Matching: agreement across four states and false COVERED rate, including
   historical evidence with weak current capability and the reverse.
-- Target operations: posting and provider latency, token usage, estimated cost with
+- Operations: posting and provider latency, token usage, estimated cost with
   explicit price/model/date, fetch success/failure and manual fallback share.
 
 Zero-denominator metrics are null, not 100%; runner errors fail the run and are
 reported separately. Fixture elapsed time is local replay time; tokens/cost/LLM
-latency are null. Current semantic hallucination and abstention metrics are null.
+latency are null. Unmeasured semantic hallucination and abstention metrics are null.
 
-Target experiments on identical frozen inputs:
+Controlled experiments on identical frozen inputs:
 A = free-form prompt (parse output and audit ungrounded claims in evaluator);
 B = structured Pydantic/schema output + mandatory evidence;
 C = B + deterministic normalization. A output never enters production persistence
@@ -279,8 +272,7 @@ hallucination, latency, cost), failures and trade-offs without assuming C wins.
 
 All endpoints use JSON except embedded CSV text in import. No frontend or auth.
 422 = invalid input/schema/evidence; 404 = unknown job; 409 = conflict/prerequisite;
-501 = explicit unimplemented integration; 503 = DB not ready. Future live adapter
-uses 502 for provider failure, 504 for timeout, structured retryable error codes.
+501 = explicit unimplemented integration; 503 = DB not ready. Live adapters use 502 for provider failure, 504 for timeout, structured retryable error codes.
 
 | Endpoint | Contract |
 | --- | --- |
@@ -290,12 +282,12 @@ uses 502 for provider failure, 504 for timeout, structured retryable error codes
 | GET /jobs/{id}/history | Append-only snapshot and extraction-run history |
 | POST /candidate/validate | Strict profile validation without persistence |
 | POST /jobs/{id}/snapshots | Manual text/HTML, source URL; return snapshot ID/hash |
-| POST /jobs/{id}/fetch | Future bounded HTTP fetch; currently 501 if URL exists |
+| POST /jobs/{id}/fetch | Bounded HTTP fetch with auditable outcomes; unsupported integration returns 501 |
 | POST /jobs/{id}/extract | Configuration, latest snapshot; return run, requirements, evidence |
 | GET /jobs/{id} | Metadata, latest snapshot and its latest extraction; no stale results |
 | POST /jobs/{id}/match | Candidate profile payload; requirement-linked states/sources |
-| GET /analytics/skills | n/N + type counts, separate alternatives; optional explicit `applied` slice; persisted gaps/remote slices planned |
-| POST /evaluate | Fixture config list now; persisted evaluation run; live suite planned |
+| GET /analytics/skills | n/N, type counts, alternatives, selected-profile gaps and explicit slices |
+| POST /evaluate | Explicit config list and persisted evaluation provenance; fixture and authorized live runs |
 
 CLI: `jobintel demo` imports/processes authored examples; `jobintel evaluate`
 compares fixture configurations; `jobintel export` writes current counts as JSON/CSV.
@@ -305,15 +297,15 @@ latest identical snapshot; it deliberately appends extraction/match history.
 ## 13. Persistence and operations
 
 Logical entities: jobs, posting_snapshots, extraction_runs, requirements, skills,
-candidate_evidence (profile snapshots in scaffold), matches, evaluation_runs.
+candidate_evidence (profile snapshots), matches, evaluation_runs.
 FKs establish source/run/candidate trace. SQLAlchemy JSON holds validated payloads
 to keep initial migrations small; promote frequently queried fields to columns
-when gap/slice queries are implemented. PostgreSQL is authoritative; SQLite is not
+when gap/slice queries justify it. PostgreSQL is authoritative; SQLite is not
 a substitute for PostgreSQL migration checks. See [data model](data_model.md).
 
 No automatic DDL on API startup. Apply Alembic before readiness. Service transactions
 keep imports/extractions atomic. Raw/clean source text and profile evidence are
-private data in private mode. Target structured logs contain IDs, hashes, outcomes
+private data in private mode. Structured logs contain IDs, hashes, outcomes
 and timings, no full bodies/secrets. Limits/backoff precede public URL operations.
 
 ## 14. Required checks and portfolio completion
@@ -329,8 +321,7 @@ extraction; source evidence on every requirement; canonical aliases/raw wording;
 four evidence-based match states; n/N corpus analytics and gaps; frozen reviewed
 golden set; at least two live config experiments; measured results committed; README
 quality table; unit/integration tests and passing CI; no private/secrets/unauthorized
-content; author can explain architecture and limitations. Scaffold gates are listed
-separately in [testing scenarios](testing_scenarios.md).
+content; author can explain architecture and limitations. Test references and issue traceability are in [testing scenarios](testing_scenarios.md).
 
 ## 15. Trade-offs and explicit exclusions
 
@@ -350,8 +341,7 @@ next Agentic Repository Task Runner project as part of this task.
 ## 16. Delivery and positioning
 
 Follow the original 26–36 hour staged budget; cut optional features if approaching
-40 hours. See [implementation plan](implementation_plan.md) for dependencies and
-test exits. Evidence-grounded API/evaluation is the priority, not feature volume.
+40 hours. See [the issue map](implementation_plan.md) for dependencies and acceptance evidence. Evidence-grounded API/evaluation is the priority, not feature volume.
 
 Only after actual completion/publication describe the project in a résumé as a
 Python/FastAPI/PostgreSQL system with structured LLM extraction and measured
