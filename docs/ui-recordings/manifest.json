@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "origin": "github-actions",
+  "recorded_at": "2026-10-08T11:57:47.546Z",
+  "source_hash": "512a14abd1fa928e4db499da073fdaac330ba1b195468b9306b922cbabc04e1a",
+  "git_sha": "ce203702ace55cc607cbd0371ebcafb409c3ab3e",
+  "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/37773290905",
+  "command": "npm run test:ui",
+  "expected": 16,
+  "flaky": 0,
+  "failed": 0,
+  "records": [
+    {
+      "id": "UI01",
+      "project": "desktop-chromium",
+      "title": "UI01 | Atomic registry import and discovery",
+      "file": "UI01-desktop-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 561558,
+      "sha256": "397ab656ebd80216c9a4eb556a60310b3f0096b5ddb22f7ec474341a26bb34d7"
+    },
+    {
+      "id": "UI02",
+      "project": "desktop-chromium",
+      "title": "UI02 | Source capture, URL fallback and immutable history",
+      "file": "UI02-desktop-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 939978,
+      "sha256": "43e167a8a4b70636e6ed54afde42e164a310eb39acbfd1fb45f0476c1e95023e"
+    },
+    {
+      "id": "UI03",
+      "project": "desktop-chromium",
+      "title": "UI03 | Grounded extraction, aliases and operators",
+      "file": "UI03-desktop-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 936385,
+      "sha256": "bad710b80931c68d146dfa2ae344aab61a1564c59dfbe52ff0f663f8f20c445b"
+    },
+    {
+      "id": "UI04",
+      "project": "desktop-chromium",
+      "title": "UI04 | Candidate evidence and four matching states",
+      "file": "UI04-desktop-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 1070831,
+      "sha256": "70f05a0713eb95a73c8efab534f5352e0bc3741489b7ddb9fe0fae2595af7f68"
+    },
+    {
+      "id": "UI05",
+      "project": "desktop-chromium",
+      "title": "UI05 | Corpus slices, gaps and safe provenance exports",
+      "file": "UI05-desktop-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 761006,
+      "sha256": "d90587896185f793e5b03f1df84c34090b5ea689252963f450e6bbde43a96551"
+    },
+    {
+      "id": "UI06",
+      "project": "desktop-chromium",
+      "title": "UI06 | Fixture evaluation and honest unavailable metrics",
+      "file": "UI06-desktop-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 463388,
+      "sha256": "96101e3bf0cfba3844b4c4897704ddc191cdeb71e86a2ee64d93bf1b910e5a01"
+    },
+    {
+      "id": "UI07",
+      "project": "desktop-chromium",
+      "title": "UI07 | Provider and connection failure recovery",
+      "file": "UI07-desktop-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 861202,
+      "sha256": "17ed22e79bb209b3dab9e9c8319865001a61c48dce713aa125191549a1cc40f2"
+    },
+    {
+      "id": "UI08",
+      "project": "desktop-chromium",
+      "title": "UI08 | Keyboard navigation, responsive layout and inert input",
+      "file": "UI08-desktop-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 752696,
+      "sha256": "4e369e02931532cb9737eec7d7549196bbd8284d33f19f1a7f74bd2c33c7241c"
+    },
+    {
+      "id": "UI01",
+      "project": "mobile-chromium",
+      "title": "UI01 | Atomic registry import and discovery",
+      "file": "UI01-mobile-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 331624,
+      "sha256": "70276891e960367dbb7f23a36ab446acc8e4db36d0f4c097436dac6a298708c8"
+    },
+    {
+      "id": "UI02",
+      "project": "mobile-chromium",
+      "title": "UI02 | Source capture, URL fallback and immutable history",
+      "file": "UI02-mobile-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 528332,
+      "sha256": "6ae6f35a4a43b76b93a1ef6b6dde95d92dc4ae24e062dbdd77fd961c4a684f51"
+    },
+    {
+      "id": "UI03",
+      "project": "mobile-chromium",
+      "title": "UI03 | Grounded extraction, aliases and operators",
+      "file": "UI03-mobile-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 643575,
+      "sha256": "d182aa54625488102740509fe2c3aa586a58a09bc0ee79962d743f3b4257bf8f"
+    },
+    {
+      "id": "UI04",
+      "project": "mobile-chromium",
+      "title": "UI04 | Candidate evidence and four matching states",
+      "file": "UI04-mobile-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 821837,
+      "sha256": "ceffb0feadd02c3074bc25e279d4552cc9d5495894a476cb651334fb6151d130"
+    },
+    {
+      "id": "UI05",
+      "project": "mobile-chromium",
+      "title": "UI05 | Corpus slices, gaps and safe provenance exports",
+      "file": "UI05-mobile-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 350768,
+      "sha256": "d6d9eb75e1ef607a073bc43019c1bff4030ed03a10a50bf078e18b8ec17400a6"
+    },
+    {
+      "id": "UI06",
+      "project": "mobile-chromium",
+      "title": "UI06 | Fixture evaluation and honest unavailable metrics",
+      "file": "UI06-mobile-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 197180,
+      "sha256": "2e856a8e9684ea154e9cd5188d6e1e829b930d7b1f28cfb3972e1a2b07fea891"
+    },
+    {
+      "id": "UI07",
+      "project": "mobile-chromium",
+      "title": "UI07 | Provider and connection failure recovery",
+      "file": "UI07-mobile-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 429649,
+      "sha256": "2c3fe2b3eefc6e896d78626b58a8b7fea892a23b03fbc2e5ee1d0142eb79abb5"
+    },
+    {
+      "id": "UI08",
+      "project": "mobile-chromium",
+      "title": "UI08 | Keyboard navigation, responsive layout and inert input",
+      "file": "UI08-mobile-chromium.webm",
+      "status": "passed",
+      "successful_attempt": 0,
+      "browser_version": "145.0.7632.6",
+      "bytes": 481707,
+      "sha256": "6f14a3cf14641e0be94314be6bfd3ae853891f40e37f29de1d854572963323d7"
+    }
+  ]
+}
