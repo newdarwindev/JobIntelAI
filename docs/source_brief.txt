@@ -1,0 +1,442 @@
+GitHub Portfolio Project 02 — JobIntel AI — Evidence-Grounded Job Requirements & Skill Gap Analysis
+Stefan Novak
+1. НАЗНАЧЕНИЕ ПРОЕКТА
+Создать второй публичный GitHub-проект, который выглядит не как учебный scraper или очередной LLM demo, а как production-oriented AI/backend system для превращения реальных job postings в проверяемые, измеримые и воспроизводимые требования к кандидату.
+Проект должен служить доказательством инженерных навыков Stefan: Python/backend, FastAPI, PostgreSQL, structured LLM extraction, Pydantic schemas, web/document ingestion, evidence-grounded AI, evaluation, normalization, data modeling, APIs, Docker, automated testing, GitHub Actions / CI/CD и production-oriented debugging.
+Главная цель — дать recruiter, hiring manager или technical interviewer возможность за 5–10 минут увидеть, что Stefan умеет не просто вызвать LLM API, а построить систему, где каждый AI-вывод связан с исходным evidence, качество extraction измеряется на golden dataset, а аналитические выводы строятся только на реально извлечённых требованиях.
+Проект также должен быть практически полезен для собственного job search Stefan, но публичный repository не должен раскрывать его приватный Job Search Log, application history, recruiter correspondence или полные тексты сторонних вакансий, если их публикация не разрешена.
+2. ПОЧЕМУ ИМЕННО ЭТОТ ПРОЕКТ
+JobIntel AI хорошо дополняет RAG Evaluation Workbench и подтверждает другой важный класс senior AI engineering задач: извлечение структуры из неструктурированных документов, traceability, evaluation, evidence-based matching и построение аналитики поверх LLM output.
+Проект опирается на сильную существующую базу Stefan и одновременно заставляет практично усилить несколько востребованных engineering areas.
+Особенно хорошо проект подтверждает:
+• Python и backend engineering;
+• FastAPI и REST API design;
+• PostgreSQL data modeling;
+• Pydantic structured schemas;
+• SQLAlchemy и database access patterns;
+• Alembic migrations;
+• OpenAI API / Anthropic API;
+• structured outputs и schema-constrained extraction;
+• document / HTML ingestion и text normalization;
+• evidence-grounded LLM workflows;
+• skill normalization и taxonomy design;
+• evaluation datasets, regression tests и measurable AI behavior;
+• Docker;
+• automated tests;
+• GitHub Actions / CI/CD;
+• production-oriented error handling, observability и reproducibility.
+Поэтому проект должен усиливать профиль Senior / Applied AI Engineer, а не создавать искусственное впечатление, что Stefan сменил специализацию на recruiting analytics или web scraping.
+3. КОНЦЕПЦИЯ
+Рабочее название repository:
+jobintel-ai
+Краткое описание для GitHub:
+Evidence-grounded job requirements intelligence system that ingests job postings, extracts auditable must-have and preferred requirements with source evidence, normalizes skills, matches them against candidate evidence, and evaluates extraction quality using reproducible golden datasets.
+Система получает список вакансий с Job ID, company, role и official URL либо вручную загруженный текст, сохраняет snapshot источника, извлекает requirements, нормализует skills, сопоставляет их с candidate profile/evidence и строит corpus-level аналитику.
+Ключевой вопрос проекта:
+«Как превратить десятки неоднородных job descriptions в надёжные skill-gap signals, не придумывая требования, которых нет в исходном тексте?»
+Ключевой принцип:
+No evidence — no claim. Любой extracted requirement, skill classification или candidate match должен быть проверяемым и связанным с исходным текстом вакансии или подтверждённым candidate evidence.
+4. ПОЛЬЗОВАТЕЛЬСКИЙ СЦЕНАРИЙ
+Минимальный рабочий flow:
+1) Пользователь импортирует registry вакансий из CSV / Google Sheets export или добавляет одну вакансию вручную.
+2) Для каждой записи система получает Job ID, Company, Role и Official URL; Status / Applied могут импортироваться как optional metadata.
+3) Система пытается получить содержимое official URL обычным HTTP fetch.
+4) Если страница требует JavaScript, допускается отдельный browser-render fallback; если доступ невозможен, пользователь может вставить исходный текст вручную.
+5) HTML очищается от навигации, cookie banners, application widgets и другого UI-мусора без изменения содержания job description.
+6) Исходный текст сохраняется как immutable snapshot с source URL, timestamp и content hash.
+7) LLM получает snapshot и возвращает строго структурированный result через schema.
+8) Каждый requirement получает requirement type и evidence span из исходного posting.
+9) Skill normalization сводит варианты вроде Postgres / PostgreSQL, GenAI / Generative AI и K8s / Kubernetes к единому canonical name.
+10) Candidate matcher сопоставляет requirement с candidate profile и evidence, не смешивая current capability и historical production evidence.
+11) Analytics layer считает реальные counts n/N по corpus, must-have share, preferred share, clusters и skill gaps.
+12) Evaluation pipeline сравнивает extraction с вручную размеченным golden dataset и показывает precision/recall, classification accuracy и hallucination rate.
+13) Система экспортирует результаты в JSON/CSV и даёт API для просмотра одной вакансии и corpus-level summary.
+5. ДАННЫЕ И PRIVACY
+Проект имеет два режима данных.
+A. Private local mode
+Для личного использования Stefan может импортировать реальный Job Search Log и свои candidate-profile/evidence данные. Эти файлы должны находиться вне публичного repository, например в ignored local data directory или в приватном storage.
+Private mode может работать с реальными полями:
+• Job ID;
+• Company;
+• Role;
+• Official URL;
+• Status;
+• Applied?;
+• Original Job Description;
+• Extracted Requirements / Skills;
+• Notes.
+B. Public portfolio mode
+Публичный repository должен быть полностью воспроизводим без приватных материалов Stefan.
+Предпочтительный вариант v1:
+• 15–30 synthetic или самостоятельно созданных sample job descriptions, имитирующих реальную сложность postings;
+• sample registry с Job ID / Company / Role / URL-or-local-fixture;
+• golden labels для части sample postings;
+• никаких recruiter names, application history, личных адресов или приватных заметок;
+• никаких полных сторонних job descriptions, если нет явного права их перераспространять.
+Система может уметь fetch public URLs во время запуска, но публичный repository не должен превращаться в архив стороннего copyrighted content.
+В README явно объяснить: corpus-level conclusions относятся только к загруженному набору вакансий и не являются заявлением об «общем рынке труда».
+6. ТЕХНИЧЕСКИЙ STACK
+Обязательный стек v1:
+• Python 3.11+;
+• FastAPI;
+• Pydantic v2;
+• PostgreSQL;
+• SQLAlchemy;
+• Alembic;
+• OpenAI API как основной LLM provider;
+• Anthropic как optional second provider для comparison;
+• httpx для async HTTP calls;
+• BeautifulSoup / selectolax / readability-style extraction для HTML cleaning;
+• Docker / docker-compose;
+• pytest;
+• GitHub Actions.
+Допустимые библиотеки:
+• tenacity или собственный retry layer для network/provider failures;
+• rapidfuzz для deterministic alias matching;
+• sentence-transformers или embeddings только если semantic skill normalization действительно улучшает качество;
+• Playwright как optional browser fallback для JavaScript-heavy pages.
+Важно: не перегружать v1 framework-слоем. LangChain/LangGraph не нужны для первой версии, если обычный Python pipeline делает architecture и traceability яснее.
+7. DATA MODEL И АРХИТЕКТУРА
+Основные сущности database:
+• jobs — Job ID, company, role, official URL, optional status/applied metadata;
+• posting_snapshots — source URL, fetched_at, raw/clean text, content hash, fetch status;
+• requirements — normalized requirement, type, category, evidence text/span, confidence;
+• skills — canonical skill name, aliases, category;
+• candidate_evidence — candidate skill/evidence records, source, capability, production-evidence level;
+• matches — requirement ↔ candidate evidence, match status, explanation;
+• evaluation_runs — prompt/model/config, metrics, latency, token/cost metadata.
+Основные модули:
+A. registry
+• CSV/JSON import;
+• Job ID validation;
+• deduplication by Job ID / URL / company+role;
+• optional import of status/applied metadata.
+B. acquisition
+• HTTP fetch;
+• timeouts/retries;
+• redirect handling;
+• content-type checks;
+• optional browser fallback;
+• manual text fallback.
+C. snapshot
+• HTML-to-text normalization;
+• boilerplate removal;
+• content hash;
+• immutable source snapshot;
+• source metadata and fetch timestamp.
+D. extraction
+• schema-constrained LLM output;
+• responsibilities;
+• MUST requirements;
+• PREFERRED requirements;
+• EXPERIENCE requirements;
+• OTHER filters: geography, work mode, work authorization, travel;
+• production-experience requirement;
+• evidence span for every extracted item;
+• abstain / unknown when evidence is insufficient.
+E. normalization
+• canonical skill taxonomy;
+• alias mapping;
+• case/version normalization;
+• avoid merging distinct concepts such as AWS vs AWS Bedrock;
+• preserve raw wording alongside normalized name.
+F. candidate matching
+• candidate profile/evidence ingestion;
+• separate Current Capability from Historical / Production Evidence;
+• match states: COVERED / PARTIAL / MISSING / UNKNOWN;
+• evidence-first explanation;
+• no inference from employer/company reputation or generic knowledge.
+G. analytics
+• counts as n/N, never estimated percentages without underlying counts;
+• Must n/N;
+• Preferred n/N;
+• cluster coverage;
+• gap frequency;
+• optional slices: Applied vs Not Applied, Remote-only, positive-response subset.
+H. evaluation
+• golden dataset;
+• experiment runner;
+• quality metrics;
+• latency/tokens/cost;
+• regression comparison between prompts/models/configurations.
+I. API / CLI
+• FastAPI endpoints for import, fetch, extraction, matching, analytics and evaluation;
+• CLI commands for batch runs and reproducible portfolio demos.
+8. STRUCTURED OUTPUT — ГЛАВНАЯ AI ЧАСТЬ
+LLM output должен быть строгим schema object, а не prose summary.
+Минимальная структура requirement:
+• raw_text — формулировка из posting;
+• normalized_skill_or_requirement;
+• requirement_type — MUST / PREFERRED / EXPERIENCE / OTHER;
+• category — AI/LLM, backend, cloud, infrastructure, data, domain, geography и т. п.;
+• evidence_quote или evidence span;
+• explicit_production_required — true/false/unknown;
+• years_required — value/range/unknown;
+• confidence;
+• notes — только при неоднозначности.
+Критическое правило:
+Система не должна создавать requirement, если для него нельзя показать evidence в snapshot.
+Если posting говорит «experience with AWS or Azure», extractor не должен превращать это в два отдельных must-have требования AWS AND Azure.
+Если posting перечисляет technology в разделе Nice to have, она не должна классифицироваться как MUST.
+Если география не указана, система должна вернуть geography = unknown, а не угадывать по компании.
+9. EVALUATION — КЛЮЧЕВАЯ ЧАСТЬ ПРОЕКТА
+Именно evaluation должна отличать JobIntel AI от обычного LLM extraction demo.
+Минимальный golden dataset:
+• 20–30 job descriptions или synthetic equivalents;
+• ручная разметка MUST / PREFERRED / EXPERIENCE / OTHER;
+• canonical skill names;
+• evidence spans;
+• отдельная разметка production-experience requirements и geography/work-mode filters.
+Extraction metrics:
+• skill/requirement precision;
+• skill/requirement recall;
+• F1;
+• MUST vs PREFERRED classification accuracy;
+• evidence attribution accuracy;
+• hallucination rate — requirements без подтверждающего текста;
+• abstention quality для ambiguous/unknown cases.
+Matching metrics:
+• manual agreement для COVERED / PARTIAL / MISSING / UNKNOWN;
+• false-positive match rate;
+• cases where candidate evidence is present but current capability is weak;
+• cases where capability is strong but production evidence is limited.
+Operational metrics:
+• end-to-end latency per posting;
+• LLM latency;
+• tokens;
+• estimated cost per posting;
+• fetch success/failure rate;
+• percentage of postings requiring manual-text fallback.
+Главный experiment v1:
+Configuration A — free-form extraction prompt без strict evidence constraints.
+Configuration B — Pydantic structured output + mandatory evidence spans.
+Configuration C — structured extraction + deterministic normalization pass.
+Результат должен быть представлен как таблица, например:
+configuration | precision | recall | type accuracy | evidence accuracy | hallucination rate | latency | estimated cost
+Цель не в том, чтобы обязательно показать, что самая сложная configuration победила. Цель — показать engineering approach: hypothesis → experiment → measurement → trade-off.
+10. API
+Минимально:
+GET /health
+Проверка приложения и database.
+POST /jobs/import
+Импорт registry вакансий из JSON/CSV payload.
+POST /jobs/{job_id}/fetch
+Получение/обновление source snapshot по official URL.
+POST /jobs/{job_id}/extract
+Запуск structured requirement extraction.
+GET /jobs/{job_id}
+Возвращает metadata, snapshot status, extracted requirements и evidence.
+POST /jobs/{job_id}/match
+Сопоставляет requirements с выбранным candidate profile.
+GET /analytics/skills
+Возвращает counts n/N, must/preferred breakdown и gap summary по corpus.
+POST /evaluate
+Запускает evaluation suite для выбранной extraction configuration.
+Для portfolio версии достаточно API + curl examples + CLI batch commands. Frontend не нужен.
+11. ПРИМЕРНАЯ СТРУКТУРА REPOSITORY
+jobintel-ai/
+  README.md
+  LICENSE
+  .env.example
+  docker-compose.yml
+  pyproject.toml
+  alembic.ini
+  src/
+    api/
+    registry/
+    acquisition/
+    snapshots/
+    extraction/
+    normalization/
+    matching/
+    analytics/
+    evaluation/
+    providers/
+    db/
+    config.py
+  alembic/
+    versions/
+  data/
+    sample_jobs/
+    sample_registry.csv
+    golden_dataset.json
+  scripts/
+    import_jobs.py
+    run_pipeline.py
+    run_evaluation.py
+  tests/
+    unit/
+    integration/
+    fixtures/
+  results/
+    example_skill_counts.csv
+    example_eval_results.csv
+  docs/
+    architecture.md
+    data_model.md
+    evaluation.md
+    privacy_and_copyright.md
+  .github/
+    workflows/
+      test.yml
+12. TESTS И CI
+Минимальный quality bar:
+• unit tests для URL normalization, deduplication, text cleaning, taxonomy mapping и counts;
+• schema validation tests для LLM output;
+• tests, которые гарантируют наличие evidence для каждого extracted requirement;
+• provider mocks, чтобы CI не требовал платных API calls;
+• HTML fixture tests для разных типов career pages;
+• integration test PostgreSQL + migrations;
+• tests для candidate matching rules;
+• golden evaluation runner отдельно от обычного CI, если он требует реальных LLM calls;
+• GitHub Actions запускает unit/integration tests на каждый push/PR.
+Проект не обязан иметь 100% coverage. Важно показать sensible test boundaries и наличие regression protection вокруг наиболее рискованных AI/data transformations.
+13. README — КРИТИЧЕСКИ ВАЖНО
+README должен быть рассчитан на hiring manager, который не будет долго изучать repository.
+Первые 30 секунд README должны дать ответы:
+• What is this?;
+• Why does it exist?;
+• How is evidence grounding enforced?;
+• How is quality measured?;
+• What technologies are used?;
+• What did the extraction experiments show?
+Рекомендуемая структура README:
+1) Project summary — 4–6 строк.
+2) Architecture diagram.
+3) Example input registry.
+4) One end-to-end job example: source → extracted requirements → evidence → candidate match.
+5) Data model.
+6) Quick start — docker-compose + 2–4 команды.
+7) Structured extraction schema.
+8) Evaluation methodology.
+9) Results table.
+10) Corpus analytics example with n/N counts.
+11) Engineering trade-offs.
+12) Privacy/copyright limitations.
+13) Next steps.
+README должен подчёркивать reasoning, auditability и measurable behavior, а не рекламные формулировки.
+14. ЧТО НУЖНО ЯВНО ОБЪЯСНИТЬ В TRADE-OFFS
+• почему source snapshot хранится отдельно от extracted requirements;
+• почему official URL сам по себе не является стабильным dataset и страницы могут исчезать;
+• почему dynamic/browser fetching сделан fallback, а не основной архитектурой;
+• почему нельзя делать market-wide conclusions по персонально отобранному corpus;
+• почему counts показываются как n/N;
+• почему MUST и PREFERRED нельзя смешивать в один keyword frequency;
+• почему deterministic normalization используется вместе с LLM, а не полностью заменяется LLM;
+• почему current capability и production evidence кандидата хранятся как две разные оси;
+• где confidence полезен, а где система обязана abstain;
+• как защищаться от hallucinated requirements;
+• как model/provider changes могут менять extraction и почему нужен regression dataset;
+• почему публичный repository не содержит реальные приватные application data и полные сторонние postings.
+Это особенно важно для senior-level впечатления: repository должен показывать качество технических решений, а не количество библиотек.
+15. ЧТО НЕ ДЕЛАТЬ В V1
+Не тратить время на:
+• React/frontend dashboard;
+• user authentication;
+• multi-user SaaS;
+• автоматическую массовую индексацию всего рынка вакансий;
+• scraping protected sites или обход anti-bot механизмов;
+• автоматическую подачу applications;
+• resume generation;
+• полноценный browser automation framework;
+• Kubernetes;
+• Terraform;
+• полноценный cloud deployment;
+• LangGraph;
+• MCP;
+• multi-agent architecture;
+• vector database, если обычная taxonomy/SQL модель решает задачу;
+• десятки LLM providers;
+• сложную observability platform.
+Все эти вещи можно добавить позже, но они не должны размывать основной evidence: structured extraction → source grounding → normalization → matching → evaluation → corpus analytics.
+16. ПЛАН ПО ВРЕМЕНИ
+Цель: 26–36 часов до portfolio-ready состояния.
+Этап 1 — skeleton, database и schemas: 3–4 часа
+• repository structure;
+• FastAPI;
+• PostgreSQL;
+• SQLAlchemy/Alembic;
+• Pydantic models;
+• Docker compose.
+Этап 2 — registry + acquisition + snapshots: 4–6 часов
+• CSV import;
+• URL fetch;
+• HTML cleaning;
+• manual-text fallback;
+• content hash/snapshot storage;
+• error handling.
+Этап 3 — structured extraction + normalization: 5–7 часов
+• LLM provider abstraction;
+• Pydantic structured output;
+• evidence spans;
+• taxonomy/aliases;
+• MUST/PREFERRED/EXPERIENCE classification.
+Этап 4 — candidate matching + analytics: 4–5 часов
+• candidate evidence model;
+• COVERED/PARTIAL/MISSING/UNKNOWN;
+• counts n/N;
+• must/preferred breakdown;
+• JSON/CSV export.
+Этап 5 — evaluation: 5–7 часов
+• golden dataset;
+• precision/recall/F1;
+• type accuracy;
+• evidence accuracy;
+• hallucination rate;
+• latency/cost comparison.
+Этап 6 — tests/CI: 2–3 часа
+• key unit tests;
+• provider mocks;
+• PostgreSQL integration;
+• GitHub Actions.
+Этап 7 — README и cleanup: 3–4 часа
+• architecture diagram;
+• one full traceable example;
+• evaluation results table;
+• trade-offs;
+• privacy/copyright explanation;
+• reproducible quick start.
+Если работа начинает выходить сильно за 40 часов, scope нужно сокращать, а не добавлять features.
+17. DEFINITION OF DONE
+Проект считается готовым к публикации, когда:
+• новый пользователь может запустить его по README;
+• sample registry импортируется;
+• минимум два способа ingestion работают: URL fetch и manual/local text;
+• source snapshot сохраняется с metadata и hash;
+• LLM extraction возвращает валидный structured schema;
+• каждый extracted requirement имеет evidence в source snapshot;
+• skills нормализуются к canonical names без потери raw wording;
+• candidate matching показывает COVERED / PARTIAL / MISSING / UNKNOWN с evidence;
+• analytics считает n/N, а не выдуманные market percentages;
+• есть фиксированный golden eval dataset;
+• минимум две extraction configurations сравниваются автоматически;
+• evaluation results сохранены в repository;
+• README содержит реальную таблицу quality metrics;
+• есть tests;
+• CI проходит;
+• нет secrets;
+• нет приватного Job Search Log или recruiter correspondence;
+• нет закрытого employer code/data;
+• code достаточно чистый, чтобы Stefan мог уверенно объяснить каждое ключевое архитектурное решение на интервью.
+18. КАК ПРОЕКТ ДОЛЖЕН РАБОТАТЬ НА ПОИСК РАБОТЫ
+После публикации repository можно использовать в résumé и application materials как Portfolio / GitHub evidence.
+Правильное позиционирование:
+Это не «AI-рекрутер», не способ заменить профессиональный опыт и не попытка выдать локальный pet project за production SaaS.
+Это публичный воспроизводимый пример подходов, которые важны для Applied AI / Senior AI Engineering: structured LLM workflows, evidence grounding, data modeling, evaluation, regression testing, backend APIs, PostgreSQL, Docker и measurable system behavior.
+Короткое описание для résumé после фактической публикации можно сформулировать примерно так:
+“Built an evidence-grounded job-requirements intelligence system in Python/FastAPI with PostgreSQL, structured LLM extraction, source-level traceability, skill normalization, candidate-evidence matching, reproducible evaluation datasets, Docker, tests and CI.”
+Эту строку добавлять в résumé только после того, как repository реально существует и соответствует описанию.
+На интервью Stefan должен быть готов показать:
+• почему extraction schema устроена именно так;
+• как предотвращаются hallucinated requirements;
+• как строится evidence trace;
+• как измерялись precision/recall и hallucination rate;
+• как различаются current capability и production evidence;
+• какие ошибки встречались на реальных/сложных postings;
+• какие trade-offs были сделаны между accuracy, cost, latency и complexity.
+19. СЛЕДУЮЩИЙ ПРОЕКТ
+Следующий repository имеет смысл начинать только после завершения JobIntel AI и RAG Evaluation Workbench.
+Предпочтительное направление №3:
+Agentic Repository Task Runner — stateful tool-using workflow для анализа небольшого code repository, планирования изменений, выполнения tools/tests, проверки результата, tracing и retry/failure recovery.
+Он должен подтверждать другой сильный кластер опыта Stefan — multi-step agent workflows, tool use, handoffs/state, automated verification и failure recovery.
+Но текущий приоритет — закончить JobIntel AI так, чтобы repository был компактным, воспроизводимым, измеримым и действительно пригодным для демонстрации senior-level engineering judgment.

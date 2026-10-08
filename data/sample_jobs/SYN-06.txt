@@ -1,0 +1,3 @@
+Synthetic company 06 — Backend / AI Engineer
+This fictional posting is authored for a public engineering demo.
+Two to four years of Java experience is required.

@@ -1,0 +1,44 @@
+{
+  "mode": "fixture replay \u2014 plumbing regression, not live LLM quality",
+  "dataset_size": 20,
+  "results": [
+    {
+      "configuration": "fixture_raw",
+      "metrics": {
+        "true_positives": 18,
+        "predicted": 22,
+        "expected": 22,
+        "precision": 0.8181818181818182,
+        "recall": 0.8181818181818182,
+        "f1": 0.8181818181818182,
+        "type_accuracy": 1.0,
+        "evidence_accuracy": 1.0,
+        "unsupported_span_rate": 0.0,
+        "semantic_hallucination_rate": null,
+        "abstention_quality": null
+      },
+      "elapsed_seconds": 0.0006617669998831843,
+      "tokens": null,
+      "estimated_cost": null
+    },
+    {
+      "configuration": "fixture_normalized",
+      "metrics": {
+        "true_positives": 22,
+        "predicted": 22,
+        "expected": 22,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "type_accuracy": 1.0,
+        "evidence_accuracy": 1.0,
+        "unsupported_span_rate": 0.0,
+        "semantic_hallucination_rate": null,
+        "abstention_quality": null
+      },
+      "elapsed_seconds": 0.0006498989998817706,
+      "tokens": null,
+      "estimated_cost": null
+    }
+  ]
+}

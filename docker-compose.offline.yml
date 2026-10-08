@@ -1,0 +1,9 @@
+services:
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.offline
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.offline

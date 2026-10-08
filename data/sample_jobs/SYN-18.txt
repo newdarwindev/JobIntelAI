@@ -1,0 +1,2 @@
+Synthetic company 18 — Backend / AI Engineer
+Our product uses Java. Tools here are context, not candidate requirements.

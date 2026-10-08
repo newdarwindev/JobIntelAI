@@ -1,0 +1,93 @@
+"""Run the Python CI checks locally; fail immediately on an underlying command failure."""
+
+import argparse
+import json
+import os
+import shlex
+import subprocess
+import sys
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def run(*arguments: str, environment=None):
+    print(f"+ {shlex.join(arguments)}", flush=True)
+    subprocess.run(arguments, cwd=ROOT, env=environment, check=True)
+
+
+def smoke(environment, output):
+    run(sys.executable, "-m", "alembic", "upgrade", "head", environment=environment)
+    run(sys.executable, "-m", "alembic", "check", environment=environment)
+    for _ in range(2):
+        run(
+            sys.executable,
+            "-m",
+            "jobintel.cli",
+            "demo",
+            "--output",
+            str(output),
+            environment=environment,
+        )
+    run(
+        sys.executable,
+        "-m",
+        "jobintel.cli",
+        "evaluate",
+        "--output",
+        str(output),
+        environment=environment,
+    )
+    run(
+        sys.executable,
+        "-m",
+        "jobintel.cli",
+        "export",
+        "--output",
+        str(output),
+        environment=environment,
+    )
+    counts = json.loads((output / "skill_counts.json").read_text())
+    evaluation = json.loads((output / "evaluation.json").read_text())
+    if counts["N"] != 20 or evaluation["dataset_size"] != 20 or len(evaluation["results"]) != 2:
+        raise SystemExit("Offline smoke result does not match the bundled corpus/configuration.")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--require-postgres", action="store_true")
+    args = parser.parse_args()
+    if args.require_postgres and not os.getenv("TEST_DATABASE_URL", "").startswith("postgresql"):
+        raise SystemExit(
+            "--require-postgres needs TEST_DATABASE_URL for a disposable PostgreSQL DB."
+        )
+    run(sys.executable, "-m", "ruff", "check", ".")
+    run(sys.executable, "-m", "ruff", "format", "--check", ".")
+    run(sys.executable, "-m", "pip", "check")
+    run(sys.executable, "scripts/check_fixtures.py")
+    run(sys.executable, "-m", "pytest", "-q", "--tb=short")
+    if args.require_postgres:
+        postgres_environment = {
+            **os.environ,
+            "JOBINTEL_DATABASE_URL": os.environ["TEST_DATABASE_URL"],
+        }
+        run(sys.executable, "-m", "alembic", "check", environment=postgres_environment)
+    with TemporaryDirectory(prefix="jobintel-check-") as directory:
+        temporary = Path(directory)
+        environment = {
+            **os.environ,
+            "JOBINTEL_DATABASE_URL": f"sqlite:///{temporary / 'smoke.db'}",
+            "JOBINTEL_FIXTURE_ROOT": str(ROOT / "data"),
+            "JOBINTEL_PROVIDER": "fixture",
+        }
+        smoke(environment, temporary / "results")
+        run(sys.executable, "-m", "build", "--outdir", str(temporary / "dist"))
+    print("Python quality gates passed.")
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except subprocess.CalledProcessError as error:
+        raise SystemExit(error.returncode) from None

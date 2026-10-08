@@ -1,0 +1,27 @@
+{
+  "profile_id": "synthetic-candidate",
+  "complete": false,
+  "evidence": [
+    {
+      "skill": "Python",
+      "current_capability": "strong",
+      "production_evidence": "confirmed",
+      "source": "synthetic://portfolio",
+      "quote": "Authored and operated a Python service."
+    },
+    {
+      "skill": "Kubernetes",
+      "current_capability": "strong",
+      "production_evidence": "limited",
+      "source": "synthetic://lab",
+      "quote": "Operated a local Kubernetes lab; no production deployment claimed."
+    },
+    {
+      "skill": "AWS",
+      "current_capability": "basic",
+      "production_evidence": "confirmed",
+      "source": "synthetic://history",
+      "quote": "Historical AWS operations; current capability needs refreshing."
+    }
+  ]
+}
