@@ -85,6 +85,15 @@ reloads, selects and re-matches synthetic revisions with match-run provenance.
 
 ## Implementation acceptance in GitHub issues
 
+V31–V32 regressions in `integration/test_exports.py` and `unit/test_export_csv.py`
+cover current/explicit historical selection, saved candidate revisions, repeated and
+stale runs, successful empty extractions, applied denominators, ANY/ALL and version/
+obligation preservation, API/CLI equality, CSV provenance resolution, exact JSON,
+Unicode/CSV boundaries and formula prefixes after whitespace/control characters.
+Export query counts are bounded across corpus sizes; private generated paths must
+be ignored. UI03/UI04/UI05 verify backend download parity, refresh persistence,
+source-change exclusion and explicit historical recovery.
+
 | Issue | Acceptance area | Original scenario IDs |
 | --- | --- | --- |
 | [#2](https://github.com/newdarwindev/JobIntelAI/issues/2) | Ground extraction metadata, experience obligation, and version predicates in source evidence | V19, V21–V23 |

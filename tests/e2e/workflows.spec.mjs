@@ -68,11 +68,13 @@ test('UI02 | Source capture, URL fallback and immutable history',async({page,req
   await page.getByLabel('Posting source').fill(text);await click(page,'Save immutable snapshot');await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
 });
 
-test('UI03 | Grounded extraction, aliases and operators',async({page})=>{
+test('UI03 | Grounded extraction, aliases and operators',async({page,request})=>{
   await importSample(page);await capture(page,'SYN-01');
   await expect(page.locator('.requirement').filter({hasText:'PostgreSQL'})).toContainText('PREFERRED');
   await page.getByRole('button',{name:'Highlight source quote',exact:true}).first().click();await expect(page.locator('mark')).toHaveText('Python is required.');
   const exported=JSON.parse(await download(page,'Export evidence JSON'));
+  expect(exported).toEqual(await (await request.post('/exports',{data:{kind:'evidence',job_ids:['SYN-01']}})).json());
+  expect(exported.rows[0].requirement_id).toBeTruthy();
   expect(exported.extraction.provenance).toMatchObject({provider:'fixture',configuration:'fixture_normalized',schema_version:2,model:null,usage:null,prompt_version:null});
   expect(exported.extraction.provenance.source_sha256).toBe(exported.snapshot.content_hash);
   expect(exported.extraction.provenance.taxonomy_sha256).toHaveLength(64);
@@ -129,6 +131,9 @@ test('UI04 | Candidate evidence and four matching states',async({page,request})=
   await saveProfile(page,await candidate());await click(page,'Match extracted corpus');await expect(notice(page)).toContainText('Matched 20');
   const matched=JSON.parse(await download(page,'Export matches JSON'));expect(matched.snapshot_id).toBeTruthy();expect(matched.run_id).toBeTruthy();expect(matched.matches[0].requirement_id).toBeTruthy();
   expect(matched.match_run_id).toBeTruthy();expect(matched.profile_revision_id).toBeTruthy();
+  const matchCsv=await download(page,'Export matches CSV');
+  expect(matchCsv).toEqual(await (await request.post('/exports',{data:{kind:'matches',format:'csv',job_ids:['SYN-01'],profile_id:matched.profile_id,profile_revision_id:matched.profile_revision_id}})).text());
+  expect(matchCsv).toContain(matched.match_run_id);expect(matchCsv).toContain('"UNKNOWN"');
   const originalRevision=matched.profile_revision_id;
   const dated={...(await candidate()),tenure_complete:true,tenure:[{skill:'Python',start:'2020-01-01',end:'2024-01-01',source:'synthetic://dated-ui',quote:'Authored Python experience from 2020 to 2024.'}],eligibility:[{kind:'location',value:'Georgia',status:'confirmed',observed_on:'2020-01-01',source:'synthetic://location-ui',quote:'Authored current Georgia location statement.'}]};
   await saveProfile(page,dated);await page.getByLabel('Selected posting').selectOption('SYN-05');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('COVERED 1');
@@ -147,9 +152,15 @@ test('UI05 | Corpus slices, gaps and safe provenance exports',async({page,reques
   await nav(page,'Overview');await click(page,'Load synthetic corpus');await saveProfile(page,await candidate());await click(page,'Match extracted corpus');
   await nav(page,'Corpus analytics');await expect(page.locator('main')).toContainText('5/20');
   const report=JSON.parse(await download(page,'Export corpus JSON'));expect(report.N).toBe(20);expect(report.skills.find(s=>s.skill==='Python').n).toBe(5);expect(report.gaps.N).toBe(20);expect(report.clusters.N).toBe(20);
+  const selected={profile_id:report.selection.profile_id,profile_revision_id:report.selection.profile_revision_id};
+  expect(report).toEqual(await (await request.post('/exports',{data:{kind:'skills',...selected}})).json());
   expect(report.alternatives.find(g=>g.skills.join(' OR ')==='AWS OR Azure')).toBeTruthy();
   expect(report.skills.find(s=>s.skill==='Azure')).toBeUndefined();
   const csv=await download(page,'Export skills CSV');expect(csv).toContain('"Python","20","5","3","1","1","0"');
+  expect(csv).toEqual(await (await request.post('/exports',{data:{kind:'skills',format:'csv',...selected}})).text());
+  expect(csv).toContain(selected.profile_revision_id);expect(csv).toContain('"run_ids"');
+  await page.reload();
+  const restored=JSON.parse(await download(page,'Export corpus JSON'));expect(restored.gaps.N).toBe(20);expect(restored.selection.profile_revision_id).toBe(selected.profile_revision_id);
   await page.getByLabel('Application slice').selectOption('yes');await expect(page.getByText('N = 0',{exact:true}).first()).toBeVisible();
   await page.getByLabel('Application slice').selectOption('all');await expect(page.locator('main')).toContainText('5/20');
   // User-controlled cells retain source IDs while spreadsheet prefixes are neutralized.
@@ -158,7 +169,14 @@ test('UI05 | Corpus slices, gaps and safe provenance exports',async({page,reques
   expect((await request.post('/jobs/UI-FORMULA/extract',{data:{}})).ok()).toBeTruthy();
   await page.reload();await expect(page.getByRole('heading',{name:'Corpus analytics',exact:true})).toBeVisible();await page.getByLabel('Application slice').selectOption('yes');
   const rows=await download(page,'Export requirements CSV');expect(rows).toContain("\"'=HYPERLINK");expect(rows).toContain('"UI-FORMULA"');expect(rows).toContain('"snapshot_id"');expect(rows).toContain('"evidence_start"');
+  expect(rows).toEqual(await (await request.post('/exports',{data:{kind:'requirements',format:'csv',applied:true,...selected}})).text());
   const sliced=JSON.parse(await download(page,'Export corpus JSON'));expect(sliced.N).toBe(1);expect(sliced.jobs).toHaveLength(1);
+  expect(sliced.matched_jobs_N).toBe(0);expect(sliced.selection.applied).toBe(true);
+  const oldRun=sliced.jobs[0].extraction.run_id;
+  expect((await request.post('/jobs/UI-FORMULA/snapshots',{data:{text:'Authored changed source for explicit export history.'}})).ok()).toBeTruthy();
+  const current=JSON.parse(await download(page,'Export corpus JSON'));expect(current.N).toBe(0);expect(current.jobs[0].extraction).toBeNull();
+  const historical=await (await request.post('/exports',{data:{kind:'requirements',historical:true,run_ids:[oldRun],applied:true,...selected}})).json();
+  expect(historical.N).toBe(1);expect(historical.rows).toHaveLength(2);expect(historical.rows[0].run_id).toBe(oldRun);
 });
 
 test('UI06 | Fixture evaluation and honest unavailable metrics',async({page})=>{

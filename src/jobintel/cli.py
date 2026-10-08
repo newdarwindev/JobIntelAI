@@ -1,5 +1,4 @@
 import argparse
-import csv
 import json
 import sys
 from pathlib import Path
@@ -31,6 +30,11 @@ def main(argv=None, *, transport=None):
 
 
 def execute(argv, transport):
+    if argv and argv[0] == "export":
+        from jobintel.export_cli import execute as export_execute
+
+        export_execute(argv)
+        return
     if argv and argv[0] == "experiment":
         from jobintel.experiment_cli import main as experiment_main
 
@@ -89,16 +93,12 @@ def execute(argv, transport):
                 service.extract(job.job_id, configuration)
                 service.match(job.job_id, profile)
             print(f"Imported and processed {len(jobs)} synthetic postings with fixture replay.")
-        report = service.analytics()
-        (args.output / "skill_counts.json").write_text(json.dumps(report, indent=2) + "\n")
-        with (args.output / "skill_counts.csv").open("w", newline="") as output:
-            writer = csv.DictWriter(
-                output,
-                fieldnames=["skill", "N", "n", "must_n", "preferred_n", "experience_n", "other_n"],
-                lineterminator="\n",
-            )
-            writer.writeheader()
-            writer.writerows(report["skills"])
+        from jobintel.export_cli import write_exports
+        from jobintel.export_selection import ExportInput
+
+        report = write_exports(
+            service.session, ExportInput(legacy_skills_csv=True), args.output, "skill_counts"
+        )
         print(f"N={report['N']}; exports written to {args.output}")
 
 

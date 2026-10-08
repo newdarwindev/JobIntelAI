@@ -27,7 +27,7 @@ Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 | Overview | Empty onboarding, registry/success/pending counts, complete 20-posting replay, direct navigation | UI01, UI03, UI08 |
 | Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters | UI01 |
 | Source & extraction | Manual text/HTML, URL stub/manual fallback, immutable hash/timestamp/URL, history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON | UI02, UI03, UI07 |
-| Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked JSON export | UI04 |
+| Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export | UI04 |
 | Corpus analytics | Successful latest-source n/N, explicit pending/excluded totals, applied slices, alternative groups, distinct-job category coverage, current-profile group gaps with UNKNOWN separate, JSON and formula-safe CSV with snapshot/run/profile provenance | UI05 |
 | Evaluation lab | Select raw/normalized fixture configs, reject empty selection, frozen 20-posting comparison, precision/recall numerators/denominators, type/evidence denominators, null unavailable metrics, elapsed replay time, run ID and JSON export | UI06 |
 
@@ -56,8 +56,19 @@ Category coverage and candidate gaps are **UI session projections** of real late
 extractions/matches, not newly persisted backend analytics. Gap denominator is
 matched jobs in the current slice, with one count per job/group/state. Category
 denominator is successfully extracted jobs in that slice. These do not promote
-planned backend V27/V30 to complete. Applied slicing and formula-safe UI exports
-are implemented; remote/positive-response slicing and live experiments are not.
+planned backend V27/V30 to complete. Downloads use the shared backend export
+service and saved candidate revision, including after refresh; the displayed gap
+projection still uses current session matches. Applied slicing and formula-safe
+exports are implemented; remote/positive-response slicing and live experiments are not.
+
+UI03 compares evidence JSON with the shared API and requires persisted requirement
+IDs. UI04 downloads formula-safe match CSV and verifies equality with the API for
+the selected saved revision. UI05 compares corpus JSON and skills/requirement CSV
+downloads with the shared API, verifies profile/snapshot/run and slice provenance,
+retains persisted match counts after refresh, and excludes stale-source extraction.
+An explicit historical run selection recovers the original source requirements.
+The [export contract](exports.md) documents JSON nulls, CSV transformations and
+legacy skills compatibility. V31–V32 backend tests establish CLI equivalence.
 
 ## Executable coverage and evidence
 
