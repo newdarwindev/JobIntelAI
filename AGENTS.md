@@ -12,6 +12,11 @@ Use the existing checkout; cloud tasks are already isolated. Do not create a Git
 worktree unless the user asks. Inspect `git status` and preserve existing changes.
 Run all commands from the repository root. Python 3.11+ is required; CI tests 3.11 and 3.12.
 
+Use `Stefan Novak` as the Git author/committer display name for repository commits,
+including automatic README recording publication. Preserve existing email addresses
+unless the user requests an email change. Set `git config --local user.name 'Stefan Novak'`
+before committing in a new checkout.
+
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate

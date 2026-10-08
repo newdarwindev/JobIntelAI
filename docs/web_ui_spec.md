@@ -65,7 +65,9 @@ The Actions workflow runs every journey on pushes, pull requests, and manual
 dispatch, uploads reports/traces/videos even on failure, and supplies verified
 README evidence only after all journeys pass. Trusted successful default-branch
 pushes automatically commit the README/video refresh; pull requests and forks have
-read-only permissions and downloadable evidence. Publishing needs repository
+read-only permissions and downloadable evidence. Publication commits use the Git
+display name `Stefan Novak` and retain the automation email address for provenance.
+Publishing needs repository
 Actions write permission and a default branch allowing bot commits. If branch
 protection rejects the push, the publishing job fails explicitly while the verified
 artifact remains available; apply that artifact through the repository's approved

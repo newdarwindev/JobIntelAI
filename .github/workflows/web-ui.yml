@@ -112,7 +112,7 @@ jobs:
           mkdir -p docs/ui-recordings
           cp work/recorded-evidence/docs/ui-recordings/* docs/ui-recordings/
           node scripts/check_ui_contract.mjs
-          git config user.name 'github-actions[bot]'
+          git config user.name 'Stefan Novak'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add README.md docs/ui-recordings
           if git diff --cached --quiet; then exit 0; fi
