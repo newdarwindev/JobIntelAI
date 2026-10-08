@@ -1,0 +1,120 @@
+name: Web UI workflows and recordings
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'data/**'
+      - 'tests/**'
+      - 'scripts/**'
+      - 'docs/web_ui*'
+      - 'package*.json'
+      - 'pyproject.toml'
+      - 'requirements.lock.txt'
+      - 'playwright.config.mjs'
+      - '.github/workflows/web-ui.yml'
+      - 'AGENTS.md'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-ui-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  workflows:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      UI_PYTHON: python
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install locked dependencies
+        run: |
+          python -m pip install -c requirements.lock.txt -e '.[dev]'
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Check spec-to-journey coverage
+        run: |
+          node scripts/check_ui_contract.mjs --coverage-only
+          npm run test:recordings
+      - name: Exercise every complete desktop and mobile workflow
+        run: npm run test:ui
+      - name: Collect only successful attempts and update README
+        run: |
+          npm run record:ui
+          npm run check:ui
+      - name: Upload videos, browser report and failure diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-ui-diagnostics-${{ github.run_id }}
+          path: |
+            test-results/
+            playwright-report/
+            work/ui-results.json
+          retention-days: 30
+          if-no-files-found: error
+      - name: Upload verified README and successful recordings
+        uses: actions/upload-artifact@v4
+        with:
+          name: successful-web-ui-recordings
+          path: |
+            README.md
+            docs/ui-recordings/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Link evidence in the run summary
+        if: always()
+        run: |
+          printf '%s\n' \
+            '## Complete browser workflow evidence' \
+            'Download the diagnostics artifact for the HTML report, videos, screenshots, and failure traces.' \
+            'Only a fully passing suite produces the successful-web-ui-recordings artifact. It contains an updated README and desktop/mobile recordings for every specified journey.' \
+            >> "$GITHUB_STEP_SUMMARY"
+
+  publish-readme-recordings:
+    needs: workflows
+    if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: successful-web-ui-recordings
+          path: work/recorded-evidence
+      - name: Publish passing videos and README provenance
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          git fetch origin "$DEFAULT_BRANCH"
+          if [ "$(git rev-parse "origin/$DEFAULT_BRANCH")" != "$GITHUB_SHA" ]; then
+            echo 'The source branch advanced; a newer run will publish its own evidence.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          cp work/recorded-evidence/README.md README.md
+          mkdir -p docs/ui-recordings
+          cp work/recorded-evidence/docs/ui-recordings/* docs/ui-recordings/
+          node scripts/check_ui_contract.mjs
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add README.md docs/ui-recordings
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'docs: refresh successful web UI workflow recordings [skip ci]'
+          git push origin "HEAD:$DEFAULT_BRANCH"

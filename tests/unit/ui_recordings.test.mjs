@@ -1,0 +1,12 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {selectSuccessfulVideos} from '../../scripts/ui_evidence.mjs';
+const contract={workflows:[{id:'UI01'}],projects:['desktop-chromium','mobile-chromium']};
+function report(){return {stats:{unexpected:0,skipped:0},errors:[],suites:[{suites:[{specs:[{title:'UI01 | Complete journey',tests:contract.projects.map(projectName=>({projectName,expectedStatus:'passed',status:'expected',results:[{status:'passed',retry:0,attachments:[{name:'video',contentType:'video/webm',path:`test-results/${projectName}.webm`}]}]}))}]}]}]};}
+const tests=r=>r.suites[0].suites[0].specs[0].tests;
+test('selects only the passed retry, excluding a failed-attempt video',()=>{const r=report();const first=tests(r)[0];first.status='flaky';first.results.unshift({status:'failed',retry:0,attachments:[{name:'video',contentType:'video/webm',path:'failed.webm'}]});first.results[1].retry=1;const entries=selectSuccessfulVideos(r,contract);assert.equal(entries.length,2);assert.equal(entries[0].attempt,1);assert.notEqual(entries[0].path,'failed.webm');});
+test('refuses a failed suite even if another attempt has a video',()=>{const r=report();r.stats.unexpected=1;assert.throws(()=>selectSuccessfulVideos(r,contract),/complete successful/);});
+test('refuses skipped and interrupted runs',()=>{const r=report();r.stats.skipped=1;assert.throws(()=>selectSuccessfulVideos(r,contract));r.stats.skipped=0;r.errors=[{message:'interrupted'}];assert.throws(()=>selectSuccessfulVideos(r,contract));});
+test('refuses expected failures as acceptance evidence',()=>{const r=report();tests(r)[0].expectedStatus='failed';assert.throws(()=>selectSuccessfulVideos(r,contract),/Unsuccessful/);});
+test('refuses a missing successful-attempt video',()=>{const r=report();tests(r)[0].results[0].attachments=[];assert.throws(()=>selectSuccessfulVideos(r,contract),/Missing successful video/);});
+test('refuses missing, duplicate and unmapped workflow/project pairs',()=>{const missing=report();tests(missing).pop();assert.throws(()=>selectSuccessfulVideos(missing,contract),/every workflow/);const duplicate=report();tests(duplicate).push(structuredClone(tests(duplicate)[0]));assert.throws(()=>selectSuccessfulVideos(duplicate,contract),/every workflow/);const unmapped=report();unmapped.suites[0].suites[0].specs[0].title='Unmapped';assert.throws(()=>selectSuccessfulVideos(unmapped,contract),/Unmapped/);});

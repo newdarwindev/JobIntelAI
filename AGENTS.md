@@ -39,8 +39,9 @@ functions instead of raising the threshold or adding complexity exemptions.
 
 ## Implementation rules
 
-- Prefer ordinary Python, FastAPI, Pydantic v2, SQLAlchemy and Alembic. No frontend,
-  agent orchestration, vector store, Kubernetes or SaaS framework in v1.
+- Prefer ordinary Python, FastAPI, Pydantic v2, SQLAlchemy and Alembic. No production frontend,
+  agent orchestration, vector store, Kubernetes or SaaS framework in v1. The user's
+  2026-10-08 request explicitly adds the mock UI in `docs/web_ui_spec.md`.
 - Default provider is fixture replay. It may only answer known synthetic hashes.
   Unsupported inputs must fail explicitly. Never fall back silently from a live
   provider to fixtures or claim that fixture agreement measures LLM quality.
@@ -87,3 +88,36 @@ Retain the original brief. Changes in scope require a documented decision; do no
 mark portfolio Definition of Done complete while live acquisition, extraction or
 experiments remain stubs. Do not claim production experience or résumé evidence
 from this project before the implemented behavior supports it.
+
+## Web UI changes — mandatory workflow and recording updates
+
+For every change to a web UI, its API contract, fixture/provider data, or browser
+workflow, **always update the affected UI acceptance specification and complete
+workflow tests, run the entire desktop/mobile suite, and refresh successful video
+recordings and their README links before calling the change complete**. This rule
+applies to every future coding agent and contributor. Preserve the coverage map in
+`docs/web_ui_workflows.json`; new user-visible flows require their own mapped journey.
+
+```bash
+npm ci
+npx playwright install --with-deps chromium
+npm run test:ui
+npm run record:ui
+npm run check:ui
+```
+
+The Playwright web server starts `scripts/serve_ui.py`, migrates a disposable DB,
+and uses only authored synthetic fixtures. Never record private postings, candidate
+history, real credentials or paid API calls. Keep `video: 'on'`: successful attempts
+must be recorded (`video: {mode: 'on', ...}` is equivalent). Publish only the passing attempt for every workflow/project;
+retain failures and traces as diagnostic artifacts, never as proof of success.
+The publisher refuses failed, skipped, incomplete or missing-video runs. The source
+hash checker must pass after the **final** relevant edit; stale recordings are not
+acceptable. Do not change assertions, invent metrics or remove workflows to make
+the recording gate green.
+
+Maintain `.github/workflows/web-ui.yml` alongside affected flows. Actions must run
+full desktop/mobile journeys, upload recordings/reports on every outcome, and update
+README videos after trusted successful default-branch runs. Fork/PR runs stay read
+only. If GitHub publishing is blocked, keep the verified local videos/manifest in
+README and report the actual blocker; never describe local videos as Actions runs.

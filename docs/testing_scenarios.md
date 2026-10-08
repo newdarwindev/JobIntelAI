@@ -107,3 +107,13 @@ or planned scenario is not evidence of implementation.
 Promotion rule: add a meaningful executable test, verify it against a failing case,
 move the scenario to the executable table, and update the implementation plan. Do
 not create empty or permanently skipped test functions for the planned table.
+
+## Mock web UI workflows
+
+The authorized UI extension has a separate acceptance contract in
+[web_ui_spec.md](web_ui_spec.md) and ID map in `web_ui_workflows.json`. UI01–UI08
+exercise full registry, capture/history, evidence, matching, analytics/export,
+evaluation, failure recovery and accessible navigation journeys on desktop/mobile
+Chromium. The tests use the actual migrated API with the fixture provider. The
+README video manifest records executed successful attempts and their source hash.
+UI projections do not promote planned live/persisted V scenarios to complete.

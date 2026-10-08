@@ -11,6 +11,60 @@ exercise fixture extraction, normalization, matching and evaluation without keys
 Live OpenAI extraction and HTTP acquisition are explicit stubs. Fixture metrics
 demonstrate pipeline behavior; no live-model quality results are claimed.
 
+## Mock web workspace and recorded acceptance workflows
+
+The spec-driven UI exposes six screens: overview, CSV/JSON job registry, immutable
+source/evidence workbench, candidate evidence matching, corpus analytics/exports,
+and fixture evaluation. It uses the real API with the deterministic fixture
+provider; external acquisition and live-model calls remain explicit stubs. The
+authorized frontend scope extension and limitations are in
+[the UI acceptance specification](docs/web_ui_spec.md).
+
+After the Python install below, start the isolated synthetic sandbox:
+
+```bash
+python scripts/serve_ui.py
+# Open http://127.0.0.1:8000/ui/
+```
+
+Select **Load synthetic corpus** to process all 20 authored postings, or import a
+sample registry and walk through source capture, extraction, and matching yourself.
+The launcher migrates a disposable SQLite database before serving and deletes it
+on exit. Normal `uvicorn jobintel.api:app` also serves `/ui/` against its configured
+database, without synthetic fixture/reset endpoints. Candidate/evaluation display
+state and gap projections live in the current browser session; job history lives
+in the database. No API keys, third-party UI assets, or paid calls are needed.
+
+Run every complete workflow on desktop and mobile Chromium (Node 22+):
+
+```bash
+npm ci
+npx playwright install --with-deps chromium
+npm run test:ui
+npm run record:ui
+npm run check:ui
+```
+
+Local Playwright defaults to `.venv/bin/python`; set `UI_PYTHON=python` if using an
+activated environment elsewhere. `UI_BROWSER_PATH` can select a local Chromium
+binary. The [Actions workflow](.github/workflows/web-ui.yml) runs all journeys,
+retains reports/videos/failure traces as artifacts, and commits passing README
+videos on trusted default-branch pushes. PR/fork runs publish downloadable evidence
+without write permissions. Bot publication requires Actions write permission and
+a branch policy permitting its commit; protected branches can apply the verified
+artifact via their PR process. Recording-only bot commits on the default branch skip CI; PR updates still run the full suite.
+
+**Every UI change must update its workflow and successful recordings.** This is
+mandatory in [AGENTS.md](AGENTS.md), with a source-hash/video-integrity gate and the
+[machine-readable coverage map](docs/web_ui_workflows.json). Videos below are linked
+as files because GitHub Markdown does not reliably render inline HTML video tags.
+
+<!-- UI-RECORDINGS:START -->
+
+Verified successful recordings will be published here after the complete desktop/mobile workflow run.
+
+<!-- UI-RECORDINGS:END -->
+
 ## Architecture and evidence trace
 
 ```mermaid
@@ -134,12 +188,15 @@ bundled known content hashes; arbitrary manual text cannot be extracted yet.
 | --- | --- |
 | GET /health | DB connection + migrated schema readiness |
 | POST /jobs/import | Atomic JSON/CSV import, duplicate/conflict handling |
+| GET /jobs | Ordered registry with current snapshots and extractions |
+| GET /jobs/{id}/history | Immutable source history and extraction runs |
 | POST /jobs/{id}/snapshots | Manual text/HTML, provenance/hash |
 | POST /jobs/{id}/fetch | Explicit 501 stub if URL exists |
 | POST /jobs/{id}/extract | `{}` defaults to normalized fixture replay |
 | GET /jobs/{id} | Latest source, current requirements and evidence |
 | POST /jobs/{id}/match | Candidate payload as in `data/sample_candidate.json` |
-| GET /analytics/skills | Distinct-job n/N, type breakdown, alternatives |
+| POST /candidate/validate | Strict sourced-profile validation, no database write |
+| GET /analytics/skills | Distinct-job n/N, type breakdown, alternatives; optional `applied=true/false` slice |
 | POST /evaluate | Two fixture configurations, persisted evaluation report |
 
 OpenAPI schemas are available at `/docs` when running locally. Error contracts and
@@ -213,7 +270,8 @@ See [privacy and copyright](docs/privacy_and_copyright.md).
 
 Next: grounded metadata/experience obligation → bounded HTTP adapter → one structured
 OpenAI adapter → candidate predicates/gap analytics → independently reviewed live
-experiments. No frontend, SaaS, automatic applications or agent orchestration in v1.
+experiments. The mock UI is an explicitly authorized scope extension; SaaS,
+automatic applications and agent orchestration remain outside v1.
 
 - [Full specification](docs/specification.md)
 - [Acceptance scenarios](docs/testing_scenarios.md): executable vs planned
