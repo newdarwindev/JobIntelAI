@@ -52,6 +52,7 @@ def execute(argv):
     parser.add_argument("--kind", choices=["skills", "requirements", "matches", "evidence"])
     parser.add_argument("--output", type=Path, default=Path("results/generated"))
     parser.add_argument("--applied", choices=["true", "false"])
+    parser.add_argument("--remote", choices=["true", "false"])
     parser.add_argument("--job-id", action="append", default=[])
     parser.add_argument("--run-id", action="append", default=[])
     parser.add_argument("--match-run-id", action="append", default=[])
@@ -68,6 +69,7 @@ def execute(argv):
         profile_id=args.profile_id,
         profile_revision_id=args.revision_id,
         applied=None if args.applied is None else args.applied == "true",
+        remote=None if args.remote is None else args.remote == "true",
         legacy_skills_csv=args.kind is None,
     )
     stem = args.kind or "skill_counts"

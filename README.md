@@ -28,8 +28,10 @@ sample registry and walk through source capture, extraction, and matching yourse
 The launcher migrates a disposable SQLite database before serving and deletes it
 on exit. Normal `uvicorn jobintel.api:app` also serves `/ui/` against its configured
 database, without synthetic fixture/reset endpoints. Candidate/evaluation display
-state and gap projections live in the current browser session; job history lives
-in the database. No API keys, third-party UI assets, or paid calls are needed.
+state lives in the current browser session. Corpus categories, gaps and coverage are
+computed from saved source/extraction/match outcomes and survive refresh for the
+explicitly selected candidate revision. No API keys, third-party UI assets, or paid
+calls are needed.
 
 Run every complete workflow on desktop and mobile Chromium (Node 22+):
 
@@ -58,8 +60,8 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **16/16**, recorded 2026-10-08.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37841598776) · commit `7f6bb94060be115392a91da850c0db0e564992a3`.
-Source content SHA-256: `64df7a5899c3a507c0bab9c9107d8a8732538add51dc097e1740da285ad4c7a0`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `68733a323de171ab19ad36401b3f682928fa2ffb988afd2d323f83cf85ff5d36`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -257,7 +259,7 @@ The demo uses authored offline HTTP/DNS responses and performs no URL crawling.
 | GET /jobs/{id} | Latest source, current requirements and evidence |
 | POST /jobs/{id}/match | Candidate payload as in `data/sample_candidate.json` |
 | POST /candidate/validate | Strict sourced-profile validation, no database write |
-| GET /analytics/skills | Distinct-job n/N, type breakdown, alternatives; optional `applied=true/false` slice |
+| GET /analytics/skills | Saved-source n/N, categories, candidate gaps, coverage; applied/remote slices |
 | POST /exports | Shared JSON/CSV counts, requirements, evidence and saved-revision matches |
 | POST /evaluate | Two fixture configurations, persisted evaluation report |
 

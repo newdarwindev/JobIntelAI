@@ -12,6 +12,18 @@ evidence in issue #9.
 
 ## Regression references
 
+V27–V30 regressions in `unit/test_corpus_analytics.py` and
+`integration/test_corpus_analytics_boundary.py` cover mixed failed/pending/empty/stale
+sources, duplicate mentions/categories, ANY/ALL, distinct four-state groups, explicit
+revisions and repeated source/extraction/match runs. They verify exact API/CLI JSON,
+applied and grounded work-mode slices, null zero denominators, constant query counts
+on SQLite/PostgreSQL, migration preservation and outer rollback after savepoint
+success. UI05 verifies saved categories/gaps after refresh, two revisions, typed
+remote slices, failure accounting, stale exclusion and shared CSV selection. Positive
+response is not inferred from free-form status; its optional typed import extension
+is outside this slice. The [analytics contract](analytics.md) defines every bucket
+and overlap; no unavailable historical failure counts are invented.
+
 V02–V07/V09–V11 regressions in `unit/test_acquisition.py`,
 `unit/test_fetch_transport.py`, `unit/test_acquisition_cleaning.py` and
 `integration/test_acquisition_boundary.py` use authored fake HTTP/DNS/socket responses.

@@ -71,6 +71,7 @@ class AcquisitionAttempt(Base):
     fetch_id: Mapped[str] = mapped_column(String(32), index=True)
     sequence: Mapped[int] = mapped_column(Integer)
     created_at: Mapped[str] = mapped_column(String(40), default=now)
+    recorded_at: Mapped[str | None] = mapped_column(String(40), nullable=True, default=now)
     original_url: Mapped[str] = mapped_column(Text)
     requested_url: Mapped[str] = mapped_column(Text)
     final_url: Mapped[str] = mapped_column(Text)
@@ -79,6 +80,19 @@ class AcquisitionAttempt(Base):
     error_code: Mapped[str | None] = mapped_column(String(50), nullable=True)
     retryable: Mapped[bool] = mapped_column(Boolean)
     payload: Mapped[dict] = mapped_column(JSON)
+
+
+class ExtractionAttempt(Base):
+    __tablename__ = "extraction_attempts"
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
+    job_id: Mapped[str] = mapped_column(ForeignKey("jobs.job_id"), index=True)
+    snapshot_id: Mapped[str] = mapped_column(ForeignKey("posting_snapshots.id"), index=True)
+    run_id: Mapped[str | None] = mapped_column(ForeignKey("extraction_runs.id"), nullable=True)
+    created_at: Mapped[str] = mapped_column(String(40), default=now)
+    configuration: Mapped[str] = mapped_column(String(100))
+    status: Mapped[str] = mapped_column(String(20))
+    error_code: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    retryable: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
 class RequirementRow(Base):
@@ -142,5 +156,10 @@ def session_factory(url: str):
         @event.listens_for(engine, "connect")
         def foreign_keys(connection, _):
             connection.execute("PRAGMA foreign_keys=ON")
+            connection.isolation_level = None
+
+        @event.listens_for(engine, "begin")
+        def explicit_begin(connection):
+            connection.exec_driver_sql("BEGIN")
 
     return sessionmaker(engine, expire_on_commit=False)

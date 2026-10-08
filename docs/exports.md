@@ -98,4 +98,8 @@ V31–V32 regressions: `tests/integration/test_exports.py` and
 `tests/unit/test_export_csv.py`. UI03/UI04/UI05 verify actual downloads through this
 contract; UI05 checks persisted selection after refresh, API equivalence, slicing,
 formula handling and explicit stale-run history. These exports do not complete the
-separate remote/positive-response analytics acceptance in issue #6.
+analytics coverage contract. Remote filtering now uses grounded selected-source
+work-mode metadata in both JSON/CSV and CLI `--remote true|false`; unknown metadata
+is excluded. `remote_slice` is included in CSV provenance. The optional positive
+response extension needs an explicitly typed import field and is not inferred from
+free-form status. See [the shared analytics contract](analytics.md).
