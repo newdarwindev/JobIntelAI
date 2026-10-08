@@ -160,13 +160,14 @@ test('UI07 | Provider and connection failure recovery',async({page,request})=>{
   await click(page,'Extract requirements');await expect(notice(page)).toContainText('503:');await expect(page.getByRole('button',{name:'Extract requirements',exact:true})).toBeEnabled();
   await page.unroute('**/jobs/SYN-01/extract');await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
   await page.route('**/jobs/SYN-01/extract',route=>route.abort('connectionrefused'));await click(page,'Extract requirements');await expect(notice(page)).toContainText('Connection unavailable');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();await page.unroute('**/jobs/SYN-01/extract');
+  const latestSaved=await (await request.get('/jobs/SYN-01')).json();
   // Typed live-adapter failures use authored API errors and preserve the last saved run.
   for(const [httpStatus,code,retryable] of [[504,'timeout',true],[502,'quota',false],[422,'refusal',false]]){
     await page.route('**/jobs/SYN-01/extract',route=>route.fulfill({status:httpStatus,json:{detail:{code,retryable,message:`extraction provider: ${code}`}}}));
     await click(page,'Extract requirements');await expect(notice(page)).toContainText(`${httpStatus}: extraction provider: ${code}`);
     await expect(notice(page)).toContainText(retryable?'Retry is available':'Review the failure before retrying');
     await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
-    expect((await (await request.get('/jobs/SYN-01')).json()).extraction.run_id).toBe(original.extraction.run_id);
+    expect((await (await request.get('/jobs/SYN-01')).json()).extraction.run_id).toBe(latestSaved.extraction.run_id);
     await page.unroute('**/jobs/SYN-01/extract');
   }
   const history=await (await request.get('/jobs/SYN-01/history')).json();expect(history.snapshots.some(s=>s.runs.some(r=>r.run_id===original.extraction.run_id))).toBeTruthy();
