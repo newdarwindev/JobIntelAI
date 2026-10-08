@@ -103,7 +103,7 @@ test('UI03 | Grounded extraction, aliases and operators',async({page})=>{
   await page.goto('/ui/?read-fixture=unicode#workbench?job=UI-UNICODE');await expect(page.getByLabel('Selected posting')).toHaveValue('UI-UNICODE');await click(page,'Highlight source quote');await expect(page.locator('mark')).toHaveText('Python is required.');
 });
 
-test('UI04 | Candidate evidence and four matching states',async({page})=>{
+test('UI04 | Candidate evidence and four matching states',async({page,request})=>{
   await nav(page,'Overview');await click(page,'Load synthetic corpus');
   await saveProfile(page,await candidate());await page.getByLabel('Selected posting').selectOption('SYN-01');await click(page,'Match selected posting');
   await expect(page.locator('.status-totals')).toContainText('COVERED 1');await expect(page.locator('.status-totals')).toContainText('UNKNOWN 1');
@@ -120,6 +120,18 @@ test('UI04 | Candidate evidence and four matching states',async({page})=>{
   await page.getByLabel('Candidate JSON',{exact:true}).fill('{"profile_id":"bad","evidence":[{"skill":"Python"}]}');await click(page,'Validate & save profile');await expect(notice(page)).toContainText('422:');
   await saveProfile(page,await candidate());await click(page,'Match extracted corpus');await expect(notice(page)).toContainText('Matched 20');
   const matched=JSON.parse(await download(page,'Export matches JSON'));expect(matched.snapshot_id).toBeTruthy();expect(matched.run_id).toBeTruthy();expect(matched.matches[0].requirement_id).toBeTruthy();
+  expect(matched.match_run_id).toBeTruthy();expect(matched.profile_revision_id).toBeTruthy();
+  const originalRevision=matched.profile_revision_id;
+  const dated={...(await candidate()),tenure_complete:true,tenure:[{skill:'Python',start:'2020-01-01',end:'2024-01-01',source:'synthetic://dated-ui',quote:'Authored Python experience from 2020 to 2024.'}],eligibility:[{kind:'location',value:'Georgia',status:'confirmed',observed_on:'2020-01-01',source:'synthetic://location-ui',quote:'Authored current Georgia location statement.'}]};
+  await saveProfile(page,dated);await page.getByLabel('Selected posting').selectOption('SYN-05');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('COVERED 1');
+  const datedMatch=JSON.parse(await download(page,'Export matches JSON'));expect(datedMatch.profile_revision_id).not.toBe(originalRevision);
+  await page.reload();await expect(page.getByLabel('Saved revision')).toHaveValue(datedMatch.profile_revision_id);await expect(page.getByLabel('Candidate JSON',{exact:true})).toContainText('synthetic://dated-ui');
+  await page.getByLabel('Selected posting').selectOption('SYN-05');await click(page,'Match selected posting');const reloaded=JSON.parse(await download(page,'Export matches JSON'));expect(reloaded.profile_revision_id).toBe(datedMatch.profile_revision_id);expect(reloaded.match_run_id).not.toBe(datedMatch.match_run_id);expect(reloaded.matches).toEqual(datedMatch.matches);
+  expect(await (await request.get(`/match-runs/${datedMatch.match_run_id}`)).json()).toMatchObject({profile_revision_id:datedMatch.profile_revision_id,snapshot_id:datedMatch.snapshot_id});
+  await page.getByLabel('Saved revision').selectOption(originalRevision);await expect(notice(page)).toContainText('Saved revision selected');await expect(page.getByText('No current match',{exact:true})).toBeVisible();await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('UNKNOWN 1');
+  await page.getByLabel('Saved revision').selectOption(datedMatch.profile_revision_id);await expect(notice(page)).toContainText('Saved revision selected');await page.getByLabel('Selected posting').selectOption('SYN-10');await click(page,'Match selected posting');await expect(page.getByRole('heading',{name:'Location & eligibility'})).toBeVisible();await expect(page.locator('main')).toContainText('Authored current Georgia location statement.');
+  const located=JSON.parse(await download(page,'Export matches JSON'));expect(located.eligibility[0].status).toBe('COVERED');
+
 });
 
 test('UI05 | Corpus slices, gaps and safe provenance exports',async({page,request})=>{

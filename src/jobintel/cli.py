@@ -22,6 +22,9 @@ def main(argv=None, *, transport=None):
     except ProviderError as error:
         print(json.dumps(error.detail()), file=sys.stderr)
         raise SystemExit(1) from None
+    except KeyError:
+        print("job, candidate revision or match run not found", file=sys.stderr)
+        raise SystemExit(2) from None
     except ValueError as error:
         print(str(error), file=sys.stderr)
         raise SystemExit(2) from None
@@ -32,6 +35,11 @@ def execute(argv, transport):
         from jobintel.experiment_cli import main as experiment_main
 
         raise SystemExit(experiment_main(argv[1:]))
+    if argv and argv[0] in {"candidate-import", "candidate-revisions", "match", "match-run"}:
+        from jobintel.candidate_cli import execute as candidate_execute
+
+        candidate_execute(argv)
+        return
     parser = argparse.ArgumentParser(
         description="JobIntel extraction and offline demo; run migrations first"
     )

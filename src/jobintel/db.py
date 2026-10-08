@@ -69,9 +69,24 @@ class CandidateEvidenceRow(Base):
     payload: Mapped[dict] = mapped_column(JSON)
 
 
+class MatchRun(Base):
+    __tablename__ = "match_runs"
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
+    extraction_run_id: Mapped[str] = mapped_column(ForeignKey("extraction_runs.id"), index=True)
+    snapshot_id: Mapped[str] = mapped_column(ForeignKey("posting_snapshots.id"))
+    profile_revision_id: Mapped[str] = mapped_column(
+        ForeignKey("candidate_evidence.id"), index=True
+    )
+    created_at: Mapped[str] = mapped_column(String(40), default=now)
+    payload: Mapped[dict] = mapped_column(JSON)
+
+
 class MatchRow(Base):
     __tablename__ = "matches"
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
+    match_run_id: Mapped[str | None] = mapped_column(
+        ForeignKey("match_runs.id"), index=True, nullable=True
+    )
     requirement_id: Mapped[str] = mapped_column(ForeignKey("requirements.id"), index=True)
     candidate_evidence_id: Mapped[str] = mapped_column(ForeignKey("candidate_evidence.id"))
     created_at: Mapped[str] = mapped_column(String(40), default=now)

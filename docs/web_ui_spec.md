@@ -14,8 +14,10 @@ API/services with authored synthetic data. Domain logic is not replaced by stati
 success responses. Unknown fixture hashes fail explicitly. The demo launcher runs
 Alembic before serving a disposable SQLite database, binds to loopback, and removes
 the database on exit. Demo fixture/reset routes exist only with `demo=True`; the
-normal API exposes neither. Candidate profiles and gap projections are held in
-the current browser session; refreshing clears them and evaluation display state.
+normal API exposes neither. Candidate imports append immutable revisions in the local database. The browser
+stores only the explicitly selected profile/revision IDs and reloads that revision
+after refresh. Match and gap display projections and evaluation display state
+are cleared on refresh. Saved match runs remain readable by their IDs.
 Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 
 ## Required interfaces and contracts
@@ -25,7 +27,7 @@ Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 | Overview | Empty onboarding, registry/success/pending counts, complete 20-posting replay, direct navigation | UI01, UI03, UI08 |
 | Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters | UI01 |
 | Source & extraction | Manual text/HTML, URL stub/manual fallback, immutable hash/timestamp/URL, history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON | UI02, UI03, UI07 |
-| Candidate evidence | Strict sourced JSON, explicit completeness, separate capability/production axes, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked JSON export | UI04 |
+| Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked JSON export | UI04 |
 | Corpus analytics | Successful latest-source n/N, explicit pending/excluded totals, applied slices, alternative groups, distinct-job category coverage, current-profile group gaps with UNKNOWN separate, JSON and formula-safe CSV with snapshot/run/profile provenance | UI05 |
 | Evaluation lab | Select raw/normalized fixture configs, reject empty selection, frozen 20-posting comparison, precision/recall numerators/denominators, type/evidence denominators, null unavailable metrics, elapsed replay time, run ID and JSON export | UI06 |
 
@@ -93,3 +95,12 @@ current. These error envelopes are authored browser mocks; adapter and atomic
 persistence contracts are exercised with fake transports in backend tests.
 The synthetic launcher remains fixture-only. OpenAI is selected explicitly through
 API/CLI setup; paid live execution and model quality need separate authorization.
+
+UI04 saves multiple synthetic revisions, refreshes the page, re-matches the selected
+revision, selects an older revision without overwriting it, and inspects the persisted
+match-run identity. Dated tenure satisfies the years predicate; location evidence is
+shown with the job quote and candidate source. Version predicates remain unsupported.
+Revision selection clears current projections. Matching sends the selected revision
+ID and inspected extraction ID; stale extraction selections fail with 409 and preserve
+history. Missing saved revisions are reported; the browser never silently selects a
+newest revision after a saved selection disappears.

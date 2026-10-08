@@ -1,3 +1,4 @@
+from datetime import date
 from enum import StrEnum
 from typing import Annotated, Literal
 
@@ -142,17 +143,64 @@ class SnapshotInput(StrictModel):
 
 
 class CandidateEvidence(StrictModel):
-    skill: str = Field(min_length=1)
+    skill: str = Field(min_length=1, pattern=r"\S")
     current_capability: Literal["strong", "basic", "none", "unknown"]
     production_evidence: Literal["confirmed", "limited", "none", "unknown"]
-    source: str = Field(min_length=1)
-    quote: str = Field(min_length=1)
+    source: str = Field(min_length=1, pattern=r"\S")
+    quote: str = Field(min_length=1, pattern=r"\S")
+
+
+class TenureEvidence(StrictModel):
+    skill: str = Field(min_length=1, pattern=r"\S")
+    kind: Literal["experience", "production"] = "experience"
+    status: Literal["confirmed", "none", "unknown"] = "confirmed"
+    start: date | None = None
+    end: date | None = None
+    source: str = Field(min_length=1, pattern=r"\S")
+    quote: str = Field(min_length=1, pattern=r"\S")
+
+    @model_validator(mode="after")
+    def dates(self):
+        if self.start and self.end and self.end <= self.start:
+            raise ValueError("tenure end must follow start (end exclusive)")
+        if self.status != "confirmed" and (self.start or self.end):
+            raise ValueError("only confirmed tenure can carry dates")
+        return self
+
+
+class EligibilityEvidence(StrictModel):
+    kind: Literal["location", "work_authorization", "travel", "residency", "attendance"]
+    value: str = Field(min_length=1, pattern=r"\S")
+    status: Literal["confirmed", "denied", "unknown"]
+    observed_on: date
+    valid_until: date | None = None
+    source: str = Field(min_length=1, pattern=r"\S")
+    quote: str = Field(min_length=1, pattern=r"\S")
+
+    @model_validator(mode="after")
+    def dates(self):
+        if self.valid_until and self.valid_until < self.observed_on:
+            raise ValueError("eligibility expiry precedes observation")
+        return self
 
 
 class CandidateProfile(StrictModel):
-    profile_id: str = Field(min_length=1)
-    complete: bool = False
+    profile_id: str = Field(min_length=1, max_length=100, pattern=r"\S")
+    complete: bool = Field(default=False, strict=True)
     evidence: list[CandidateEvidence]
+    tenure: list[TenureEvidence] = Field(default_factory=list)
+    tenure_complete: bool = Field(default=False, strict=True)
+    eligibility: list[EligibilityEvidence] = Field(default_factory=list)
+    eligibility_complete: list[
+        Literal["location", "work_authorization", "travel", "residency", "attendance"]
+    ] = Field(default_factory=list)
+
+
+class MatchSelection(StrictModel):
+    profile_id: str = Field(min_length=1, max_length=100)
+    profile_revision_id: str = Field(min_length=1, max_length=32)
+    expected_run_id: str = Field(min_length=1, max_length=32)
+    as_of: date = Field(default_factory=date.today)
 
 
 class ExtractInput(StrictModel):

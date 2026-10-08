@@ -66,6 +66,13 @@ configuration, API/CLI parity, migrated SQLite/PostgreSQL persistence and atomic
 failure. UI03 exports identity and UI07 verifies typed errors and preserved runs.
 Paid execution and measured live semantic quality belong to issue #9.
 
+V24–V26 regressions are in `unit/test_candidate_predicates.py` and
+`integration/test_candidate_revisions.py`: inclusive years/ranges, merged overlapping
+periods, missing dates, source contradictions, production/current capability separation,
+exact-scope eligibility and dated validity, immutable revision reuse, stale extraction
+selection, migration preservation and atomic rollback on SQLite/PostgreSQL. UI04 saves,
+reloads, selects and re-matches synthetic revisions with match-run provenance.
+
 ## Implementation acceptance in GitHub issues
 
 | Issue | Acceptance area | Original scenario IDs |
