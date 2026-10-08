@@ -44,6 +44,11 @@ def number(value: str) -> float:
     return float(NUMBER_WORDS[value]) if value in NUMBER_WORDS else float(value)
 
 
+def statements(quote: str) -> list[str]:
+    # Clause boundaries must not split numeric years or software versions.
+    return re.split(r"(?<!\d)[.;\n](?!\d)", quote)
+
+
 def validate_experience(requirement) -> None:
     quote = requirement.evidence.quote
     years = list(YEARS.finditer(quote.casefold()))
@@ -59,22 +64,22 @@ def validate_experience(requirement) -> None:
         ):
             raise ValueError("years predicate is not explicit in requirement evidence")
     if requirement.experience_obligation != Obligation.UNKNOWN:
-        statements = [s for s in re.split(r"[.\n]", quote) if "experience" in s.casefold()]
-        if not statements or {obligation(s) for s in statements} != {
-            requirement.experience_obligation
-        }:
+        clauses = [s for s in statements(quote) if "experience" in s.casefold()]
+        if requirement.years_required is not None:
+            clauses = [s for s in clauses if YEARS.search(s)]
+        if not clauses or {obligation(s) for s in clauses} != {requirement.experience_obligation}:
             raise ValueError("experience obligation is not explicit in source evidence")
     production = requirement.explicit_production_required
     if production is not None or requirement.production_obligation != Obligation.UNKNOWN:
-        statements = [s for s in re.split(r"[.\n]", quote) if "production" in s.casefold()]
-        observed = {obligation(s) for s in statements}
+        clauses = [s for s in statements(quote) if "production" in s.casefold()]
+        observed = {obligation(s) for s in clauses}
         expected = requirement.production_obligation
-        if not statements or observed != {expected}:
+        if not clauses or observed != {expected}:
             raise ValueError("production obligation is not explicit in source evidence")
         if expected != Obligation.UNKNOWN and production != (expected == Obligation.MUST):
             raise ValueError("production preference cannot be a mandatory production predicate")
         if expected == Obligation.UNKNOWN and (
-            production is not False or not any("not required" in s.casefold() for s in statements)
+            production is not False or not any("not required" in s.casefold() for s in clauses)
         ):
             raise ValueError("unknown production predicate must remain null")
 

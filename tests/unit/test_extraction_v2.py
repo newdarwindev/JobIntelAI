@@ -162,6 +162,19 @@ def test_v21_upper_bound_is_not_a_minimum():
         validate_grounding(quote, Extraction(requirements=[row]))
 
 
+@pytest.mark.parametrize("minimum", [3, 3.5])
+def test_v21_mandatory_years_and_preferred_production_remain_independent(minimum):
+    quote = f"{minimum} years of Python experience is required; production experience is preferred."
+    row = requirement(
+        quote,
+        years_required={"minimum": minimum},
+        experience_obligation="MUST",
+        production_obligation="PREFERRED",
+        explicit_production_required=False,
+    )
+    validate_grounding(quote, Extraction(requirements=[row]))
+
+
 def version_requirement(phrase="Python 3.11+", product="Python", source_product="Python"):
     quote = phrase + " is required."
     return requirement(
