@@ -61,7 +61,20 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 <!-- UI-RECORDINGS:START -->
 
-Verified successful recordings will be published here after the complete desktop/mobile workflow run.
+Successful browser attempts: **16/16**, recorded 2026-10-08.
+Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37773290905) · commit `ce203702ace55cc607cbd0371ebcafb409c3ab3e`.
+Source content SHA-256: `512a14abd1fa928e4db499da073fdaac330ba1b195468b9306b922cbabc04e1a`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+
+| Complete workflow | Desktop Chromium | Mobile Chromium |
+| --- | --- | --- |
+| UI01 · Atomic registry import and discovery | [Watch](docs/ui-recordings/UI01-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI01-mobile-chromium.webm) |
+| UI02 · Source capture, URL fallback and immutable history | [Watch](docs/ui-recordings/UI02-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI02-mobile-chromium.webm) |
+| UI03 · Grounded extraction, aliases and operators | [Watch](docs/ui-recordings/UI03-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI03-mobile-chromium.webm) |
+| UI04 · Candidate evidence and four matching states | [Watch](docs/ui-recordings/UI04-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI04-mobile-chromium.webm) |
+| UI05 · Corpus slices, gaps and safe provenance exports | [Watch](docs/ui-recordings/UI05-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI05-mobile-chromium.webm) |
+| UI06 · Fixture evaluation and honest unavailable metrics | [Watch](docs/ui-recordings/UI06-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI06-mobile-chromium.webm) |
+| UI07 · Provider and connection failure recovery | [Watch](docs/ui-recordings/UI07-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI07-mobile-chromium.webm) |
+| UI08 · Keyboard navigation, responsive layout and inert input | [Watch](docs/ui-recordings/UI08-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI08-mobile-chromium.webm) |
 
 <!-- UI-RECORDINGS:END -->
 

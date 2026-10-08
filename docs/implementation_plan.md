@@ -29,8 +29,9 @@ Portfolio complete: every required release gate in `specification.md` §14 plus
 measured live results. Frontend, auth, browser, deployment and additional providers
 remain optional. The follow-on project in the brief is out of scope.
 
-Current validation: 34 tests passed including PostgreSQL; offline Docker and a
-functional API trace passed. [Validation details](validation.md) record limitations.
+Current validation: 38 Python tests passed including PostgreSQL and 16 desktop/mobile
+browser journeys passed. GitHub Actions verified quality, both Python versions,
+Docker/API smoke and browser recordings. [Validation details](validation.md) record limitations.
 
 ## Authorized mock UI extension
 
