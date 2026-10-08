@@ -1,6 +1,7 @@
 import argparse
 import csv
 import json
+import sys
 from pathlib import Path
 
 from jobintel.config import database_url, fixture_root
@@ -13,6 +14,10 @@ from jobintel.service import Service
 
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "experiment":
+        from jobintel.experiment_cli import main as experiment_main
+
+        raise SystemExit(experiment_main(sys.argv[2:]))
     parser = argparse.ArgumentParser(
         description="Offline synthetic JobIntel demo; run migrations first"
     )

@@ -19,3 +19,7 @@ evidence and duplication to show that the evaluator can detect failures.
 Independent labels, additional metrics and evaluation provenance are specified in
 [issue #8](https://github.com/newdarwindev/JobIntelAI/issues/8). Actual authorized live
 comparisons and publication requirements are in [issue #9](https://github.com/newdarwindev/JobIntelAI/issues/9).
+
+The [frozen experiment command](experiments.md) checkpoints fake A/B/C runs,
+checks budgets and rescores saved predictions without provider calls. Its fake
+reports cannot substitute for independently reviewed live measurements.

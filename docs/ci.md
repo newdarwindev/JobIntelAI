@@ -72,3 +72,9 @@ job validates the ordinary online Dockerfile and Compose path.
 Required new regressions and backend result publication are tracked in
 [issue #10](https://github.com/newdarwindev/JobIntelAI/issues/10). Live experiment evidence is tracked separately in
 [issue #9](https://github.com/newdarwindev/JobIntelAI/issues/9); ordinary CI uses no paid calls.
+
+The Python matrix uploads `backend-evidence-python-*` artifacts on every outcome:
+JUnit, command diagnostics and JSON pass/fail/error/skip counts with commit/config
+provenance. `scripts/check.py --junitxml path.xml` emits the same local test result.
+The CLI smoke also freezes, runs and rescores a complete fake experiment, checking
+exact saved-score reproduction without another provider call.

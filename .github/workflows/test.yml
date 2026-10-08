@@ -68,7 +68,28 @@ jobs:
       - name: Install pinned dependencies
         run: python -m pip install -c requirements.lock.txt -e '.[dev]'
       - name: Tests, migrations, fixture drift, CLI smoke and distribution build
-        run: python scripts/check.py --require-postgres
+        run: |
+          mkdir -p work/ci
+          if python scripts/check.py --require-postgres --junitxml work/ci/junit.xml >work/ci/check.log 2>&1; then
+            result=0
+          else
+            result=$?
+          fi
+          cat work/ci/check.log
+          exit "$result"
+      - name: Summarize actual test counts and provenance
+        if: always()
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+        run: python scripts/summarize_tests.py --junit work/ci/junit.xml --output work/ci/summary.json
+      - name: Upload machine-readable results and failure diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-evidence-python-${{ matrix.python-version }}-${{ github.run_id }}
+          path: work/ci/
+          if-no-files-found: error
+          retention-days: 30
 
   container:
     name: Docker Compose / API smoke

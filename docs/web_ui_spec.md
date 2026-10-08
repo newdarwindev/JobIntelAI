@@ -29,6 +29,11 @@ Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 | Corpus analytics | Successful latest-source n/N, explicit pending/excluded totals, applied slices, alternative groups, distinct-job category coverage, current-profile group gaps with UNKNOWN separate, JSON and formula-safe CSV with snapshot/run/profile provenance | UI05 |
 | Evaluation lab | Select raw/normalized fixture configs, reject empty selection, frozen 20-posting comparison, precision/recall numerators/denominators, type/evidence denominators, null unavailable metrics, elapsed replay time, run ID and JSON export | UI06 |
 
+UI06 must identify exported results as fixture replay rather than live model
+quality. The separate `jobintel experiment` CLI preserves `/evaluate` and cannot
+enable paid browser calls. The journey checks the exported mode and null usage,
+cost, semantic and abstention metrics.
+
 All screens require visible busy/error/empty states, labelled controls, keyboard
 access, responsive layouts, deep links to postings, and escaped untrusted content.
 Failing mutations preserve the source/prior run, enable retry, and never show a

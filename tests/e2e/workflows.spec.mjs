@@ -125,7 +125,7 @@ test('UI06 | Fixture evaluation and honest unavailable metrics',async({page})=>{
   await nav(page,'Evaluation lab');await page.getByRole('checkbox',{name:'Raw aliases',exact:true}).uncheck();await page.getByRole('checkbox',{name:'Deterministic normalization',exact:true}).uncheck();await click(page,'Run fixture evaluation');await expect(notice(page)).toContainText('Select at least one');
   await page.getByRole('checkbox',{name:'Raw aliases',exact:true}).check();await page.getByRole('checkbox',{name:'Deterministic normalization',exact:true}).check();await click(page,'Run fixture evaluation');
   await expect(page.locator('main')).toContainText('18/22');await expect(page.locator('main')).toContainText('22/22');await expect(page.locator('main')).toContainText('Tokens: Unavailable');
-  const report=JSON.parse(await download(page,'Export evaluation JSON'));expect(report.dataset_size).toBe(20);expect(report.results).toHaveLength(2);
+  const report=JSON.parse(await download(page,'Export evaluation JSON'));expect(report.dataset_size).toBe(20);expect(report.results).toHaveLength(2);expect(report.mode).toContain('not live LLM quality');
   for(const r of report.results){expect(r.tokens).toBeNull();expect(r.estimated_cost).toBeNull();expect(r.metrics.semantic_hallucination_rate).toBeNull();expect(r.metrics.abstention_quality).toBeNull();}
   await page.getByRole('checkbox',{name:'Raw aliases',exact:true}).uncheck();await click(page,'Run fixture evaluation');const single=JSON.parse(await download(page,'Export evaluation JSON'));expect(single.results).toHaveLength(1);expect(single.results[0].configuration).toBe('fixture_normalized');
 });

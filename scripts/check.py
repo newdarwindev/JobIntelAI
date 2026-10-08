@@ -57,6 +57,7 @@ def smoke(environment, output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--require-postgres", action="store_true")
+    parser.add_argument("--junitxml", type=Path)
     args = parser.parse_args()
     if args.require_postgres and not os.getenv("TEST_DATABASE_URL", "").startswith("postgresql"):
         raise SystemExit(
@@ -66,7 +67,8 @@ def main():
     run(sys.executable, "-m", "ruff", "format", "--check", ".")
     run(sys.executable, "-m", "pip", "check")
     run(sys.executable, "scripts/check_fixtures.py")
-    run(sys.executable, "-m", "pytest", "-q", "--tb=short")
+    pytest_args = ["--junitxml", str(args.junitxml)] if args.junitxml else []
+    run(sys.executable, "-m", "pytest", "-q", "--tb=short", *pytest_args)
     if args.require_postgres:
         postgres_environment = {
             **os.environ,
@@ -82,8 +84,29 @@ def main():
             "JOBINTEL_PROVIDER": "fixture",
         }
         smoke(environment, temporary / "results")
+        experiment_smoke(environment, temporary)
         run(sys.executable, "-m", "build", "--outdir", str(temporary / "dist"))
     print("Python quality gates passed.")
+
+
+def experiment_smoke(environment, temporary):
+    corpus = temporary / "corpus.json"
+    report = temporary / "experiment"
+    reproduced = temporary / "reproduced.json"
+    common = [sys.executable, "-m", "jobintel.cli", "experiment"]
+    run(*common, "freeze", "--output", str(corpus), environment=environment)
+    run(*common, "run", "--corpus", str(corpus), "--output", str(report), environment=environment)
+    run(
+        *common,
+        "rescore",
+        "--report",
+        str(report / "report.json"),
+        "--output",
+        str(reproduced),
+        environment=environment,
+    )
+    if reproduced.read_bytes() != (report / "scores.json").read_bytes():
+        raise SystemExit("Saved experiment scores are not reproducible.")
 
 
 if __name__ == "__main__":
