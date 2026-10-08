@@ -12,6 +12,7 @@ class ExportInput(StrictModel):
     format: Literal["json", "csv"] = "json"
     historical: bool = False
     applied: bool | None = None
+    remote: bool | None = None
     job_ids: list[str] = Field(default_factory=list)
     run_ids: list[str] = Field(default_factory=list)
     match_run_ids: list[str] = Field(default_factory=list)

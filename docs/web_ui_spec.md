@@ -16,7 +16,7 @@ Alembic before serving a disposable SQLite database, binds to loopback, and remo
 the database on exit. Demo fixture/reset routes exist only with `demo=True`; the
 normal API exposes neither. Candidate imports append immutable revisions in the local database. The browser
 stores only the explicitly selected profile/revision IDs and reloads that revision
-after refresh. Match and gap display projections and evaluation display state
+after refresh. Individual match display cards and evaluation display state
 are cleared on refresh. Saved match runs remain readable by their IDs.
 Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 
@@ -28,7 +28,7 @@ Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 | Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters | UI01 |
 | Source & extraction | Manual text/HTML, bounded URL acquisition/manual recovery, immutable hash/timestamp/URL, source/extraction/attempt history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON | UI02, UI03, UI07 |
 | Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export | UI04 |
-| Corpus analytics | Successful latest-source n/N, explicit pending/excluded totals, applied slices, alternative groups, distinct-job category coverage, current-profile group gaps with UNKNOWN separate, JSON and formula-safe CSV with snapshot/run/profile provenance | UI05 |
+| Corpus analytics | Saved latest-source n/N, mutually exclusive coverage and explicit failure overlaps, applied/grounded remote slices, alternatives, distinct-job categories and revision-selected group gaps after refresh, JSON and formula-safe CSV with source/run/profile provenance | UI05 |
 | Evaluation lab | Select raw/normalized fixture configs, reject empty selection, frozen 20-posting comparison, precision/recall numerators/denominators, type/evidence denominators, null unavailable metrics, elapsed replay time, run ID and JSON export | UI06 |
 
 UI06 must identify exported results as fixture replay rather than live model
@@ -65,19 +65,29 @@ the normal API. The normal API uses the pinned HTTP adapter described in
 edge cases are backend fake-transport regressions, not claims of real URL access
 from the browser videos. Rendering and anti-bot bypass are excluded.
 
-Category coverage and candidate gaps are **UI session projections** of real latest
-extractions/matches, not newly persisted backend analytics. Gap denominator is
-matched jobs in the current slice, with one count per job/group/state. Category
-denominator is successfully extracted jobs in that slice. These do not promote
-planned backend V27/V30 to complete. Downloads use the shared backend export
-service and saved candidate revision, including after refresh; the displayed gap
-projection still uses current session matches. Applied slicing and formula-safe
-exports are implemented; remote/positive-response slicing and live experiments are not.
+Category coverage and candidate gaps come from shared persisted backend selection,
+including after refresh. The gap denominator is jobs with an eligible saved match
+for the explicit revision/current extraction, distinct from successful-extraction N.
+Empty successes count in N and matching an empty extraction counts as a matched job.
+Group identity retains type, ANY/ALL, obligations, years and versions; UNKNOWN stays
+separate from MISSING. UI05 changes candidate revisions without overwriting either
+revision's matches, and verifies identical refreshed backend/download JSON.
+
+UI05 displays mutually exclusive source/extraction coverage buckets, unmatched jobs,
+excluded registry totals and explicit overlapping latest-attempt failure counts.
+It checks authored acquisition/extraction failures and source-change staleness.
+Applied and grounded remote/hybrid/onsite slices recompute every denominator and
+exclude unknown metadata. Corpus JSON uses `/analytics/skills`; CSV still uses the
+shared export service with identical slice/revision selection. Positive-response
+slicing needs a future typed registry field and is outside this optional extension;
+free-form status/notes never imply a positive response. Live experiments are separate.
+See [the analytics contract](analytics.md) for query and bucket semantics.
 
 UI03 compares evidence JSON with the shared API and requires persisted requirement
 IDs. UI04 downloads formula-safe match CSV and verifies equality with the API for
 the selected saved revision. UI05 compares corpus JSON and skills/requirement CSV
 downloads with the shared API, verifies profile/snapshot/run and slice provenance,
+and checks that a selected posting's match export is independent of corpus slices,
 retains persisted match counts after refresh, and excludes stale-source extraction.
 An explicit historical run selection recovers the original source requirements.
 The [export contract](exports.md) documents JSON nulls, CSV transformations and

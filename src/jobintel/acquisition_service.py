@@ -110,6 +110,7 @@ def attempt_output(row):
         "job_id": row.job_id,
         "snapshot_id": row.snapshot_id,
         "timestamp": row.created_at,
+        "recorded_at": row.recorded_at,
         "original_url": row.original_url,
         "requested_url": row.requested_url,
         "final_url": row.final_url,

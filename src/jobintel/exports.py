@@ -9,7 +9,7 @@ from hashlib import sha256
 from sqlalchemy import func, select
 
 from jobintel import db
-from jobintel.analytics import skill_counts
+from jobintel.analytics import corpus_summaries, remote_selected, skill_counts
 from jobintel.compatibility import stored_requirement
 from jobintel.export_selection import ExportInput
 from jobintel.service import Service
@@ -17,6 +17,7 @@ from jobintel.service import Service
 SKILL_COLUMNS = ["skill", "N", "n", "must_n", "preferred_n", "experience_n", "other_n"]
 SKILL_PROVENANCE = [
     "applied_slice",
+    "remote_slice",
     "historical",
     "denominator",
     "job_ids",
@@ -74,6 +75,7 @@ REQUIREMENT_COLUMNS = [
     "N",
     "matched_jobs_N",
     "applied_slice",
+    "remote_slice",
     "historical",
     "denominator",
     "selected_profile_id",
@@ -167,6 +169,20 @@ class ExportService:
             )
         snapshots = {row.id: row for row in snapshots if row.job_id in {job.job_id for job in jobs}}
         runs = {run.id: run for run in runs if run.snapshot_id in snapshots}
+        if request.remote is not None:
+            selected_ids = {
+                snapshots[run.snapshot_id].job_id
+                for run in runs.values()
+                if remote_selected({"extraction": Service.run_output(run)}, request.remote)
+            }
+            jobs = [job for job in jobs if job.job_id in selected_ids]
+            snapshots = {k: s for k, s in snapshots.items() if s.job_id in selected_ids}
+            runs = {
+                k: r
+                for k, r in runs.items()
+                if r.snapshot_id in snapshots
+                and remote_selected({"extraction": Service.run_output(r)}, request.remote)
+            }
         if not request.match_run_ids and request.profile_revision_id:
             matches = latest_rows(
                 self.session,
@@ -394,42 +410,6 @@ def distinct_job_requirements(jobs):
     ]
 
 
-def corpus_summaries(jobs, rows, matched_N):
-    categories = {}
-    gaps = {}
-    for job in jobs:
-        for category in {r["category"] for r in job["extraction"]["requirements"]}:
-            categories.setdefault(category, set()).add(job["job_id"])
-    for row in rows:
-        if row["match_status"] is None:
-            continue
-        key = (row["normalized_skill_or_requirement"], row["operator"])
-        group = gaps.setdefault(
-            key, {state: set() for state in ["COVERED", "PARTIAL", "MISSING", "UNKNOWN"]}
-        )
-        group[row["match_status"]].add(row["job_id"])
-    return {
-        "clusters": {
-            "N": len({job["job_id"] for job in jobs}),
-            "clusters": [
-                {"category": category, "n": len(ids)}
-                for category, ids in sorted(categories.items())
-            ],
-        },
-        "gaps": {
-            "N": matched_N,
-            "groups": [
-                {
-                    "requirement": key[0],
-                    "operator": key[1],
-                    **{state: len(ids) for state, ids in states.items()},
-                }
-                for key, states in sorted(gaps.items())
-            ],
-        },
-    }
-
-
 def render_csv(result, request):
     if request.kind != "skills":
         rows = [
@@ -438,6 +418,7 @@ def render_csv(result, request):
                 "N": result["N"],
                 "matched_jobs_N": result["matched_jobs_N"],
                 "applied_slice": request.applied,
+                "remote_slice": request.remote,
                 "historical": request.historical,
                 "denominator": result["denominator"],
                 "selected_profile_id": request.profile_id,
@@ -449,6 +430,7 @@ def render_csv(result, request):
     eligible = [job for job in result["jobs"] if job["extraction"]]
     provenance = {
         "applied_slice": request.applied,
+        "remote_slice": request.remote,
         "denominator": result["denominator"],
         "historical": request.historical,
         "profile_id": request.profile_id,

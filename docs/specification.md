@@ -256,10 +256,12 @@ ANY groups are reported separately; no branch is counted as an independent MUST.
 ALL branches count as individual required mentions. EXPERIENCE and OTHER have
 separate breakdowns. Results are n/N integers, not unsupported market estimates.
 
-Analytics includes taxonomy cluster coverage, requirement-group gaps from the latest matching
-run for a selected profile, unknown counts separate from missing, and slices by
-applied state, remote and explicitly imported positive-response status. Do not
-infer “positive response” from generic notes. Recompute N after each slice. Counts
+The [persisted analytics contract](analytics.md) includes stored category coverage,
+requirement-group gaps from the latest eligible match for an explicitly selected
+immutable candidate revision, and UNKNOWN separate from MISSING. Applied and grounded
+work-mode slices recompute every denominator and exclude unknown filter metadata.
+Positive-response slicing requires a future explicitly typed import field; free-form
+status/notes are not interpreted as positive responses. Counts
 are frequencies, not job suitability scores; no ranking without an explicit model.
 
 The shared backend [export contract](exports.md) serves JSON/CSV counts,
@@ -336,12 +338,14 @@ single-user API has no authentication; the authorized mock UI uses these contrac
 | POST /jobs/{id}/extract | Configuration, latest snapshot; return run, requirements, evidence |
 | GET /jobs/{id} | Metadata, latest snapshot and its latest extraction; no stale results |
 | POST /jobs/{id}/match | Candidate profile payload; requirement-linked states/sources |
-| GET /analytics/skills | n/N, type counts, alternatives, selected-profile gaps and explicit slices |
+| GET /analytics/skills | Saved-source skill/category/group aggregates, coverage buckets; applied/remote slices and explicit candidate revision |
 | POST /exports | Shared JSON/CSV skills, requirement, evidence or match export; explicit revision/history selection |
 | POST /evaluate | Explicit config list and persisted evaluation provenance; fixture and authorized live runs |
 
 CLI: `jobintel demo` imports/processes authored examples; `jobintel evaluate`
 compares fixture configurations; `jobintel export` preserves legacy current counts.
+`jobintel analytics` returns the same saved-data JSON as the API without invoking
+a provider; see [selection and denominator options](analytics.md).
 `jobintel export --kind requirements/matches/skills/evidence` writes JSON/CSV with
 explicit applied/job/profile/history selection; see [the options](exports.md).
 Run from checkout root, migrate first. Repeated demo doesn't duplicate jobs or the

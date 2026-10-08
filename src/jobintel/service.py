@@ -5,7 +5,6 @@ from hashlib import sha256
 from sqlalchemy import select
 
 from jobintel import db
-from jobintel.analytics import skill_counts
 from jobintel.candidate_matching import match_filters
 from jobintel.compatibility import stored_extraction, stored_requirement
 from jobintel.config import fixture_root
@@ -113,8 +112,8 @@ class Service:
         )
 
     @outcome("extract")
-    def extract(self, job_id: str, configuration: str):
-        snapshot = self.latest_snapshot(job_id)
+    def extract(self, job_id: str, configuration: str, *, snapshot=None):
+        snapshot = snapshot if snapshot is not None else self.latest_snapshot(job_id)
         if snapshot is None:
             raise Conflict("create a snapshot before extraction")
         result = extract_result(self.provider, snapshot.clean_text, configuration)
@@ -299,6 +298,7 @@ class Service:
 
     def history(self, job_id):
         from jobintel.acquisition_service import AcquisitionService
+        from jobintel.extraction_attempts import history
 
         self.job(job_id)
         snapshots = self.session.scalars(
@@ -309,6 +309,7 @@ class Service:
         return {
             "job_id": job_id,
             "acquisition_attempts": AcquisitionService(self).history(job_id),
+            "extraction_attempts": history(self.session, job_id),
             "snapshots": [
                 {
                     "id": snapshot.id,
@@ -360,15 +361,10 @@ class Service:
                 if version.product not in {version.source_product, canonical}:
                     raise ValueError("version product differs from the sourced taxonomy product")
 
-    def analytics(self, applied=None):
-        jobs = []
-        for job_id in self.session.scalars(select(db.Job.job_id).order_by(db.Job.job_id)):
-            item = self.get_job(job_id)
-            if applied is not None and item["applied"] is not applied:
-                continue
-            if item["extraction"] is not None:
-                jobs.append({"job_id": job_id, "requirements": item["extraction"]["requirements"]})
-        return skill_counts(jobs)
+    def analytics(self, applied=None, **options):
+        from jobintel.corpus_analytics import AnalyticsInput, AnalyticsService
+
+        return AnalyticsService(self.session).report(AnalyticsInput(applied=applied, **options))
 
     def seed_taxonomy(self):
         for record in self.taxonomy.records:

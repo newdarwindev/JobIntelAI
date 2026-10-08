@@ -8,7 +8,7 @@ from jobintel.db import session_factory
 from jobintel.evaluation import run_evaluation
 from jobintel.normalization import Taxonomy
 from jobintel.openai_transport import ProviderError
-from jobintel.providers import selected_configuration, selected_provider
+from jobintel.providers import ProviderUnavailable, selected_configuration, selected_provider
 from jobintel.registry import parse_csv
 from jobintel.schemas import CandidateProfile, SnapshotInput
 from jobintel.service import Service
@@ -21,6 +21,9 @@ def main(argv=None, *, transport=None):
     except ProviderError as error:
         print(json.dumps(error.detail()), file=sys.stderr)
         raise SystemExit(1) from None
+    except ProviderUnavailable as error:
+        print(str(error), file=sys.stderr)
+        raise SystemExit(1) from None
     except KeyError:
         print("job, candidate revision or match run not found", file=sys.stderr)
         raise SystemExit(2) from None
@@ -30,6 +33,11 @@ def main(argv=None, *, transport=None):
 
 
 def execute(argv, transport):
+    if argv and argv[0] == "analytics":
+        from jobintel.analytics_cli import execute as analytics_execute
+
+        analytics_execute(argv)
+        return
     if argv and argv[0] == "export":
         from jobintel.export_cli import execute as export_execute
 
@@ -71,13 +79,15 @@ def execute(argv, transport):
         (args.output / "evaluation.json").write_text(json.dumps(report, indent=2) + "\n")
         print(json.dumps(report, indent=2))
         return
+    if args.command == "extract":
+        print(
+            json.dumps(
+                extract_command(factory, provider, root, args.job_id, configuration), indent=2
+            )
+        )
+        return
     with factory.begin() as session:
         service = Service(session, provider, Taxonomy(root / "taxonomy.json"))
-        if args.command == "extract":
-            if not args.job_id:
-                raise ValueError("extract requires --job-id")
-            print(json.dumps(service.extract(args.job_id, configuration), indent=2))
-            return
         if args.command == "demo":
             jobs = parse_csv((root / "sample_registry.csv").read_text())
             service.import_jobs(jobs)
@@ -100,6 +110,23 @@ def execute(argv, transport):
             service.session, ExportInput(legacy_skills_csv=True), args.output, "skill_counts"
         )
         print(f"N={report['N']}; exports written to {args.output}")
+
+
+def extract_command(factory, provider, root, job_id, configuration):
+    from jobintel.extraction_attempts import attempt_extract
+
+    if not job_id:
+        raise ValueError("extract requires --job-id")
+    try:
+        with factory.begin() as session:
+            result, error = attempt_extract(
+                Service(session, provider, Taxonomy(root / "taxonomy.json")), job_id, configuration
+            )
+        if error:
+            raise error
+        return result
+    finally:
+        factory.kw["bind"].dispose()
 
 
 if __name__ == "__main__":

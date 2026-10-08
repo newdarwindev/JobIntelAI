@@ -2,7 +2,7 @@ import json
 from contextlib import asynccontextmanager
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse
 from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -11,9 +11,11 @@ from jobintel import db
 from jobintel.acquisition import HttpAcquirer
 from jobintel.acquisition_service import AcquisitionService
 from jobintel.config import database_url, fixture_root
+from jobintel.corpus_analytics import AnalyticsInput
 from jobintel.evaluation import run_evaluation
 from jobintel.export_selection import ExportInput
 from jobintel.exports import ExportService
+from jobintel.extraction_attempts import attempt_extract
 from jobintel.normalization import Taxonomy
 from jobintel.openai_transport import ProviderError
 from jobintel.providers import ProviderUnavailable, selected_configuration, selected_provider
@@ -81,6 +83,7 @@ def health(request: Request):
             session.execute(select(db.ExtractionRun.provenance).limit(1))
             session.execute(select(db.MatchRun.id).limit(1))
             session.execute(select(db.AcquisitionAttempt.id).limit(1))
+            session.execute(select(db.ExtractionAttempt.id).limit(1))
     except SQLAlchemyError as error:
         raise HTTPException(503, "database unavailable or migrations required") from error
     provider = request.app.state.provider
@@ -151,7 +154,17 @@ def fetch(job_id: str, request: Request, svc: ServiceDependency):
 @router.post("/jobs/{job_id}/extract")
 def extract(job_id: str, payload: ExtractInput, request: Request, svc: ServiceDependency):
     configuration = payload.configuration or request.app.state.configuration
-    return svc.extract(job_id, configuration)
+    result, error = attempt_extract(svc, job_id, configuration)
+    if error:
+        return extraction_failure(error)
+    return result
+
+
+def extraction_failure(error):
+    if isinstance(error, ProviderError):
+        return JSONResponse({"detail": error.detail()}, status_code=error.status)
+    status = 501 if isinstance(error, ProviderUnavailable) else 422
+    return JSONResponse({"detail": str(error)}, status_code=status)
 
 
 @router.get("/jobs/{job_id}")
@@ -165,8 +178,10 @@ def match(job_id: str, payload: CandidateProfile | MatchSelection, svc: ServiceD
 
 
 @router.get("/analytics/skills")
-def analytics(svc: ServiceDependency, applied: bool | None = None):
-    return svc.analytics(applied)
+def analytics(svc: ServiceDependency, selection: Annotated[AnalyticsInput, Query()]):
+    return JSONResponse(
+        svc.analytics(**selection.model_dump()), headers={"Cache-Control": "no-store"}
+    )
 
 
 @router.post("/exports")
