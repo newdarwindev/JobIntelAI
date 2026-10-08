@@ -69,5 +69,6 @@ then `python scripts/container_smoke.py`. On this cloud machine use the offline
 wheel/Compose override if build-container DNS is unavailable. GitHub's container
 job validates the ordinary online Dockerfile and Compose path.
 
-Live LLM quality experiments, browser fallback and other planned acceptance cases
-are not executable checks yet; this workflow does not misrepresent them as passing.
+Required new regressions and backend result publication are tracked in
+[issue #10](https://github.com/newdarwindev/JobIntelAI/issues/10). Live experiment evidence is tracked separately in
+[issue #9](https://github.com/newdarwindev/JobIntelAI/issues/9); ordinary CI uses no paid calls.

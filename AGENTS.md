@@ -1,8 +1,8 @@
 # Repository instructions
 
 JobIntel AI turns job postings into auditable requirements and candidate evidence
-matches. This repository currently contains an offline-first scaffold, not a finished
-LLM product. Read `docs/specification.md`, `docs/testing_scenarios.md`, and
+matches. Implementation status and remaining acceptance criteria belong in GitHub
+issues, not inline source comments or document status tables. Read `docs/specification.md`, `docs/testing_scenarios.md`, and
 `docs/implementation_plan.md` before changing behavior. `docs/source_brief.txt` is
 the original brief; the specification records implementation decisions.
 
@@ -52,8 +52,8 @@ functions instead of raising the threshold or adding complexity exemptions.
   provider to fixtures or claim that fixture agreement measures LLM quality.
 - Keep acquisition/provider boundaries replaceable through small interfaces. Start
   with a fake transport in tests. Add one live OpenAI adapter before any second
-  provider. HTTP fetch remains an explicit 501 until its bounded redirects, SSRF
-  protections, content limits and error handling have regression tests.
+  provider. HTTP fetch requires bounded redirects, SSRF
+  protections, content limits and error handling with regression tests.
 - Every extracted requirement needs an exact `[start:end]` quote in the immutable
   clean snapshot. Offsets count Unicode code points, end exclusive. Revalidate
   provider output before persistence. Never repair invalid evidence by guessing.
@@ -83,15 +83,15 @@ functions instead of raising the threshold or adding complexity exemptions.
 
 ## Finish a change
 
-Implement one acceptance slice at a time. Update the scenario status and README
-when a planned capability becomes executable. Add meaningful tests for boundary
+Implement one issue acceptance slice at a time. Update its evidence and test references
+when a capability becomes executable; keep status and remaining work in GitHub issues. Add meaningful tests for boundary
 behavior, not tests that merely echo implementation. Run affected checks and the
 offline demo; report actual pass/fail/skip counts and unverified live services.
 Never use `xfail` or skipped placeholders as evidence that a scenario works.
 
 Retain the original brief. Changes in scope require a documented decision; do not
-mark portfolio Definition of Done complete while live acquisition, extraction or
-experiments remain stubs. Do not claim production experience or résumé evidence
+mark portfolio Definition of Done complete without evidence for all required issue
+acceptance criteria. Do not claim production experience or résumé evidence
 from this project before the implemented behavior supports it.
 
 ## Web UI changes — mandatory workflow and recording updates

@@ -4,9 +4,9 @@
 flowchart LR
     Registry[CSV / JSON registry] --> Jobs[(Jobs)]
     Manual[Manual text / authored HTML] --> Clean[Deterministic cleaning]
-    HTTP[HTTP adapter: planned] -.-> Clean
+    HTTP[HTTP adapter] --> Clean
     Clean --> Snapshots[(Immutable source snapshots)]
-    Snapshots --> Provider[Fixture replay / future OpenAI]
+    Snapshots --> Provider[Extraction provider]
     Provider --> Guard[Pydantic + exact evidence guard]
     Guard --> Aliases[Deterministic taxonomy]
     Aliases --> Runs[(Extraction runs + requirements)]
@@ -33,7 +33,6 @@ SQLite is a low-friction offline development mode. PostgreSQL and Alembic are th
 target persistence path; PostgreSQL integration is required in CI. JSON payloads
 keep the initial schema compact while foreign keys preserve provenance.
 
-Live HTTP and OpenAI adapters are explicit stubs; optional Playwright/Anthropic do
-not impose dependencies. Source code currently validates quote integrity, not the
-semantic entailment of a claim; evaluation and planned grounded metadata address
-that boundary. See specification sections 6–11 before enabling live integrations.
+Quote integrity and semantic entailment are separate boundaries. See specification
+sections 6–11 for their contracts and [the issue map](implementation_plan.md) for
+implementation acceptance and dependencies.

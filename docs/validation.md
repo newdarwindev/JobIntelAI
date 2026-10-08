@@ -24,8 +24,7 @@ The checked-in Playwright config defaults to the pinned Playwright browser in
 Actions; `UI_BROWSER_PATH` selected the local binary here. The local recorder used
 the installed FFmpeg through a checkout-local Playwright browser-cache path. No
 private data, live crawling, paid provider calls, or deployed service was used.
-Candidate display/gap projections are session-local; live backend release gates
-remain planned. The implementation was integrated with the repository's newer
+Implementation acceptance and remaining release work are tracked in GitHub issues. The implementation was integrated with the repository's newer
 quality scaffold without replacing its checks. The first incremental commit
 passed [all repository checks on GitHub](https://github.com/newdarwindev/JobIntelAI/actions/runs/37772935880),
 including Python 3.11/3.12 PostgreSQL, packaging and normal Docker/API smoke.
@@ -68,8 +67,7 @@ The disposable PostgreSQL test container was stopped and removed after validatio
 
 ## Earlier backend scaffold validation
 
-Executed in the cloud workspace on 2026-10-08 with Python 3.12.14 and 3.11.16. This records the
-current scaffold, not a published environment or remote GitHub Actions run.
+Executed in the cloud workspace on 2026-10-08 with Python 3.12.14 and 3.11.16. This historical record describes that local run; later remote runs are linked above.
 
 | Check | Observed result |
 | --- | --- |
@@ -99,10 +97,8 @@ The documented offline wheel bundle/Compose override restored a working Docker
 build without disabling TLS, signatures or checksums. A writable Docker config
 directory was also required because the default home directory is read-only.
 
-Not executed / not implemented: paid OpenAI/Anthropic calls, real URL acquisition,
-browser fallback, independent semantic hallucination or matching quality metrics,
-actual A/B/C live experiments, GitHub-hosted CI, publication/deployment or restoration
-in a fresh cloud task. These are not claimed as passing. See the scenario matrix.
+Remaining implementation and experiment acceptance are tracked in [the issue map](implementation_plan.md).
+Historical checks above establish only the behavior exercised by those recorded runs.
 
 The workflow now runs quality gates, Python 3.11/3.12 PostgreSQL checks and a normal
 Docker/API smoke on pushes and PRs. The cloud proxy denied connections to
