@@ -11,22 +11,31 @@ from jobintel.export_selection import ExportInput
 from jobintel.exports import ExportService, render_csv
 
 
-def private_output(path):
+def private_output(path, filenames=("export.json",)):
     path = path.resolve()
-    result = subprocess.run(["git", "rev-parse", "--show-toplevel"], capture_output=True, text=True)
-    if result.returncode != 0 or not path.is_relative_to(Path(result.stdout.strip())):
+    root = next((parent for parent in (path, *path.parents) if (parent / ".git").exists()), None)
+    if root is None:
         return
-    ignored = subprocess.run(
-        ["git", "check-ignore", "--quiet", str(path / "export.json")], capture_output=True
-    )
-    if ignored.returncode != 0:
+    try:
+        ignored = [
+            subprocess.run(
+                ["git", "-C", str(root), "check-ignore", "--quiet", str(path / filename)],
+                capture_output=True,
+            )
+            for filename in filenames
+        ]
+    except FileNotFoundError:
+        raise ValueError(
+            "Git is required to verify ignored export paths inside a checkout"
+        ) from None
+    if any(result.returncode != 0 for result in ignored):
         raise ValueError(
             "exports inside a checkout must use an ignored path such as results/generated/ or local_data/"
         )
 
 
 def write_exports(session, request, output, stem):
-    private_output(output)
+    private_output(output, [f"{stem}.json", f"{stem}.csv"])
     output.mkdir(parents=True, exist_ok=True)
     exporter = ExportService(session)
     report = exporter.export(request.model_copy(update={"format": "json"}))

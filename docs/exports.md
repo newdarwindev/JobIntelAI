@@ -90,6 +90,8 @@ for that compatibility interface; JSON still contains complete provenance.
 Generated exports can contain private posting and candidate data. CLI paths inside
 the checkout must be ignored (`results/generated/` or `local_data/`); paths outside
 the checkout are allowed. Browser downloads use the user's local download folder.
+Installed distributions and containers outside a checkout do not require Git.
+Inside a checkout, Git must be available to verify that the output is ignored.
 Only synthetic public fixtures belong in Git or CI evidence.
 
 V31–V32 regressions: `tests/integration/test_exports.py` and

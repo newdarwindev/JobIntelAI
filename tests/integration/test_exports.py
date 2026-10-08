@@ -4,6 +4,7 @@ import csv
 import io
 import json
 import logging
+import subprocess
 from hashlib import sha256
 
 import pytest
@@ -379,3 +380,29 @@ def test_v32_private_exports_require_ignored_checkout_paths(tmp_path):
     private_output(ROOT / "local_data/export-tests")
     with pytest.raises(ValueError, match="ignored path"):
         private_output(ROOT / "public-export-test")
+
+
+def test_v32_installed_exports_without_git_and_checkout_guard(client, tmp_path, monkeypatch):
+    run = prepare(client)
+    monkeypatch.setenv("PATH", str(tmp_path / "no-executables"))
+    main(["export", "--kind", "requirements", "--output", str(tmp_path / "installed-exports")])
+    result = json.loads((tmp_path / "installed-exports/requirements.json").read_text())
+    assert result["N"] == 1 and result["rows"][0]["run_id"] == run["run_id"]
+    with pytest.raises(ValueError, match="Git is required"):
+        private_output(ROOT / "local_data/no-git-export")
+
+
+def test_v32_export_path_guard_finds_checkout_when_cwd_is_outside(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    private_output(ROOT / "local_data/export-tests")
+    with pytest.raises(ValueError, match="ignored path"):
+        private_output(ROOT / "public-export-test")
+
+
+def test_v32_path_guard_checks_both_actual_generated_filenames(tmp_path):
+    subprocess.run(["git", "init", "--quiet", str(tmp_path)], check=True)
+    (tmp_path / ".gitignore").write_text("outputs/export.json\noutputs/requirements.json\n")
+    with pytest.raises(ValueError, match="ignored path"):
+        private_output(tmp_path / "outputs", ["requirements.json", "requirements.csv"])
+    (tmp_path / ".gitignore").write_text("outputs/requirements.json\noutputs/requirements.csv\n")
+    private_output(tmp_path / "outputs", ["requirements.json", "requirements.csv"])
