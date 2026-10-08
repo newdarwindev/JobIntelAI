@@ -62,7 +62,7 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **16/16**, recorded 2026-10-08.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37773290905) · commit `ce203702ace55cc607cbd0371ebcafb409c3ab3e`.
+Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37774716592) · commit `f6ade0117e67f6b10b165007472630f3e8c97a1d`.
 Source content SHA-256: `512a14abd1fa928e4db499da073fdaac330ba1b195468b9306b922cbabc04e1a`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
