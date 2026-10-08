@@ -33,6 +33,14 @@ test('UI01 | Atomic registry import and discovery',async({page,request})=>{
   await page.getByLabel('Search postings').fill('UI-NEW');await expect(page.locator('#registry-table')).toContainText('No');
   await page.getByLabel('Import format').selectOption('csv');await page.getByLabel('Registry content').fill('job_id,company,role,applied\nBAD,Synthetic,Engineer,maybe\n');await click(page,'Import registry');await expect(notice(page)).toContainText('422:');
   await click(page,'Load sample registry');await click(page,'Import registry');await expect(notice(page)).toContainText('20 duplicate(s)');
+  await page.getByLabel('Import format').selectOption('json');
+  const urlJob={job_id:'UI-CANONICAL',company:'Authored URL identity',role:'Analyst',official_url:'https://example.com/jobs/canonical'};
+  await page.getByLabel('Registry content').fill(JSON.stringify([urlJob]));await click(page,'Import registry');await expect(notice(page)).toContainText('Imported 1');
+  const conflictBatch=[{job_id:'UI-URL-PARTIAL',company:'Authored partial URL batch',role:'Engineer'},{job_id:'UI-URL-CONFLICT',company:'Authored distinct opening',role:'Engineer',official_url:'HTTPS://EXAMPLE.COM:443/jobs/canonical#fragment'}];
+  await page.getByLabel('Import format').selectOption('json');
+  await page.getByLabel('Registry content').fill(JSON.stringify(conflictBatch));await click(page,'Import registry');await expect(notice(page)).toContainText('409:');
+  for(const row of conflictBatch)expect((await request.get(`/jobs/${row.job_id}`)).status()).toBe(404);
+  await page.reload();expect((await request.get('/jobs/UI-CANONICAL')).ok()).toBeTruthy();
 });
 
 test('UI02 | Source capture, URL fallback and immutable history',async({page,request})=>{

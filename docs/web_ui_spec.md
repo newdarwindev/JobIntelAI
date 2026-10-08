@@ -61,6 +61,10 @@ are implemented; remote/positive-response slicing and live experiments are not.
 
 ## Executable coverage and evidence
 
+UI01 also submits a different job ID with a case/default-port/fragment variant of
+an existing official URL. The UI shows 409 and the whole batch is absent, including
+its earlier valid row. The saved registry entry remains available after reload (V01).
+
 `web_ui_workflows.json` is the machine-readable workflow inventory. Every ID maps
 to one complete test in `tests/e2e/workflows.spec.mjs` and runs on desktop Chromium
 and mobile Chromium. Unit/API regressions cover domain edge cases beneath these

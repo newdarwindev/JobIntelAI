@@ -11,6 +11,7 @@ from jobintel.compatibility import stored_extraction, stored_requirement
 from jobintel.config import fixture_root
 from jobintel.matching import match_requirement
 from jobintel.normalization import Taxonomy
+from jobintel.outcomes import outcome
 from jobintel.providers import extract_result
 from jobintel.registry import identity, normalize_url
 from jobintel.schemas import CandidateProfile, Extraction, JobInput, MatchSelection, SnapshotInput
@@ -33,6 +34,7 @@ class Service:
             raise KeyError(job_id)
         return job
 
+    @outcome("import")
     def import_jobs(self, jobs: list[JobInput]) -> dict:
         imported = duplicate = 0
         for item in jobs:
@@ -75,6 +77,7 @@ class Service:
             .limit(1)
         )
 
+    @outcome("snapshot")
     def snapshot(self, job_id: str, item: SnapshotInput):
         job = self.job(job_id)
         text = clean_text(item.text, item.format == "html")
@@ -109,6 +112,7 @@ class Service:
             .limit(1)
         )
 
+    @outcome("extract")
     def extract(self, job_id: str, configuration: str):
         snapshot = self.latest_snapshot(job_id)
         if snapshot is None:
@@ -177,6 +181,7 @@ class Service:
             "profile": profile,
         }
 
+    @outcome("candidate_import")
     def import_candidate(self, profile: CandidateProfile):
         payload = profile.model_dump(mode="json")
         existing = self.session.scalars(
@@ -212,6 +217,7 @@ class Service:
             "revisions": [self.candidate_output(r) for r in revisions],
         }
 
+    @outcome("match")
     def match(self, job_id: str, selection: CandidateProfile | MatchSelection):
         snapshot = self.latest_snapshot(job_id)
         run = self.latest_run(snapshot.id) if snapshot else None

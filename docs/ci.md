@@ -78,3 +78,21 @@ JUnit, command diagnostics and JSON pass/fail/error/skip counts with commit/conf
 provenance. `scripts/check.py --junitxml path.xml` emits the same local test result.
 The CLI smoke also freezes, runs and rescores a complete fake experiment, checking
 exact saved-score reproduction without another provider call.
+
+Each matrix artifact includes `summary.json` (actual command exit code, Python,
+commit and Actions run/attempt), `junit.xml`, `check.log`, `release-audit.json` and
+`publication-probes/`. The two synthetic publication probes intentionally exercise
+success and failure: success is 1 pass / 0 fail / 1 skip, failure is 1 pass / 1 fail /
+1 skip with exit code 1. The harness requires those exact outcomes; an unexpected
+probe result fails CI. These diagnostic probes are separate from acceptance tests.
+Nested JUnit suite totals are counted from leaf cases without double-counting.
+
+`MANIFEST.in` bundles licensed authored fixtures and migration/configuration files
+in the source release. The release audit rejects private runtime paths, database/key
+files and unknown or modified corpus files; tests build with injected ignored private
+sentinels to verify their exclusion. It is a deterministic archive/corpus check, not
+an automatic legal or secret-content review. The installed wheel is exercised from a
+fresh unpacked source release with the README migration/demo/evaluation/export path
+and API readiness/analytics, outside the original checkout. Only counts and archive
+hashes enter CI evidence; temporary databases and generated candidate/posting outputs
+are not uploaded. Every artifact has 30-day retention and PR/fork runs remain read-only.

@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "origin": "github-actions",
-  "recorded_at": "2026-10-08T15:50:49.812Z",
-  "source_hash": "a63e091240bdb7a251d36cf15a64f65e5d82f4acccd9fa0964baff850508bec5",
-  "git_sha": "01be176670265718508737e6342a01b433a241d0",
-  "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/37803755761",
+  "origin": "local-playwright",
+  "recorded_at": "2026-10-08T19:11:52.944Z",
+  "source_hash": "204051cba16f8115f67945c32c7173857d28c73bee8636e3d083bc7b8dcd550c",
+  "git_sha": "66c7035a47be7f81f95551e399d37e80ebb10ccb",
+  "run_url": null,
   "command": "npm run test:ui",
   "expected": 16,
   "flaky": 0,
@@ -17,9 +17,9 @@
       "file": "UI01-desktop-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 595013,
-      "sha256": "1f05b419e0d64eb99aafccec7abfd808c699ecf276a06dfdc186374547f2d2d0"
+      "browser_version": "151.0.7922.173",
+      "bytes": 742852,
+      "sha256": "f82f6e72484c711dddb108f10518c6b23a4904737f8f456dedf366c319322e88"
     },
     {
       "id": "UI02",
@@ -28,9 +28,9 @@
       "file": "UI02-desktop-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 968352,
-      "sha256": "a883071ae80f270d363c1615c7a24a230fb85baaee5de6f2adb84d508150b93e"
+      "browser_version": "151.0.7922.173",
+      "bytes": 898843,
+      "sha256": "39982f03eb0fe7a9395849c09ae971ffba9b8399dfa901f622be7df86b8bad01"
     },
     {
       "id": "UI03",
@@ -39,9 +39,9 @@
       "file": "UI03-desktop-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 1232820,
-      "sha256": "df56cf1739e7d31c246c46c7c90baf664768b4238ff1601ed5560e47c66abbad"
+      "browser_version": "151.0.7922.173",
+      "bytes": 1430376,
+      "sha256": "c6304a26ceac80ffe9e615f2e91ee70db55b88f1f0cf6f18a1abc973db46f2f2"
     },
     {
       "id": "UI04",
@@ -50,9 +50,9 @@
       "file": "UI04-desktop-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 1535650,
-      "sha256": "25d4d1f9a86bff6650331e1088b8ac269857d0eba653ab3a9ee9699f29339ce8"
+      "browser_version": "151.0.7922.173",
+      "bytes": 1313293,
+      "sha256": "2163e60bea80bb3e7aedb39351f957c4d7bfc8aa4a810e6fc5b1ceb083bcd4b3"
     },
     {
       "id": "UI05",
@@ -61,9 +61,9 @@
       "file": "UI05-desktop-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 827015,
-      "sha256": "05208745511d5e5bdb8d8320df4f8c761c282cd389a4a2783a8c28e76733ad6a"
+      "browser_version": "151.0.7922.173",
+      "bytes": 874950,
+      "sha256": "9f2357a18f1ebbb35dbc2ab83f074e516e7e271e255cc18f9b617b9b5cc3b1e1"
     },
     {
       "id": "UI06",
@@ -72,9 +72,9 @@
       "file": "UI06-desktop-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 534196,
-      "sha256": "c3b8c66907632d2c35c990ea6b2fbdffae26139cf76bbe04b02f1561a4971238"
+      "browser_version": "151.0.7922.173",
+      "bytes": 555766,
+      "sha256": "2cd7eea253543b27be08e599e0bb3984848ca710217f17c610216183216196d9"
     },
     {
       "id": "UI07",
@@ -83,9 +83,9 @@
       "file": "UI07-desktop-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 968927,
-      "sha256": "f31c0260922441c84ec3c4545f75ab2ba0f98daac3be23d55d79370d19ec643e"
+      "browser_version": "151.0.7922.173",
+      "bytes": 814790,
+      "sha256": "42569210b7893539bb14aa123f46b17c56dc9ab36fc92ac6de02875b91fe56a1"
     },
     {
       "id": "UI08",
@@ -94,9 +94,9 @@
       "file": "UI08-desktop-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 682563,
-      "sha256": "534c3f3e6597714591a486038a5bbb889ce6ca98f94b2cbf9063394fc03d5247"
+      "browser_version": "151.0.7922.173",
+      "bytes": 631313,
+      "sha256": "e5f6d51194ca574c5b6398a4222d5c93c67ee4f61ac8d4fb0fcfaf56a1c86f0e"
     },
     {
       "id": "UI01",
@@ -105,9 +105,9 @@
       "file": "UI01-mobile-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 318423,
-      "sha256": "8eefe1b78e9c43649b17e33d67f33e1b72f4866b92795848a22b338d0a140a18"
+      "browser_version": "151.0.7922.173",
+      "bytes": 560519,
+      "sha256": "1b3973df8e7c45c629851bd4de1603909826bacba14874ad467025e002c83895"
     },
     {
       "id": "UI02",
@@ -116,9 +116,9 @@
       "file": "UI02-mobile-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 518060,
-      "sha256": "cb91fd302557e34e77af6a814dd05177e4e369e3bc75b0882352cf35858c2fc7"
+      "browser_version": "151.0.7922.173",
+      "bytes": 661886,
+      "sha256": "69478e4af8d035876299d22951f0aebd4a4bb3ee572e62b7c377464b8d10c154"
     },
     {
       "id": "UI03",
@@ -127,9 +127,9 @@
       "file": "UI03-mobile-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 859819,
-      "sha256": "36d9b2d3e4680e61f9357e128aa527429c2f2c2eb1a1a977a6fafabe31d96144"
+      "browser_version": "151.0.7922.173",
+      "bytes": 1010639,
+      "sha256": "55e671d32de4df010a7d739b598a5fe18acf82e19b90d2aa0fb5b3dfdf2500c3"
     },
     {
       "id": "UI04",
@@ -138,9 +138,9 @@
       "file": "UI04-mobile-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 1076474,
-      "sha256": "06486624d7a4d5c81c4749c5d093bacff2db44d2b3e11cbc162c7ee718646964"
+      "browser_version": "151.0.7922.173",
+      "bytes": 1267486,
+      "sha256": "e868c91d177bc77a6cbb0d00df9aa34d504719edf78cfe43c5b7668987af13ac"
     },
     {
       "id": "UI05",
@@ -149,9 +149,9 @@
       "file": "UI05-mobile-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 373472,
-      "sha256": "4c0192cf15efee0fa96b5a07e6a4558fc0d3e5d4eceb76079e14f9439ebbf27d"
+      "browser_version": "151.0.7922.173",
+      "bytes": 540360,
+      "sha256": "1b6a8ca3a88cbccc6d4550243ee8751cd9ea96269e37a6892414a17b689a59bf"
     },
     {
       "id": "UI06",
@@ -160,9 +160,9 @@
       "file": "UI06-mobile-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 273836,
-      "sha256": "41f32ee8ce13b246e2bec14723a620bda356f64abe8239ee2510e66b37695083"
+      "browser_version": "151.0.7922.173",
+      "bytes": 279486,
+      "sha256": "5ab9720c8e8a6672a7cdc38a11466cbf7de4530ed13e4302dfaa6a0d81466896"
     },
     {
       "id": "UI07",
@@ -171,9 +171,9 @@
       "file": "UI07-mobile-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 439741,
-      "sha256": "a4aada4df50bb2f2613db32a65352eae72831d223d10e06ab3eb6bd09110d344"
+      "browser_version": "151.0.7922.173",
+      "bytes": 497702,
+      "sha256": "5944a6e3a62f64d12da253abb01f043852f36b7d894c39e1af2e2fd7003888f6"
     },
     {
       "id": "UI08",
@@ -182,9 +182,9 @@
       "file": "UI08-mobile-chromium.webm",
       "status": "passed",
       "successful_attempt": 0,
-      "browser_version": "145.0.7632.6",
-      "bytes": 443425,
-      "sha256": "fd772ff16ad7419b99e57f5fab1bad92dab00e371ff47cda912dc0e98223d36c"
+      "browser_version": "151.0.7922.173",
+      "bytes": 651083,
+      "sha256": "acc9a5fc1d1bd5fdc0a9b91f82d1f4a4b9477c070813d70c7ffe0713d8bd08fd"
     }
   ]
 }
