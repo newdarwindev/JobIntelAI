@@ -1,0 +1,26 @@
+[
+  {
+    "name": "greenhouse_inline",
+    "html": "<nav>Menu</nav><div id='job-description'><h2>Required skills</h2><p><strong>Python</strong> and <em>SQL</em> are required.</p><ul><li>AWS or Azure is preferred.</li><li>Production experience is required.</li></ul></div><form>Application fields</form>",
+    "clauses": ["Python and SQL are required.", "AWS or Azure is preferred.", "Production experience is required."],
+    "excluded": ["Menu", "Application fields"]
+  },
+  {
+    "name": "workday_table_list",
+    "html": "<div role='navigation'>Menu</div><div data-automation-id='jobPostingDescription'><p>Authored Engineer</p><table><tr><th>Requirement</th><th>Level</th></tr><tr><td>PostgreSQL is required.</td><td>Senior</td></tr></table><ol><li>At least 3 years of Python experience is required.</li><li>Go 1.23+ is preferred.</li></ol></div><div class='cookie-banner'>Cookies</div>",
+    "clauses": ["PostgreSQL is required.", "At least 3 years of Python experience is required.", "Go 1.23+ is preferred."],
+    "excluded": ["Menu", "Cookies"]
+  },
+  {
+    "name": "main_preserves_sibling_clauses",
+    "html": "<main><section class='job-description'><p>Python is required.</p></section><section><p>EU work authorization is required.</p><p>Remote work within Georgia only.</p></section></main><footer>Other jobs</footer>",
+    "clauses": ["Python is required.", "EU work authorization is required.", "Remote work within Georgia only."],
+    "excluded": ["Other jobs"]
+  },
+  {
+    "name": "malformed_unicode",
+    "html": "<article><h2>Authored café 🧪<p>Python is required.<ul><li>SQL is required.<li>AWS or Azure is preferred.</article><script>execute()</script>",
+    "clauses": ["Authored café 🧪", "Python is required.", "SQL is required.", "AWS or Azure is preferred."],
+    "excluded": ["execute()"]
+  }
+]

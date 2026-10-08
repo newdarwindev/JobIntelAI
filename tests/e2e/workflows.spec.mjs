@@ -64,8 +64,26 @@ test('UI02 | Source capture, URL fallback and immutable history',async({page,req
   expect(await page.evaluate(()=>window.__executed)).toBeUndefined();
   await page.reload();await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
   await nav(page,'Job registry');await page.getByLabel('Import format').selectOption('json');await page.getByLabel('Registry content').fill(JSON.stringify([{job_id:'UI-URL',company:'Authored URL fallback',role:'Engineer',official_url:'https://example.com/authored-job'}]));await click(page,'Import registry');
-  await inspect(page,'UI-URL');await click(page,'Try URL acquisition');await expect(notice(page)).toContainText('501:');await expect(notice(page)).toContainText('manual source editor');
-  await page.getByLabel('Posting source').fill(text);await click(page,'Save immutable snapshot');await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
+  await inspect(page,'UI-URL');await click(page,'Try URL acquisition');await expect(notice(page)).toContainText('URL source saved');
+  const fetched=await (await request.get('/jobs/UI-URL')).json();expect(fetched.snapshot.fetch_status).toBe('http');expect(fetched.snapshot.clean_text).toBe(text.trim());
+  const attempts=(await (await request.get('/jobs/UI-URL/history')).json()).acquisition_attempts;
+  expect(attempts).toHaveLength(2);expect(attempts.find(a=>a.status==='success').snapshot_id).toBe(fetched.snapshot.id);expect(attempts.find(a=>a.status==='redirect').http_status).toBe(302);
+  expect(await page.evaluate(()=>window.__fetched)).toBeUndefined();
+  await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
+  for(const [id,path] of [['UI-DENIED','authored-denied'],['UI-JS','authored-js']]){
+    await nav(page,'Job registry');await page.getByLabel('Import format').selectOption('json');await page.getByLabel('Registry content').fill(JSON.stringify([{job_id:id,company:`Authored ${id}`,role:'Acquisition recovery',official_url:`https://example.com/${path}`} ]));await click(page,'Import registry');
+    await inspect(page,id);await page.getByLabel('Posting source').fill(text);await click(page,'Save immutable snapshot');await click(page,'Extract requirements');
+    const prior=await (await request.get(`/jobs/${id}`)).json();
+    await page.getByLabel('Posting source').fill('Authored unsaved manual recovery text.');
+    await click(page,'Try URL acquisition');await expect(notice(page)).toContainText(id==='UI-DENIED'?'403:':'422:');await expect(notice(page)).toContainText('manual source editor');
+    await expect(page.getByLabel('Posting source')).toHaveValue('Authored unsaved manual recovery text.');
+    expect((await (await request.get(`/jobs/${id}`)).json()).extraction.run_id).toBe(prior.extraction.run_id);
+    await page.getByText(/URL acquisition history/).click();await expect(page.locator('#acquisition-history')).toContainText(id==='UI-DENIED'?'access_denied':'js_only');
+    expect((await request.patch(`/jobs/${id}/history`,{data:{snapshots:[]}})).status()).toBe(405);
+    await page.reload();await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
+    await page.getByText(/URL acquisition history/).click();await expect(page.locator('#acquisition-history')).toContainText('failed');
+    await page.getByLabel('Posting source').fill(text);await click(page,'Save immutable snapshot');await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
+  }
 });
 
 test('UI03 | Grounded extraction, aliases and operators',async({page,request})=>{
@@ -221,7 +239,7 @@ test('UI08 | Keyboard navigation, responsive layout and inert input',async({page
   await page.goto('/ui/#workbench?job=UI-INERT');await expect(page.getByLabel('Selected posting')).toHaveValue('UI-INERT');await page.getByLabel('Posting source').fill('Authored source <script>window.__injected=true</script>');await click(page,'Save immutable snapshot');
   await page.getByText(/Snapshot & extraction history/).click();await expect(page.locator('#history')).toContainText('<script>');expect(await page.locator('main script').count()).toBe(0);
   await page.reload();await expect(page.getByLabel('Selected posting')).toHaveValue('UI-INERT');
-  expect(await (await request.get('/ui/config')).json()).toEqual({demo:true,provider:'fixture',live_llm:false});
+  expect(await (await request.get('/ui/config')).json()).toEqual({demo:true,provider:'fixture',live_llm:false,acquisition_mode:'synthetic'});
   for(const view of ['Overview','Job registry','Source & extraction','Candidate evidence','Corpus analytics','Evaluation lab']){await nav(page,view);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBeTruthy();await expect(page.getByRole('navigation').getByRole('link',{name:view,exact:true})).toHaveAttribute('aria-current','page');await page.getByRole('link',{name:'Skip to content',exact:true}).focus();await page.keyboard.press('Enter');await expect(page.locator('main')).toBeFocused();await expect(page.getByRole('heading',{name:view,level:1,exact:true})).toBeVisible();}
   expect(errors).toEqual([]);
   await page.screenshot({path:info.outputPath('responsive-layout.png'),fullPage:true});

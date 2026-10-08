@@ -12,6 +12,19 @@ evidence in issue #9.
 
 ## Regression references
 
+V02–V07/V09–V11 regressions in `unit/test_acquisition.py`,
+`unit/test_fetch_transport.py`, `unit/test_acquisition_cleaning.py` and
+`integration/test_acquisition_boundary.py` use authored fake HTTP/DNS/socket responses.
+They cover public IPv4/IPv6 pinning and mixed/rebound DNS rejection before HTTP,
+proxy refusal without direct fallback, verified TLS, deadlines/retries/redirects,
+compression and text limits, access-gate/manual recovery, ATS/table/list/malformed
+cleaning, unchanged-clean/different-raw provenance, and atomic attempt/source writes
+on migrated SQLite/PostgreSQL. Supported mutation requests are rejected; direct SQL
+immutability is not claimed. UI02 exercises redirect success, inert HTML, 403/JS-only
+failure history, preserved extraction/unsaved manual text and manual recovery on both
+browser projects. Real authorized URL smoke is separate; optional rendering V08 is
+excluded. See [the acquisition contract](acquisition.md).
+
 V01/V39-V42 regressions in `integration/test_persistence_privacy.py` exercise
 canonical-URL batch atomicity, SQL failures after writes, mid-match/provider failures,
 unreachable readiness, migration downgrade/re-upgrade, foreign keys and source/profile
@@ -63,7 +76,7 @@ PostgreSQL. UI03/UI04 inspect the corresponding evidence and abstention contract
 | S31 / eval honesty | Fixture suite → evaluate → 20 cases, two configs, tokens/cost null | integration/test_api.py |
 | S32 / API pipeline | Migrated SQLite → import, snapshot, extract, match → exact source trace and two match states | integration/test_api.py |
 | S33 / API errors | Missing job/prerequisite/malformed payload → call → 404/409/422 | integration/test_api.py |
-| S34 / fetch stub | Registry has official URL → fetch → explicit 501, no network call | integration/test_api.py |
+| S34 / fetch recovery | Official URL denies access → bounded fetch → typed 403, saved attempt, manual fallback, prior source preserved | integration/test_api.py; integration/test_acquisition_boundary.py |
 | S35 / PostgreSQL | Disposable DB → Alembic upgrade + full source/extraction path → tables and API work | integration/test_postgres.py (opt-in locally; required in CI) |
 | S36 / health | Database connected but unmigrated → health → 503 | integration/test_boundaries.py |
 | S37 / persistence boundary | Replaceable provider returns invalid quote → service extract → no new rows; prior run preserved | integration/test_boundaries.py |

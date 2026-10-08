@@ -14,11 +14,44 @@ def clean_text(text: str, is_html: bool = False) -> str:
     if is_html:
         soup = BeautifulSoup(text, "html.parser")
         for element in soup.select(
-            "script, style, nav, header, footer, form, [data-cookie-banner]"
+            "script, style, title, nav, header, footer, form, noscript, [data-cookie-banner], "
+            "[role='navigation'], [role='banner'], .cookie-banner, #cookie-banner"
         ):
             element.decompose()
-        container = soup.select_one("main") or soup.select_one("article") or soup
-        text = container.get_text(separator="\n")
+        container = (
+            soup.select_one("main")
+            or soup.select_one("article")
+            or soup.select_one(
+                "#job-description, .job-description, #jobDescriptionText, "
+                "[data-automation-id='jobPostingDescription'], [itemprop='description']"
+            )
+            or soup
+        )
+        for element in container.find_all("br"):
+            element.replace_with("\n")
+        for element in container.find_all(
+            [
+                "p",
+                "div",
+                "section",
+                "h1",
+                "h2",
+                "h3",
+                "h4",
+                "h5",
+                "h6",
+                "li",
+                "tr",
+                "table",
+                "ul",
+                "ol",
+            ]
+        ):
+            element.insert_before("\n")
+            element.insert_after("\n")
+        for element in container.find_all(["td", "th"]):
+            element.append(" ")
+        text = container.get_text(separator="")
     # Character offsets refer exclusively to this final Unicode string, never raw HTML.
     return "\n".join(
         line.strip()

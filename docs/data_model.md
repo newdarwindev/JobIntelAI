@@ -4,6 +4,7 @@
 | --- | --- | --- |
 | jobs | job_id PK; identity and nonnull official_url unique | Validated registry JSON, canonical identity/URL |
 | posting_snapshots | id PK; job_id FK | Raw/clean content, URL, UTC time, hash, fetch status |
+| acquisition_attempts | id PK; job_id + nullable snapshot_id FKs; unique fetch_id/sequence | Original/requested/final URL, UTC time, status/HTTP/error/retryability, redirect/retry/wait metadata and successful body hash/type/charset/size |
 | extraction_runs | id PK; snapshot_id FK | Config, time, full validated extraction JSON |
 | requirements | id PK; run_id FK | Typed requirement JSON with raw text, skill group, quote/offsets |
 | skills | canonical PK | Versioned taxonomy record |
@@ -26,5 +27,12 @@ assessment date. Historical source/profile/match rows remain readable after chan
 
 Snapshot immutability is enforced by supported service behavior (no update/delete
 endpoint); this service contract does not guarantee protection against direct SQL writes.
+Acquisition history has the same supported-service immutability boundary. Failed
+fetches commit attempts without changing sources; successful attempts link to the
+saved/reused snapshot. Snapshot and attempt writes share one transaction. Reusing
+a manual snapshot through HTTP retains its original status/time; the new attempt
+records HTTP provenance separately. FKs and per-fetch sequence uniqueness are
+verified on SQLite/PostgreSQL. Raw body text is stored only in usable snapshots,
+not duplicated in attempt payloads; URLs/history remain private local data.
 Do not claim a database-level guarantee. New source snapshots exclude stale runs
 from current views. Re-extraction appends runs; analytics selects only the latest.

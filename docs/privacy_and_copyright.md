@@ -20,7 +20,7 @@ The API is unauthenticated local single-user tooling. Bind it to loopback, not a
 public endpoint. Demo database passwords in Compose/CI are local placeholders only.
 Live API credentials belong in secure runtime settings; do not put them in Git.
 
-The `jobintel.outcomes` logger emits JSON at INFO for imports, snapshots, extraction,
+The `jobintel.outcomes` logger emits JSON at INFO for imports, snapshots, fetching, extraction,
 candidate revisions and matching. Enable this named logger through your application's
 logging configuration. Outcomes are emitted after transaction commit or rollback,
 including savepoint handling; successful work is not reported before commit. Fields
@@ -29,6 +29,11 @@ and allowlisted error codes. Job/profile names, URLs, source/candidate bodies,
 provider responses and exception text are excluded. SQLAlchemy hides bound parameters
 in exception rendering. These guarantees do not cover custom SQL logging configured
 outside this application, or logging request/response bodies in external middleware.
+Acquisition URLs and successful source bodies remain in the local database; attempt
+history is not a public report. Failed HTTP bodies and raw response headers are not
+stored or logged. The transport sends fixed headers without cookies, authorization,
+referrers or browser execution, validates every destination and refuses access gates.
+CI and videos use authored responses only; no real job URL smoke is implied.
 
 Backend Actions artifacts contain synthetic test JUnit, sanitized command diagnostics,
 counts/provenance and release audit hashes, retained for 30 days. Private runtime files

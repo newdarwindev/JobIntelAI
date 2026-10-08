@@ -17,7 +17,12 @@ demo_router = APIRouter()
 @router.get("/ui/config")
 def ui_config(request: Request):
     provider = request.app.state.provider.name
-    return {"demo": request.app.state.demo, "provider": provider, "live_llm": provider == "openai"}
+    return {
+        "demo": request.app.state.demo,
+        "provider": provider,
+        "live_llm": provider == "openai",
+        "acquisition_mode": "synthetic" if request.app.state.demo else "http",
+    }
 
 
 @demo_router.get("/ui/fixtures")

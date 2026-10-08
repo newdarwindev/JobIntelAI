@@ -36,7 +36,7 @@ claim. Employer reputation is never candidate or job evidence.
 | Storage | SQLAlchemy, Alembic, PostgreSQL 16 |
 | Import | JSON or pasted CSV export; no Google OAuth integration |
 | Manual acquisition | Text/HTML payload, local authored fixtures |
-| URL acquisition | Bounded HTTP GET through httpx |
+| URL acquisition | Bounded HTTP GET with an injectable pinned transport/resolver |
 | Browser | Optional fallback only after HTTP/manual modes |
 | Snapshots | Append-only raw/clean text, SHA-256, UTC timestamp |
 | Extraction | Strict provider interface; fixture replay by hash |
@@ -111,19 +111,22 @@ resolution/update workflows require a separate scope decision. Reject malformed 
 
 Manual endpoint accepts `text`, optional `source_url`, `format=text|html`, at most
 200,000 characters. HTML stripping removes scripts/styles/nav/header/footer/forms
-and explicit cookie banners, prefers main/article, and normalizes line breaks.
+and explicit cookie banners, prefers main/article then authored ATS selectors,
+preserves inline wording and table/list clauses, and normalizes line breaks.
 Retain raw HTML/text and clean text; simple cleaning can still lose information on
 unusual sites. Fixture tests precede expanding selectors.
 
 Snapshots include ID, job FK, URL, UTC `fetched_at`, raw content, clean content,
-SHA-256 of UTF-8 clean text, acquisition status and outcome metadata.
+SHA-256 of UTF-8 clean text and the original acquisition status. Separate immutable
+acquisition attempts retain each request/refusal, final URL and outcome metadata.
 Offsets refer to clean Unicode text. Exact latest raw+clean+URL resubmission reuses
 the existing snapshot. Changed raw text with identical clean content can create a
 new provenance snapshot with the same hash. The service never edits a snapshot;
 the service contract does not protect against direct database mutation.
 
-HTTP adapter acceptance requirements: configurable connect/read timeouts; bounded
-retry on transient errors/429 with capped Retry-After; at most three redirects;
+The executable [HTTP acquisition contract](acquisition.md) defines configurable
+connect/read timeouts, a shared deadline, bounded retry on transient errors/429 with
+capped Retry-After, and at most three redirects;
 HTTP(S) only; no credentials; validate every redirect and resolved IP, reject
 loopback/private/link-local/metadata/multicast/reserved addresses including IPv6;
 protect against DNS rebinding via a transport with verified destination selection;
@@ -322,14 +325,14 @@ single-user API has no authentication; the authorized mock UI uses these contrac
 | GET /health | Check DB connection and migrated jobs table; report fixture/live status |
 | POST /jobs/import | Exactly one of `{jobs:[...]}` / `{csv_text:"..."}`; counts, atomic |
 | GET /jobs | Ordered registry with latest-source snapshots/extractions for the UI |
-| GET /jobs/{id}/history | Append-only snapshot and extraction-run history |
+| GET /jobs/{id}/history | Append-only snapshots, extraction runs and acquisition attempts |
 | POST /candidate/validate | Strict profile validation without persistence |
 | POST /candidates/import | Explicit local candidate import; immutable/reused revision |
 | GET /candidates/{profile_id}/revisions | List saved revisions |
 | GET /candidates/{profile_id}/revisions/{revision_id} | Read/select an exact saved revision |
 | GET /match-runs/{match_run_id} | Read a historical match run and its provenance |
 | POST /jobs/{id}/snapshots | Manual text/HTML, source URL; return snapshot ID/hash |
-| POST /jobs/{id}/fetch | Bounded HTTP fetch with auditable outcomes; unsupported integration returns 501 |
+| POST /jobs/{id}/fetch | Bounded HTTP fetch; 201 with snapshot/hash and attempts, or persisted typed failure with manual fallback |
 | POST /jobs/{id}/extract | Configuration, latest snapshot; return run, requirements, evidence |
 | GET /jobs/{id} | Metadata, latest snapshot and its latest extraction; no stale results |
 | POST /jobs/{id}/match | Candidate profile payload; requirement-linked states/sources |
