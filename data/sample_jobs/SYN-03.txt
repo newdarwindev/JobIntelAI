@@ -1,0 +1,3 @@
+Synthetic company 03 — Backend / AI Engineer
+This fictional posting is authored for a public engineering demo.
+You must know Python and SQL.

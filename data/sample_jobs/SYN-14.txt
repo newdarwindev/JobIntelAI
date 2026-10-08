@@ -1,0 +1,4 @@
+Synthetic company 14 — Backend / AI Engineer
+This fictional posting is authored for a public engineering demo.
+Docker is required.
+Production experience with Docker is preferred.

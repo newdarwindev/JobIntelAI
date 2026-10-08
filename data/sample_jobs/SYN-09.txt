@@ -1,0 +1,3 @@
+Synthetic company 09 — Backend / AI Engineer
+This fictional posting is authored for a public engineering demo.
+GenAI is a bonus.

@@ -1,0 +1,99 @@
+[
+  {
+    "canonical": "Python",
+    "aliases": [
+      "python"
+    ],
+    "category": "backend"
+  },
+  {
+    "canonical": "PostgreSQL",
+    "aliases": [
+      "Postgres",
+      "postgresql"
+    ],
+    "category": "data"
+  },
+  {
+    "canonical": "Kubernetes",
+    "aliases": [
+      "K8s",
+      "kubernetes"
+    ],
+    "category": "infrastructure"
+  },
+  {
+    "canonical": "Generative AI",
+    "aliases": [
+      "GenAI",
+      "generative ai"
+    ],
+    "category": "AI/LLM"
+  },
+  {
+    "canonical": "AWS",
+    "aliases": [
+      "aws"
+    ],
+    "category": "cloud"
+  },
+  {
+    "canonical": "AWS Bedrock",
+    "aliases": [
+      "Amazon Bedrock"
+    ],
+    "category": "AI/LLM"
+  },
+  {
+    "canonical": "Azure",
+    "aliases": [
+      "azure"
+    ],
+    "category": "cloud"
+  },
+  {
+    "canonical": "FastAPI",
+    "aliases": [
+      "fastapi"
+    ],
+    "category": "backend"
+  },
+  {
+    "canonical": "Docker",
+    "aliases": [
+      "docker"
+    ],
+    "category": "infrastructure"
+  },
+  {
+    "canonical": "SQL",
+    "aliases": [
+      "sql"
+    ],
+    "category": "data"
+  },
+  {
+    "canonical": "Java",
+    "aliases": [
+      "java"
+    ],
+    "category": "backend"
+  },
+  {
+    "canonical": "Go",
+    "aliases": [
+      "Golang"
+    ],
+    "category": "backend"
+  },
+  {
+    "canonical": "LLM evaluation",
+    "aliases": [],
+    "category": "AI/LLM"
+  },
+  {
+    "canonical": "communication",
+    "aliases": [],
+    "category": "domain"
+  }
+]

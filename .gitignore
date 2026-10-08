@@ -205,6 +205,10 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
+# Private inputs, runtime databases and generated demo/evaluation outputs
+local_data/
+results/generated/
+
 # Ruff stuff:
 .ruff_cache/
 

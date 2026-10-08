@@ -1,0 +1,4 @@
+Synthetic company 08 — Backend / AI Engineer
+This fictional posting is authored for a public engineering demo.
+AWS Bedrock is required.
+AWS is preferred.

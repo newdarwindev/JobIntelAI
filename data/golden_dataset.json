@@ -1,0 +1,647 @@
+[
+  {
+    "job_id": "SYN-01",
+    "fixture": "sample_jobs/SYN-01.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Python is required.",
+          "normalized_skill_or_requirement": "Python",
+          "skills": [
+            "Python"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "MUST",
+          "category": "backend",
+          "evidence": {
+            "start": 111,
+            "end": 130,
+            "quote": "Python is required."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        },
+        {
+          "raw_text": "Postgres is nice to have.",
+          "normalized_skill_or_requirement": "PostgreSQL",
+          "skills": [
+            "PostgreSQL"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "PREFERRED",
+          "category": "data",
+          "evidence": {
+            "start": 131,
+            "end": 156,
+            "quote": "Postgres is nice to have."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-02",
+    "fixture": "sample_jobs/SYN-02.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Experience with AWS or Azure is required.",
+          "normalized_skill_or_requirement": "AWS OR Azure",
+          "skills": [
+            "AWS",
+            "Azure"
+          ],
+          "operator": "ANY",
+          "requirement_type": "MUST",
+          "category": "cloud",
+          "evidence": {
+            "start": 111,
+            "end": 152,
+            "quote": "Experience with AWS or Azure is required."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-03",
+    "fixture": "sample_jobs/SYN-03.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "You must know Python and SQL.",
+          "normalized_skill_or_requirement": "Python AND SQL",
+          "skills": [
+            "Python",
+            "SQL"
+          ],
+          "operator": "ALL",
+          "requirement_type": "MUST",
+          "category": "backend",
+          "evidence": {
+            "start": 111,
+            "end": 140,
+            "quote": "You must know Python and SQL."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-04",
+    "fixture": "sample_jobs/SYN-04.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Production experience with K8s is required.",
+          "normalized_skill_or_requirement": "Kubernetes",
+          "skills": [
+            "Kubernetes"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "EXPERIENCE",
+          "category": "infrastructure",
+          "evidence": {
+            "start": 111,
+            "end": 154,
+            "quote": "Production experience with K8s is required."
+          },
+          "explicit_production_required": true,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-05",
+    "fixture": "sample_jobs/SYN-05.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Three or more years of Python experience is required.",
+          "normalized_skill_or_requirement": "Python",
+          "skills": [
+            "Python"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "EXPERIENCE",
+          "category": "backend",
+          "evidence": {
+            "start": 111,
+            "end": 164,
+            "quote": "Three or more years of Python experience is required."
+          },
+          "explicit_production_required": null,
+          "years_required": {
+            "minimum": 3,
+            "maximum": null
+          },
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-06",
+    "fixture": "sample_jobs/SYN-06.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Two to four years of Java experience is required.",
+          "normalized_skill_or_requirement": "Java",
+          "skills": [
+            "Java"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "EXPERIENCE",
+          "category": "backend",
+          "evidence": {
+            "start": 111,
+            "end": 160,
+            "quote": "Two to four years of Java experience is required."
+          },
+          "explicit_production_required": null,
+          "years_required": {
+            "minimum": 2,
+            "maximum": 4
+          },
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-07",
+    "fixture": "sample_jobs/SYN-07.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "FastAPI is preferred.",
+          "normalized_skill_or_requirement": "FastAPI",
+          "skills": [
+            "FastAPI"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "PREFERRED",
+          "category": "backend",
+          "evidence": {
+            "start": 111,
+            "end": 132,
+            "quote": "FastAPI is preferred."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-08",
+    "fixture": "sample_jobs/SYN-08.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "AWS Bedrock is required.",
+          "normalized_skill_or_requirement": "AWS Bedrock",
+          "skills": [
+            "AWS Bedrock"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "MUST",
+          "category": "AI/LLM",
+          "evidence": {
+            "start": 111,
+            "end": 135,
+            "quote": "AWS Bedrock is required."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        },
+        {
+          "raw_text": "AWS is preferred.",
+          "normalized_skill_or_requirement": "AWS",
+          "skills": [
+            "AWS"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "PREFERRED",
+          "category": "cloud",
+          "evidence": {
+            "start": 136,
+            "end": 153,
+            "quote": "AWS is preferred."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-09",
+    "fixture": "sample_jobs/SYN-09.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "GenAI is a bonus.",
+          "normalized_skill_or_requirement": "Generative AI",
+          "skills": [
+            "Generative AI"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "PREFERRED",
+          "category": "AI/LLM",
+          "evidence": {
+            "start": 111,
+            "end": 128,
+            "quote": "GenAI is a bonus."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-10",
+    "fixture": "sample_jobs/SYN-10.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Remote work within Georgia only.",
+          "normalized_skill_or_requirement": "Georgia residency",
+          "skills": [
+            "Georgia residency"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "OTHER",
+          "category": "geography",
+          "evidence": {
+            "start": 111,
+            "end": 143,
+            "quote": "Remote work within Georgia only."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": "Georgia",
+      "work_mode": "remote"
+    }
+  },
+  {
+    "job_id": "SYN-11",
+    "fixture": "sample_jobs/SYN-11.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Onsite in Berlin three days weekly.",
+          "normalized_skill_or_requirement": "Berlin attendance",
+          "skills": [
+            "Berlin attendance"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "OTHER",
+          "category": "geography",
+          "evidence": {
+            "start": 111,
+            "end": 146,
+            "quote": "Onsite in Berlin three days weekly."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": "Berlin",
+      "work_mode": "onsite"
+    }
+  },
+  {
+    "job_id": "SYN-12",
+    "fixture": "sample_jobs/SYN-12.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Existing EU work authorization is required.",
+          "normalized_skill_or_requirement": "EU work authorization",
+          "skills": [
+            "EU work authorization"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "OTHER",
+          "category": "geography",
+          "evidence": {
+            "start": 111,
+            "end": 154,
+            "quote": "Existing EU work authorization is required."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-13",
+    "fixture": "sample_jobs/SYN-13.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Travel up to 20 percent is required.",
+          "normalized_skill_or_requirement": "travel up to 20%",
+          "skills": [
+            "travel up to 20%"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "OTHER",
+          "category": "geography",
+          "evidence": {
+            "start": 111,
+            "end": 147,
+            "quote": "Travel up to 20 percent is required."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-14",
+    "fixture": "sample_jobs/SYN-14.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Docker is required.",
+          "normalized_skill_or_requirement": "Docker",
+          "skills": [
+            "Docker"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "MUST",
+          "category": "infrastructure",
+          "evidence": {
+            "start": 111,
+            "end": 130,
+            "quote": "Docker is required."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        },
+        {
+          "raw_text": "Production experience with Docker is preferred.",
+          "normalized_skill_or_requirement": "Docker",
+          "skills": [
+            "Docker"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "PREFERRED",
+          "category": "infrastructure",
+          "evidence": {
+            "start": 131,
+            "end": 178,
+            "quote": "Production experience with Docker is preferred."
+          },
+          "explicit_production_required": true,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-15",
+    "fixture": "sample_jobs/SYN-15.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Golang is required.",
+          "normalized_skill_or_requirement": "Go",
+          "skills": [
+            "Go"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "MUST",
+          "category": "backend",
+          "evidence": {
+            "start": 111,
+            "end": 130,
+            "quote": "Golang is required."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-16",
+    "fixture": "sample_jobs/SYN-16.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "LLM evaluation is required.",
+          "normalized_skill_or_requirement": "LLM evaluation",
+          "skills": [
+            "LLM evaluation"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "MUST",
+          "category": "AI/LLM",
+          "evidence": {
+            "start": 111,
+            "end": 138,
+            "quote": "LLM evaluation is required."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-17",
+    "fixture": "sample_jobs/SYN-17.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Python is preferred, not mandatory.",
+          "normalized_skill_or_requirement": "Python",
+          "skills": [
+            "Python"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "PREFERRED",
+          "category": "backend",
+          "evidence": {
+            "start": 111,
+            "end": 146,
+            "quote": "Python is preferred, not mandatory."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-18",
+    "fixture": "sample_jobs/SYN-18.txt",
+    "extraction": {
+      "requirements": [],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-19",
+    "fixture": "sample_jobs/SYN-19.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Clear communication is required.",
+          "normalized_skill_or_requirement": "communication",
+          "skills": [
+            "communication"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "MUST",
+          "category": "domain",
+          "evidence": {
+            "start": 111,
+            "end": 143,
+            "quote": "Clear communication is required."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  },
+  {
+    "job_id": "SYN-20",
+    "fixture": "sample_jobs/SYN-20.txt",
+    "extraction": {
+      "requirements": [
+        {
+          "raw_text": "Python is required — café systems experience is not required.",
+          "normalized_skill_or_requirement": "Python",
+          "skills": [
+            "Python"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "MUST",
+          "category": "backend",
+          "evidence": {
+            "start": 111,
+            "end": 172,
+            "quote": "Python is required — café systems experience is not required."
+          },
+          "explicit_production_required": null,
+          "years_required": null,
+          "confidence": 1.0,
+          "notes": "Synthetic fixture confidence; not model calibrated."
+        }
+      ],
+      "responsibilities": [],
+      "geography": null,
+      "work_mode": null
+    }
+  }
+]

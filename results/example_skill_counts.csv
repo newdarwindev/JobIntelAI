@@ -1,0 +1,18 @@
+skill,N,n,must_n,preferred_n,experience_n,other_n
+AWS,20,1,0,1,0,0
+AWS Bedrock,20,1,1,0,0,0
+Berlin attendance,20,1,0,0,0,1
+Docker,20,1,1,1,0,0
+EU work authorization,20,1,0,0,0,1
+FastAPI,20,1,0,1,0,0
+Generative AI,20,1,0,1,0,0
+Georgia residency,20,1,0,0,0,1
+Go,20,1,1,0,0,0
+Java,20,1,0,0,1,0
+Kubernetes,20,1,0,0,1,0
+LLM evaluation,20,1,1,0,0,0
+PostgreSQL,20,1,0,1,0,0
+Python,20,5,3,1,1,0
+SQL,20,1,1,0,0,0
+communication,20,1,1,0,0,0
+travel up to 20%,20,1,0,0,0,1
