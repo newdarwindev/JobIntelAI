@@ -130,6 +130,14 @@ curl --fail -X POST http://127.0.0.1:8000/evaluate \
   -H 'Content-Type: application/json' -d '{}'
 ```
 
+Candidate imports are private local database revisions. Save one with
+`jobintel candidate-import --input local_data/profile.json`, list it with
+`jobintel candidate-revisions --profile-id PROFILE`, and explicitly select it using
+`jobintel match --job-id JOB --profile-id PROFILE --revision-id REVISION --run-id EXTRACTION`.
+Read historical results with `jobintel match-run --run-id MATCH_RUN`.
+The browser saves/reloads the selected revision ID and displays sourced tenure and
+eligibility alongside separate capability and production evidence.
+
 ## Explicit OpenAI extraction
 
 Fixture replay stays the offline default. For separately authorized live execution,

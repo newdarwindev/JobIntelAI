@@ -1,14 +1,19 @@
+import json
+from datetime import date
+from hashlib import sha256
+
 from sqlalchemy import select
 
 from jobintel import db
 from jobintel.analytics import skill_counts
+from jobintel.candidate_matching import match_filters
 from jobintel.compatibility import stored_extraction, stored_requirement
 from jobintel.config import fixture_root
 from jobintel.matching import match_requirement
 from jobintel.normalization import Taxonomy
 from jobintel.providers import extract_result
 from jobintel.registry import identity, normalize_url
-from jobintel.schemas import CandidateProfile, Extraction, JobInput, SnapshotInput
+from jobintel.schemas import CandidateProfile, Extraction, JobInput, MatchSelection, SnapshotInput
 from jobintel.snapshots import clean_text, content_hash, validate_grounding
 
 
@@ -160,31 +165,125 @@ class Service:
             "extraction": None if run is None else self.run_output(run),
         }
 
-    def match(self, job_id: str, profile: CandidateProfile):
+    @staticmethod
+    def candidate_output(candidate):
+        profile = CandidateProfile.model_validate(candidate.payload).model_dump(mode="json")
+        encoded = json.dumps(profile, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        return {
+            "profile_id": candidate.profile_id,
+            "profile_revision_id": candidate.id,
+            "content_hash": sha256(encoded.encode()).hexdigest(),
+            "created_at": candidate.created_at,
+            "profile": profile,
+        }
+
+    def import_candidate(self, profile: CandidateProfile):
+        payload = profile.model_dump(mode="json")
+        existing = self.session.scalars(
+            select(db.CandidateEvidenceRow).where(
+                db.CandidateEvidenceRow.profile_id == profile.profile_id
+            )
+        )
+        for candidate in existing:
+            if (
+                CandidateProfile.model_validate(candidate.payload).model_dump(mode="json")
+                == payload
+            ):
+                return self.candidate_output(candidate)
+        candidate = db.CandidateEvidenceRow(profile_id=profile.profile_id, payload=payload)
+        self.session.add(candidate)
+        self.session.flush()
+        return self.candidate_output(candidate)
+
+    def candidate(self, profile_id, revision_id):
+        candidate = self.session.get(db.CandidateEvidenceRow, revision_id)
+        if candidate is None or candidate.profile_id != profile_id:
+            raise KeyError(revision_id)
+        return self.candidate_output(candidate)
+
+    def candidate_revisions(self, profile_id):
+        revisions = self.session.scalars(
+            select(db.CandidateEvidenceRow)
+            .where(db.CandidateEvidenceRow.profile_id == profile_id)
+            .order_by(db.CandidateEvidenceRow.created_at.desc(), db.CandidateEvidenceRow.id.desc())
+        )
+        return {
+            "profile_id": profile_id,
+            "revisions": [self.candidate_output(r) for r in revisions],
+        }
+
+    def match(self, job_id: str, selection: CandidateProfile | MatchSelection):
         snapshot = self.latest_snapshot(job_id)
         run = self.latest_run(snapshot.id) if snapshot else None
         if run is None:
             raise Conflict("extract the latest snapshot before matching")
-        candidate = db.CandidateEvidenceRow(
-            profile_id=profile.profile_id, payload=profile.model_dump()
+        if isinstance(selection, MatchSelection):
+            if selection.expected_run_id != run.id:
+                raise Conflict("extraction selection is stale; reload and select the current run")
+            candidate = self.candidate(selection.profile_id, selection.profile_revision_id)
+            as_of = selection.as_of
+        else:
+            candidate = self.import_candidate(selection)
+            as_of = date.today()
+        profile = CandidateProfile.model_validate(candidate["profile"])
+        match_run = db.MatchRun(
+            extraction_run_id=run.id,
+            snapshot_id=snapshot.id,
+            profile_revision_id=candidate["profile_revision_id"],
+            payload={},
         )
-        self.session.add(candidate)
+        self.session.add(match_run)
         self.session.flush()
+        eligibility = match_filters(stored_extraction(run.payload), profile, as_of)
+        results = self.match_rows(run, candidate, profile, match_run.id, as_of, eligibility)
+        output = {
+            "match_run_id": match_run.id,
+            "profile_id": profile.profile_id,
+            "profile_revision_id": candidate["profile_revision_id"],
+            "profile_content_hash": candidate["content_hash"],
+            "run_id": run.id,
+            "snapshot_id": snapshot.id,
+            "content_hash": snapshot.content_hash,
+            "as_of": as_of.isoformat(),
+            "created_at": match_run.created_at,
+            "matches": results,
+            "eligibility": eligibility,
+        }
+        match_run.payload = output
+        self.session.flush()
+        return output
+
+    def match_rows(self, run, candidate, profile, match_run_id, as_of, eligibility):
         results = []
-        for row in self.session.scalars(
+        rows = self.session.scalars(
             select(db.RequirementRow).where(db.RequirementRow.run_id == run.id)
-        ):
+        ).all()
+        rows.sort(key=lambda row: run.payload["requirements"].index(row.payload))
+        for row in rows:
             result = match_requirement(
-                stored_requirement(row.payload, run.schema_version), profile, self.taxonomy
+                stored_requirement(row.payload, run.schema_version),
+                profile,
+                self.taxonomy,
+                as_of,
+                eligibility,
             )
             result["requirement_id"] = row.id
             self.session.add(
                 db.MatchRow(
-                    requirement_id=row.id, candidate_evidence_id=candidate.id, payload=result
+                    match_run_id=match_run_id,
+                    requirement_id=row.id,
+                    candidate_evidence_id=candidate["profile_revision_id"],
+                    payload=result,
                 )
             )
             results.append(result)
-        return {"profile_id": profile.profile_id, "run_id": run.id, "matches": results}
+        return results
+
+    def match_run(self, match_run_id):
+        run = self.session.get(db.MatchRun, match_run_id)
+        if run is None:
+            raise KeyError(match_run_id)
+        return run.payload
 
     def list_jobs(self):
         return [

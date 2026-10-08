@@ -192,6 +192,41 @@ current_capability (`strong|basic|none|unknown`), production_evidence
 (`confirmed|limited|none|unknown`), source reference and quote. A source reference
 is supplied evidence, not proof that a third-party credential has been verified.
 No employer-name inference. Candidate import and revision selection use explicit sourced profile payloads.
+`POST /candidates/import` appends an immutable revision, reusing an identical validated
+payload for the same profile ID. Reads list revisions or retrieve one exact revision;
+there is no update/delete endpoint. Legacy snapshot IDs remain valid revisions.
+Completeness is a user assertion about supplied records, not independent verification.
+
+`tenure` records carry skill, kind (`experience|production`), status
+(`confirmed|none|unknown`), start/end dates, source and quote. End is exclusive;
+missing dates and periods beyond the match assessment date abstain. Overlapping
+and adjacent intervals are merged per canonical skill/kind before computing calendar
+anniversary years plus a fractional remainder. Requirements use inclusive minimum
+and maximum bounds. A known lower bound can satisfy a minimum; a maximum requires
+`tenure_complete=true`. Short positive complete tenure is PARTIAL; zero/absent complete
+tenure or exceeding a maximum is MISSING. Incomplete deficits stay UNKNOWN.
+Generic capability and employer names never supply tenure. Production years use
+production periods and still require the separate current capability/production axes.
+
+`eligibility` records carry kind (`location|work_authorization|travel|residency|attendance`),
+exact scoped value, status (`confirmed|denied|unknown`), observation date, optional
+inclusive expiry, source and quote. Only whitespace/case normalization is applied;
+no country hierarchy, citizenship, authorization, or travel inference is performed.
+Records outside their validity period or contradictory records abstain. Each kind's
+absence remains UNKNOWN unless declared in `eligibility_complete`. Explicit denial
+is MISSING. Sourced job geography and filter metadata are evaluated directly. An OTHER
+requirement using the same grounded evidence span shares those predicate results;
+OTHER claims without such a supported fact and version requirements abstain.
+
+Matching a saved revision sends `profile_id`, `profile_revision_id`, `expected_run_id`
+and optional `as_of` (default local assessment date). A wrong profile/revision pair
+returns 404; a stale extraction returns 409. Older candidate revisions remain valid
+when explicitly selected. A coherent persisted match run identifies source snapshot,
+source hash, extraction, candidate revision/hash and assessment date, with per-predicate
+job evidence and candidate sources. `GET /match-runs/{id}` preserves historical reads.
+The original full-profile match body remains compatible and imports/reuses its revision.
+Private payloads stay in the user's local database; only synthetic records enter tests.
+The browser retains revision IDs, not profile bodies, in local storage.
 
 | Condition | State |
 | --- | --- |
@@ -283,6 +318,10 @@ All endpoints use JSON except embedded CSV text in import. No frontend or auth.
 | GET /jobs | Ordered registry with latest-source snapshots/extractions for the UI |
 | GET /jobs/{id}/history | Append-only snapshot and extraction-run history |
 | POST /candidate/validate | Strict profile validation without persistence |
+| POST /candidates/import | Explicit local candidate import; immutable/reused revision |
+| GET /candidates/{profile_id}/revisions | List saved revisions |
+| GET /candidates/{profile_id}/revisions/{revision_id} | Read/select an exact saved revision |
+| GET /match-runs/{match_run_id} | Read a historical match run and its provenance |
 | POST /jobs/{id}/snapshots | Manual text/HTML, source URL; return snapshot ID/hash |
 | POST /jobs/{id}/fetch | Bounded HTTP fetch with auditable outcomes; unsupported integration returns 501 |
 | POST /jobs/{id}/extract | Configuration, latest snapshot; return run, requirements, evidence |
@@ -299,7 +338,7 @@ latest identical snapshot; it deliberately appends extraction/match history.
 ## 13. Persistence and operations
 
 Logical entities: jobs, posting_snapshots, extraction_runs, requirements, skills,
-candidate_evidence (profile snapshots), matches, evaluation_runs.
+candidate_evidence (immutable profile revisions), match_runs, matches, evaluation_runs.
 FKs establish source/run/candidate trace. SQLAlchemy JSON holds validated payloads
 to keep initial migrations small; promote frequently queried fields to columns
 when gap/slice queries justify it. PostgreSQL is authoritative; SQLite is not

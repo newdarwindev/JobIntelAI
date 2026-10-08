@@ -18,6 +18,7 @@ from jobintel.schemas import (
     EvaluateInput,
     ExtractInput,
     ImportInput,
+    MatchSelection,
     SnapshotInput,
 )
 from jobintel.service import Conflict, Service
@@ -41,8 +42,11 @@ def service(request: Request):
             session.commit()
         except KeyError as error:
             session.rollback()
-            raise HTTPException(404, "job not found") from error
-        except (Conflict, IntegrityError) as error:
+            raise HTTPException(404, "job, candidate revision or match run not found") from error
+        except Conflict as error:
+            session.rollback()
+            raise HTTPException(409, str(error)) from error
+        except IntegrityError as error:
             session.rollback()
             raise HTTPException(409, "registry conflict or missing prerequisite") from error
         except ProviderError as error:
@@ -69,6 +73,7 @@ def health(request: Request):
             session.execute(text("SELECT 1"))
             session.execute(text("SELECT job_id FROM jobs LIMIT 1"))
             session.execute(select(db.ExtractionRun.provenance).limit(1))
+            session.execute(select(db.MatchRun.id).limit(1))
     except SQLAlchemyError as error:
         raise HTTPException(503, "database unavailable or migrations required") from error
     provider = request.app.state.provider
@@ -101,7 +106,27 @@ def history(job_id: str, svc: ServiceDependency):
 
 @router.post("/candidate/validate")
 def validate_candidate(payload: CandidateProfile):
-    return payload.model_dump()
+    return payload.model_dump(mode="json")
+
+
+@router.post("/candidates/import", status_code=201)
+def import_candidate(payload: CandidateProfile, svc: ServiceDependency):
+    return svc.import_candidate(payload)
+
+
+@router.get("/candidates/{profile_id}/revisions")
+def candidate_revisions(profile_id: str, svc: ServiceDependency):
+    return svc.candidate_revisions(profile_id)
+
+
+@router.get("/candidates/{profile_id}/revisions/{revision_id}")
+def candidate_revision(profile_id: str, revision_id: str, svc: ServiceDependency):
+    return svc.candidate(profile_id, revision_id)
+
+
+@router.get("/match-runs/{match_run_id}")
+def match_run(match_run_id: str, svc: ServiceDependency):
+    return svc.match_run(match_run_id)
 
 
 @router.post("/jobs/{job_id}/snapshots", status_code=201)
@@ -133,7 +158,7 @@ def job(job_id: str, svc: ServiceDependency):
 
 
 @router.post("/jobs/{job_id}/match")
-def match(job_id: str, payload: CandidateProfile, svc: ServiceDependency):
+def match(job_id: str, payload: CandidateProfile | MatchSelection, svc: ServiceDependency):
     return svc.match(job_id, payload)
 
 
