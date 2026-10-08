@@ -3,6 +3,7 @@
 `.github/workflows/test.yml` runs on every push and pull request, with manual
 `workflow_dispatch` support. It has read-only repository permissions, bounded
 timeouts and cancels superseded runs for the same ref. There are no paid calls.
+Runners use Ubuntu 24.04 explicitly; checkout v5 and setup-python v6 use Node 24.
 
 | Job | Blocking checks |
 | --- | --- |
