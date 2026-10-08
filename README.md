@@ -58,8 +58,8 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **16/16**, recorded 2026-10-08.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37794370175) · commit `c061db3aedad40f0241fc4213c8b7a0209dbd72d`.
-Source content SHA-256: `db4dab29d2a95410396568493b673200772700ec3d8faeb7260a6d2a0c72f7f7`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37797879580) · commit `53d3c9c3ee2ed0e3fc18a07d0f8c7537f42e9bcf`.
+Source content SHA-256: `f0c0a828236c0365dcf738d0d7e30cf87e1d0ad224b9322ef9e2f313b8fb4e65`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -129,6 +129,48 @@ curl --fail http://127.0.0.1:8000/analytics/skills
 curl --fail -X POST http://127.0.0.1:8000/evaluate \
   -H 'Content-Type: application/json' -d '{}'
 ```
+
+## Explicit OpenAI extraction
+
+Fixture replay stays the offline default. For separately authorized live execution,
+export `JOBINTEL_PROVIDER=openai`, an explicit structured-output-compatible
+`JOBINTEL_OPENAI_MODEL`, and `OPENAI_API_KEY` from secure runtime configuration.
+Never put credentials in postings, configuration files, public artifacts or CLI
+arguments. `JOBINTEL_OPENAI_TIMEOUT` defaults to 30 seconds (allowed: 1–120).
+The HTTP adapter uses the existing packaged httpx dependency and the
+[Responses Structured Outputs contract](https://developers.openai.com/api/docs/guides/structured-outputs?api-mode=responses).
+
+`JOBINTEL_CONFIGURATION` selects `openai_structured_v1` (raw terms) or
+`openai_normalized_v1` (deterministic taxonomy aliases, default). Both use the
+packaged `job-requirements-v1` prompt and grounded extraction schema v2. Missing
+keys/models and mismatched configurations fail before requests. The synthetic
+`demo` command/launcher requires fixture replay. No failure substitutes fixtures.
+
+After importing a job and saving its snapshot, the same extraction is available via
+`jobintel extract --provider openai --configuration openai_normalized_v1 --job-id ID`
+or `POST /jobs/ID/extract` with `{"configuration":"openai_normalized_v1"}` on an
+explicitly configured OpenAI app. `create_app(provider_name="openai", model=...,
+transport=...)` supports injectable fake transports. `/health` reports the selected
+provider/configuration and configuration readiness; it makes no paid readiness call
+and does not establish upstream reachability. Startup rejects missing configuration.
+
+New runs retain source/snapshot IDs, provider/model (requested and returned),
+configuration/prompt versions and hashes, schema/taxonomy hashes, request/response
+IDs, bounded attempt metadata, actual supplied usage, and measured local elapsed
+seconds. Missing usage, provider-only latency and cost remain null. Historical
+runs migrated from older versions retain null provenance rather than invented data.
+`/evaluate` and `jobintel evaluate --provider openai --configurations
+openai_structured_v1 openai_normalized_v1` preserve per-posting provenance and fail
+atomically; the authored fixture labels do not establish independent live quality.
+
+Typed errors carry `detail.code`, `retryable` and a redacted message: refusal and
+invalid evidence use 422; malformed JSON, invalid schema, truncation, quota,
+rate-limit and provider failure use 502; timeout uses 504. Only malformed output
+gets one schema retry. Quota/refusal/invalid evidence are not retryable; transient
+network/rate-limit failures are retryable by an explicit caller, without hidden
+transport retries. A failed extraction/evaluation keeps previous runs unchanged.
+Fake transport, semantic, API/CLI and migrated database regressions are in
+`tests/unit/test_openai*` and `tests/integration/test_openai_boundary.py` (V12–V19).
 
 ## PostgreSQL / Docker
 

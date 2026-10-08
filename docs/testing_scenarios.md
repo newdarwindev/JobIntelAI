@@ -58,6 +58,14 @@ PostgreSQL. UI03/UI04 inspect the corresponding evidence and abstention contract
 | S36 / health | Database connected but unmigrated → health → 503 | integration/test_boundaries.py |
 | S37 / persistence boundary | Replaceable provider returns invalid quote → service extract → no new rows; prior run preserved | integration/test_boundaries.py |
 
+V12–V19 provider regressions are in `unit/test_openai_provider.py`,
+`unit/test_openai_semantics.py`, and `integration/test_openai_boundary.py`.
+They use fake Responses transports for strict schema/refusal/retry/Unicode/errors,
+independent authored semantic cases, concurrent request provenance, explicit
+configuration, API/CLI parity, migrated SQLite/PostgreSQL persistence and atomic
+failure. UI03 exports identity and UI07 verifies typed errors and preserved runs.
+Paid execution and measured live semantic quality belong to issue #9.
+
 ## Implementation acceptance in GitHub issues
 
 | Issue | Acceptance area | Original scenario IDs |

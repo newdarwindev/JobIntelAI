@@ -2,6 +2,8 @@ import json
 from collections import defaultdict
 from time import perf_counter
 
+from jobintel.provider_config import configuration_for
+from jobintel.providers import extract_result
 from jobintel.schemas import Extraction
 from jobintel.snapshots import GroundingError, validate_grounding
 
@@ -76,21 +78,34 @@ def run_evaluation(provider, root, configurations: list[str]) -> dict:
     gold = [Extraction.model_validate(record["extraction"]) for record in labels]
     for text, extraction in zip(texts, gold, strict=True):
         validate_grounding(text, extraction)
+    for configuration in configurations:
+        configuration_for(configuration, provider.name)
     results = []
     for configuration in configurations:
         started = perf_counter()
-        predictions = [provider.extract(text, configuration) for text in texts]
+        records = [extract_result(provider, text, configuration) for text in texts]
+        predictions = [r.extraction for r in records]
         results.append(
             {
                 "configuration": configuration,
                 "metrics": score(predictions, gold, texts),
                 "elapsed_seconds": perf_counter() - started,
-                "tokens": None,
+                "tokens": evaluation_tokens(records),
+                "provenance": [r.provenance for r in records],
                 "estimated_cost": None,
             }
         )
     return {
-        "mode": "fixture replay — plumbing regression, not live LLM quality",
+        "mode": "fixture replay — plumbing regression, not live LLM quality"
+        if provider.name == "fixture"
+        else "live structured extraction — authored fixture labels",
         "dataset_size": len(labels),
         "results": results,
     }
+
+
+def evaluation_tokens(records):
+    usages = [r.provenance.get("usage") if r.provenance else None for r in records]
+    if any(u is None or u.get("total_tokens") is None for u in usages):
+        return None
+    return sum(u["total_tokens"] for u in usages)

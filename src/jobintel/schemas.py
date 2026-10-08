@@ -156,10 +156,10 @@ class CandidateProfile(StrictModel):
 
 
 class ExtractInput(StrictModel):
-    configuration: Literal["fixture_raw", "fixture_normalized"] = "fixture_normalized"
+    configuration: str | None = Field(default=None, min_length=1, max_length=100)
 
 
 class EvaluateInput(StrictModel):
-    configurations: list[Literal["fixture_raw", "fixture_normalized"]] = Field(
-        default_factory=lambda: ["fixture_raw", "fixture_normalized"], min_length=1
+    configurations: list[Annotated[str, Field(min_length=1, max_length=100)]] | None = Field(
+        default=None, min_length=1
     )

@@ -6,7 +6,7 @@ The user requested all required web interfaces, mocks, complete GitHub Actions
 browser workflows, successful videos in README.md, and persistent agent rules.
 This explicitly extends the original backend-only v1 scope. The original brief is
 retained. The six screens below expose that backend's contracts; this extension
-does not complete the live HTTP/OpenAI or portfolio experiment release gates.
+does not establish live model quality or complete HTTP acquisition and portfolio experiment release gates.
 
 The UI is dependency-free HTML/CSS/JavaScript served by FastAPI at `/ui/`. Mocking
 happens at the existing `FixtureProvider` boundary: the browser calls real migrated
@@ -84,3 +84,12 @@ Actions write permission and a default branch allowing bot commits. If branch
 protection rejects the push, the publishing job fails explicitly while the verified
 artifact remains available; apply that artifact through the repository's approved
 PR process. Never use `pull_request_target` to execute untrusted browser tests.
+
+
+UI03 also exports the provider/configuration/schema/taxonomy/source identity and
+null fixture usage. UI07 exercises typed 422 refusal, 502 quota and 504 timeout
+responses, shows retryability, and verifies that the prior extraction remains
+current. These error envelopes are authored browser mocks; adapter and atomic
+persistence contracts are exercised with fake transports in backend tests.
+The synthetic launcher remains fixture-only. OpenAI is selected explicitly through
+API/CLI setup; paid live execution and model quality need separate authorization.

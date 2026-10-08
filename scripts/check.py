@@ -86,7 +86,24 @@ def main():
         smoke(environment, temporary / "results")
         experiment_smoke(environment, temporary)
         run(sys.executable, "-m", "build", "--outdir", str(temporary / "dist"))
+        packaging_smoke(temporary)
     print("Python quality gates passed.")
+
+
+def packaging_smoke(temporary):
+    target = temporary / "installed-wheel"
+    wheel = next((temporary / "dist").glob("*.whl"))
+    run(sys.executable, "-m", "pip", "install", "--no-deps", "--target", str(target), str(wheel))
+    code = (
+        "import pathlib, sys; sys.path.insert(0, sys.argv[1]); import jobintel; "
+        "from jobintel.openai_provider import OpenAIProvider; "
+        "from jobintel.openai_transport import HttpOpenAITransport; "
+        "from jobintel.provider_config import strict_schema; "
+        "assert pathlib.Path(jobintel.__file__).is_relative_to(sys.argv[1]); "
+        "assert strict_schema()['additionalProperties'] is False; "
+        "print('Installed wheel adapter/policy imports passed')"
+    )
+    run(sys.executable, "-I", "-c", code, str(target))
 
 
 def experiment_smoke(environment, temporary):
