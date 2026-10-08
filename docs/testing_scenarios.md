@@ -5,6 +5,11 @@ remaining work are maintained in [GitHub issues](implementation_plan.md), rather
 than executable/planned status tables. Live model experiments require explicit
 paid-call authorization; fast CI uses fake transports/providers.
 
+V38 harness regressions in `tests/unit/test_experiments.py` verify frozen inputs,
+configuration separation, budget rejection, failure preservation, saved-prediction
+rescoring and public-report safeguards. Live reports/reviewer audit are separate
+evidence in issue #9.
+
 ## Regression references
 
 | ID / brief area | Given → when → expected | Test location |

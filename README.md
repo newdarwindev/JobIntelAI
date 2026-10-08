@@ -58,8 +58,8 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **16/16**, recorded 2026-10-08.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37780541001) · commit `239a3043741e164eb93979e91553a5907dc28516`.
-Source content SHA-256: `3f7a2ca1af4ea5c9ca7a33c401f5df834f557f3798875aa7f76a9306357fd4e2`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `5132066d3431f561854dcd54fb01072c677aa8e7cad753ad8d939b04a6c8a8b8`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -255,6 +255,24 @@ abstention, tokens and cost are unavailable, represented by null. Test cases inj
 wrong types, duplicate predictions and invalid evidence to verify metric failures.
 Read [evaluation methodology](docs/evaluation.md) and the saved
 [fixture report](results/fixture_evaluation.json). Do not substitute fixture measurements for independently reviewed model results.
+
+The opt-in [experiment command](docs/experiments.md) freezes snapshots and labels,
+checks call/token/USD reservations, checkpoints failures and rescores saved outputs
+without requests. The [complete fake report](results/experiments/fake/report.json)
+and [reproduced scores](results/experiments/fake/scores.json) include corpus, source,
+schema and configuration hashes. These A/B/C values are plumbing measurements:
+the fake provider supplies identical raw predictions, then C applies normalization.
+
+| Fake configuration | Aligned / predicted | Aligned / gold | Type | Evidence | Failures / cases | Tokens / priced cost |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| A · free-form audit path | 18/22 | 18/22 | 18/18 | 18/18 | 0/20 | unavailable |
+| B · strict evidence path | 18/22 | 18/22 | 18/18 | 18/18 | 0/20 | unavailable |
+| C · strict + normalization | 22/22 | 22/22 | 22/22 | 22/22 | 0/20 | unavailable |
+
+Local replay duration is in the report; it measures no LLM latency. Semantic and
+abstention metrics are null. The alias trade-off above does not predict a live
+winner. [Issue #9](https://github.com/newdarwindev/JobIntelAI/issues/9) requires
+separately authorized live reports and independent reviewer audit for closure.
 
 After the demo, N=20 successful latest-source extractions. Python appears in 5/20
 jobs (MUST 3/20, PREFERRED 1/20, EXPERIENCE 1/20). AWS OR Azure appears as a separate

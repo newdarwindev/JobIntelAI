@@ -1,0 +1,1170 @@
+{
+  "corpus_sha256": "8ecb4b2db7575a2a1600c7f61231b400637efa974b13a0bcd5d7593baeb48784",
+  "spec_sha256": "6fbcbbc6636836fe16fbdc9eee0665162654d6dc3704e24ccc71027591d12520",
+  "results": [
+    {
+      "configuration": "A",
+      "summary": {
+        "succeeded": 20,
+        "failed": 0,
+        "metric_scope": "successful cases only; failures excluded, never empty predictions",
+        "metrics": {
+          "true_positives": 18,
+          "predicted": 22,
+          "expected": 22,
+          "precision": 0.8181818181818182,
+          "recall": 0.8181818181818182,
+          "f1": 0.8181818181818182,
+          "type_accuracy": 1.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": null,
+          "abstention_quality": null
+        },
+        "per_case": [
+          {
+            "case_id": "SYN-01",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 0.5,
+              "recall": 0.5,
+              "f1": 0.5,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-02",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-03",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-04",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-05",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-06",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-07",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-08",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-09",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-10",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-11",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-12",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-13",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-14",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-15",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-16",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-17",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-18",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 0,
+              "expected": 0,
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": null,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-19",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-20",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          }
+        ],
+        "tokens": null,
+        "cost_usd": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 20,
+        "elapsed_seconds": 0.0011439539996445092
+      }
+    },
+    {
+      "configuration": "B",
+      "summary": {
+        "succeeded": 20,
+        "failed": 0,
+        "metric_scope": "successful cases only; failures excluded, never empty predictions",
+        "metrics": {
+          "true_positives": 18,
+          "predicted": 22,
+          "expected": 22,
+          "precision": 0.8181818181818182,
+          "recall": 0.8181818181818182,
+          "f1": 0.8181818181818182,
+          "type_accuracy": 1.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": null,
+          "abstention_quality": null
+        },
+        "per_case": [
+          {
+            "case_id": "SYN-01",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 0.5,
+              "recall": 0.5,
+              "f1": 0.5,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-02",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-03",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-04",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-05",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-06",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-07",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-08",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-09",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-10",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-11",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-12",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-13",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-14",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-15",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-16",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-17",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-18",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 0,
+              "expected": 0,
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": null,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-19",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-20",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          }
+        ],
+        "tokens": null,
+        "cost_usd": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 20,
+        "elapsed_seconds": 0.0013218490000781458
+      }
+    },
+    {
+      "configuration": "C",
+      "summary": {
+        "succeeded": 20,
+        "failed": 0,
+        "metric_scope": "successful cases only; failures excluded, never empty predictions",
+        "metrics": {
+          "true_positives": 22,
+          "predicted": 22,
+          "expected": 22,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "type_accuracy": 1.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": null,
+          "abstention_quality": null
+        },
+        "per_case": [
+          {
+            "case_id": "SYN-01",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-02",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-03",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-04",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-05",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-06",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-07",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-08",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-09",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-10",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-11",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-12",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-13",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-14",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-15",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-16",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-17",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-18",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 0,
+              "expected": 0,
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": null,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-19",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          },
+          {
+            "case_id": "SYN-20",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null
+            }
+          }
+        ],
+        "tokens": null,
+        "cost_usd": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 20,
+        "elapsed_seconds": 0.00243311500071286
+      }
+    }
+  ]
+}

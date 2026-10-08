@@ -6,7 +6,16 @@ from jobintel.schemas import Requirement
 
 class Taxonomy:
     def __init__(self, path: Path):
-        self.records = json.loads(path.read_text())
+        self._load(json.loads(path.read_text()))
+
+    @classmethod
+    def from_records(cls, records: list[dict]):
+        instance = cls.__new__(cls)
+        instance._load(records)
+        return instance
+
+    def _load(self, records: list[dict]):
+        self.records = records
         self.aliases = {}
         for record in self.records:
             for alias in [record["canonical"], *record["aliases"]]:
