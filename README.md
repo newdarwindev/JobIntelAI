@@ -58,8 +58,8 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **16/16**, recorded 2026-10-08.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37835848670) · commit `f000705582bf9911de19ce812593cc1c9e3f8890`.
-Source content SHA-256: `d75ba04802cbb6efe3356ececd5c4f7908757fd970b9090f4924b86ec2cad1e5`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `64df7a5899c3a507c0bab9c9107d8a8732538add51dc097e1740da285ad4c7a0`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -239,16 +239,20 @@ SYN-01,Synthetic Company 01,Backend / AI Engineer,,,
 `POST /jobs/import` accepts exactly one of `{"jobs":[...]}` or `{"csv_text":"..."}`.
 Create a manual source with `POST /jobs/{id}/snapshots` and `{"text":"..."}` or
 `{"text":"<main>...</main>","format":"html"}`. A fixture extractor accepts only
-bundled known content hashes; arbitrary manual text cannot be extracted yet.
+bundled known content hashes; arbitrary sources need an explicitly configured
+live provider for extraction. URL acquisition uses a bounded public-destination
+HTTP transport with saved attempts and manual recovery. See the
+[acquisition contract](docs/acquisition.md) for time/size limits and proxy support.
+The demo uses authored offline HTTP/DNS responses and performs no URL crawling.
 
 | Endpoint | Interface |
 | --- | --- |
 | GET /health | DB connection + migrated schema readiness |
 | POST /jobs/import | Atomic JSON/CSV import, duplicate/conflict handling |
 | GET /jobs | Ordered registry with current snapshots and extractions |
-| GET /jobs/{id}/history | Immutable source history and extraction runs |
+| GET /jobs/{id}/history | Immutable sources, extraction runs and acquisition attempts |
 | POST /jobs/{id}/snapshots | Manual text/HTML, provenance/hash |
-| POST /jobs/{id}/fetch | Explicit 501 stub if URL exists |
+| POST /jobs/{id}/fetch | Bounded HTTP acquisition, 201 source/hash or typed manual fallback |
 | POST /jobs/{id}/extract | `{}` defaults to normalized fixture replay |
 | GET /jobs/{id} | Latest source, current requirements and evidence |
 | POST /jobs/{id}/match | Candidate payload as in `data/sample_candidate.json` |

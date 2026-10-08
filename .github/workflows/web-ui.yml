@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - 'src/**'
+      - 'alembic/**'
+      - 'alembic.ini'
       - 'data/**'
       - 'tests/**'
       - 'scripts/**'
@@ -48,7 +50,7 @@ jobs:
         run: |
           node scripts/check_ui_contract.mjs --coverage-only
           npm run test:recordings
-      - name: Exercise every desktop/mobile workflow including shared provenance exports
+      - name: Exercise every desktop/mobile workflow including bounded acquisition and provenance exports
         run: npm run test:ui
       - name: Collect only successful attempts and update README
         run: |

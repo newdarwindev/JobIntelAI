@@ -75,7 +75,9 @@ def test_import_conflict_rolls_back_entire_batch(client):
     )
 
 
-def test_errors_and_explicit_fetch_stub(client):
+def test_errors_and_explicit_fetch_fallback(client):
+    from tests.acquisition_fakes import Response, acquirer
+
     assert client.get("/jobs/missing").status_code == 404
     assert client.post("/jobs/import", json={}).status_code == 422
     assert (
@@ -101,5 +103,6 @@ def test_errors_and_explicit_fetch_stub(client):
         ).status_code
         == 200
     )
-    assert client.post("/jobs/x/fetch").status_code == 501
+    client.app.state.acquirer = acquirer(Response(403))[0]
+    assert client.post("/jobs/x/fetch").status_code == 403
     assert client.post("/jobs/x/extract", json={}).status_code == 409

@@ -6,7 +6,7 @@ The user requested all required web interfaces, mocks, complete GitHub Actions
 browser workflows, successful videos in README.md, and persistent agent rules.
 This explicitly extends the original backend-only v1 scope. The original brief is
 retained. The six screens below expose that backend's contracts; this extension
-does not establish live model quality or complete HTTP acquisition and portfolio experiment release gates.
+does not establish live model quality or complete portfolio experiment release gates.
 
 The UI is dependency-free HTML/CSS/JavaScript served by FastAPI at `/ui/`. Mocking
 happens at the existing `FixtureProvider` boundary: the browser calls real migrated
@@ -26,7 +26,7 @@ Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 | --- | --- | --- |
 | Overview | Empty onboarding, registry/success/pending counts, complete 20-posting replay, direct navigation | UI01, UI03, UI08 |
 | Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters | UI01 |
-| Source & extraction | Manual text/HTML, URL stub/manual fallback, immutable hash/timestamp/URL, history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON | UI02, UI03, UI07 |
+| Source & extraction | Manual text/HTML, bounded URL acquisition/manual recovery, immutable hash/timestamp/URL, source/extraction/attempt history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON | UI02, UI03, UI07 |
 | Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export | UI04 |
 | Corpus analytics | Successful latest-source n/N, explicit pending/excluded totals, applied slices, alternative groups, distinct-job category coverage, current-profile group gaps with UNKNOWN separate, JSON and formula-safe CSV with snapshot/run/profile provenance | UI05 |
 | Evaluation lab | Select raw/normalized fixture configs, reject empty selection, frozen 20-posting comparison, precision/recall numerators/denominators, type/evidence denominators, null unavailable metrics, elapsed replay time, run ID and JSON export | UI06 |
@@ -51,6 +51,19 @@ HTML is cleaned server-side and is never inserted as executable source markup.
 The Unicode UI regression injects an authored API read fixture with an emoji
 prefix; transport-error regressions inject transient HTTP/connection failures.
 The rest of the browser pipeline uses the real fixture-backed service.
+
+UI02 calls the actual bounded acquisition/service contract through an explicitly
+synthetic HTTP transport and DNS resolver in the demo. It follows an authored redirect,
+persists an HTML source with the known SYN-01 clean hash, extracts it and verifies
+that its script never executes. Authored 403 and JS-only responses save failure
+history while preserving the prior usable source/extraction and unsaved manual
+editor text. Reload retains the attempt IDs, original/requested/final URLs, UTC
+timestamps, status/error codes and snapshot references; manual save/extract recovers.
+`/ui/config` identifies `acquisition_mode=synthetic` for the demo and `http` for
+the normal API. The normal API uses the pinned HTTP adapter described in
+[acquisition.md](acquisition.md). SSRF, TLS, deadlines, body limits and transactional
+edge cases are backend fake-transport regressions, not claims of real URL access
+from the browser videos. Rendering and anti-bot bypass are excluded.
 
 Category coverage and candidate gaps are **UI session projections** of real latest
 extractions/matches, not newly persisted backend analytics. Gap denominator is

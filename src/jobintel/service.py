@@ -78,7 +78,7 @@ class Service:
         )
 
     @outcome("snapshot")
-    def snapshot(self, job_id: str, item: SnapshotInput):
+    def snapshot(self, job_id: str, item: SnapshotInput, *, fetch_status="manual"):
         job = self.job(job_id)
         text = clean_text(item.text, item.format == "html")
         if not text:
@@ -98,7 +98,7 @@ class Service:
             raw_text=item.text,
             clean_text=text,
             content_hash=content_hash(text),
-            fetch_status="manual",
+            fetch_status=fetch_status,
         )
         self.session.add(snapshot)
         self.session.flush()
@@ -298,6 +298,8 @@ class Service:
         ]
 
     def history(self, job_id):
+        from jobintel.acquisition_service import AcquisitionService
+
         self.job(job_id)
         snapshots = self.session.scalars(
             select(db.Snapshot)
@@ -306,6 +308,7 @@ class Service:
         )
         return {
             "job_id": job_id,
+            "acquisition_attempts": AcquisitionService(self).history(job_id),
             "snapshots": [
                 {
                     "id": snapshot.id,

@@ -3,11 +3,13 @@ from contextlib import asynccontextmanager
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, Response
+from fastapi.responses import JSONResponse
 from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from jobintel import db
-from jobintel.acquisition import FetchNotImplemented, HttpAcquirer
+from jobintel.acquisition import HttpAcquirer
+from jobintel.acquisition_service import AcquisitionService
 from jobintel.config import database_url, fixture_root
 from jobintel.evaluation import run_evaluation
 from jobintel.export_selection import ExportInput
@@ -26,6 +28,7 @@ from jobintel.schemas import (
 )
 from jobintel.service import Conflict, Service
 from jobintel.snapshots import GroundingError
+from jobintel.synthetic_fetch import synthetic_acquirer
 from jobintel.web_api import configure_web_ui
 
 router = APIRouter()
@@ -77,6 +80,7 @@ def health(request: Request):
             session.execute(text("SELECT job_id FROM jobs LIMIT 1"))
             session.execute(select(db.ExtractionRun.provenance).limit(1))
             session.execute(select(db.MatchRun.id).limit(1))
+            session.execute(select(db.AcquisitionAttempt.id).limit(1))
     except SQLAlchemyError as error:
         raise HTTPException(503, "database unavailable or migrations required") from error
     provider = request.app.state.provider
@@ -139,14 +143,9 @@ def snapshots(job_id: str, payload: SnapshotInput, svc: ServiceDependency):
 
 
 @router.post("/jobs/{job_id}/fetch")
-def fetch(job_id: str, svc: ServiceDependency):
-    job = svc.job(job_id)
-    if not job.official_url:
-        raise HTTPException(422, "job has no official_url; use manual snapshots")
-    try:
-        HttpAcquirer().fetch(job.official_url)
-    except FetchNotImplemented as error:
-        raise HTTPException(501, str(error)) from error
+def fetch(job_id: str, request: Request, svc: ServiceDependency):
+    report, status = AcquisitionService(svc).fetch(job_id, request.app.state.acquirer)
+    return JSONResponse(report, status_code=status, headers={"Cache-Control": "no-store"})
 
 
 @router.post("/jobs/{job_id}/extract")
@@ -212,6 +211,7 @@ def create_app(
     configuration=None,
     transport=None,
     model=None,
+    acquirer=None,
 ) -> FastAPI:
     root = root or fixture_root()
     app = FastAPI(title="JobIntel AI", version="0.1.0", lifespan=lifespan)
@@ -220,6 +220,9 @@ def create_app(
     app.state.provider = selected_provider(root, provider_name, transport=transport, model=model)
     app.state.configuration = selected_configuration(app.state.provider, configuration)
     app.state.taxonomy = Taxonomy(root / "taxonomy.json")
+    app.state.acquirer = (
+        acquirer if acquirer is not None else synthetic_acquirer(root) if demo else HttpAcquirer()
+    )
     if demo and app.state.provider.name != "fixture":
         raise ValueError("the synthetic demo requires fixture provider")
     app.include_router(router)
