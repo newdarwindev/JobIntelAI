@@ -48,7 +48,7 @@ jobs:
         run: |
           node scripts/check_ui_contract.mjs --coverage-only
           npm run test:recordings
-      - name: Exercise every complete desktop and mobile workflow including v2 evidence
+      - name: Exercise every desktop/mobile workflow including shared provenance exports
         run: npm run test:ui
       - name: Collect only successful attempts and update README
         run: |

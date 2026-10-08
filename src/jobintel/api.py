@@ -1,7 +1,8 @@
+import json
 from contextlib import asynccontextmanager
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, Response
 from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
@@ -9,6 +10,8 @@ from jobintel import db
 from jobintel.acquisition import FetchNotImplemented, HttpAcquirer
 from jobintel.config import database_url, fixture_root
 from jobintel.evaluation import run_evaluation
+from jobintel.export_selection import ExportInput
+from jobintel.exports import ExportService
 from jobintel.normalization import Taxonomy
 from jobintel.openai_transport import ProviderError
 from jobintel.providers import ProviderUnavailable, selected_configuration, selected_provider
@@ -165,6 +168,25 @@ def match(job_id: str, payload: CandidateProfile | MatchSelection, svc: ServiceD
 @router.get("/analytics/skills")
 def analytics(svc: ServiceDependency, applied: bool | None = None):
     return svc.analytics(applied)
+
+
+@router.post("/exports")
+def exports(payload: ExportInput, svc: ServiceDependency):
+    result = ExportService(svc.session).export(payload)
+    if payload.format == "csv":
+        return Response(
+            result,
+            media_type="text/csv; charset=utf-8",
+            headers={
+                "Content-Disposition": f'attachment; filename="jobintel-{payload.kind}.csv"',
+                "Cache-Control": "no-store",
+            },
+        )
+    return Response(
+        json.dumps(result, ensure_ascii=False),
+        media_type="application/json",
+        headers={"Cache-Control": "no-store"},
+    )
 
 
 @router.post("/evaluate")

@@ -259,9 +259,14 @@ applied state, remote and explicitly imported positive-response status. Do not
 infer “positive response” from generic notes. Recompute N after each slice. Counts
 are frequencies, not job suitability scores; no ranking without an explicit model.
 
-JSON export preserves provenance/alternatives. CSV includes core counts and flattened requirement/match rows with run and snapshot identifiers.
-For spreadsheet-facing exports neutralize formula prefixes in user-controlled
-strings; test both authored terms and private user-controlled values.
+The shared backend [export contract](exports.md) serves JSON/CSV counts,
+requirements, evidence and matches through API, CLI and browser. Default selection
+uses latest-source extractions and the explicitly selected saved candidate revision.
+History requires explicit run IDs. Preserve null versus UNKNOWN, ANY/ALL groups,
+source/configuration/profile revision links and slice denominators. CSV quotes all
+fields and neutralizes formula prefixes even after leading whitespace/control
+characters; JSON retains exact strings. Original seven-column skills CSV remains
+available through the legacy CLI/API option.
 
 ## 11. Evaluation contract
 
@@ -307,7 +312,8 @@ hallucination, latency, cost), failures and trade-offs without assuming C wins.
 
 ## 12. API contracts
 
-All endpoints use JSON except embedded CSV text in import. No frontend or auth.
+Endpoints use JSON except the explicitly requested CSV export response. The local
+single-user API has no authentication; the authorized mock UI uses these contracts.
 422 = invalid input/schema/evidence; 404 = unknown job; 409 = conflict/prerequisite;
 501 = explicit unimplemented integration; 503 = DB not ready. Live adapters use 502 for provider failure, 504 for timeout, structured retryable error codes.
 
@@ -328,10 +334,13 @@ All endpoints use JSON except embedded CSV text in import. No frontend or auth.
 | GET /jobs/{id} | Metadata, latest snapshot and its latest extraction; no stale results |
 | POST /jobs/{id}/match | Candidate profile payload; requirement-linked states/sources |
 | GET /analytics/skills | n/N, type counts, alternatives, selected-profile gaps and explicit slices |
+| POST /exports | Shared JSON/CSV skills, requirement, evidence or match export; explicit revision/history selection |
 | POST /evaluate | Explicit config list and persisted evaluation provenance; fixture and authorized live runs |
 
 CLI: `jobintel demo` imports/processes authored examples; `jobintel evaluate`
-compares fixture configurations; `jobintel export` writes current counts as JSON/CSV.
+compares fixture configurations; `jobintel export` preserves legacy current counts.
+`jobintel export --kind requirements/matches/skills/evidence` writes JSON/CSV with
+explicit applied/job/profile/history selection; see [the options](exports.md).
 Run from checkout root, migrate first. Repeated demo doesn't duplicate jobs or the
 latest identical snapshot; it deliberately appends extraction/match history.
 

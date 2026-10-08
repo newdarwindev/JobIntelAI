@@ -59,7 +59,7 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 Successful browser attempts: **16/16**, recorded 2026-10-08.
 Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
-Source content SHA-256: `204051cba16f8115f67945c32c7173857d28c73bee8636e3d083bc7b8dcd550c`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source content SHA-256: `37b29f31603dfbbcb3a9dcf47be53f0e604e82ede9f1d1c0978283dadbe59784`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -254,10 +254,17 @@ bundled known content hashes; arbitrary manual text cannot be extracted yet.
 | POST /jobs/{id}/match | Candidate payload as in `data/sample_candidate.json` |
 | POST /candidate/validate | Strict sourced-profile validation, no database write |
 | GET /analytics/skills | Distinct-job n/N, type breakdown, alternatives; optional `applied=true/false` slice |
+| POST /exports | Shared JSON/CSV counts, requirements, evidence and saved-revision matches |
 | POST /evaluate | Two fixture configurations, persisted evaluation report |
 
 OpenAPI schemas are available at `/docs` when running locally. Error contracts and
 target live behaviors are documented in [specification §12](docs/specification.md).
+
+Export saved requirements with `jobintel export --kind requirements --output
+results/generated`. Counts, matches and explicit historical runs use the same
+[API/CLI/browser export contract](docs/exports.md). JSON retains exact values;
+spreadsheet CSV protects formula prefixes. The default `jobintel export` keeps its
+original skills CSV columns and filenames.
 
 ## Automated checks
 
