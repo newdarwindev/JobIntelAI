@@ -173,10 +173,54 @@ class Service:
             results.append(result)
         return {"profile_id": profile.profile_id, "run_id": run.id, "matches": results}
 
-    def analytics(self):
+    def list_jobs(self):
+        return [
+            self.get_job(job_id)
+            for job_id in self.session.scalars(select(db.Job.job_id).order_by(db.Job.job_id))
+        ]
+
+    def history(self, job_id):
+        self.job(job_id)
+        snapshots = self.session.scalars(
+            select(db.Snapshot)
+            .where(db.Snapshot.job_id == job_id)
+            .order_by(db.Snapshot.fetched_at.desc(), db.Snapshot.id.desc())
+        )
+        return {
+            "job_id": job_id,
+            "snapshots": [
+                {
+                    "id": snapshot.id,
+                    "content_hash": snapshot.content_hash,
+                    "clean_text": snapshot.clean_text,
+                    "fetched_at": snapshot.fetched_at,
+                    "source_url": snapshot.source_url,
+                    "runs": [
+                        {
+                            "run_id": run.id,
+                            "configuration": run.configuration,
+                            "created_at": run.created_at,
+                            **run.payload,
+                        }
+                        for run in self.session.scalars(
+                            select(db.ExtractionRun)
+                            .where(db.ExtractionRun.snapshot_id == snapshot.id)
+                            .order_by(
+                                db.ExtractionRun.created_at.desc(), db.ExtractionRun.id.desc()
+                            )
+                        )
+                    ],
+                }
+                for snapshot in snapshots
+            ],
+        }
+
+    def analytics(self, applied=None):
         jobs = []
         for job_id in self.session.scalars(select(db.Job.job_id).order_by(db.Job.job_id)):
             item = self.get_job(job_id)
+            if applied is not None and item["applied"] is not applied:
+                continue
             if item["extraction"] is not None:
                 jobs.append({"job_id": job_id, "requirements": item["extraction"]["requirements"]})
         return skill_counts(jobs)

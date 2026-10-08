@@ -5,6 +5,13 @@ AI — Evidence-Grounded Job Requirements & Skill Gap Analysis”, Stefan Novak.
 This document translates that brief into implementable contracts. The repository
 name remains `JobIntelAI`; package/CLI names are `jobintel-ai` / `jobintel`.
 
+**2026-10-08 scope extension:** the user subsequently requested spec-driven mock web
+UIs, complete Actions browser workflows, successful videos in README, and mandatory
+agent recording updates. [Web UI specification](web_ui_spec.md) defines this
+authorized extension and its executable acceptance map. Original backend-only
+exclusions below describe the initial v1 brief, not a prohibition on this requested
+mock UI. Live integrations and portfolio experiment gates remain incomplete.
+
 ## 1. Purpose and audience
 
 Build a reproducible Python backend that converts heterogeneous job postings into
@@ -279,12 +286,15 @@ uses 502 for provider failure, 504 for timeout, structured retryable error codes
 | --- | --- |
 | GET /health | Check DB connection and migrated jobs table; report fixture/live status |
 | POST /jobs/import | Exactly one of `{jobs:[...]}` / `{csv_text:"..."}`; counts, atomic |
+| GET /jobs | Ordered registry with latest-source snapshots/extractions for the UI |
+| GET /jobs/{id}/history | Append-only snapshot and extraction-run history |
+| POST /candidate/validate | Strict profile validation without persistence |
 | POST /jobs/{id}/snapshots | Manual text/HTML, source URL; return snapshot ID/hash |
 | POST /jobs/{id}/fetch | Future bounded HTTP fetch; currently 501 if URL exists |
 | POST /jobs/{id}/extract | Configuration, latest snapshot; return run, requirements, evidence |
 | GET /jobs/{id} | Metadata, latest snapshot and its latest extraction; no stale results |
 | POST /jobs/{id}/match | Candidate profile payload; requirement-linked states/sources |
-| GET /analytics/skills | n/N + type counts, separate alternatives; gaps/slices planned |
+| GET /analytics/skills | n/N + type counts, separate alternatives; optional explicit `applied` slice; persisted gaps/remote slices planned |
 | POST /evaluate | Fixture config list now; persisted evaluation run; live suite planned |
 
 CLI: `jobintel demo` imports/processes authored examples; `jobintel evaluate`

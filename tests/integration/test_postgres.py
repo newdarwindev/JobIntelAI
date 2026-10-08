@@ -41,5 +41,8 @@ def test_postgres_migrations_and_api(monkeypatch):
         text = (ROOT / "data/sample_jobs/SYN-01.txt").read_text()
         assert client.post("/jobs/pg-test/snapshots", json={"text": text}).status_code == 201
         assert client.post("/jobs/pg-test/extract", json={}).status_code == 200
+        assert client.get("/jobs").json()["jobs"][0]["job_id"] == "pg-test"
+        assert client.get("/jobs/pg-test/history").json()["snapshots"][0]["runs"]
         assert client.get("/analytics/skills").json()["N"] >= 1
+        assert client.get("/analytics/skills?applied=true").json()["N"] == 0
     engine.dispose()
