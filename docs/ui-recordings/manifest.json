@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "origin": "local-playwright",
-  "recorded_at": "2026-10-08T13:15:36.103Z",
+  "recorded_at": "2026-10-08T13:16:29.266Z",
   "source_hash": "5132066d3431f561854dcd54fb01072c677aa8e7cad753ad8d939b04a6c8a8b8",
-  "git_sha": "239a3043741e164eb93979e91553a5907dc28516",
+  "git_sha": "2a3ecb825f7751ba3c1d67b4ce928cf1b957acbc",
   "run_url": null,
   "command": "npm run test:ui",
   "expected": 16,
