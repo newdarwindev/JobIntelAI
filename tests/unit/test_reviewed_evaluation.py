@@ -51,6 +51,7 @@ def test_v20_v34_duplicate_type_and_zero_boundaries_have_exact_counts(corpus):
     prediction = Extraction(requirements=[wrong, wrong, gold.requirements[1]])
     result = score([prediction], [gold], [corpus.cases[0].text], counted=True)
     assert result["counts"]["precision"] == {"numerator": 2, "denominator": 3}
+    assert result["counts"]["f1"] == {"numerator": 4, "denominator": 5}
     assert result["counts"]["type_accuracy"] == {"numerator": 1, "denominator": 2}
     classes = classification_metrics([prediction], [gold])
     assert classes["type_confusion_matrix"]["MUST"]["PREFERRED"] == 1

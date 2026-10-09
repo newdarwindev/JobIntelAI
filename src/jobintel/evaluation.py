@@ -66,6 +66,7 @@ def score(
         result["counts"] = {
             "precision": {"numerator": tp, "denominator": predicted},
             "recall": {"numerator": tp, "denominator": expected},
+            "f1": {"numerator": 2 * tp, "denominator": predicted + expected},
             "type_accuracy": {"numerator": correct_type, "denominator": tp},
             "evidence_accuracy": {"numerator": correct_evidence, "denominator": tp},
             "unsupported_span_rate": {"numerator": predicted - grounded, "denominator": predicted},
