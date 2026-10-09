@@ -27,8 +27,8 @@ Select **Load synthetic corpus** to process all 20 authored postings, or import 
 sample registry and walk through source capture, extraction, and matching yourself.
 The launcher migrates a disposable SQLite database before serving and deletes it
 on exit. Normal `uvicorn jobintel.api:app` also serves `/ui/` against its configured
-database, without synthetic fixture/reset endpoints. Candidate/evaluation display
-state lives in the current browser session. Corpus categories, gaps and coverage are
+database, without synthetic fixture/reset endpoints. Candidate display state lives in the current browser session; the selected evaluation
+run ID reloads its saved report after refresh. Corpus categories, gaps and coverage are
 computed from saved source/extraction/match outcomes and survive refresh for the
 explicitly selected candidate revision. No API keys, third-party UI assets, or paid
 calls are needed.
@@ -261,7 +261,8 @@ The demo uses authored offline HTTP/DNS responses and performs no URL crawling.
 | POST /candidate/validate | Strict sourced-profile validation, no database write |
 | GET /analytics/skills | Saved-source n/N, categories, candidate gaps, coverage; applied/remote slices |
 | POST /exports | Shared JSON/CSV counts, requirements, evidence and saved-revision matches |
-| POST /evaluate | Two fixture configurations, persisted evaluation report |
+| POST /evaluate | Fixture/reviewed dataset, typed failures, persisted evaluation report |
+| GET /evaluation-runs/{id} | Exact saved report and diagnostics without provider requests |
 
 OpenAPI schemas are available at `/docs` when running locally. Error contracts and
 target live behaviors are documented in [specification §12](docs/specification.md).
@@ -317,7 +318,16 @@ Type/evidence accuracy use aligned-pair denominators. Semantic hallucination,
 abstention, tokens and cost are unavailable, represented by null. Test cases inject
 wrong types, duplicate predictions and invalid evidence to verify metric failures.
 Read [evaluation methodology](docs/evaluation.md) and the saved
-[fixture report](results/fixture_evaluation.json). Do not substitute fixture measurements for independently reviewed model results.
+[fixture report](results/fixture_evaluation.json).
+
+`jobintel evaluate --dataset reviewed` uses 25 frozen source-reviewed cases and
+a sourced synthetic candidate. It measures semantic, abstention, filter, responsibility
+and matching agreement with explicit counts. The bounded fixture provider has no
+response for five cases: the command saves their diagnostics and exits 1. Reports
+retain failures and remain retrievable through `/evaluation-runs/{id}` or
+`jobintel evaluate --run-id ID`. UI06 reloads saved evaluations after refresh.
+The source reviewer and limitations are recorded in the methodology; this replay
+run supplies no live-model quality claim. Do not substitute fixture measurements for independently reviewed model results.
 
 The opt-in [experiment command](docs/experiments.md) freezes snapshots and labels,
 checks call/token/USD reservations, checkpoints failures and rescores saved outputs

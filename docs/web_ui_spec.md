@@ -16,8 +16,9 @@ Alembic before serving a disposable SQLite database, binds to loopback, and remo
 the database on exit. Demo fixture/reset routes exist only with `demo=True`; the
 normal API exposes neither. Candidate imports append immutable revisions in the local database. The browser
 stores only the explicitly selected profile/revision IDs and reloads that revision
-after refresh. Individual match display cards and evaluation display state
-are cleared on refresh. Saved match runs remain readable by their IDs.
+after refresh. Individual match display cards are cleared on refresh. The selected
+evaluation run ID also reloads its saved report after refresh; private report bodies
+are not copied into browser storage. Saved match runs remain readable by their IDs.
 Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 
 ## Required interfaces and contracts
@@ -29,12 +30,15 @@ Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 | Source & extraction | Manual text/HTML, bounded URL acquisition/manual recovery, immutable hash/timestamp/URL, source/extraction/attempt history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON | UI02, UI03, UI07 |
 | Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export | UI04 |
 | Corpus analytics | Saved latest-source n/N, mutually exclusive coverage and explicit failure overlaps, applied/grounded remote slices, alternatives, distinct-job categories and revision-selected group gaps after refresh, JSON and formula-safe CSV with source/run/profile provenance | UI05 |
-| Evaluation lab | Select raw/normalized fixture configs, reject empty selection, frozen 20-posting comparison, precision/recall numerators/denominators, type/evidence denominators, null unavailable metrics, elapsed replay time, run ID and JSON export | UI06 |
+| Evaluation lab | Select raw/normalized fixture configs, reject empty selection, original 20-case regression and frozen 25-case source-reviewed benchmark, explicit metric counts, semantic/abstention/matching metrics, null unavailable measurements, per-case failures, report reload after refresh and by ID, JSON export | UI06 |
 
 UI06 must identify exported results as fixture replay rather than live model
 quality. The separate `jobintel experiment` CLI preserves `/evaluate` and cannot
-enable paid browser calls. The journey checks the exported mode and null usage,
-cost, semantic and abstention metrics.
+enable paid browser calls. The journey checks the exported mode and null usage/cost. Original regression
+semantic/abstention metrics remain null. The source-reviewed benchmark displays
+reviewed counts, successful-case scope, matching on gold requirements, and five
+unsupported replay inputs as preserved failures. It reloads both reports without
+new extraction requests; fixtures cannot establish live quality.
 
 UI03 inspects schema-v2 geography/work-mode/filter values with exact source quotes,
 highlights metadata evidence, exports explicit version comparators with raw wording,

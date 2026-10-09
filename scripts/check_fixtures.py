@@ -25,11 +25,16 @@ def main():
         committed_files = {
             path.relative_to(ROOT / "data") for path in (ROOT / "data").rglob("*") if path.is_file()
         }
-        if committed_files != set(files):
+        reviewed = Path("evaluation/reviewed-v1.json")
+        if committed_files != set(files) | {reviewed}:
             raise SystemExit(
                 "Unexpected files in public data/: review ownership and fixture inventory."
             )
         print(f"Verified {len(files)} authored fixture files without modifying data/.")
+        from jobintel.evaluation_corpus import load_reviewed
+
+        corpus = load_reviewed(ROOT / "data")
+        print(f"Verified {len(corpus.cases)} frozen source-reviewed annotations.")
 
 
 if __name__ == "__main__":

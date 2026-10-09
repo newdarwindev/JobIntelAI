@@ -1,0 +1,1450 @@
+{
+  "format_version": 1,
+  "revision": "source-reviewed-v1",
+  "license": "MIT; repository-authored synthetic sources and candidate evidence",
+  "review": {
+    "independent": true,
+    "reviewer": "Codex",
+    "method": "Source-only manual annotation and clause-by-clause specification review, independent of generator labels, replay responses and model predictions. This is one automated reviewer, not a human panel or independent-model benchmark.",
+    "revision": "source-review-2026-10-09-v1"
+  },
+  "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+  "as_of": "2026-10-01",
+  "candidate": {
+    "profile_id": "reviewed-synthetic-candidate-v1",
+    "complete": false,
+    "evidence": [
+      {
+        "skill": "Python",
+        "current_capability": "strong",
+        "production_evidence": "confirmed",
+        "source": "synthetic://reviewed-profile/v1",
+        "quote": "I can independently implement Python services and have operated them."
+      },
+      {
+        "skill": "SQL",
+        "current_capability": "basic",
+        "production_evidence": "confirmed",
+        "source": "synthetic://reviewed-profile/v1",
+        "quote": "I have basic current SQL capability and confirmed prior production SQL history."
+      },
+      {
+        "skill": "AWS",
+        "current_capability": "none",
+        "production_evidence": "none",
+        "source": "synthetic://reviewed-profile/v1",
+        "quote": "I have no AWS capability or production experience."
+      },
+      {
+        "skill": "Azure",
+        "current_capability": "unknown",
+        "production_evidence": "unknown",
+        "source": "synthetic://reviewed-profile/v1",
+        "quote": "My Azure capability and history are not established."
+      },
+      {
+        "skill": "Kubernetes",
+        "current_capability": "strong",
+        "production_evidence": "limited",
+        "source": "synthetic://reviewed-profile/v1",
+        "quote": "I can independently use Kubernetes; my production record is limited."
+      },
+      {
+        "skill": "Docker",
+        "current_capability": "strong",
+        "production_evidence": "none",
+        "source": "synthetic://reviewed-profile/v1",
+        "quote": "I can independently use Docker; no production record is supplied."
+      },
+      {
+        "skill": "Java",
+        "current_capability": "none",
+        "production_evidence": "none",
+        "source": "synthetic://reviewed-profile/v1",
+        "quote": "I have no Java capability or experience."
+      }
+    ],
+    "tenure": [
+      {
+        "skill": "Python",
+        "kind": "experience",
+        "status": "confirmed",
+        "start": "2020-01-01",
+        "end": "2026-01-01",
+        "source": "synthetic://reviewed-profile/tenure",
+        "quote": "Python development from January 2020 through December 2025."
+      }
+    ],
+    "tenure_complete": true,
+    "eligibility": [
+      {
+        "kind": "location",
+        "value": "Georgia",
+        "status": "confirmed",
+        "observed_on": "2026-01-01",
+        "valid_until": "2026-12-31",
+        "source": "synthetic://reviewed-profile/eligibility",
+        "quote": "I am eligible for a position located in Georgia."
+      },
+      {
+        "kind": "residency",
+        "value": "Georgia",
+        "status": "confirmed",
+        "observed_on": "2026-01-01",
+        "valid_until": "2026-12-31",
+        "source": "synthetic://reviewed-profile/eligibility",
+        "quote": "I am resident in Georgia."
+      },
+      {
+        "kind": "location",
+        "value": "Berlin",
+        "status": "denied",
+        "observed_on": "2026-01-01",
+        "valid_until": "2026-12-31",
+        "source": "synthetic://reviewed-profile/eligibility",
+        "quote": "I cannot take a position located in Berlin."
+      },
+      {
+        "kind": "attendance",
+        "value": "three days weekly",
+        "status": "denied",
+        "observed_on": "2026-01-01",
+        "valid_until": "2026-12-31",
+        "source": "synthetic://reviewed-profile/eligibility",
+        "quote": "I cannot attend onsite three days weekly."
+      },
+      {
+        "kind": "work_authorization",
+        "value": "EU work authorization",
+        "status": "unknown",
+        "observed_on": "2026-01-01",
+        "valid_until": "2026-12-31",
+        "source": "synthetic://reviewed-profile/eligibility",
+        "quote": "My EU work authorization is unknown."
+      },
+      {
+        "kind": "travel",
+        "value": "20 percent",
+        "status": "confirmed",
+        "observed_on": "2026-01-01",
+        "valid_until": "2026-12-31",
+        "source": "synthetic://reviewed-profile/eligibility",
+        "quote": "I can travel up to 20 percent."
+      }
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "REV-01",
+      "text": "Synthetic company 01 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nPython is required.\nPostgres is nice to have.",
+      "snapshot_sha256": "6f13b2017ee21a59e26953947f50473b18dce5b1727b796bd7051c41ac9cb87a",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Python is required.",
+            "normalized_skill_or_requirement": "Python",
+            "skills": [
+              "Python"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "MUST",
+            "category": "backend",
+            "evidence": {
+              "start": 111,
+              "end": 130,
+              "quote": "Python is required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          },
+          {
+            "raw_text": "Postgres is nice to have.",
+            "normalized_skill_or_requirement": "PostgreSQL",
+            "skills": [
+              "PostgreSQL"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "PREFERRED",
+            "category": "data",
+            "evidence": {
+              "start": 131,
+              "end": 156,
+              "quote": "Postgres is nice to have."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Python is mandatory; Postgres is optional and normalizes to PostgreSQL. Missing production and years stay unknown.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "COVERED",
+        "UNKNOWN"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-02",
+      "text": "Synthetic company 02 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nExperience with AWS or Azure is required.",
+      "snapshot_sha256": "5ee1986e49ae498513ed22558deef8e112735c4c6b0453bc32be66079609ee48",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Experience with AWS or Azure is required.",
+            "normalized_skill_or_requirement": "AWS OR Azure",
+            "skills": [
+              "AWS",
+              "Azure"
+            ],
+            "operator": "ANY",
+            "requirement_type": "EXPERIENCE",
+            "category": "cloud",
+            "evidence": {
+              "start": 111,
+              "end": 152,
+              "quote": "Experience with AWS or Azure is required."
+            },
+            "experience_obligation": "MUST",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "One mandatory ANY experience group with separate MUST obligation and no sourced years. AWS absence of capability and Azure unknown cannot establish coverage.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "UNKNOWN"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-03",
+      "text": "Synthetic company 03 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nYou must know Python and SQL.",
+      "snapshot_sha256": "56b616fc79415f14dff6d251514cf029d163ed11deb818c71b173e6fafbb6524",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "You must know Python and SQL.",
+            "normalized_skill_or_requirement": "Python AND SQL",
+            "skills": [
+              "Python",
+              "SQL"
+            ],
+            "operator": "ALL",
+            "requirement_type": "MUST",
+            "category": "backend",
+            "evidence": {
+              "start": 111,
+              "end": 140,
+              "quote": "You must know Python and SQL."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "One ALL group; strong Python with basic current SQL and confirmed historical SQL production is PARTIAL. Historical production does not imply strong current capability.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "PARTIAL"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-04",
+      "text": "Synthetic company 04 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nProduction experience with K8s is required.",
+      "snapshot_sha256": "3d5131652fbfa997e3b1ee5b4a357b92e929e96f7fd389bf6b2af9dc4babdc2a",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Production experience with K8s is required.",
+            "normalized_skill_or_requirement": "Kubernetes",
+            "skills": [
+              "Kubernetes"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "EXPERIENCE",
+            "category": "infrastructure",
+            "evidence": {
+              "start": 111,
+              "end": 154,
+              "quote": "Production experience with K8s is required."
+            },
+            "experience_obligation": "MUST",
+            "production_obligation": "MUST",
+            "explicit_production_required": true,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "K8s normalizes to Kubernetes. Required production with only limited production is PARTIAL.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "PARTIAL"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-05",
+      "text": "Synthetic company 05 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nThree or more years of Python experience is required.",
+      "snapshot_sha256": "3795d951e88afba11395d1d0326ea1ee3ff4799b0c2d85ad5be094dfe510b3ed",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Three or more years of Python experience is required.",
+            "normalized_skill_or_requirement": "Python",
+            "skills": [
+              "Python"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "EXPERIENCE",
+            "category": "backend",
+            "evidence": {
+              "start": 111,
+              "end": 164,
+              "quote": "Three or more years of Python experience is required."
+            },
+            "experience_obligation": "MUST",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": {
+              "minimum": 3.0,
+              "maximum": null
+            },
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Minimum three years is mandatory experience; dated Python history exceeds it.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "COVERED"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-06",
+      "text": "Synthetic company 06 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nTwo to four years of Java experience is required.",
+      "snapshot_sha256": "0ae3915c63dcf21ab244697455ba1a8010cbf383ef82ed98394b56724657c69d",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Two to four years of Java experience is required.",
+            "normalized_skill_or_requirement": "Java",
+            "skills": [
+              "Java"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "EXPERIENCE",
+            "category": "backend",
+            "evidence": {
+              "start": 111,
+              "end": 160,
+              "quote": "Two to four years of Java experience is required."
+            },
+            "experience_obligation": "MUST",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": {
+              "minimum": 2.0,
+              "maximum": 4.0
+            },
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Inclusive two-to-four-year Java interval; explicit no capability and complete zero tenure is MISSING.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "MISSING"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-07",
+      "text": "Synthetic company 07 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nFastAPI is preferred.",
+      "snapshot_sha256": "e2725c681559cb74c04de9c3cab07d3f292c59a050d7bb495aed1932ec16f8da",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "FastAPI is preferred.",
+            "normalized_skill_or_requirement": "FastAPI",
+            "skills": [
+              "FastAPI"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "PREFERRED",
+            "category": "backend",
+            "evidence": {
+              "start": 111,
+              "end": 132,
+              "quote": "FastAPI is preferred."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Preference is not MUST; no FastAPI record in an incomplete profile stays UNKNOWN.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "UNKNOWN"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-08",
+      "text": "Synthetic company 08 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nAWS Bedrock is required.\nAWS is preferred.",
+      "snapshot_sha256": "8f5ed8413b55ee7ae82321f13a30367ca7e91bf8af4a3128809f0ae3a7695d24",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "AWS Bedrock is required.",
+            "normalized_skill_or_requirement": "AWS Bedrock",
+            "skills": [
+              "AWS Bedrock"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "MUST",
+            "category": "AI/LLM",
+            "evidence": {
+              "start": 111,
+              "end": 135,
+              "quote": "AWS Bedrock is required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          },
+          {
+            "raw_text": "AWS is preferred.",
+            "normalized_skill_or_requirement": "AWS",
+            "skills": [
+              "AWS"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "PREFERRED",
+            "category": "cloud",
+            "evidence": {
+              "start": 136,
+              "end": 153,
+              "quote": "AWS is preferred."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "AWS Bedrock stays distinct from AWS. AWS is preferred and explicit no AWS capability is MISSING.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "UNKNOWN",
+        "MISSING"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-09",
+      "text": "Synthetic company 09 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nGenAI is a bonus.",
+      "snapshot_sha256": "dbd7a7bf6a72b1a3a4e11c5d24377aa69001ed7ded7bb52c64b98b147aeca652",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "GenAI is a bonus.",
+            "normalized_skill_or_requirement": "Generative AI",
+            "skills": [
+              "Generative AI"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "PREFERRED",
+            "category": "AI/LLM",
+            "evidence": {
+              "start": 111,
+              "end": 128,
+              "quote": "GenAI is a bonus."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "GenAI is a preference and normalizes to Generative AI; no candidate claim is inferred.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "UNKNOWN"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-10",
+      "text": "Synthetic company 10 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nRemote work within Georgia only.",
+      "snapshot_sha256": "3886eed9e82152d3c934be49cd4a45b4c7ae823a65e0afefde8e6e6bfbfb8724",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Remote work within Georgia only.",
+            "normalized_skill_or_requirement": "Georgia residency",
+            "skills": [
+              "Georgia residency"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "OTHER",
+            "category": "geography",
+            "evidence": {
+              "start": 111,
+              "end": 143,
+              "quote": "Remote work within Georgia only."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": {
+          "value": "Georgia",
+          "evidence": {
+            "start": 111,
+            "end": 143,
+            "quote": "Remote work within Georgia only."
+          }
+        },
+        "work_mode": {
+          "value": "remote",
+          "evidence": {
+            "start": 111,
+            "end": 143,
+            "quote": "Remote work within Georgia only."
+          }
+        },
+        "filters": [
+          {
+            "kind": "residency",
+            "value": "Georgia",
+            "evidence": {
+              "start": 111,
+              "end": 143,
+              "quote": "Remote work within Georgia only."
+            }
+          }
+        ]
+      },
+      "rationale": "Remote job geography and residency are explicit. Exact Georgia location/residency evidence is confirmed.",
+      "tags": [
+        "source-review",
+        "metadata"
+      ],
+      "expected_matches": [
+        "COVERED"
+      ],
+      "expected_filter_matches": [
+        "COVERED",
+        "COVERED"
+      ]
+    },
+    {
+      "case_id": "REV-11",
+      "text": "Synthetic company 11 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nOnsite in Berlin three days weekly.",
+      "snapshot_sha256": "3dba50011b4aea9115dcc0ad1d4d8f4f99b9e980443b895df242e8684bfa8973",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Onsite in Berlin three days weekly.",
+            "normalized_skill_or_requirement": "Berlin attendance",
+            "skills": [
+              "Berlin attendance"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "OTHER",
+            "category": "geography",
+            "evidence": {
+              "start": 111,
+              "end": 146,
+              "quote": "Onsite in Berlin three days weekly."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": {
+          "value": "Berlin",
+          "evidence": {
+            "start": 111,
+            "end": 146,
+            "quote": "Onsite in Berlin three days weekly."
+          }
+        },
+        "work_mode": {
+          "value": "onsite",
+          "evidence": {
+            "start": 111,
+            "end": 146,
+            "quote": "Onsite in Berlin three days weekly."
+          }
+        },
+        "filters": [
+          {
+            "kind": "attendance",
+            "value": "three days weekly",
+            "evidence": {
+              "start": 111,
+              "end": 146,
+              "quote": "Onsite in Berlin three days weekly."
+            }
+          }
+        ]
+      },
+      "rationale": "Onsite Berlin and three days weekly attendance are explicit; dated Berlin location and attendance are denied.",
+      "tags": [
+        "source-review",
+        "metadata"
+      ],
+      "expected_matches": [
+        "MISSING"
+      ],
+      "expected_filter_matches": [
+        "MISSING",
+        "MISSING"
+      ]
+    },
+    {
+      "case_id": "REV-12",
+      "text": "Synthetic company 12 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nExisting EU work authorization is required.",
+      "snapshot_sha256": "53cdfdd955c1912d4b33a42618ab5eafe577cd9d62585b0c243fa337d09480c0",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Existing EU work authorization is required.",
+            "normalized_skill_or_requirement": "EU work authorization",
+            "skills": [
+              "EU work authorization"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "OTHER",
+            "category": "geography",
+            "evidence": {
+              "start": 111,
+              "end": 154,
+              "quote": "Existing EU work authorization is required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": [
+          {
+            "kind": "work_authorization",
+            "value": "EU work authorization",
+            "evidence": {
+              "start": 111,
+              "end": 154,
+              "quote": "Existing EU work authorization is required."
+            }
+          }
+        ]
+      },
+      "rationale": "Exact EU work authorization filter is mandatory. Candidate eligibility is explicitly unknown.",
+      "tags": [
+        "source-review",
+        "metadata"
+      ],
+      "expected_matches": [
+        "UNKNOWN"
+      ],
+      "expected_filter_matches": [
+        "UNKNOWN"
+      ]
+    },
+    {
+      "case_id": "REV-13",
+      "text": "Synthetic company 13 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nTravel up to 20 percent is required.",
+      "snapshot_sha256": "f368cbc3a4786ca3029d35e64caaa050c0c9eca2aa2d06e629c4fe59aebfddb9",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Travel up to 20 percent is required.",
+            "normalized_skill_or_requirement": "travel up to 20%",
+            "skills": [
+              "travel up to 20%"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "OTHER",
+            "category": "geography",
+            "evidence": {
+              "start": 111,
+              "end": 147,
+              "quote": "Travel up to 20 percent is required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": [
+          {
+            "kind": "travel",
+            "value": "20 percent",
+            "evidence": {
+              "start": 111,
+              "end": 147,
+              "quote": "Travel up to 20 percent is required."
+            }
+          }
+        ]
+      },
+      "rationale": "Travel up to 20 percent is an explicit filter, not technical capability. Exact candidate scope is confirmed.",
+      "tags": [
+        "source-review",
+        "metadata"
+      ],
+      "expected_matches": [
+        "COVERED"
+      ],
+      "expected_filter_matches": [
+        "COVERED"
+      ]
+    },
+    {
+      "case_id": "REV-14",
+      "text": "Synthetic company 14 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nDocker is required.\nProduction experience with Docker is preferred.",
+      "snapshot_sha256": "58231692c47df6b44ed0082a039215c9a2a61cf24d83c7ac2c016ac1f83e2091",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Docker is required.",
+            "normalized_skill_or_requirement": "Docker",
+            "skills": [
+              "Docker"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "MUST",
+            "category": "infrastructure",
+            "evidence": {
+              "start": 111,
+              "end": 130,
+              "quote": "Docker is required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          },
+          {
+            "raw_text": "Production experience with Docker is preferred.",
+            "normalized_skill_or_requirement": "Docker",
+            "skills": [
+              "Docker"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "EXPERIENCE",
+            "category": "infrastructure",
+            "evidence": {
+              "start": 131,
+              "end": 178,
+              "quote": "Production experience with Docker is preferred."
+            },
+            "experience_obligation": "PREFERRED",
+            "production_obligation": "PREFERRED",
+            "explicit_production_required": false,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Docker capability is required; production EXPERIENCE has PREFERRED obligation, not a mandatory production filter.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "COVERED",
+        "COVERED"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-15",
+      "text": "Synthetic company 15 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nGolang 1.23+ is required.",
+      "snapshot_sha256": "b15922f9b3b3f8c785c1b0d375d4ef1951862098b0e43cf3b4d32fb8eec6784e",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Golang 1.23+ is required.",
+            "normalized_skill_or_requirement": "Go 1.23+",
+            "skills": [
+              "Go 1.23+"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "MUST",
+            "category": "backend",
+            "evidence": {
+              "start": 111,
+              "end": 136,
+              "quote": "Golang 1.23+ is required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [
+              {
+                "skill": "Go 1.23+",
+                "product": "Go",
+                "source_product": "Golang",
+                "raw_text": "Golang 1.23+",
+                "comparator": "GTE",
+                "version": "1.23",
+                "evidence": {
+                  "start": 111,
+                  "end": 123,
+                  "quote": "Golang 1.23+"
+                }
+              }
+            ],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Golang 1.23+ retains Go product, GTE comparator and version. Generic skills cannot prove version coverage.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "UNKNOWN"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-16",
+      "text": "Synthetic company 16 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nLLM evaluation is required.",
+      "snapshot_sha256": "8d2cc457e69d35fa0267b63ac7d09b7f0ca15586ffc03c5fa5593ffa136dcab9",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "LLM evaluation is required.",
+            "normalized_skill_or_requirement": "LLM evaluation",
+            "skills": [
+              "LLM evaluation"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "MUST",
+            "category": "AI/LLM",
+            "evidence": {
+              "start": 111,
+              "end": 138,
+              "quote": "LLM evaluation is required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "LLM evaluation is mandatory; missing candidate record stays UNKNOWN.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "UNKNOWN"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-17",
+      "text": "Synthetic company 17 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nPython is preferred, not mandatory.",
+      "snapshot_sha256": "3d2ea1d3d838dfe8e26111e202fc15e94d6c5c45310d53426da3adcfa4ef9e97",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Python is preferred, not mandatory.",
+            "normalized_skill_or_requirement": "Python",
+            "skills": [
+              "Python"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "PREFERRED",
+            "category": "backend",
+            "evidence": {
+              "start": 111,
+              "end": 146,
+              "quote": "Python is preferred, not mandatory."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Explicit preferred and not mandatory: PREFERRED. Strong sourced Python is COVERED.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "COVERED"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-18",
+      "text": "Synthetic company 18 — Backend / AI Engineer\nOur product uses Java. Tools here are context, not candidate requirements.",
+      "snapshot_sha256": "c17781eef7cead8bc2fa6b1f87b02da4dea0a21d97910ed6d48dcc262cd8fee2",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Java is product context, explicitly not a candidate requirement. Empty requirements are correct abstention.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-19",
+      "text": "Synthetic company 19 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nClear communication is required.",
+      "snapshot_sha256": "eca3c0c0e0cacc362d58148fb00ac02744316a9290a8ba7432be408ad90e152e",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Clear communication is required.",
+            "normalized_skill_or_requirement": "communication",
+            "skills": [
+              "communication"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "MUST",
+            "category": "domain",
+            "evidence": {
+              "start": 111,
+              "end": 143,
+              "quote": "Clear communication is required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Communication is mandatory; absent candidate evidence stays UNKNOWN.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "UNKNOWN"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-20",
+      "text": "Synthetic company 20 — Backend / AI Engineer\nThis fictional posting is authored for a public engineering demo.\nPython is required — café systems experience is not required.",
+      "snapshot_sha256": "0fd492dd6a2fcdccde629e9d19135e6b38cf12ba21d9db71f1371001bfea6cfe",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Python is required — café systems experience is not required.",
+            "normalized_skill_or_requirement": "Python",
+            "skills": [
+              "Python"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "MUST",
+            "category": "backend",
+            "evidence": {
+              "start": 111,
+              "end": 172,
+              "quote": "Python is required — café systems experience is not required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Python is required; the negated café experience must not become another requirement. Unicode offsets count code points.",
+      "tags": [
+        "source-review",
+        "requirements"
+      ],
+      "expected_matches": [
+        "COVERED"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-21",
+      "text": "Our product uses Rust.\nYou will build APIs.\nPython is required.",
+      "snapshot_sha256": "95bfc8dc304bc2c45dba2d55f9bf56b7369630cf189491bffb6d0689f313a08a",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Python is required.",
+            "normalized_skill_or_requirement": "Python",
+            "skills": [
+              "Python"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "MUST",
+            "category": "backend",
+            "evidence": {
+              "start": 44,
+              "end": 63,
+              "quote": "Python is required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [
+          {
+            "start": 23,
+            "end": 43,
+            "quote": "You will build APIs."
+          }
+        ],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Product Rust is not a candidate requirement. Build APIs is a responsibility. Python is the only MUST.",
+      "tags": [
+        "responsibility",
+        "product-context"
+      ],
+      "expected_matches": [
+        "COVERED"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-22",
+      "text": "Python experience may be useful.\nThe job may be remote.",
+      "snapshot_sha256": "2686cafaa170aef9b0bc3253b4575d51a0b0a2484113a003a105c18e96e1111b",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Python experience may be useful.",
+            "normalized_skill_or_requirement": "Python",
+            "skills": [
+              "Python"
+            ],
+            "operator": "SINGLE",
+            "requirement_type": "EXPERIENCE",
+            "category": "backend",
+            "evidence": {
+              "start": 0,
+              "end": 32,
+              "quote": "Python experience may be useful."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": "Obligation is ambiguous; no years or production predicate is stated."
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Ambiguous experience has UNKNOWN obligation. Ambiguous work mode must remain unknown.",
+      "tags": [
+        "ambiguity",
+        "abstention"
+      ],
+      "expected_matches": [
+        "COVERED"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-23",
+      "text": "Python 3.11+ or Python 2.7 is required.",
+      "snapshot_sha256": "a452d8ce5273a45f146f378bb970dc64f7d9656edef286e550e199f3b92e2782",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [
+          {
+            "raw_text": "Python 3.11+ or Python 2.7 is required.",
+            "normalized_skill_or_requirement": "Python 3.11+ OR Python 2.7",
+            "skills": [
+              "Python 3.11+",
+              "Python 2.7"
+            ],
+            "operator": "ANY",
+            "requirement_type": "MUST",
+            "category": "backend",
+            "evidence": {
+              "start": 0,
+              "end": 39,
+              "quote": "Python 3.11+ or Python 2.7 is required."
+            },
+            "experience_obligation": "UNKNOWN",
+            "production_obligation": "UNKNOWN",
+            "explicit_production_required": null,
+            "years_required": null,
+            "version_constraints": [
+              {
+                "skill": "Python 3.11+",
+                "product": "Python",
+                "source_product": "Python",
+                "raw_text": "Python 3.11+",
+                "comparator": "GTE",
+                "version": "3.11",
+                "evidence": {
+                  "start": 0,
+                  "end": 12,
+                  "quote": "Python 3.11+"
+                }
+              },
+              {
+                "skill": "Python 2.7",
+                "product": "Python",
+                "source_product": "Python",
+                "raw_text": "Python 2.7",
+                "comparator": "EQ",
+                "version": "2.7",
+                "evidence": {
+                  "start": 16,
+                  "end": 26,
+                  "quote": "Python 2.7"
+                }
+              }
+            ],
+            "source_skills": null,
+            "confidence": 1.0,
+            "notes": null
+          }
+        ],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "One ANY requirement with distinct version predicates. Candidate version evidence is unavailable.",
+      "tags": [
+        "versions",
+        "ANY"
+      ],
+      "expected_matches": [
+        "UNKNOWN"
+      ],
+      "expected_filter_matches": []
+    },
+    {
+      "case_id": "REV-24",
+      "text": "Remote work within Georgia only.\nEU work authorization is required.\nYou will maintain services.",
+      "snapshot_sha256": "aa56376838ecd2b6062998adf48d9fd3ab76879d17269fed8ce2f5d95b9d1a70",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [],
+        "responsibilities": [
+          {
+            "start": 68,
+            "end": 95,
+            "quote": "You will maintain services."
+          }
+        ],
+        "geography": {
+          "value": "Georgia",
+          "evidence": {
+            "start": 0,
+            "end": 32,
+            "quote": "Remote work within Georgia only."
+          }
+        },
+        "work_mode": {
+          "value": "remote",
+          "evidence": {
+            "start": 0,
+            "end": 32,
+            "quote": "Remote work within Georgia only."
+          }
+        },
+        "filters": [
+          {
+            "kind": "work_authorization",
+            "value": "EU work authorization",
+            "evidence": {
+              "start": 33,
+              "end": 67,
+              "quote": "EU work authorization is required."
+            }
+          }
+        ]
+      },
+      "rationale": "Explicit geography, mode and authorization with a separate responsibility; no technical skill requirement.",
+      "tags": [
+        "filters",
+        "responsibility"
+      ],
+      "expected_matches": [],
+      "expected_filter_matches": [
+        "COVERED",
+        "UNKNOWN"
+      ]
+    },
+    {
+      "case_id": "REV-25",
+      "text": "Java is not required.\nOur company headquarters are in Berlin.\nWe may consider remote or hybrid work.",
+      "snapshot_sha256": "8b15eb3f2282c8d4fa65ae6d28f675566ffbde73bb2c7ec5585afc3bd596a73b",
+      "gold": {
+        "schema_version": 2,
+        "requirements": [],
+        "responsibilities": [],
+        "geography": null,
+        "work_mode": null,
+        "filters": null
+      },
+      "rationale": "Negated technology and company address supply no requirement or job geography. Alternative uncertain modes stay unknown.",
+      "tags": [
+        "negation",
+        "ambiguity",
+        "abstention"
+      ],
+      "expected_matches": [],
+      "expected_filter_matches": []
+    }
+  ]
+}

@@ -1,11 +1,6 @@
-import json
 from collections import defaultdict
-from time import perf_counter
 
-from jobintel.provider_config import configuration_for
-from jobintel.providers import extract_result
 from jobintel.schemas import Extraction
-from jobintel.snapshots import GroundingError, validate_grounding
 
 
 def semantic_key(requirement) -> tuple:
@@ -28,7 +23,9 @@ def semantic_key(requirement) -> tuple:
     )
 
 
-def score(predictions: list[Extraction], gold: list[Extraction], texts: list[str]) -> dict:
+def score(
+    predictions: list[Extraction], gold: list[Extraction], texts: list[str], *, counted=False
+) -> dict:
     if not (len(predictions) == len(gold) == len(texts)) or not gold:
         raise ValueError("evaluation needs nonempty, aligned predictions, gold, and texts")
     tp = predicted = expected = correct_type = correct_evidence = grounded = 0
@@ -40,11 +37,8 @@ def score(predictions: list[Extraction], gold: list[Extraction], texts: list[str
         predicted += len(prediction.requirements)
         expected += len(truth.requirements)
         for requirement in prediction.requirements:
-            try:
-                validate_grounding(text, Extraction(requirements=[requirement]))
+            if requirement_spans_valid(text, requirement):
                 grounded += 1
-            except GroundingError:
-                pass
             options = remaining[semantic_key(requirement)]
             if options:
                 reference = options.pop(0)
@@ -53,7 +47,7 @@ def score(predictions: list[Extraction], gold: list[Extraction], texts: list[str
                 correct_evidence += requirement.evidence == reference.evidence
     precision = tp / predicted if predicted else None
     recall = tp / expected if expected else None
-    return {
+    result = {
         "true_positives": tp,
         "predicted": predicted,
         "expected": expected,
@@ -68,40 +62,28 @@ def score(predictions: list[Extraction], gold: list[Extraction], texts: list[str
         "semantic_hallucination_rate": None,
         "abstention_quality": None,
     }
+    if counted:
+        result["counts"] = {
+            "precision": {"numerator": tp, "denominator": predicted},
+            "recall": {"numerator": tp, "denominator": expected},
+            "type_accuracy": {"numerator": correct_type, "denominator": tp},
+            "evidence_accuracy": {"numerator": correct_evidence, "denominator": tp},
+            "unsupported_span_rate": {"numerator": predicted - grounded, "denominator": predicted},
+        }
+    return result
+
+
+def requirement_spans_valid(text, requirement):
+    evidence = [requirement.evidence, *(v.evidence for v in requirement.version_constraints)]
+    return requirement.raw_text == requirement.evidence.quote and all(
+        e.end <= len(text) and text[e.start : e.end] == e.quote for e in evidence
+    )
 
 
 def run_evaluation(provider, root, configurations: list[str]) -> dict:
-    labels = json.loads((root / "golden_dataset.json").read_text())
-    texts = [(root / record["fixture"]).read_text() for record in labels]
-    if any(record["extraction"].get("schema_version") != 2 for record in labels):
-        raise ValueError("golden labels require extraction schema v2")
-    gold = [Extraction.model_validate(record["extraction"]) for record in labels]
-    for text, extraction in zip(texts, gold, strict=True):
-        validate_grounding(text, extraction)
-    for configuration in configurations:
-        configuration_for(configuration, provider.name)
-    results = []
-    for configuration in configurations:
-        started = perf_counter()
-        records = [extract_result(provider, text, configuration) for text in texts]
-        predictions = [r.extraction for r in records]
-        results.append(
-            {
-                "configuration": configuration,
-                "metrics": score(predictions, gold, texts),
-                "elapsed_seconds": perf_counter() - started,
-                "tokens": evaluation_tokens(records),
-                "provenance": [r.provenance for r in records],
-                "estimated_cost": None,
-            }
-        )
-    return {
-        "mode": "fixture replay — plumbing regression, not live LLM quality"
-        if provider.name == "fixture"
-        else "live structured extraction — authored fixture labels",
-        "dataset_size": len(labels),
-        "results": results,
-    }
+    from jobintel.evaluation_runs import run_report
+
+    return run_report(provider, root, configurations)
 
 
 def evaluation_tokens(records):

@@ -207,7 +207,17 @@ class ExtractInput(StrictModel):
     configuration: str | None = Field(default=None, min_length=1, max_length=100)
 
 
+class EvaluationPricing(StrictModel):
+    model: str = Field(min_length=1)
+    source: str = Field(min_length=1)
+    date: date
+    input_usd_per_million: float = Field(ge=0, allow_inf_nan=False)
+    output_usd_per_million: float = Field(ge=0, allow_inf_nan=False)
+
+
 class EvaluateInput(StrictModel):
+    dataset: Literal["fixture", "reviewed"] = "fixture"
+    pricing: EvaluationPricing | None = None
     configurations: list[Annotated[str, Field(min_length=1, max_length=100)]] | None = Field(
         default=None, min_length=1
     )

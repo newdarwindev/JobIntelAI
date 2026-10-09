@@ -12,7 +12,8 @@ from jobintel.acquisition import HttpAcquirer
 from jobintel.acquisition_service import AcquisitionService
 from jobintel.config import database_url, fixture_root
 from jobintel.corpus_analytics import AnalyticsInput
-from jobintel.evaluation import run_evaluation
+from jobintel.evaluation_runs import run_report
+from jobintel.evaluation_store import get_report, list_reports, save_report
 from jobintel.export_selection import ExportInput
 from jobintel.exports import ExportService
 from jobintel.extraction_attempts import attempt_extract
@@ -205,16 +206,36 @@ def exports(payload: ExportInput, svc: ServiceDependency):
 
 @router.post("/evaluate")
 def evaluate(payload: EvaluateInput, request: Request, svc: ServiceDependency):
+    svc.session.execute(select(db.EvaluationRun.id).limit(1))
     configurations = payload.configurations or [request.app.state.configuration]
     if payload.configurations is None and request.app.state.provider.name == "fixture":
         configurations = ["fixture_raw", "fixture_normalized"]
-    report = run_evaluation(
-        request.app.state.provider, request.app.state.fixture_root, configurations
+    report = run_report(
+        request.app.state.provider,
+        request.app.state.fixture_root,
+        configurations,
+        dataset=payload.dataset,
+        pricing=payload.pricing,
     )
-    record = db.EvaluationRun(payload=report)
-    svc.session.add(record)
-    svc.session.flush()
-    return {"evaluation_run_id": record.id, **report}
+    saved = save_report(svc.session, report)
+    errors = [r["error"] for result in report["results"] for r in result["per_case"] if r["error"]]
+    if errors and request.app.state.provider.name == "openai":
+        return JSONResponse(
+            {"detail": errors[0], **saved},
+            status_code=errors[0]["status"],
+            headers={"Cache-Control": "no-store"},
+        )
+    return JSONResponse(saved, headers={"Cache-Control": "no-store"})
+
+
+@router.get("/evaluation-runs")
+def evaluation_runs(svc: ServiceDependency):
+    return JSONResponse(list_reports(svc.session), headers={"Cache-Control": "no-store"})
+
+
+@router.get("/evaluation-runs/{run_id}")
+def evaluation_run(run_id: str, svc: ServiceDependency):
+    return JSONResponse(get_report(svc.session, run_id), headers={"Cache-Control": "no-store"})
 
 
 def create_app(
