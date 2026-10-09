@@ -60,8 +60,8 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **16/16**, recorded 2026-10-09.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37928713698) · commit `33b045f1e7e227380a56f97750ad39f3e3a69f07`.
-Source content SHA-256: `3de74c9b22d4dd74ba59bf2328ead8691f1209ce6a9a5ba37160d3445be14964`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `b8db0557829b5b60fb8cb918bfdb593baf7cb26cae472ba0b2750953f1e009af`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -214,6 +214,8 @@ outside the checkout), then run `python scripts/runtime.py up --mode openai
 environment values. `JOBINTEL_CONFIGURATION` must match the provider. Startup and
 health check configuration/database readiness without making a paid provider request.
 Actual extraction/evaluation requires separate paid-call authorization.
+This profile configures the API/CLI; provider-aware browser controls are tracked
+in [#27](https://github.com/newdarwindev/JobIntelAI/issues/27).
 
 The runtime driver reads exported settings. `JOBINTEL_COMPOSE_DATABASE_URL` selects
 an explicit container database URL; otherwise the driver constructs the local
