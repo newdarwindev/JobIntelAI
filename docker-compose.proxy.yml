@@ -1,0 +1,17 @@
+services:
+  migrate:
+    build:
+      secrets: [proxy_ca]
+    secrets: [proxy_ca]
+    environment:
+      SSL_CERT_FILE: /run/secrets/proxy_ca
+  api:
+    build:
+      secrets: [proxy_ca]
+    secrets: [proxy_ca]
+    environment:
+      SSL_CERT_FILE: /run/secrets/proxy_ca
+      REQUESTS_CA_BUNDLE: /run/secrets/proxy_ca
+secrets:
+  proxy_ca:
+    file: ${JOBINTEL_CA_BUNDLE:?Set a readable CA bundle including normal and proxy roots}

@@ -13,6 +13,13 @@ exclusions below describe the initial v1 brief, not a prohibition on this reques
 mock UI. Implementation acceptance and dependencies are tracked in
 [GitHub issues](implementation_plan.md).
 
+**2026-10-09 runtime extension:** the user authorized local/dev/on-demand machinery
+and the issues #22–#29 after reviewing the backend audit. The runtime foundation
+uses named Compose environments, persistent PostgreSQL and output volumes, explicit
+demo/provider modes, mounted credentials, verified proxy trust and explicit cleanup.
+Local inference and network contract services have separate issue dependencies.
+This extension does not authorize paid calls or public exposure of the local API.
+
 ## 1. Purpose and audience
 
 Build a reproducible Python backend that converts heterogeneous job postings into

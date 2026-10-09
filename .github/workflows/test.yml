@@ -116,6 +116,12 @@ jobs:
         run: |
           curl --fail --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:8000/health
           python scripts/container_smoke.py
+      - name: Persistent dev, demo isolation and mounted OpenAI configuration (no paid calls)
+        run: python scripts/runtime_smoke.py --project jobintel-runtime-online
+      - name: Prepare verified wheels and exercise the offline runtime
+        run: |
+          python -m pip wheel --wheel-dir build/wheels -c requirements.lock.txt -r requirements.lock.txt 'setuptools>=75' wheel .
+          python scripts/runtime_smoke.py --project jobintel-runtime-offline --port 18081 --offline
       - name: Container diagnostics
         if: failure()
         run: docker compose logs --no-color

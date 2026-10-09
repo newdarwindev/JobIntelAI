@@ -9,6 +9,8 @@ on:
       - 'data/**'
       - 'tests/**'
       - 'scripts/**'
+      - 'Dockerfile*'
+      - 'docker-compose*.yml'
       - 'docs/web_ui*'
       - 'package*.json'
       - 'pyproject.toml'
@@ -50,7 +52,7 @@ jobs:
         run: |
           node scripts/check_ui_contract.mjs --coverage-only
           npm run test:recordings
-      - name: Verify all offline desktop/mobile workflows and reviewed evaluation recovery
+      - name: Verify all offline desktop/mobile workflows, demo isolation and evaluation recovery
         run: npm run test:ui
       - name: Collect only successful attempts and update README
         run: |

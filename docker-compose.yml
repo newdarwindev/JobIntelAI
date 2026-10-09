@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: jobintel
       POSTGRES_USER: jobintel
-      POSTGRES_PASSWORD: local-demo-only
+      POSTGRES_PASSWORD: ${JOBINTEL_POSTGRES_PASSWORD:-local-demo-only}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U jobintel -d jobintel"]
       interval: 2s
@@ -15,7 +15,7 @@ services:
   migrate:
     build: .
     environment:
-      JOBINTEL_DATABASE_URL: postgresql+psycopg://jobintel:local-demo-only@db/jobintel
+      JOBINTEL_DATABASE_URL: ${JOBINTEL_COMPOSE_DATABASE_URL:-postgresql+psycopg://jobintel:local-demo-only@db/jobintel}
     command: ["alembic", "upgrade", "head"]
     depends_on:
       db:
@@ -23,11 +23,24 @@ services:
   api:
     build: .
     environment:
-      JOBINTEL_DATABASE_URL: postgresql+psycopg://jobintel:local-demo-only@db/jobintel
-      JOBINTEL_PROVIDER: fixture
-    ports: ["127.0.0.1:8000:8000"]
+      JOBINTEL_DATABASE_URL: ${JOBINTEL_COMPOSE_DATABASE_URL:-postgresql+psycopg://jobintel:local-demo-only@db/jobintel}
+      JOBINTEL_PROVIDER: ${JOBINTEL_PROVIDER:-fixture}
+      JOBINTEL_CONFIGURATION: ${JOBINTEL_CONFIGURATION:-}
+      JOBINTEL_OPENAI_MODEL: ${JOBINTEL_OPENAI_MODEL:-}
+      JOBINTEL_OPENAI_TIMEOUT: ${JOBINTEL_OPENAI_TIMEOUT:-30}
+    ports: ["127.0.0.1:${JOBINTEL_API_PORT:-8000}:8000"]
+    volumes:
+      - outputs:/app/results/generated
+      - runtime_data:/app/local_data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import http.client; c = http.client.HTTPConnection('127.0.0.1', 8000, timeout=3); c.request('GET', '/health'); assert c.getresponse().status == 200"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
     depends_on:
       migrate:
         condition: service_completed_successfully
 volumes:
   pgdata:
+  outputs:
+  runtime_data:
