@@ -2,10 +2,10 @@
   "format_version": 2,
   "mode": "fake",
   "quality_claim": "fake provider plumbing only",
-  "created_at": "2026-10-09T11:48:07.158859+00:00",
+  "created_at": "2026-10-09T12:03:13.161712+00:00",
   "provenance": {
-    "source_sha256": "642e26e13c4dda97a6aac46b20c574fcade1e2b5bf8747ea830f7fa6f4630884",
-    "git_commit": "edc28a572cb9f451b4b31ba5a4b8f0df932e668d",
+    "source_sha256": "9362c3c5acda2cea36dcfff39c5f3ce2637246c813eb1616253d9c65d2aaa899",
+    "git_commit": "084cd862fb52c35f3746c1db7fc58084cfd9331b",
     "git_dirty": false
   },
   "corpus": {
@@ -3203,7 +3203,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00037778299974888796
+          "elapsed_seconds": 0.00026187399998889305
         },
         {
           "case_id": "REV-02",
@@ -3281,7 +3281,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00011225200069020502
+          "elapsed_seconds": 0.00025412600007257424
         },
         {
           "case_id": "REV-03",
@@ -3359,7 +3359,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001032109994412167
+          "elapsed_seconds": 0.00014869999995426042
         },
         {
           "case_id": "REV-04",
@@ -3435,7 +3435,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00014188600016495911
+          "elapsed_seconds": 0.00022494200038636336
         },
         {
           "case_id": "REV-05",
@@ -3517,7 +3517,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002038490001723403
+          "elapsed_seconds": 0.00018390600052953232
         },
         {
           "case_id": "REV-06",
@@ -3599,7 +3599,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00013272199976199772
+          "elapsed_seconds": 0.00017807400035962928
         },
         {
           "case_id": "REV-07",
@@ -3675,7 +3675,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001000440006464487
+          "elapsed_seconds": 0.00019220000012865057
         },
         {
           "case_id": "REV-08",
@@ -3797,7 +3797,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00011739300043700496
+          "elapsed_seconds": 0.00022901500051375479
         },
         {
           "case_id": "REV-09",
@@ -3873,7 +3873,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001371850003124564
+          "elapsed_seconds": 0.00010350400043535046
         },
         {
           "case_id": "REV-10",
@@ -3977,7 +3977,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.005245119999926828
+          "elapsed_seconds": 0.00017637099972489523
         },
         {
           "case_id": "REV-11",
@@ -4081,7 +4081,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002204510001320159
+          "elapsed_seconds": 0.00024949199996626703
         },
         {
           "case_id": "REV-12",
@@ -4177,7 +4177,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002835420000337763
+          "elapsed_seconds": 0.00019939200046792394
         },
         {
           "case_id": "REV-13",
@@ -4273,7 +4273,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00011690200062730582
+          "elapsed_seconds": 0.00016070899982878473
         },
         {
           "case_id": "REV-14",
@@ -4395,7 +4395,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00017878000016935403
+          "elapsed_seconds": 0.0004257379996488453
         },
         {
           "case_id": "REV-15",
@@ -4499,7 +4499,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003153810002913815
+          "elapsed_seconds": 0.00021327800004655728
         },
         {
           "case_id": "REV-16",
@@ -4575,7 +4575,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00010286199994880008
+          "elapsed_seconds": 0.00022195499968802324
         },
         {
           "case_id": "REV-17",
@@ -4651,7 +4651,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00010157199994864641
+          "elapsed_seconds": 0.00021203500000410713
         },
         {
           "case_id": "REV-18",
@@ -4679,7 +4679,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 5.30460001755273e-05
+          "elapsed_seconds": 0.00014154300060909009
         },
         {
           "case_id": "REV-19",
@@ -4755,7 +4755,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00010113000007549999
+          "elapsed_seconds": 0.0002071330000035232
         },
         {
           "case_id": "REV-20",
@@ -4831,7 +4831,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00012680200052272994
+          "elapsed_seconds": 0.00020118199972785078
         },
         {
           "case_id": "REV-21",
@@ -4845,7 +4845,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 5.9173999943595845e-05
+          "elapsed_seconds": 0.00011541699950612383
         },
         {
           "case_id": "REV-22",
@@ -4859,7 +4859,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.8808999811881222e-05
+          "elapsed_seconds": 0.00010738800028775586
         },
         {
           "case_id": "REV-23",
@@ -4873,7 +4873,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.6448999303975143e-05
+          "elapsed_seconds": 2.1302999812178314e-05
         },
         {
           "case_id": "REV-24",
@@ -4887,7 +4887,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.5395999980682973e-05
+          "elapsed_seconds": 5.8938000620401e-05
         },
         {
           "case_id": "REV-25",
@@ -4901,10 +4901,10 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.5655999959562905e-05
+          "elapsed_seconds": 5.882499954168452e-05
         }
       ],
-      "records_sha256": "5bc30926e6c0ccf89506e98281766ab5fbcdd9835530ea2a0a1252bcb8a1da67",
+      "records_sha256": "45793a6fe24e08d7416984a74a07d5d90adf2e3df7c05c9b4979ceedaa486c84",
       "summary": {
         "succeeded": 20,
         "failed": 5,
@@ -5952,7 +5952,7 @@
         "cost_usd": null,
         "known_cost_usd": null,
         "missing_usage_cases": 25,
-        "elapsed_seconds": 0.00839739700222708,
+        "elapsed_seconds": 0.00454704000185302,
         "reviewed_per_case": [
           {
             "case_id": "REV-01",
@@ -7691,7 +7691,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00012875399988843128
+          "elapsed_seconds": 0.00028445299994928064
         },
         {
           "case_id": "REV-02",
@@ -7769,7 +7769,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00011497800005599856
+          "elapsed_seconds": 0.00021899300008954015
         },
         {
           "case_id": "REV-03",
@@ -7847,7 +7847,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00011111999992863275
+          "elapsed_seconds": 0.00020677900010923622
         },
         {
           "case_id": "REV-04",
@@ -7923,7 +7923,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001538619999337243
+          "elapsed_seconds": 0.0002366580001762486
         },
         {
           "case_id": "REV-05",
@@ -8005,7 +8005,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001959530000021914
+          "elapsed_seconds": 0.0002624260005177348
         },
         {
           "case_id": "REV-06",
@@ -8087,7 +8087,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00018845799968403298
+          "elapsed_seconds": 0.0002885550002247328
         },
         {
           "case_id": "REV-07",
@@ -8163,7 +8163,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00010596299944154453
+          "elapsed_seconds": 0.00011256600009801332
         },
         {
           "case_id": "REV-08",
@@ -8285,7 +8285,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00012470299952838104
+          "elapsed_seconds": 0.0002199970003857743
         },
         {
           "case_id": "REV-09",
@@ -8361,7 +8361,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00010360699980083155
+          "elapsed_seconds": 0.00018772400017041946
         },
         {
           "case_id": "REV-10",
@@ -8465,7 +8465,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002088860001094872
+          "elapsed_seconds": 0.000279128000329365
         },
         {
           "case_id": "REV-11",
@@ -8569,7 +8569,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001874150002549868
+          "elapsed_seconds": 0.0002615140001580585
         },
         {
           "case_id": "REV-12",
@@ -8665,7 +8665,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001371650005239644
+          "elapsed_seconds": 0.00020963299994036788
         },
         {
           "case_id": "REV-13",
@@ -8761,7 +8761,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001365449998047552
+          "elapsed_seconds": 0.00022819399964646436
         },
         {
           "case_id": "REV-14",
@@ -8883,7 +8883,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00016420500014646677
+          "elapsed_seconds": 0.00025069999992410885
         },
         {
           "case_id": "REV-15",
@@ -8987,7 +8987,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00015312699997593882
+          "elapsed_seconds": 0.0002873820003514993
         },
         {
           "case_id": "REV-16",
@@ -9063,7 +9063,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00010764599937829189
+          "elapsed_seconds": 0.00020031999974889914
         },
         {
           "case_id": "REV-17",
@@ -9139,7 +9139,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001718399998935638
+          "elapsed_seconds": 0.0001934689998961403
         },
         {
           "case_id": "REV-18",
@@ -9167,7 +9167,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 5.06369997310685e-05
+          "elapsed_seconds": 9.255599979951512e-05
         },
         {
           "case_id": "REV-19",
@@ -9243,7 +9243,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00010622700028761756
+          "elapsed_seconds": 0.00012046400024701143
         },
         {
           "case_id": "REV-20",
@@ -9319,7 +9319,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001562750003358815
+          "elapsed_seconds": 0.00018657900000107475
         },
         {
           "case_id": "REV-21",
@@ -9333,7 +9333,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.805299962143181e-05
+          "elapsed_seconds": 1.8707999515754636e-05
         },
         {
           "case_id": "REV-22",
@@ -9347,7 +9347,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.6543000128876884e-05
+          "elapsed_seconds": 1.7768999896361493e-05
         },
         {
           "case_id": "REV-23",
@@ -9361,7 +9361,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.890299972728826e-05
+          "elapsed_seconds": 1.8822000129148364e-05
         },
         {
           "case_id": "REV-24",
@@ -9375,7 +9375,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.6076000065368135e-05
+          "elapsed_seconds": 4.980999983672518e-05
         },
         {
           "case_id": "REV-25",
@@ -9389,10 +9389,10 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.6417000551882666e-05
+          "elapsed_seconds": 1.8899000679084565e-05
         }
       ],
-      "records_sha256": "e515006cce6c7a172e5cdd36369801a144a836db7b8f35688b666b4d277ecf91",
+      "records_sha256": "dc3476f3a59c3779865b2379fa84887cac845909dc67ff1326684275b8d72dfa",
       "summary": {
         "succeeded": 20,
         "failed": 5,
@@ -10440,7 +10440,7 @@
         "cost_usd": null,
         "known_cost_usd": null,
         "missing_usage_cases": 25,
-        "elapsed_seconds": 0.0028933579988006386,
+        "elapsed_seconds": 0.004452098001820559,
         "reviewed_per_case": [
           {
             "case_id": "REV-01",
@@ -12183,7 +12183,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003032470003745402
+          "elapsed_seconds": 0.0004631390002032276
         },
         {
           "case_id": "REV-02",
@@ -12264,7 +12264,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003141369998047594
+          "elapsed_seconds": 0.0002575739999883808
         },
         {
           "case_id": "REV-03",
@@ -12345,7 +12345,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003594370000428171
+          "elapsed_seconds": 0.000271199000053457
         },
         {
           "case_id": "REV-04",
@@ -12423,7 +12423,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002222479997726623
+          "elapsed_seconds": 0.00028073500016034814
         },
         {
           "case_id": "REV-05",
@@ -12507,7 +12507,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00033614599942666246
+          "elapsed_seconds": 0.00026910500037047314
         },
         {
           "case_id": "REV-06",
@@ -12591,7 +12591,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003248430002713576
+          "elapsed_seconds": 0.00025859200013655936
         },
         {
           "case_id": "REV-07",
@@ -12669,7 +12669,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0004838410004595062
+          "elapsed_seconds": 0.00029782999990857206
         },
         {
           "case_id": "REV-08",
@@ -12795,7 +12795,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00025476599967078073
+          "elapsed_seconds": 0.00027232899992668536
         },
         {
           "case_id": "REV-09",
@@ -12873,7 +12873,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00025594199996703537
+          "elapsed_seconds": 0.00016279000010399614
         },
         {
           "case_id": "REV-10",
@@ -12979,7 +12979,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003329050005049794
+          "elapsed_seconds": 0.000372956000319391
         },
         {
           "case_id": "REV-11",
@@ -13085,7 +13085,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00031546700029139174
+          "elapsed_seconds": 0.00036802499926125165
         },
         {
           "case_id": "REV-12",
@@ -13183,7 +13183,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003207460003977758
+          "elapsed_seconds": 0.00032155600001715356
         },
         {
           "case_id": "REV-13",
@@ -13281,7 +13281,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.001189083999634022
+          "elapsed_seconds": 0.0007261170003403095
         },
         {
           "case_id": "REV-14",
@@ -13407,7 +13407,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0027704510002877214
+          "elapsed_seconds": 0.0004512800005613826
         },
         {
           "case_id": "REV-15",
@@ -13513,7 +13513,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00035455499983072514
+          "elapsed_seconds": 0.00029065899980196264
         },
         {
           "case_id": "REV-16",
@@ -13591,7 +13591,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0005707640002583503
+          "elapsed_seconds": 0.000311150000015914
         },
         {
           "case_id": "REV-17",
@@ -13669,7 +13669,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002740930003710673
+          "elapsed_seconds": 0.00034875399978773203
         },
         {
           "case_id": "REV-18",
@@ -13697,7 +13697,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 8.699699992575916e-05
+          "elapsed_seconds": 8.302199967147317e-05
         },
         {
           "case_id": "REV-19",
@@ -13775,7 +13775,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00027086999944003765
+          "elapsed_seconds": 0.00017117400057031773
         },
         {
           "case_id": "REV-20",
@@ -13853,7 +13853,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00029130600069038337
+          "elapsed_seconds": 0.0001819360004446935
         },
         {
           "case_id": "REV-21",
@@ -13867,7 +13867,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.9350999536982272e-05
+          "elapsed_seconds": 2.1845999981451314e-05
         },
         {
           "case_id": "REV-22",
@@ -13881,7 +13881,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.7770000340533443e-05
+          "elapsed_seconds": 2.22570006371825e-05
         },
         {
           "case_id": "REV-23",
@@ -13895,7 +13895,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.6467000023112632e-05
+          "elapsed_seconds": 0.0001666389998717932
         },
         {
           "case_id": "REV-24",
@@ -13909,7 +13909,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.730599979055114e-05
+          "elapsed_seconds": 3.335900055390084e-05
         },
         {
           "case_id": "REV-25",
@@ -13923,10 +13923,10 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 1.6261999917333014e-05
+          "elapsed_seconds": 1.684099970589159e-05
         }
       ],
-      "records_sha256": "dbb2c51816be164995953f7fa7b50568d22610419d986c34a5e947c4870db7c6",
+      "records_sha256": "6dd66c6664a73bbaa763ea0f00a0c3f8df7b7c3fc26f5324bcef56248eea04a4",
       "summary": {
         "succeeded": 20,
         "failed": 5,
@@ -14974,7 +14974,7 @@
         "cost_usd": null,
         "known_cost_usd": null,
         "missing_usage_cases": 25,
-        "elapsed_seconds": 0.009719001001030847,
+        "elapsed_seconds": 0.0064208640023935,
         "reviewed_per_case": [
           {
             "case_id": "REV-01",

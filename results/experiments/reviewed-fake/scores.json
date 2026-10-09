@@ -1051,7 +1051,7 @@
         "cost_usd": null,
         "known_cost_usd": null,
         "missing_usage_cases": 25,
-        "elapsed_seconds": 0.00839739700222708,
+        "elapsed_seconds": 0.00454704000185302,
         "reviewed_per_case": [
           {
             "case_id": "REV-01",
@@ -3308,7 +3308,7 @@
         "cost_usd": null,
         "known_cost_usd": null,
         "missing_usage_cases": 25,
-        "elapsed_seconds": 0.0028933579988006386,
+        "elapsed_seconds": 0.004452098001820559,
         "reviewed_per_case": [
           {
             "case_id": "REV-01",
@@ -5565,7 +5565,7 @@
         "cost_usd": null,
         "known_cost_usd": null,
         "missing_usage_cases": 25,
-        "elapsed_seconds": 0.009719001001030847,
+        "elapsed_seconds": 0.0064208640023935,
         "reviewed_per_case": [
           {
             "case_id": "REV-01",
