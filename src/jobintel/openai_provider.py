@@ -45,22 +45,35 @@ class OpenAIProvider:
                 extraction = parse_response(response.body)
                 break
             except ProviderError as error:
+                attempts[-1]["elapsed_seconds"] = perf_counter() - attempt_started
+                error.provenance = self.provenance(text, configuration, payload, attempts, started)
                 if error.code not in {"malformed_json", "invalid_schema", "truncated_json"}:
                     raise
                 if attempt == 1:
-                    raise ProviderError(error.code, error.status, False) from error
+                    final_error = ProviderError(error.code, error.status, False)
+                    final_error.provenance = error.provenance
+                    raise final_error from error
                 # Repeat the original schema request once. Never echo untrusted model output.
         try:
             validate_grounding(text, extraction)
         except GroundingError as error:
-            raise ProviderError("invalid_evidence", 422, False) from error
+            provider_error = ProviderError("invalid_evidence", 422, False)
+            provider_error.provenance = self.provenance(
+                text, configuration, payload, attempts, started
+            )
+            raise provider_error from error
         if policy.normalize:
             extraction = extraction.model_copy(
                 update={
                     "requirements": [self._taxonomy.normalize(r) for r in extraction.requirements]
                 }
             )
-        provenance = {
+        return ProviderResult(
+            extraction, self.provenance(text, configuration, payload, attempts, started)
+        )
+
+    def provenance(self, text, configuration, payload, attempts, started):
+        return {
             **identity(self.name, configuration, self.model, self._taxonomy),
             "source_sha256": content_hash(text),
             "request_sha256": digest(payload),
@@ -74,13 +87,12 @@ class OpenAIProvider:
             "request_id": attempts[-1]["request_id"],
             "response_id": attempts[-1]["response_id"],
             "attempts": attempts,
-            "attempt_count": attempt + 1,
+            "attempt_count": len(attempts),
             "usage": total_usage(attempts),
             "elapsed_seconds": perf_counter() - started,
             "llm_elapsed_seconds": None,
             "estimated_cost": None,
         }
-        return ProviderResult(extraction, provenance)
 
     def request(self, text):
         return {

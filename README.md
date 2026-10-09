@@ -27,8 +27,8 @@ Select **Load synthetic corpus** to process all 20 authored postings, or import 
 sample registry and walk through source capture, extraction, and matching yourself.
 The launcher migrates a disposable SQLite database before serving and deletes it
 on exit. Normal `uvicorn jobintel.api:app` also serves `/ui/` against its configured
-database, without synthetic fixture/reset endpoints. Candidate/evaluation display
-state lives in the current browser session. Corpus categories, gaps and coverage are
+database, without synthetic fixture/reset endpoints. Candidate display state lives in the current browser session; the selected evaluation
+run ID reloads its saved report after refresh. Corpus categories, gaps and coverage are
 computed from saved source/extraction/match outcomes and survive refresh for the
 explicitly selected candidate revision. No API keys, third-party UI assets, or paid
 calls are needed.
@@ -59,9 +59,9 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 <!-- UI-RECORDINGS:START -->
 
-Successful browser attempts: **16/16**, recorded 2026-10-08.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37846182194) · commit `3ca2f51edb8670703a6db05de320743d4d8fbad7`.
-Source content SHA-256: `68733a323de171ab19ad36401b3f682928fa2ffb988afd2d323f83cf85ff5d36`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Successful browser attempts: **16/16**, recorded 2026-10-09.
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `3a1ad0b876345778d9975a7c2dedab4335c6b0b31959e427ae425231546bc34a`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -70,7 +70,7 @@ Source content SHA-256: `68733a323de171ab19ad36401b3f682928fa2ffb988afd2d323f83c
 | UI03 · Grounded extraction, aliases and operators | [Watch](docs/ui-recordings/UI03-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI03-mobile-chromium.webm) |
 | UI04 · Candidate evidence and four matching states | [Watch](docs/ui-recordings/UI04-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI04-mobile-chromium.webm) |
 | UI05 · Corpus slices, gaps and safe provenance exports | [Watch](docs/ui-recordings/UI05-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI05-mobile-chromium.webm) |
-| UI06 · Fixture evaluation and honest unavailable metrics | [Watch](docs/ui-recordings/UI06-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI06-mobile-chromium.webm) |
+| UI06 · Fixture and source-reviewed evaluation diagnostics | [Watch](docs/ui-recordings/UI06-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI06-mobile-chromium.webm) |
 | UI07 · Provider and connection failure recovery | [Watch](docs/ui-recordings/UI07-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI07-mobile-chromium.webm) |
 | UI08 · Keyboard navigation, responsive layout and inert input | [Watch](docs/ui-recordings/UI08-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI08-mobile-chromium.webm) |
 
@@ -261,7 +261,8 @@ The demo uses authored offline HTTP/DNS responses and performs no URL crawling.
 | POST /candidate/validate | Strict sourced-profile validation, no database write |
 | GET /analytics/skills | Saved-source n/N, categories, candidate gaps, coverage; applied/remote slices |
 | POST /exports | Shared JSON/CSV counts, requirements, evidence and saved-revision matches |
-| POST /evaluate | Two fixture configurations, persisted evaluation report |
+| POST /evaluate | Fixture/reviewed dataset, typed failures, persisted evaluation report |
+| GET /evaluation-runs/{id} | Exact saved report and diagnostics without provider requests |
 
 OpenAPI schemas are available at `/docs` when running locally. Error contracts and
 target live behaviors are documented in [specification §12](docs/specification.md).
@@ -317,7 +318,17 @@ Type/evidence accuracy use aligned-pair denominators. Semantic hallucination,
 abstention, tokens and cost are unavailable, represented by null. Test cases inject
 wrong types, duplicate predictions and invalid evidence to verify metric failures.
 Read [evaluation methodology](docs/evaluation.md) and the saved
-[fixture report](results/fixture_evaluation.json). Do not substitute fixture measurements for independently reviewed model results.
+[fixture report](results/fixture_evaluation.json).
+
+`jobintel evaluate --dataset reviewed` uses 25 frozen source-reviewed cases and
+a sourced synthetic candidate. It measures semantic, abstention, filter, responsibility
+and matching agreement with explicit counts. The bounded fixture provider has no
+response for five cases: the command saves their diagnostics and exits 1. Reports
+retain failures and remain retrievable through `/evaluation-runs/{id}` or
+`jobintel evaluate --run-id ID`. UI06 reloads saved evaluations after refresh.
+The source reviewer and limitations are recorded in the methodology; this replay
+run supplies no live-model quality claim. See the [saved diagnostic JSON](results/reviewed_fixture_evaluation.json)
+and [human-readable errors](results/reviewed_fixture_evaluation.txt). Do not substitute fixture measurements for independently reviewed model results.
 
 The opt-in [experiment command](docs/experiments.md) freezes snapshots and labels,
 checks call/token/USD reservations, checkpoints failures and rescores saved outputs

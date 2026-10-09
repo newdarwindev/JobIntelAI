@@ -217,7 +217,12 @@ def test_v12_live_evaluation_captures_usage_without_fabricating_quality(client, 
     failed = client.post("/evaluate", json={"configurations": ["openai_structured_v1"]})
     assert failed.status_code == 502
     with client.app.state.session_factory() as session:
-        assert session.scalar(select(func.count()).select_from(db.EvaluationRun)) == 1
+        assert session.scalar(select(func.count()).select_from(db.EvaluationRun)) == 2
+    failure_report = failed.json()
+    assert failure_report["status"] == "partial"
+    assert failure_report["results"][0]["per_case"][0]["error"]["code"] == "quota"
+    assert failure_report["results"][0]["per_case"][1]["status"] == "not_attempted"
+    assert client.get(f"/evaluation-runs/{failure_report['evaluation_run_id']}").status_code == 200
 
 
 def test_v19_migrated_live_failures_preserve_provenance_and_rows(

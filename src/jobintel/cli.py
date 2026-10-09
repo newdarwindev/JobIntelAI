@@ -5,7 +5,6 @@ from pathlib import Path
 
 from jobintel.config import database_url, fixture_root
 from jobintel.db import session_factory
-from jobintel.evaluation import run_evaluation
 from jobintel.normalization import Taxonomy
 from jobintel.openai_transport import ProviderError
 from jobintel.providers import ProviderUnavailable, selected_configuration, selected_provider
@@ -32,17 +31,17 @@ def main(argv=None, *, transport=None):
         raise SystemExit(2) from None
 
 
-def execute(argv, transport):
+def specialized_command(argv):
     if argv and argv[0] == "analytics":
         from jobintel.analytics_cli import execute as analytics_execute
 
         analytics_execute(argv)
-        return
+        return True
     if argv and argv[0] == "export":
         from jobintel.export_cli import execute as export_execute
 
         export_execute(argv)
-        return
+        return True
     if argv and argv[0] == "experiment":
         from jobintel.experiment_cli import main as experiment_main
 
@@ -51,6 +50,12 @@ def execute(argv, transport):
         from jobintel.candidate_cli import execute as candidate_execute
 
         candidate_execute(argv)
+        return True
+    return False
+
+
+def execute(argv, transport):
+    if specialized_command(argv):
         return
     parser = argparse.ArgumentParser(
         description="JobIntel extraction and offline demo; run migrations first"
@@ -61,7 +66,13 @@ def execute(argv, transport):
     parser.add_argument("--configuration")
     parser.add_argument("--configurations", nargs="+")
     parser.add_argument("--job-id")
+    parser.add_argument("--dataset", choices=["fixture", "reviewed"], default="fixture")
+    parser.add_argument("--pricing", type=Path)
+    parser.add_argument("--run-id")
     args = parser.parse_args(argv)
+    if args.run_id:
+        load_evaluation_command(args)
+        return
     root = fixture_root()
     provider = selected_provider(root, args.provider, transport=transport)
     configuration = selected_configuration(provider, args.configuration)
@@ -72,12 +83,7 @@ def execute(argv, transport):
     factory = session_factory(database_url())
     args.output.mkdir(parents=True, exist_ok=True)
     if args.command == "evaluate":
-        configurations = args.configurations or (
-            ["fixture_raw", "fixture_normalized"] if provider.name == "fixture" else [configuration]
-        )
-        report = run_evaluation(provider, root, configurations)
-        (args.output / "evaluation.json").write_text(json.dumps(report, indent=2) + "\n")
-        print(json.dumps(report, indent=2))
+        evaluate_command(factory, provider, root, args, configuration)
         return
     if args.command == "extract":
         print(
@@ -127,6 +133,55 @@ def extract_command(factory, provider, root, job_id, configuration):
         return result
     finally:
         factory.kw["bind"].dispose()
+
+
+def evaluate_command(factory, provider, root, args, configuration):
+    from jobintel.evaluation_runs import human_summary, run_report
+    from jobintel.evaluation_store import get_report, save_report
+    from jobintel.schemas import EvaluationPricing
+
+    try:
+        with factory.begin() as session:
+            if args.run_id:
+                report = get_report(session, args.run_id)
+            else:
+                from sqlalchemy import select
+
+                from jobintel import db
+
+                session.execute(select(db.EvaluationRun.id).limit(1))
+                configurations = args.configurations or (
+                    ["fixture_raw", "fixture_normalized"]
+                    if provider.name == "fixture"
+                    else [configuration]
+                )
+                pricing = (
+                    EvaluationPricing.model_validate_json(args.pricing.read_text())
+                    if args.pricing
+                    else None
+                )
+                report = save_report(
+                    session,
+                    run_report(
+                        provider, root, configurations, dataset=args.dataset, pricing=pricing
+                    ),
+                )
+        (args.output / "evaluation.json").write_text(
+            json.dumps(report, indent=2, ensure_ascii=False) + "\n"
+        )
+        (args.output / "evaluation.txt").write_text(human_summary(report))
+        print(human_summary(report), end="")
+        if any(r.get("failed", 0) for r in report["results"]):
+            raise SystemExit(1)
+    finally:
+        factory.kw["bind"].dispose()
+
+
+def load_evaluation_command(args):
+    if args.command != "evaluate":
+        raise ValueError("--run-id is supported only for evaluate")
+    args.output.mkdir(parents=True, exist_ok=True)
+    evaluate_command(session_factory(database_url()), None, None, args, None)
 
 
 if __name__ == "__main__":

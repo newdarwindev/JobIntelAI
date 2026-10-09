@@ -183,12 +183,15 @@ def plan(corpus: FrozenCorpus, spec: ExperimentSpec, mode: str) -> dict:
 def code_provenance() -> dict:
     root = Path(__file__).resolve().parent
     sources = {path.name: path.read_text(encoding="utf-8") for path in sorted(root.glob("*.py"))}
-    commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
-    status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+    try:
+        commit = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
+        status = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True)
+    except OSError:
+        commit = status = None
     return {
         "source_sha256": digest(sources),
-        "git_commit": commit.stdout.strip() if commit.returncode == 0 else None,
-        "git_dirty": bool(status.stdout) if status.returncode == 0 else None,
+        "git_commit": commit.stdout.strip() if commit and commit.returncode == 0 else None,
+        "git_dirty": bool(status.stdout) if status and status.returncode == 0 else None,
     }
 
 

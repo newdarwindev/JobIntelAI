@@ -219,6 +219,11 @@ test('UI06 | Fixture evaluation and honest unavailable metrics',async({page})=>{
   const report=JSON.parse(await download(page,'Export evaluation JSON'));expect(report.dataset_size).toBe(20);expect(report.results).toHaveLength(2);expect(report.mode).toContain('not live LLM quality');
   for(const r of report.results){expect(r.tokens).toBeNull();expect(r.estimated_cost).toBeNull();expect(r.metrics.semantic_hallucination_rate).toBeNull();expect(r.metrics.abstention_quality).toBeNull();}
   await page.getByRole('checkbox',{name:'Raw aliases',exact:true}).uncheck();await click(page,'Run fixture evaluation');const single=JSON.parse(await download(page,'Export evaluation JSON'));expect(single.results).toHaveLength(1);expect(single.results[0].configuration).toBe('fixture_normalized');
+  await page.getByLabel('Evaluation dataset').selectOption('reviewed');await page.getByRole('checkbox',{name:'Raw aliases',exact:true}).uncheck();await click(page,'Run fixture evaluation');
+  await expect(page.locator('main')).toContainText('20 succeeded · 5 failed');await expect(page.locator('#evaluation-diagnostics')).toContainText('REV-21: failed · provider_unavailable');
+  const reviewed=JSON.parse(await download(page,'Export evaluation JSON'));expect(reviewed.dataset_size).toBe(25);expect(reviewed.review.independent).toBe(true);expect(reviewed.results[0].metrics.reviewed_metrics.matching_agreement.denominator).toBe(28);expect(reviewed.results[0].per_case).toHaveLength(25);
+  await page.reload();await expect(page.getByLabel('Saved evaluation run ID')).toHaveValue(reviewed.evaluation_run_id);await expect(page.locator('main')).toContainText('20 succeeded · 5 failed');
+  await page.getByLabel('Saved evaluation run ID').fill(report.evaluation_run_id);await click(page,'Load saved evaluation');await expect(page.locator('main')).toContainText('18/22');const restored=JSON.parse(await download(page,'Export evaluation JSON'));expect(restored).toEqual(report);
 });
 
 test('UI07 | Provider and connection failure recovery',async({page,request})=>{

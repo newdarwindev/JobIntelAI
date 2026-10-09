@@ -12,6 +12,12 @@ evidence in issue #9.
 
 ## Regression references
 
+V20/V33-V37 regressions in `unit/test_reviewed_evaluation.py` and
+`integration/test_evaluation_reports.py` cover frozen source annotations, exact
+metric counts, semantic/alias/span distinctions, abstentions, filters, responsibilities,
+four-state matching, pricing/usage, typed failures and historical API/CLI reports
+on migrated SQLite/PostgreSQL. UI06 covers reviewed diagnostics and report reload.
+
 V27–V30 regressions in `unit/test_corpus_analytics.py` and
 `integration/test_corpus_analytics_boundary.py` cover mixed failed/pending/empty/stale
 sources, duplicate mentions/categories, ANY/ALL, distinct four-state groups, explicit
