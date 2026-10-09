@@ -105,7 +105,15 @@ def freeze_bundled(root: Path) -> FrozenCorpus:
 
 
 def load_corpus(path: Path) -> FrozenCorpus:
-    return FrozenCorpus.model_validate(read_json(path))
+    return parse_corpus(read_json(path))
+
+
+def parse_corpus(value) -> FrozenCorpus:
+    if "reviewed" in value:
+        from jobintel.experiment_reviewed import ReviewedExperimentCorpus
+
+        return ReviewedExperimentCorpus.model_validate(value)
+    return FrozenCorpus.model_validate(value)
 
 
 def verify_public(corpus: FrozenCorpus, bundled: FrozenCorpus) -> None:

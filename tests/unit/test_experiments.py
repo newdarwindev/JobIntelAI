@@ -143,8 +143,12 @@ def test_v38_failure_preservation_and_checkpoint_redaction(corpus):
         ExperimentSpec(),
         checkpoint=lambda r: checkpoints.append(copy.deepcopy(r)),
     )
-    assert len(checkpoints) == 60
     assert checkpoints[0]["complete"] is False
+    assert checkpoints[0]["results"] == []
+    assert any(
+        c["active_case"] == {"configuration": "A", "case_id": corpus.cases[0].case_id}
+        for c in checkpoints
+    )
     for result in report["results"]:
         failed = result["records"][0]
         assert failed["status"] == "failed" and failed["prediction"] is None
@@ -299,14 +303,10 @@ def test_v38_public_source_pin_and_path_traversal(tmp_path, corpus):
 
 
 def test_v38_live_cli_never_constructs_fake_fallback(corpus, tmp_path, monkeypatch, capsys):
-    reviewed = corpus.model_copy(
-        update={
-            "public": False,
-            "review": Review(
-                independent=True, reviewer="test only", method="test only", revision="test"
-            ),
-        }
-    )
+    from jobintel.experiment_reviewed import freeze_reviewed
+
+    reviewed = freeze_reviewed(DATA)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     frozen = tmp_path / "corpus.json"
     write_json(frozen, reviewed.model_dump(mode="json"))
     config = tmp_path / "config.json"
@@ -314,6 +314,7 @@ def test_v38_live_cli_never_constructs_fake_fallback(corpus, tmp_path, monkeypat
         config,
         {
             "model": "test-model",
+            "max_calls": 75,
             "authorization_reference": "unit test only",
             "budget_usd": 10,
             "pricing": {
@@ -346,7 +347,7 @@ def test_v38_live_cli_never_constructs_fake_fallback(corpus, tmp_path, monkeypat
             ]
         )
     assert error.value.code == 2
-    assert "structured adapter (#4)" in capsys.readouterr().err
+    assert "OpenAI credentials are missing" in capsys.readouterr().err
     assert not output.exists()
 
 

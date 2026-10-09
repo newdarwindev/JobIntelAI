@@ -34,7 +34,9 @@ Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 
 UI06 must identify exported results as fixture replay rather than live model
 quality. The separate `jobintel experiment` CLI preserves `/evaluate` and cannot
-enable paid browser calls. The journey checks the exported mode and null usage/cost. Original regression
+enable paid browser calls. Live A/B/C configuration, budgeting and output audit stay
+in the opt-in CLI; UI06 exports retain fixture identity and unavailable paid usage.
+The journey checks the exported mode and null usage/cost. Original regression
 semantic/abstention metrics remain null. The source-reviewed benchmark displays
 reviewed counts, successful-case scope, matching on gold requirements, and five
 unsupported replay inputs as preserved failures. It reloads both reports without

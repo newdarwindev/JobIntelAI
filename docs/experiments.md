@@ -1,85 +1,157 @@
 # Frozen-corpus experiment protocol
 
-`jobintel experiment` runs independently of the database with an explicitly fake
-default provider. Requested `openai` execution rejects the request pending the
-adapter/evaluator contracts in [#4](https://github.com/newdarwindev/JobIntelAI/issues/4)
-and [#8](https://github.com/newdarwindev/JobIntelAI/issues/8), without fixture fallback.
-Actual paid runs and reviewer audit belong to [#9](https://github.com/newdarwindev/JobIntelAI/issues/9).
+`jobintel experiment` is a database-independent CLI with an explicitly fake default.
+It supports one opt-in OpenAI Responses transport using secure runtime
+`OPENAI_API_KEY`, supplied model/pricing configuration and a separate paid-call
+authorization reference. Configuration is not user authorization. Never run paid
+calls in CI, automatically from the browser, or before explicit operator approval.
+[Issue #9](https://github.com/newdarwindev/JobIntelAI/issues/9) defines the actual
+live-run/reviewer release gate; offline results cannot close that gate.
 
-Run from the repository root with the package installed, using new output paths:
+## Reproduce a reviewed dry run
+
+Run from the repository root, using new output paths:
 
 ```bash
-jobintel experiment freeze --output local_data/experiments/corpus.json
-jobintel experiment plan --corpus local_data/experiments/corpus.json \
-  --output local_data/experiments/plan.json
-jobintel experiment run --provider fake --corpus local_data/experiments/corpus.json \
-  --output local_data/experiments/fake-run
-jobintel experiment rescore --report local_data/experiments/fake-run/report.json \
-  --output local_data/experiments/reproduced-scores.json
-jobintel experiment publish --report local_data/experiments/fake-run/report.json \
-  --output results/experiments/fake
+jobintel experiment freeze --dataset reviewed --output local_data/experiments/reviewed.json
+jobintel experiment plan --corpus local_data/experiments/reviewed.json \
+  --output local_data/experiments/fake-plan.json
+jobintel experiment run --provider fake --corpus local_data/experiments/reviewed.json \
+  --output local_data/experiments/reviewed-fake
+# This exits 1: five inputs have no fixture response in each configuration.
+jobintel experiment rescore --report local_data/experiments/reviewed-fake/report.json \
+  --output local_data/experiments/reproduced.json
+jobintel experiment publish --report local_data/experiments/reviewed-fake/report.json \
+  --output results/experiments/reviewed-fake
 ```
 
-Freeze bundles exact Unicode snapshots, SHA-256, labels, taxonomy and review
-metadata. It checks the complete authored synthetic content against a source pin;
-an environment-selected private root cannot gain public status through filenames.
-Bundled labels have no independent review. Loading rechecks hashes/evidence/unique
-IDs. Every configuration receives the same snapshots without URL/database reads.
+The frozen file embeds all 25 pinned source-reviewed snapshots, labels, rationales,
+taxonomy, sourced candidate, assessment date and expected matches. Copies are
+cross-validated against reviewed annotations. Public publication compares the entire
+corpus to the repository's authored MIT-licensed source pin. A `public` flag or
+copied filename cannot authorize private inputs; private outputs stay under ignored
+`local_data/`.
 
-A audits free-form JSON, B rejects invalid evidence, C applies deterministic
-normalization to B. The fake provider replays identical raw responses for A/B/C;
-it cannot measure prompt/schema effects. Raw predictions remain in reports.
-Experimental A predictions never enter production storage.
+The default reviewed fake run reserves 75 attempts (25 cases × A/B/C). Twenty
+snapshots have actual fixture responses; five remain `provider_unavailable` failures
+in each configuration. Never manufacture predictions from reviewed labels.
+Ordinary `freeze` preserves the original 20-case/60-attempt regression. Legacy
+format-v1 reports still rescore exactly with their original configuration/metrics.
 
-Use `--config path.json` with at least two distinct configurations:
+## Opt-in live configuration
 
-```json
-{
-  "configurations": ["B", "C"],
-  "model": "fake-fixture",
-  "max_calls": 40,
-  "max_input_tokens": 32000,
-  "max_output_tokens": 4096,
-  "budget_usd": 0,
-  "pricing": null,
-  "authorization_reference": null
-}
+Supply JSON through `--config path.json`:
+
+| Field | Contract |
+| --- | --- |
+| configurations | At least two distinct choices from A, B, C; all three preferred |
+| model | Explicit OpenAI model; fake-fixture is rejected for live execution |
+| max_calls | At least cases × configs; no hidden retries |
+| max_input_tokens | Conservative UTF-8 reservation for the complete request plus envelope overhead |
+| max_output_tokens | Enforced in the actual Responses request |
+| budget_usd | Must cover all reserved attempts at supplied pricing |
+| pricing | Model, source, valid calendar date, input/output USD-per-million rates |
+| authorization_reference | Separate explicit operator approval reference, never a key |
+
+Verify current pricing before proposing a paid run; supplied estimates are not
+billing reconciliation. The planner rejects call/input/priced reservations before
+constructing a transport or making requests. Usage exceeding token limits stops
+later paid attempts. A model alias may return its dated snapshot; different or
+missing response models stop execution.
+
+Prepare a concrete plan without credentials or paid requests:
+
+```bash
+jobintel experiment plan --provider openai --corpus local_data/experiments/reviewed.json \
+  --config local_data/experiments/authorized-config.json \
+  --output local_data/experiments/live-plan.json
 ```
 
-Plans reserve one attempt per case/configuration with no retries. Call limits,
-conservative UTF-8 input reservations and worst-case priced reservations are
-checked before requests. Optional pricing has `model`, `source`, `date`,
-`input_usd_per_million`, `output_usd_per_million`; model must match configuration.
-Reservations are bounds, never usage. A future live transport must enforce model
-and token limits on requests; over-limit responses are rejected. Simulated test
-pricing/usage is never described as purchased service usage.
+Only after separate authorization, secure credentials, current pricing and permitted
+`api.openai.com` network access:
 
-Live preflight requires independent reviewer/method/revision, a separate paid-call
-authorization reference, and dated model-specific pricing. Configuration is not
-user authorization. The eventual adapter must use secure runtime credentials;
-this command accepts no API-key argument and reads no key. Keep secrets out of
-review/configuration fields.
+```bash
+jobintel experiment run --provider openai --corpus local_data/experiments/reviewed.json \
+  --config local_data/experiments/authorized-config.json \
+  --output local_data/experiments/authorized-run
+```
 
-Reports retain successes/failures, predictions, measured local durations, available
-usage, corpus/config/prompt/schema/source hashes, commit and dirty status. Errors
-use codes without exception bodies. Atomic checkpoints retain interruptions as
-incomplete. The command writes diagnostics then exits 1 on case failures; invalid
-files/preflight errors exit 2. Existing run directories cannot be overwritten.
+No API-key argument/config field exists. HTTP uses the supported proxy and verified
+TLS, requesting `store: false`, the supplied model and output token limit. There is
+no fixture substitution or hidden retry. Repeating a run requires approval covering
+its additional spend; an authorization reference alone grants nothing.
 
-Rescore verifies complete aligned corpus/config/prediction hashes without a
-provider. The existing multiset scorer reports aggregate/per-case alignment,
-type/evidence and invalid spans. Metrics cover successful cases only; failure
-counts remain alongside. All-failed metrics are null. Semantic/abstention metrics
-stay null pending independent evaluation; alias mismatch is not hallucination.
-Missing usage makes complete usage/cost null; `known_cost_usd` reports available
-priced usage separately.
+## A/B/C and failures
 
-Private outputs must stay under ignored `local_data/`. Public fake publication
-accepts only pinned authored inputs, default non-secret configuration and verified
-fixture predictions. It rebuilds summaries and filters arbitrary fields. Live
-publication requires reviewer/privacy audit. Reports contain text/quotes: never
-commit private reports or upload them to CI. CI artifacts contain synthetic tests.
+A provides the extraction schema in the prompt without server-side enforcement.
+Parseable extraction output is audited even when source quotes are invalid. B uses
+strict Responses output and local production grounding checks. C uses B's identical
+request, then applies deterministic taxonomy normalization. Each configuration
+receives identical frozen source bytes. B/C are separate model calls; response
+variation can confound attribution to normalization. No result assumes C wins.
 
-The README fake table demonstrates plumbing. Live evidence requires at least two
-authorized reports with model/config/date/pricing, measured failures/trade-offs and
-reviewer audit. Fake reports and green offline tests do not close V38.
+Free-form predictions remain experimental files, never production persistence.
+Reports retain parsed raw/scored predictions, bounded raw model text, actual model
+and request/response IDs, usage, request/source/prompt/schema/config/corpus/code hashes,
+UTC run timestamps and measured posting/provider/end-to-end duration. Provider-only
+LLM latency stays null. Invalid output retains available usage and raw text. Error
+bodies and credentials never enter reports. Text is capped at 128,000 characters;
+invalid schema/truncated Responses output remains a failure.
+
+An atomic incomplete checkpoint names each active case before its request.
+Interruptions preserve it. Quota/rate-limit, network/provider, model identity and
+usage-limit failures stop later attempts across configurations; remaining slots
+are `not_attempted`, with unavailable usage/duration. Case-local schema/evidence/
+refusal failures remain diagnostics. No error becomes an empty successful result.
+Failures exit 1 after saving; invalid preflight/inputs exit 2. Existing output
+directories cannot be overwritten.
+
+## Scores and publication
+
+Format-v2 reports use counted one-to-one alignment, confusion matrices and the
+reviewed semantic, abstention, filter/responsibility and gold-requirement matching
+protocol in [evaluation.md](evaluation.md). Per-case diagnostics and successful/
+failed/not-attempted counts accompany quality rates. All-failed or zero-denominator
+quality remains null. Missing usage makes complete tokens/cost unavailable; known
+priced usage remains separate. Rescoring uses saved predictions without a provider,
+credentials or another paid call.
+
+`comparison.md` includes rates, posting duration, usage, cost and failures.
+Automatic fake publication admits only default non-secret settings and reproducible
+known fixture responses or known unavailable inputs. Arbitrary predictions/provider
+metadata are rejected.
+
+Live publication requires a separate output/privacy/per-case audit tied to the exact
+complete report hash:
+
+```bash
+jobintel experiment audit --report local_data/experiments/authorized-run/report.json \
+  --output local_data/experiments/output-audit.json
+```
+
+This creates an **unapproved** draft. Review every raw output, prediction, failure,
+metric denominator and source license. Record the actual reviewer (including an
+automated reviewer honestly), method, revision and timezone-aware timestamp after
+the run. Resolve findings and approve only that reviewed report. Source-label review
+is a separate record. Recognizable credentials and non-pinned/private inputs are
+rejected; pattern checks cannot replace scrutiny of all content.
+
+```bash
+jobintel experiment publish --report local_data/experiments/authorized-run/report.json \
+  --audit local_data/experiments/output-audit.json \
+  --output results/experiments/authorized-run --readme README.md
+```
+
+Publication writes complete report/scores/audit, shared frozen corpus and a linked
+machine-readable report per configuration. `--readme` adds/replaces only the marked
+live-results section with measured values and relative artifact links, preserving
+other content. Stale/unapproved audits and incomplete runs cannot publish. Failures
+stay visible. Add observed per-case trade-offs and benchmark limitations to the
+review method rather than assuming a normalization winner.
+
+V38 tests use fake Responses transports and authored inputs: full CLI execution,
+identical snapshots/config separation, pre-request budget rejection, fatal stops,
+raw-output failures, interruption checkpoints, saved rescoring, source pins, audit
+freshness and README publication. Simulated transport/model/usage records are test
+evidence only; at least two actual authorized live configuration reports and reviewer
+audit remain the release gate.
