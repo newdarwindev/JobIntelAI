@@ -60,8 +60,8 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **16/16**, recorded 2026-10-09.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37928713698) · commit `33b045f1e7e227380a56f97750ad39f3e3a69f07`.
-Source content SHA-256: `3de74c9b22d4dd74ba59bf2328ead8691f1209ce6a9a5ba37160d3445be14964`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `b8db0557829b5b60fb8cb918bfdb593baf7cb26cae472ba0b2750953f1e009af`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -185,16 +185,71 @@ Fake transport, semantic, API/CLI and migrated database regressions are in
 ## PostgreSQL / Docker
 
 ```bash
-docker compose up -d --build
-docker compose exec api jobintel demo
-docker compose exec api jobintel evaluate
+python scripts/runtime.py up --mode dev --project jobintel-dev
+docker compose -p jobintel-dev exec -T api jobintel demo
+docker compose -p jobintel-dev exec -T api jobintel evaluate
 curl --fail --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:8000/health
-docker compose down
+python scripts/runtime.py status --project jobintel-dev
+python scripts/runtime.py stop --project jobintel-dev
 ```
 
 Compose waits for PostgreSQL, runs Alembic in a one-shot service, then starts the
-API on loopback. The database volume survives `down`; generated CLI output in the
-API container does not survive its recreation. Demo credentials are local only.
+API on loopback and waits for API readiness. Named database, runtime-data and CLI
+output volumes survive ordinary stop and container recreation. Dev runs the normal
+API: synthetic reset/fixture routes are absent. Demo credentials are local only.
+`--port` chooses a loopback port; `--project` keeps each environment's volumes separate.
+
+For an explicitly synthetic PostgreSQL sandbox, use `--mode demo --project
+jobintel-demo`. Only that mode exposes synthetic acquisition, fixtures and reset.
+Deleting an environment's records and outputs requires the explicit command
+`python scripts/runtime.py reset --project jobintel-demo`; reset refuses an omitted
+project name. Reuse the same mode/trust/build settings for each `up`. Status/stop/reset
+need only the project name and work after an OpenAI key file is removed.
+
+For authorized OpenAI use, export `JOBINTEL_OPENAI_MODEL` and
+`JOBINTEL_OPENAI_KEY_FILE` (a readable secret file under ignored `local_data/` or
+outside the checkout), then run `python scripts/runtime.py up --mode openai
+--project jobintel-openai`. The key is mounted read-only and read via
+`OPENAI_API_KEY_FILE`; it is never copied into an image or included in Compose
+environment values. `JOBINTEL_CONFIGURATION` must match the provider. Startup and
+health check configuration/database readiness without making a paid provider request.
+Actual extraction/evaluation requires separate paid-call authorization.
+This profile configures the API/CLI; provider-aware browser controls are tracked
+in [#27](https://github.com/newdarwindev/JobIntelAI/issues/27).
+
+The runtime driver reads exported settings. `JOBINTEL_COMPOSE_DATABASE_URL` selects
+an explicit container database URL; otherwise the driver constructs the local
+PostgreSQL URL from `JOBINTEL_POSTGRES_PASSWORD`. Direct Compose users setting a
+different password must also supply its matching URL. `JOBINTEL_DATABASE_URL`
+continues to select the host Python app's database independently.
+
+In a managed environment with an HTTPS proxy, provide a combined CA bundle:
+
+```bash
+python scripts/runtime.py up --mode dev --project jobintel-dev \
+  --ca-bundle /etc/ssl/certs/ca-certificates.crt
+```
+
+BuildKit mounts this CA only during pip installation. Compose also mounts it at
+runtime for verified HTTPS; the image contains neither the session CA nor keys.
+Do not disable TLS verification. `contract-test` and `local-inference` name required
+dependencies from [#23](https://github.com/newdarwindev/JobIntelAI/issues/23),
+[#25](https://github.com/newdarwindev/JobIntelAI/issues/25) and
+[#24](https://github.com/newdarwindev/JobIntelAI/issues/24) before starting Docker,
+so unavailable machinery cannot silently become fixture replay.
+
+Run real-container persistence and mode-isolation checks without paid calls:
+
+```bash
+python scripts/runtime_smoke.py --project jobintel-runtime-check
+# Add --ca-bundle PATH when needed, or --offline after preparing wheels below.
+```
+
+This creates only synthetic data and tests retained source/extraction/profile/match
+records and exports across stop/recreation, scoped reset, demo-only routes, and
+mounted OpenAI configuration using a synthetic key without any upstream call.
+It refuses existing projects, including stopped projects with saved volumes, and
+checks that resetting its project preserves a neighboring project's volume.
 If Docker's default config directory is read-only (as in some cloud tasks), use an
 existing writable Docker config or prefix commands with
 `DOCKER_CONFIG="$PWD/local_data/docker-config"` after creating that directory.
@@ -207,10 +262,11 @@ or the target platform change. Downloading with pip retains TLS/artifact validat
 ```bash
 python -m pip wheel --wheel-dir build/wheels -c requirements.lock.txt \
   -r requirements.lock.txt 'setuptools>=75' wheel .
-docker compose -f docker-compose.yml -f docker-compose.offline.yml up -d --build
+python scripts/runtime.py up --mode dev --project jobintel-dev --offline
 ```
 
-Use the same two `-f` options for subsequent Compose commands in that workflow.
+Repeat `--offline` for subsequent `up` commands in that workflow. The driver retains
+the same service/volume identities when switching between online and offline builds.
 
 For the **optional local, required CI** PostgreSQL test, start a disposable database:
 

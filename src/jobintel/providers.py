@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from typing import Protocol
 
+from jobintel.config import openai_key
 from jobintel.normalization import Taxonomy
 from jobintel.openai_provider import OpenAIProvider, ProviderResult
 from jobintel.openai_transport import HttpOpenAITransport
@@ -79,9 +80,7 @@ def selected_provider(root, name=None, *, transport=None, model=None):
     if not model or not model.strip():
         raise ValueError("JOBINTEL_OPENAI_MODEL is required for OpenAI")
     if transport is None:
-        key = os.getenv("OPENAI_API_KEY", "")
-        if not key.strip():
-            raise ValueError("OPENAI_API_KEY is required for OpenAI")
+        key = openai_key()
         try:
             timeout = float(os.getenv("JOBINTEL_OPENAI_TIMEOUT", "30"))
         except ValueError as error:

@@ -148,3 +148,12 @@ Revision selection clears current projections. Matching sends the selected revis
 ID and inspected extraction ID; stale extraction selections fail with 409 and preserve
 history. Missing saved revisions are reported; the browser never silently selects a
 newest revision after a saved selection disappears.
+
+UI08 verifies that the recorded sandbox advertises synthetic acquisition, fixture
+extraction, its explicit fixture configuration and no live LLM execution. Container
+runtime checks separately exercise the normal persistent PostgreSQL app across
+stop/recreation: saved records and exports survive, while `/ui/fixtures` and
+`/ui/reset` remain absent. The demo Compose profile deliberately exposes those routes.
+The OpenAI profile's mounted-key readiness check uses only a synthetic key and
+makes no upstream request; it does not establish paid-service availability. Runtime
+build/profile/trust inputs participate in the recording source hash.

@@ -10,4 +10,4 @@ COPY alembic.ini ./
 COPY alembic ./alembic
 COPY data ./data
 RUN mkdir -p local_data
-CMD ["uvicorn", "jobintel.api:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["python", "-m", "jobintel.runtime", "--host", "0.0.0.0"]

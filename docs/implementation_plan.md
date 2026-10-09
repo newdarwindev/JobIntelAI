@@ -22,9 +22,24 @@ transports. Profile/match revisions (#5) feed persisted analytics (#6) and expor
 (#7). Independent evaluation (#8) and provider provenance (#4) precede authorized
 live experiments (#9). Reliability and result publication (#10) support every slice.
 
-Optional browser rendering (V08) and a second provider (V45) remain outside these
-required implementation issues. The original brief and scope exclusions are retained
-in [the specification](specification.md).
+The approved runtime extension has its own dependency map:
+
+| Issue | Runtime acceptance |
+| --- | --- |
+| [#22](https://github.com/newdarwindev/JobIntelAI/issues/22) | Persistent dev/demo/provider profiles, mounted secrets, readiness and verified trust |
+| [#23](https://github.com/newdarwindev/JobIntelAI/issues/23) | Responses contract emulator over real HTTP |
+| [#24](https://github.com/newdarwindev/JobIntelAI/issues/24) | Actual local inference for unseen postings |
+| [#25](https://github.com/newdarwindev/JobIntelAI/issues/25) | Acquisition origins, TLS and controlled proxy fixtures |
+| [#26](https://github.com/newdarwindev/JobIntelAI/issues/26) | Verified acquisition in proxy-only environments |
+| [#27](https://github.com/newdarwindev/JobIntelAI/issues/27) | Provider-aware UI and persistent real-service browser journeys |
+| [#28](https://github.com/newdarwindev/JobIntelAI/issues/28) | Connect implemented experiment runners to local/network environments |
+| [#29](https://github.com/newdarwindev/JobIntelAI/issues/29) | Complete disposable environment lifecycle and CI integration |
+
+#22 provides the runtime foundation; #23/#24/#25 materialize its external services.
+#25 precedes proxy validation (#26). Provider-aware journeys (#27) use #23/#24/#25;
+experiment integration (#28) extends #9. #29 composes those environments on demand.
+Optional browser rendering (V08) remains separate from HTTP origin fixtures. The
+original brief and scope decisions are retained in [the specification](specification.md).
 
 Each implementing PR must satisfy the tests and evidence requirements in its issue.
 Keep the offline demo usable, preserve immutable source/run history, and link actual

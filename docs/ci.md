@@ -11,6 +11,12 @@ Runners use Ubuntu 24.04 explicitly; checkout v5 and setup-python v6 use Node 24
 | Python 3.11 / 3.12 | Dependency consistency, authored fixture reproducibility, complete pytest suite including PostgreSQL, SQLite/PostgreSQL migration drift, repeated CLI demo/export/evaluation, wheel and sdist builds |
 | Container | Compose validation, normal Docker image build, PostgreSQL/migrations startup, CLI demo/evaluation and actual HTTP evidence/normalization/analytics/evaluation smoke |
 
+The container job also runs `scripts/runtime_smoke.py` against online and prepared
+offline-wheel builds. It verifies named dev data/output persistence across container
+recreation, explicit reset, demo-only route isolation and mounted OpenAI configuration
+with a synthetic key. No extraction/evaluation call is made on the OpenAI profile.
+The runtime driver waits for migrations and API readiness; health checks stay local.
+
 Python and container jobs depend on the quality gate. The container job also waits
 for both Python versions. Every command preserves its exit code: failed checks fail
 the workflow, rather than merely reporting findings. Container diagnostics run on

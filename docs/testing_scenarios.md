@@ -17,6 +17,14 @@ Test-model/usage values are simulations, never live quality evidence.
 
 ## Regression references
 
+Runtime issue #22 uses `unit/test_runtime_config.py` for mounted-secret redaction,
+explicit provider selection, missing dependencies and scoped reset guards.
+`scripts/runtime_smoke.py` checks real PostgreSQL/API persistence and CLI output
+volumes across stop/recreation, reset isolation, demo-only routes and mounted OpenAI
+configuration without upstream calls. CI exercises online and offline Docker builds.
+UI08 checks the demo provider/configuration identity; its full desktop/mobile
+recordings remain synthetic workflow evidence.
+
 V20/V33-V37 regressions in `unit/test_reviewed_evaluation.py` and
 `integration/test_evaluation_reports.py` cover frozen source annotations, exact
 metric counts, semantic/alias/span distinctions, abstentions, filters, responsibilities,

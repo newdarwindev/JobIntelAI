@@ -2,12 +2,11 @@
 
 import argparse
 import json
-import os
 import re
 from datetime import datetime
 from pathlib import Path
 
-from jobintel.config import fixture_root
+from jobintel.config import fixture_root, openai_key
 from jobintel.experiment_corpus import (
     freeze_bundled,
     load_corpus,
@@ -65,11 +64,13 @@ def selected_experiment_provider(name, transport):
     from jobintel.openai_transport import HttpOpenAITransport
 
     if transport is None:
-        key = os.getenv("OPENAI_API_KEY", "")
-        if not key.strip():
+        try:
+            key = openai_key()
+        except ValueError:
             raise ProviderUnavailable(
-                "OpenAI credentials are missing; configure OPENAI_API_KEY securely."
-            )
+                "OpenAI credentials are missing or invalid; configure only OPENAI_API_KEY "
+                "or OPENAI_API_KEY_FILE securely."
+            ) from None
         transport = HttpOpenAITransport(key)
     return OpenAIExperimentProvider(transport)
 

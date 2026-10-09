@@ -1,0 +1,7 @@
+services:
+  api:
+    profiles: [demo]
+    environment:
+      JOBINTEL_PROVIDER: fixture
+      JOBINTEL_CONFIGURATION: fixture_normalized
+    command: [python, -m, jobintel.runtime, --mode, demo, --host, 0.0.0.0]
