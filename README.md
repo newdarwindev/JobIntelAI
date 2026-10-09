@@ -61,7 +61,7 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 Successful browser attempts: **16/16**, recorded 2026-10-09.
 Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
-Source content SHA-256: `abf42add079cea67bd5072a24323c0a8cf974aa263c7b867ac0af041fe669e34`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source content SHA-256: `3a1ad0b876345778d9975a7c2dedab4335c6b0b31959e427ae425231546bc34a`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |

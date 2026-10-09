@@ -1,9 +1,8 @@
 {
-  "evaluation_run_id": "83d50766447b41acaa1026dee1f2175c",
   "format_version": 2,
   "dataset": "reviewed",
   "dataset_size": 25,
-  "created_at": "2026-10-09T10:58:41.131416+00:00",
+  "created_at": "2026-10-09T11:05:41.214733+00:00",
   "mode": "fixture replay — plumbing regression, not live LLM quality",
   "dataset_sha256": "41f29d65e41685844aa7b6f3bfe2db806337d1c157620aa29a59ec59d459a050",
   "review": {
@@ -15,9 +14,9 @@
   "dataset_revision": "source-reviewed-v1",
   "candidate_sha256": "7197f7e2ca291e16f5d30bff1eab1fb453f9b9d9ff0e5d9f94580c5cde9380ab",
   "code_provenance": {
-    "source_sha256": "b4c9e13e359125a153e641f5af54510da2f4feb5091bd4ea44fd3521684df8a8",
-    "git_commit": "8c6c9b964b3612737e0054c09a07d6ba7e2ea6df",
-    "git_dirty": true
+    "source_sha256": "f92444ac741e43e570488a1e8225c06876ceaa59d85b3c24583963ca62434639",
+    "git_commit": "17adb4881ea38321c5878985c4d03216cf5149ab",
+    "git_dirty": false
   },
   "results": [
     {
@@ -215,7 +214,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.008875007999904483
+          "posting_elapsed_seconds": 0.01983947899998384
         },
         {
           "case_id": "REV-02",
@@ -373,7 +372,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.004727188000288152
+          "posting_elapsed_seconds": 0.00800258799972653
         },
         {
           "case_id": "REV-03",
@@ -531,7 +530,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.0108718440001212
+          "posting_elapsed_seconds": 0.025589905000288127
         },
         {
           "case_id": "REV-04",
@@ -688,7 +687,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.008556347000194364
+          "posting_elapsed_seconds": 0.0138277310002195
         },
         {
           "case_id": "REV-05",
@@ -848,7 +847,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.008683652999934566
+          "posting_elapsed_seconds": 0.01038701699962985
         },
         {
           "case_id": "REV-06",
@@ -1008,7 +1007,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.00872949199992945
+          "posting_elapsed_seconds": 0.013847228000031464
         },
         {
           "case_id": "REV-07",
@@ -1165,7 +1164,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.012500961999649007
+          "posting_elapsed_seconds": 0.012981616000161011
         },
         {
           "case_id": "REV-08",
@@ -1345,7 +1344,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.0055895430000418855
+          "posting_elapsed_seconds": 0.014228320999791322
         },
         {
           "case_id": "REV-09",
@@ -1502,7 +1501,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.007652069999949163
+          "posting_elapsed_seconds": 0.006666891000350006
         },
         {
           "case_id": "REV-10",
@@ -1673,7 +1672,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.0035283360002722475
+          "posting_elapsed_seconds": 0.0077662220001002424
         },
         {
           "case_id": "REV-11",
@@ -1844,7 +1843,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.004592049000166298
+          "posting_elapsed_seconds": 0.011679263999667455
         },
         {
           "case_id": "REV-12",
@@ -2011,7 +2010,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.008549873999982083
+          "posting_elapsed_seconds": 0.007430489999933343
         },
         {
           "case_id": "REV-13",
@@ -2178,7 +2177,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.01039313299997957
+          "posting_elapsed_seconds": 0.007734945000265725
         },
         {
           "case_id": "REV-14",
@@ -2358,7 +2357,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.007084669000050781
+          "posting_elapsed_seconds": 0.007780971000101999
         },
         {
           "case_id": "REV-15",
@@ -2529,7 +2528,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.007412272000237863
+          "posting_elapsed_seconds": 0.007459492999714712
         },
         {
           "case_id": "REV-16",
@@ -2686,7 +2685,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.005524741000044742
+          "posting_elapsed_seconds": 0.005246760999852995
         },
         {
           "case_id": "REV-17",
@@ -2843,7 +2842,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.006187305999901582
+          "posting_elapsed_seconds": 0.010087553999710508
         },
         {
           "case_id": "REV-18",
@@ -2976,7 +2975,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.0058006940002997
+          "posting_elapsed_seconds": 0.007724555000095279
         },
         {
           "case_id": "REV-19",
@@ -3133,7 +3132,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.005659351999838691
+          "posting_elapsed_seconds": 0.00998299599996244
         },
         {
           "case_id": "REV-20",
@@ -3290,7 +3289,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.006832367999777489
+          "posting_elapsed_seconds": 0.0097767100000965
         },
         {
           "case_id": "REV-21",
@@ -3305,7 +3304,7 @@
           },
           "reviewed_metrics": null,
           "metrics": null,
-          "posting_elapsed_seconds": 1.0820000170497224e-05
+          "posting_elapsed_seconds": 1.2295000033191172e-05
         },
         {
           "case_id": "REV-22",
@@ -3320,7 +3319,7 @@
           },
           "reviewed_metrics": null,
           "metrics": null,
-          "posting_elapsed_seconds": 5.19499963047565e-06
+          "posting_elapsed_seconds": 5.679000423697289e-06
         },
         {
           "case_id": "REV-23",
@@ -3335,7 +3334,7 @@
           },
           "reviewed_metrics": null,
           "metrics": null,
-          "posting_elapsed_seconds": 2.8010003916278947e-06
+          "posting_elapsed_seconds": 3.16299974656431e-06
         },
         {
           "case_id": "REV-24",
@@ -3350,7 +3349,7 @@
           },
           "reviewed_metrics": null,
           "metrics": null,
-          "posting_elapsed_seconds": 1.991000317502767e-06
+          "posting_elapsed_seconds": 2.5199997253366746e-06
         },
         {
           "case_id": "REV-25",
@@ -3365,7 +3364,7 @@
           },
           "reviewed_metrics": null,
           "metrics": null,
-          "posting_elapsed_seconds": 1.915999746415764e-06
+          "posting_elapsed_seconds": 2.3899997358967084e-06
         }
       ],
       "provenance": [
@@ -3815,7 +3814,7 @@
         null,
         null
       ],
-      "elapsed_seconds": 0.15368089200001123,
+      "elapsed_seconds": 0.22755724900025598,
       "metrics": {
         "true_positives": 17,
         "predicted": 22,
@@ -4154,7 +4153,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.008374564999940048
+          "posting_elapsed_seconds": 0.01391167099973245
         },
         {
           "case_id": "REV-02",
@@ -4315,7 +4314,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.0058005789996968815
+          "posting_elapsed_seconds": 0.01180530000010549
         },
         {
           "case_id": "REV-03",
@@ -4476,7 +4475,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.007471843000075751
+          "posting_elapsed_seconds": 0.010897319999912725
         },
         {
           "case_id": "REV-04",
@@ -4635,7 +4634,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.005752684000071895
+          "posting_elapsed_seconds": 0.010982948999753717
         },
         {
           "case_id": "REV-05",
@@ -4797,7 +4796,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.009819547999995848
+          "posting_elapsed_seconds": 0.025611259000015707
         },
         {
           "case_id": "REV-06",
@@ -4959,7 +4958,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.00851583399980882
+          "posting_elapsed_seconds": 0.012367560999791749
         },
         {
           "case_id": "REV-07",
@@ -5118,7 +5117,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.0052377729998625
+          "posting_elapsed_seconds": 0.009715853999750834
         },
         {
           "case_id": "REV-08",
@@ -5302,7 +5301,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.008650396000120963
+          "posting_elapsed_seconds": 0.01499905500031673
         },
         {
           "case_id": "REV-09",
@@ -5461,7 +5460,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.014738587000010739
+          "posting_elapsed_seconds": 0.007357971999681467
         },
         {
           "case_id": "REV-10",
@@ -5634,7 +5633,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.010487364000255184
+          "posting_elapsed_seconds": 0.01335345799998322
         },
         {
           "case_id": "REV-11",
@@ -5807,7 +5806,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.007662155000161874
+          "posting_elapsed_seconds": 0.014694254000005458
         },
         {
           "case_id": "REV-12",
@@ -5976,7 +5975,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.008113144999697397
+          "posting_elapsed_seconds": 0.012982924999960233
         },
         {
           "case_id": "REV-13",
@@ -6145,7 +6144,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.005737367999699927
+          "posting_elapsed_seconds": 0.008718160000171338
         },
         {
           "case_id": "REV-14",
@@ -6329,7 +6328,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.010901114999796846
+          "posting_elapsed_seconds": 0.0123315449995971
         },
         {
           "case_id": "REV-15",
@@ -6502,7 +6501,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.008648299000014958
+          "posting_elapsed_seconds": 0.005299630999616056
         },
         {
           "case_id": "REV-16",
@@ -6661,7 +6660,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.010755887000414077
+          "posting_elapsed_seconds": 0.012406592999923305
         },
         {
           "case_id": "REV-17",
@@ -6820,7 +6819,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.0038431129996752134
+          "posting_elapsed_seconds": 0.009819082000376511
         },
         {
           "case_id": "REV-18",
@@ -6953,7 +6952,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.003410982999866974
+          "posting_elapsed_seconds": 0.01063389000000825
         },
         {
           "case_id": "REV-19",
@@ -7112,7 +7111,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.0035879330002899223
+          "posting_elapsed_seconds": 0.0034805370000867697
         },
         {
           "case_id": "REV-20",
@@ -7271,7 +7270,7 @@
               }
             }
           },
-          "posting_elapsed_seconds": 0.004178439000042999
+          "posting_elapsed_seconds": 0.005367212999772164
         },
         {
           "case_id": "REV-21",
@@ -7286,7 +7285,7 @@
           },
           "reviewed_metrics": null,
           "metrics": null,
-          "posting_elapsed_seconds": 6.678400040982524e-05
+          "posting_elapsed_seconds": 3.081599970755633e-05
         },
         {
           "case_id": "REV-22",
@@ -7301,7 +7300,7 @@
           },
           "reviewed_metrics": null,
           "metrics": null,
-          "posting_elapsed_seconds": 4.453000201465329e-06
+          "posting_elapsed_seconds": 3.7209997572063003e-06
         },
         {
           "case_id": "REV-23",
@@ -7316,7 +7315,7 @@
           },
           "reviewed_metrics": null,
           "metrics": null,
-          "posting_elapsed_seconds": 2.41899988395744e-06
+          "posting_elapsed_seconds": 2.6309999157092534e-06
         },
         {
           "case_id": "REV-24",
@@ -7331,7 +7330,7 @@
           },
           "reviewed_metrics": null,
           "metrics": null,
-          "posting_elapsed_seconds": 2.2959998204896692e-06
+          "posting_elapsed_seconds": 2.1249998098937795e-06
         },
         {
           "case_id": "REV-25",
@@ -7346,7 +7345,7 @@
           },
           "reviewed_metrics": null,
           "metrics": null,
-          "posting_elapsed_seconds": 1.8410000848234631e-06
+          "posting_elapsed_seconds": 2.300999767612666e-06
         }
       ],
       "provenance": [
@@ -7796,7 +7795,7 @@
         null,
         null
       ],
-      "elapsed_seconds": 0.154944775000331,
+      "elapsed_seconds": 0.23403719199995976,
       "metrics": {
         "true_positives": 21,
         "predicted": 22,
@@ -7937,7 +7936,7 @@
       "llm_elapsed_seconds": null
     }
   ],
-  "completed_at": "2026-10-09T10:58:41.451726+00:00",
-  "end_to_end_elapsed_seconds": 0.32032744300022387,
+  "completed_at": "2026-10-09T11:05:41.694558+00:00",
+  "end_to_end_elapsed_seconds": 0.4798785970001518,
   "status": "partial"
 }
