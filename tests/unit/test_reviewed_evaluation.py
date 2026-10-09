@@ -228,6 +228,20 @@ def test_v37_failures_and_frozen_provenance_survive_reporting(provider):
     assert json.loads(json.dumps(original)) == before
 
 
+def test_v37_evaluation_runs_without_git_installed(provider, monkeypatch, tmp_path):
+    baseline = run_report(provider, DATA, ["fixture_normalized"])
+    monkeypatch.setenv("PATH", str(tmp_path))
+    report = run_report(provider, DATA, ["fixture_normalized"])
+    assert report["status"] == "completed"
+    assert report["results"][0]["succeeded"] == 20
+    assert report["results"][0]["metrics"] == baseline["results"][0]["metrics"]
+    assert report["code_provenance"] == {
+        "source_sha256": baseline["code_provenance"]["source_sha256"],
+        "git_commit": None,
+        "git_dirty": None,
+    }
+
+
 def test_v37_all_failed_metrics_are_null_and_exception_bodies_are_redacted():
     class Broken:
         name = "fixture"

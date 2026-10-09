@@ -89,6 +89,8 @@ The API returns the provider error status with a saved report ID. CLI exports th
 report before exiting 1. Prior reports and production extraction rows remain intact.
 Aggregate quality metrics cover successful cases only, with failed/not-attempted
 counts beside them; all-failed quality metrics remain null.
+Installed images without Git retain the actual Python source hash and report Git
+commit/dirty metadata as unavailable; provenance collection never requires Git.
 
 Measured posting, provider-adapter and evaluation elapsed times remain distinct
 from unavailable provider-only LLM latency. Fixture tokens/cost are null. Actual
