@@ -51,11 +51,8 @@ class OpenAIExperimentProvider:
             response = self.transport.complete(payload)
             metadata = response_metadata(response)
             output_text = raw_output(response.body)
+            validate_response_limits(metadata, spec)
             extraction = parse_response(response.body)
-            if metadata["response_model"] is None:
-                raise ProviderError("model_unavailable", 502, False)
-            if not same_model(spec.model, metadata["response_model"]):
-                raise ProviderError("model_mismatch", 502, False)
             return Prediction(
                 extraction=extraction,
                 usage=measured_usage(metadata),
@@ -78,14 +75,31 @@ def measured_usage(metadata):
 
 
 def raw_output(body):
+    output = body.get("output")
+    if not isinstance(output, list):
+        return None
     parts = [
         part.get("text")
-        for item in body.get("output", [])
-        if isinstance(item, dict)
-        for part in item.get("content", [])
+        for item in output
+        if isinstance(item, dict) and isinstance(item.get("content"), list)
+        for part in item["content"]
         if isinstance(part, dict) and part.get("type") == "output_text"
     ]
     return "".join(p for p in parts if isinstance(p, str))[:128000] or None
+
+
+def validate_response_limits(metadata, spec):
+    if metadata["response_model"] is None:
+        raise ProviderError("model_unavailable", 502, False)
+    if not same_model(spec.model, metadata["response_model"]):
+        raise ProviderError("model_mismatch", 502, False)
+    usage = metadata["usage"] or {}
+    for key, limit in [
+        ("input_tokens", spec.max_input_tokens),
+        ("output_tokens", spec.max_output_tokens),
+    ]:
+        if usage.get(key) is not None and usage[key] > limit:
+            raise ProviderError("token_limit", 502, False)
 
 
 def same_model(requested, actual):

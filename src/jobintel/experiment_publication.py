@@ -183,7 +183,7 @@ def comparison(report):
     lines.extend(
         [
             "",
-            "Metrics cover successful cases; failures and raw outputs remain in the complete report. Matching isolates gold requirements and the sourced candidate. Zero denominators and unmeasured usage/cost/provider-only LLM latency remain unavailable. B and C use separate requests with identical prompts and snapshots; response variation can confound attribution to normalization.",
+            "Metrics cover successful cases; failures and raw outputs remain in the complete report. Matching isolates gold requirements and the sourced candidate. Zero denominators and unmeasured usage/cost/provider-only LLM latency remain unavailable.",
         ]
     )
     if spec["pricing"]:
@@ -193,11 +193,11 @@ def comparison(report):
         )
     if report["mode"] == "fake":
         lines.append(
-            "Fake provider regression only; no live model quality or purchased usage claim."
+            "Fake provider regression only; no live model quality or purchased usage claim. Raw fixture responses are identical across A/B/C; only C applies normalization."
         )
     else:
         lines.append(
-            "[Reviewer audit](audit.json) records the output/privacy review separately from the source-label review."
+            "B and C use separate requests with identical prompts and snapshots; response variation can confound attribution to normalization. [Reviewer audit](audit.json) records the output/privacy review separately from the source-label review."
         )
     lines.extend(error_analysis(report))
     return "\n".join(lines) + "\n"

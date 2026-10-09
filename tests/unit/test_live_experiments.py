@@ -185,15 +185,32 @@ def test_v38_a_audits_invalid_quotes_b_c_reject_without_production_writes(corpus
         assert failed["usage"] == {"input_tokens": 100, "output_tokens": 20}
 
 
-@pytest.mark.parametrize("failure", ["quota", "model", "usage_limit"])
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "quota",
+        "model",
+        "usage_limit",
+        "invalid_json_model",
+        "invalid_json_usage",
+        "missing_model",
+        "partial_over_limit",
+    ],
+)
 def test_v38_fatal_response_stops_remaining_paid_attempts(corpus, spec, failure):
     def broken(body, payload):
         if failure == "quota":
             raise ProviderError("quota", 502, False)
-        if failure == "model":
+        if failure in {"model", "invalid_json_model"}:
             body["model"] = "different-model"
+        elif failure == "missing_model":
+            body.pop("model")
         else:
             body["usage"]["input_tokens"] = spec.max_input_tokens + 1
+        if failure.startswith("invalid_json"):
+            body["output"][0]["content"][0]["text"] = "{"
+        if failure == "partial_over_limit":
+            body["usage"].pop("output_tokens")
 
     transport = Responses(corpus, broken)
     report = run_experiment(OpenAIExperimentProvider(transport), corpus, spec)
@@ -202,9 +219,33 @@ def test_v38_fatal_response_stops_remaining_paid_attempts(corpus, spec, failure)
     assert all(r["summary"]["metrics"] is None for r in report["results"])
     assert (
         report["results"][0]["records"][0]["error_code"]
-        == {"quota": "quota", "model": "model_mismatch", "usage_limit": "token_limit"}[failure]
+        == {
+            "quota": "quota",
+            "model": "model_mismatch",
+            "usage_limit": "token_limit",
+            "invalid_json_model": "model_mismatch",
+            "invalid_json_usage": "token_limit",
+            "missing_model": "model_unavailable",
+            "partial_over_limit": "token_limit",
+        }[failure]
     )
     assert rescore(report)["results"][0]["summary"]["failed"] == 25
+
+
+def test_v38_malformed_output_shape_retains_real_usage(corpus, spec):
+    def malformed(body, payload):
+        body["output"] = None
+
+    transport = Responses(corpus, malformed)
+    report = run_experiment(OpenAIExperimentProvider(transport), corpus, spec)
+    assert len(transport.calls) == 75
+    for result in report["results"]:
+        assert result["summary"]["failed"] == 25
+        assert result["summary"]["cost_usd"] == pytest.approx(0.0075)
+        record = result["records"][0]
+        assert record["error_code"] == "invalid_schema"
+        assert record["usage"] == {"input_tokens": 100, "output_tokens": 20}
+        assert record["output_text"] is None
 
 
 def test_v38_missing_usage_remains_unknown_and_parse_failures_keep_output(corpus, spec):
