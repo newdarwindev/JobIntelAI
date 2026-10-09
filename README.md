@@ -348,6 +348,18 @@ abstention metrics are null. The alias trade-off above does not predict a live
 winner. [Issue #9](https://github.com/newdarwindev/JobIntelAI/issues/9) requires
 separately authorized live reports and independent reviewer audit for closure.
 
+`jobintel experiment freeze --dataset reviewed` packages the 25-case benchmark for
+opt-in A/B/C comparisons. The reviewed fake diagnostic run preserves five unavailable
+fixture inputs per configuration and uses counted semantic/abstention/matching
+metrics; its [complete report](results/experiments/reviewed-fake/report.json),
+[saved scores](results/experiments/reviewed-fake/scores.json) and
+[comparison](results/experiments/reviewed-fake/comparison.md) are fixture evidence.
+Live execution requires separate paid-call authorization, dated model-specific
+pricing and secure runtime credentials. The [experiment protocol](docs/experiments.md)
+describes planning, failure checkpoints, credential-free rescoring and hash-bound
+reviewer publication with a measured README table. Fake results establish no live
+model quality.
+
 After the demo, N=20 successful latest-source extractions. Python appears in 5/20
 jobs (MUST 3/20, PREFERRED 1/20, EXPERIENCE 1/20). AWS OR Azure appears as a separate
 alternative group, not two independent MUST frequencies. These are selected-corpus

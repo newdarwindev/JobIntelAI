@@ -9,6 +9,11 @@ V38 harness regressions in `tests/unit/test_experiments.py` verify frozen inputs
 configuration separation, budget rejection, failure preservation, saved-prediction
 rescoring and public-report safeguards. Live reports/reviewer audit are separate
 evidence in issue #9.
+`tests/unit/test_live_experiments.py` additionally exercises the full opt-in command
+with fake Responses transports: reviewed-input equivalence, A/B/C request separation,
+real token-limit fields, quota/model/usage stops, raw-output failures, interruption
+checkpoints, exact counted rescoring, audit freshness and linked README publication.
+Test-model/usage values are simulations, never live quality evidence.
 
 ## Regression references
 
