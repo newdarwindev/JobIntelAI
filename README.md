@@ -66,9 +66,9 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 <!-- UI-RECORDINGS:START -->
 
-Successful browser attempts: **16/16**, recorded 2026-10-09.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37947459206) · commit `88f2e9ae57f4aaca728a84d16bd5d4a1944a7616`.
-Source content SHA-256: `b8db0557829b5b60fb8cb918bfdb593baf7cb26cae472ba0b2750953f1e009af`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Successful browser attempts: **16/16**, recorded 2026-10-10.
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `627f8653dd90b8d619ab73cd693c02daef2c7912c4d532d21823d54a609dc372`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
