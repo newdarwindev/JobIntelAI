@@ -78,3 +78,31 @@ def test_prepare_does_not_redownload_a_corrupt_cache(tmp_path):
     transport = httpx.MockTransport(lambda request: pytest.fail("corrupt cache request"))
     with pytest.raises(ValueError, match="mismatch"):
         local_model.prepare(Path(tmp_path), transport=transport)
+
+
+def test_slow_weight_download_cannot_reuse_an_expired_token_for_the_license(tmp_path, monkeypatch):
+    contents = {"MODEL": b"authored weights", "LICENSE": b"authored license"}
+    blobs = {}
+    for prefix, content in contents.items():
+        checksum = hashlib.sha256(content).hexdigest()
+        monkeypatch.setattr(local_model, prefix + "_SHA256", checksum)
+        monkeypatch.setattr(local_model, prefix + "_BYTES", len(content))
+        blobs[checksum] = content
+    tokens = []
+
+    def respond(request):
+        if request.url.host == "auth.docker.io":
+            token = f"authored-token-{len(tokens) + 1}"
+            tokens.append(token)
+            return httpx.Response(200, json={"token": token, "expires_in": 300})
+        checksum = request.url.path.rsplit(":", 1)[-1]
+        # Simulate the first token expiring during the weight stream.
+        required = "authored-token-2" if checksum == local_model.LICENSE_SHA256 else tokens[0]
+        if request.headers["Authorization"] != f"Bearer {required}":
+            return httpx.Response(401)
+        return httpx.Response(200, content=blobs[checksum])
+
+    local_model.prepare(tmp_path, transport=httpx.MockTransport(respond))
+    assert len(tokens) == 2
+    assert (tmp_path / local_model.MODEL_FILE).read_bytes() == contents["MODEL"]
+    assert (tmp_path / "LICENSE").read_bytes() == contents["LICENSE"]

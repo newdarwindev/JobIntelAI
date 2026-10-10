@@ -71,17 +71,18 @@ def prepare(cache, *, offline=False, transport=None):
         if not missing:
             return
         with httpx.Client(timeout=60, follow_redirects=True, transport=transport) as client:
-            response = client.get(
-                "https://auth.docker.io/token",
-                params={
-                    "service": "registry.docker.io",
-                    "scope": f"repository:{MODEL_REPOSITORY}:pull",
-                },
-            )
-            response.raise_for_status()
-            token = response.json()["token"]
             deadline = monotonic() + 3600
             for path, checksum, size in missing:
+                # A multi-GiB stream can outlive the registry's five-minute token.
+                response = client.get(
+                    "https://auth.docker.io/token",
+                    params={
+                        "service": "registry.docker.io",
+                        "scope": f"repository:{MODEL_REPOSITORY}:pull",
+                    },
+                )
+                response.raise_for_status()
+                token = response.json()["token"]
                 download(client, path, checksum, size, token, deadline=deadline)
 
 

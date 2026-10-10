@@ -19,6 +19,8 @@ Initial startup prepares the model through the inherited verified proxy/CA path.
 Preparation has a one-hour download deadline and verifies every byte against the
 weight and license hashes. An existing corrupt file fails; remove it explicitly
 before preparing it again. Downloads publish atomically under a cache lock.
+Each file uses a fresh short-lived registry token so a slow weight stream cannot
+leave the subsequent license request with expired authorization.
 `JOBINTEL_LOCAL_MODEL_CACHE` selects the host cache (default `local_data/models`).
 Stop and reset preserve this shared cache; reset deletes only the selected
 project's database/output volumes. To run disconnected, prepare the model and
