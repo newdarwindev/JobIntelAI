@@ -44,10 +44,10 @@ async function pipeline({page,request},info,mode){
   const revision=JSON.parse(await page.evaluate(()=>localStorage.getItem('jobintel-selected-revision')));
   await page.reload();await expect(page.locator('#main')).toContainText(revision.profile_revision_id);
   await page.getByRole('button',{name:'Match selected posting',exact:true}).click();await expect(page.locator('#main')).toContainText('COVERED');
-  const matches=await downloadJson(page,'Export matches JSON');expect(matches.profile_revision_id).toBe(revision.profile_revision_id);
+  const matches=await downloadJson(page,'Export matches JSON');expect(matches.profile_revision_id).toBe(revision.profile_revision_id);expect(matches.matches.map(m=>m.requirement_id).sort()).toEqual(saved.requirements.map(r=>r.requirement_id).sort());
   await open(page,service,'analytics',id);const analytics=await json(request,service,'/analytics/skills');
   await expect(page.locator('#main')).toContainText(`N = ${analytics.N}`);
-  const corpus=await downloadJson(page,'Export corpus JSON');expect(corpus.N).toBe(analytics.N);
+  const corpus=await downloadJson(page,'Export corpus JSON');expect(corpus.N).toBe(analytics.N);expect(corpus.selection.profile_revision_id).toBe(revision.profile_revision_id);expect(corpus.jobs.map(j=>j.job_id)).toContain(id);
   return {service,id,saved};
 }
 async function evaluation(page,request,service,mode){
