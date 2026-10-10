@@ -67,8 +67,8 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **16/16**, recorded 2026-10-10.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38045379988) · commit `3e4fe02fd35a3a3537454b491ccc935c8340450b`.
-Source content SHA-256: `627f8653dd90b8d619ab73cd693c02daef2c7912c4d532d21823d54a609dc372`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `9c65d12a237f750646db564c02bb731f7c3666ee0545106e60e6237303e426dd`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -79,7 +79,7 @@ Source content SHA-256: `627f8653dd90b8d619ab73cd693c02daef2c7912c4d532d21823d54
 | UI05 · Corpus slices, gaps and safe provenance exports | [Watch](docs/ui-recordings/UI05-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI05-mobile-chromium.webm) |
 | UI06 · Fixture and source-reviewed evaluation diagnostics | [Watch](docs/ui-recordings/UI06-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI06-mobile-chromium.webm) |
 | UI07 · Provider and connection failure recovery | [Watch](docs/ui-recordings/UI07-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI07-mobile-chromium.webm) |
-| UI08 · Keyboard navigation, responsive layout and inert input | [Watch](docs/ui-recordings/UI08-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI08-mobile-chromium.webm) |
+| UI08 · Keyboard navigation, acquisition readiness, responsive layout and inert input | [Watch](docs/ui-recordings/UI08-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI08-mobile-chromium.webm) |
 
 <!-- UI-RECORDINGS:END -->
 
