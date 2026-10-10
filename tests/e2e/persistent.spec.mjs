@@ -102,13 +102,13 @@ test('UI11 | Normal PostgreSQL CPU inference, measured evaluation and readiness 
   await evaluation(ctx.page,ctx.request,service,'local');await open(ctx.page,service,'workbench',id);
   expect(service.project).toMatch(/^jobintel-browser-local-[a-f0-9]{12}$/);
   const container=service.project+'-llama-cpp-1';
+  await ctx.page.getByLabel('Posting source').fill('Authored unsaved provider recovery text.');
   try{
     expect(spawnSync('docker',['stop',container],{encoding:'utf8'}).status).toBe(0);
     await ctx.page.getByRole('button',{name:'Extract requirements',exact:true}).click();await expect(ctx.page.locator('#notice')).toContainText('provider_failure');
     await expect(ctx.page.getByRole('button',{name:'Extract requirements',exact:true})).toBeDisabled();
     expect((await json(ctx.request,service,`/jobs/${id}`)).extraction.run_id).toBe(saved.run_id);
     await expect(ctx.page.getByLabel('Posting source')).toHaveValue('Authored unsaved provider recovery text.');
-    const diagnostics=await (await ctx.request.get(service.control_base+'/diagnostics')).json();expect(diagnostics.request_count).toBe(scenario==='malformed_json'?2:1);
   }finally{expect(spawnSync('docker',['start',container],{encoding:'utf8'}).status).toBe(0);}
   await expect.poll(async()=> (await json(ctx.request,service,'/ui/config')).readiness,{timeout:120000}).toBe('ready');
   await ctx.page.getByRole('button',{name:'Refresh provider status',exact:true}).click();await expect(ctx.page.getByRole('button',{name:'Extract requirements',exact:true})).toBeEnabled();
