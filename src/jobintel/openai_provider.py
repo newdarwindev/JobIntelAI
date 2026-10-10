@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from jobintel.normalization import Taxonomy
 from jobintel.openai_transport import OpenAITransport, ProviderError
 from jobintel.provider_config import PROMPT, configuration_for, digest, identity, strict_schema
+from jobintel.provider_execution import execution_mode
 from jobintel.schemas import Extraction
 from jobintel.snapshots import GroundingError, content_hash, validate_grounding
 
@@ -41,6 +42,8 @@ class OpenAIProvider:
             try:
                 response = self.transport.complete(payload)
                 attempts[-1] = response_metadata(response)
+                if execution_mode(self) == "emulator":
+                    attempts[-1]["usage"] = None
                 attempts[-1]["elapsed_seconds"] = perf_counter() - attempt_started
                 extraction = parse_response(response.body)
                 break
@@ -75,6 +78,7 @@ class OpenAIProvider:
     def provenance(self, text, configuration, payload, attempts, started):
         return {
             **identity(self.name, configuration, self.model, self._taxonomy),
+            "execution_mode": execution_mode(self),
             "source_sha256": content_hash(text),
             "request_sha256": digest(payload),
             "request_parameters": {

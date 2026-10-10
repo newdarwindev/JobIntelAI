@@ -8,16 +8,23 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from scripts.acquisition_environment import fixture_environment
+from scripts.responses_environment import emulator_environment, write_evidence
 
 
 def main():
     with TemporaryDirectory(prefix="jobintel-browser-services-") as directory:
-        with fixture_environment(directory) as fixtures:
+        with (
+            fixture_environment(directory) as fixtures,
+            emulator_environment(
+                ca_bundle="/etc/ssl/certs/ca-certificates.crt" if os.getenv("HTTPS_PROXY") else None
+            ) as emulator,
+        ):
             environment = {
                 **os.environ,
                 "UI_FIXTURE_PROXY": fixtures["proxy"],
                 "UI_FIXTURE_CA": str(fixtures["ca"]),
                 "UI_FIXTURE_PROJECT": fixtures["project"],
+                "UI_RESPONSES_BASE": emulator["base"],
             }
             try:
                 result = subprocess.run(
@@ -34,6 +41,15 @@ def main():
                     "diagnostics": fixtures["diagnostics"](),
                 }
                 output.write_text(json.dumps(evidence, indent=2) + "\n")
+                write_evidence(
+                    "work/responses-browser-diagnostics.json",
+                    {
+                        "commit": evidence["commit"],
+                        "mode": "emulator",
+                        "inference": False,
+                        "diagnostics": emulator["diagnostics"](),
+                    },
+                )
     raise SystemExit(result.returncode)
 
 

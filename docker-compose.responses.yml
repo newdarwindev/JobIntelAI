@@ -1,0 +1,30 @@
+services:
+  responses-emulator:
+    build:
+      context: .
+    profiles: [contract-test]
+    command: [python, -m, scripts.responses_emulator.server, --host, 0.0.0.0]
+    ports: ["127.0.0.1:${JOBINTEL_RESPONSES_PORT:-0}:8033"]
+    networks: [responses, responses-control]
+    healthcheck:
+      test: [CMD, python, -c, "import http.client; c=http.client.HTTPConnection('127.0.0.1',8033,timeout=1); c.request('GET','/health'); assert c.getresponse().status==200"]
+      interval: 1s
+      timeout: 2s
+      retries: 30
+  api:
+    profiles: [contract-test]
+    environment:
+      JOBINTEL_PROVIDER: openai
+      JOBINTEL_CONFIGURATION: openai_normalized_v1
+      JOBINTEL_OPENAI_MODEL: contract-schema-v2
+      JOBINTEL_RESPONSES_MODE: emulator
+      JOBINTEL_RESPONSES_ENDPOINT: http://responses-emulator:8033/v1/responses
+      JOBINTEL_OPENAI_TIMEOUT: ${JOBINTEL_OPENAI_TIMEOUT:-1}
+    networks: [default, responses]
+    depends_on:
+      responses-emulator:
+        condition: service_healthy
+networks:
+  responses:
+    internal: true
+  responses-control: {}

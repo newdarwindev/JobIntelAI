@@ -55,7 +55,7 @@ Failing mutations preserve the source/prior run, enable retry, and never show a
 success-looking empty result. No third-party assets or hosted scripts are needed.
 HTML is cleaned server-side and is never inserted as executable source markup.
 The Unicode UI regression injects an authored API read fixture with an emoji
-prefix; transport-error regressions inject transient HTTP/connection failures.
+prefix; UI07 provider errors come from the separately running Responses emulator; its browser-to-API connection abort is intercepted locally.
 The rest of the browser pipeline uses the real fixture-backed service.
 
 UI02 calls the actual bounded acquisition/service contract through the production
@@ -145,12 +145,19 @@ PR process. Never use `pull_request_target` to execute untrusted browser tests.
 
 
 UI03 also exports the provider/configuration/schema/taxonomy/source identity and
-null fixture usage. UI07 exercises typed 422 refusal, 502 quota and 504 timeout
-responses, shows retryability, and verifies that the prior extraction remains
-current. These error envelopes are authored browser mocks; adapter and atomic
-persistence contracts are exercised with fake transports in backend tests.
-The synthetic launcher remains fixture-only. OpenAI is selected explicitly through
-API/CLI setup; paid live execution and model quality need separate authorization.
+null fixture usage. UI07 selects the authored Responses emulator through a test-only
+launcher route, reloads the workbench with OpenAI protocol configurations and a visible
+contract-emulator label, and saves a real HTTP extraction with emulator provenance.
+It then exercises 422 refusal/invalid evidence, 502 quota/server error/malformed output/
+connection close and 504 timeout, checks retryability and actual request counts, and
+verifies that failures preserve the prior extraction. Malformed output makes exactly
+two provider requests; other failures make one. Success recovers without overwriting
+history. The browser connection-abort test remains an interception of browser-to-API
+traffic. Scenario controls are absent from normal/demo entrypoints. UI08 checks
+fixture execution identity; health/report/provenance identify emulator runs separately
+with unavailable LLM usage/cost/time. Backend process and container tests verify
+stop/start/restart recovery on SQLite/PostgreSQL. See [Responses emulator](responses_emulator.md).
+Paid execution and model quality need separate authorization.
 
 UI04 saves multiple synthetic revisions, refreshes the page, re-matches the selected
 revision, selects an older revision without overwriting it, and inspects the persisted

@@ -67,8 +67,8 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **16/16**, recorded 2026-10-10.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38047745792) · commit `9e508e0378d9b7a7ec7b3d2db7d86c142af105fb`.
-Source content SHA-256: `9c65d12a237f750646db564c02bb731f7c3666ee0545106e60e6237303e426dd`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `68e05163def75e64698f7790354fd151fc45e80d1c15db8532aca1861bfdb2a3`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -239,11 +239,12 @@ python scripts/runtime.py up --mode dev --project jobintel-dev \
 
 BuildKit mounts this CA only during pip installation. Compose also mounts it at
 runtime for verified HTTPS; the image contains neither the session CA nor keys.
-Do not disable TLS verification. `contract-test` and `local-inference` name required
-dependencies from [#23](https://github.com/newdarwindev/JobIntelAI/issues/23),
-[#25](https://github.com/newdarwindev/JobIntelAI/issues/25) and
-[#24](https://github.com/newdarwindev/JobIntelAI/issues/24) before starting Docker,
-so unavailable machinery cannot silently become fixture replay.
+Do not disable TLS verification. `contract-test` runs a real HTTP Responses emulator
+with the API and PostgreSQL, using a fixed development token and authored schema-v2
+responses. It requires no hosted credentials and records contract execution separately
+from model inference. See [runtime, scenarios and evidence](docs/responses_emulator.md).
+`local-inference` requires the engine and adapter from
+[#24](https://github.com/newdarwindev/JobIntelAI/issues/24).
 
 Run real-container persistence and mode-isolation checks without paid calls:
 

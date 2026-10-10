@@ -416,3 +416,11 @@ Python/FastAPI/PostgreSQL system with structured LLM extraction and measured
 evaluation. It is a portfolio demonstration, not proof of production SaaS scale or
 a substitute for professional experience. Interviews should show evidence traces,
 metrics, candidate axis rules, actual error cases and cost/latency trade-offs.
+
+Responses execution has explicit `hosted` and `emulator` transport modes. Hosted
+uses the fixed verified public endpoint; emulator accepts only scoped local HTTP
+and the fixed development token, with no hosted-secret access. Both use the same
+schema-v2 adapter and grounding validation. Health, persisted extraction provenance
+and evaluation reports separate authored emulator execution from live inference;
+unavailable usage/cost/LLM timing stay null. Local real-HTTP failures preserve prior
+runs and bounded retries. See [the Responses contract service](responses_emulator.md).

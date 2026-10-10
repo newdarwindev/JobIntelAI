@@ -120,6 +120,10 @@ jobs:
         run: python scripts/runtime_smoke.py --project jobintel-runtime-online
       - name: Real acquisition origins, verified TLS, controlled proxy and PostgreSQL API
         run: python -m scripts.acquisition_smoke
+      - name: Responses emulator through real API/PostgreSQL sockets and process recovery
+        run: |
+          python -m pip install -c requirements.lock.txt -e .
+          python -m scripts.responses_smoke
       - name: Verified public authored URL through trusted gateway (no local destination DNS)
         run: |
           python -m pip install -c requirements.lock.txt -e .
@@ -132,6 +136,7 @@ jobs:
           path: |
             work/acquisition-service.json
             work/acquisition-public.json
+            work/responses-service.json
           if-no-files-found: warn
           retention-days: 30
       - name: Prepare verified wheels and exercise the offline runtime

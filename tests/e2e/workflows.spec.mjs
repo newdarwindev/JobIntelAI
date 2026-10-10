@@ -13,6 +13,7 @@ async function saveProfile(page,profile){await nav(page,'Candidate evidence');aw
 async function download(page,name){const event=page.waitForEvent('download');await click(page,name);const file=await event;return readFile(await file.path(),'utf8');}
 test.beforeEach(async({page,request,browser},info)=>{
   info.annotations.push({type:'browser-version',description:browser.version()});
+  expect((await request.post('/responses-fixture/fixture')).ok()).toBeTruthy();
   expect((await request.post('/ui/reset')).ok()).toBeTruthy();
   await page.goto('/ui/');
   await expect(page.getByRole('heading',{name:'Overview',exact:true})).toBeVisible();
@@ -101,7 +102,7 @@ test('UI03 | Grounded extraction, aliases and operators',async({page,request})=>
   expect(exported.extraction.provenance.source_sha256).toBe(exported.snapshot.content_hash);
   expect(exported.extraction.provenance.taxonomy_sha256).toHaveLength(64);
   for(const r of exported.extraction.requirements)expect(Array.from(exported.snapshot.clean_text).slice(r.evidence.start,r.evidence.end).join('')).toBe(r.evidence.quote);
-  await page.getByLabel('Replay configuration').selectOption('fixture_raw');await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Postgres',exact:true})).toBeVisible();
+  await page.getByLabel('Extraction configuration').selectOption('fixture_raw');await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Postgres',exact:true})).toBeVisible();
   await capture(page,'SYN-02');await expect(page.locator('.requirement')).toContainText('ANY');await expect(page.getByRole('heading',{name:'AWS OR Azure',exact:true})).toBeVisible();
   await capture(page,'SYN-03');await expect(page.locator('.requirement')).toContainText('ALL');await expect(page.getByRole('heading',{name:'Python AND SQL',exact:true})).toBeVisible();
   // Every bundled posting is replayed through the browser-driven corpus action.
@@ -236,20 +237,22 @@ test('UI07 | Provider and connection failure recovery',async({page,request})=>{
   await page.getByLabel('Posting source').fill('An authored unsupported input with no replay hash.');await click(page,'Save immutable snapshot');await click(page,'Extract requirements');await expect(notice(page)).toContainText('501:');await expect(page.getByText('No current extraction',{exact:true})).toBeVisible();
   await nav(page,'Candidate evidence');await click(page,'Load synthetic candidate');await click(page,'Validate & save profile');await click(page,'Match selected posting');await expect(notice(page)).toContainText('409:');
   await inspect(page,'SYN-01');await click(page,'Load synthetic source');await click(page,'Save immutable snapshot');
-  await page.route('**/jobs/SYN-01/extract',route=>route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({detail:'Synthetic provider unavailable'})}));
-  await click(page,'Extract requirements');await expect(notice(page)).toContainText('503:');await expect(page.getByRole('button',{name:'Extract requirements',exact:true})).toBeEnabled();
-  await page.unroute('**/jobs/SYN-01/extract');await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
+  expect((await request.post('/responses-fixture/success')).ok()).toBeTruthy();await page.reload();
+  await expect(page.locator('main')).toContainText('Responses contract emulator');
+  await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
+  const emulated=await (await request.get('/jobs/SYN-01')).json();expect(emulated.extraction.provenance.execution_mode).toBe('emulator');expect(emulated.extraction.provenance.usage).toBeNull();
   await page.route('**/jobs/SYN-01/extract',route=>route.abort('connectionrefused'));await click(page,'Extract requirements');await expect(notice(page)).toContainText('Connection unavailable');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();await page.unroute('**/jobs/SYN-01/extract');
   const latestSaved=await (await request.get('/jobs/SYN-01')).json();
-  // Typed live-adapter failures use authored API errors and preserve the last saved run.
-  for(const [httpStatus,code,retryable] of [[504,'timeout',true],[502,'quota',false],[422,'refusal',false]]){
-    await page.route('**/jobs/SYN-01/extract',route=>route.fulfill({status:httpStatus,json:{detail:{code,retryable,message:`extraction provider: ${code}`}}}));
+  // The real API and adapter call the separately running authored HTTP emulator.
+  for(const [scenario,httpStatus,code,retryable,count] of [['delay',504,'timeout',true,1],['quota',502,'quota',false,1],['refusal',422,'refusal',false,1],['server_error',502,'provider_failure',true,1],['invalid_evidence',422,'invalid_evidence',false,1],['malformed_json',502,'malformed_json',false,2],['connection_close',502,'provider_failure',true,1]]){
+    expect((await request.post(`/responses-fixture/${scenario}`)).ok()).toBeTruthy();
     await click(page,'Extract requirements');await expect(notice(page)).toContainText(`${httpStatus}: extraction provider: ${code}`);
     await expect(notice(page)).toContainText(retryable?'Retry is available':'Review the failure before retrying');
     await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
     expect((await (await request.get('/jobs/SYN-01')).json()).extraction.run_id).toBe(latestSaved.extraction.run_id);
-    await page.unroute('**/jobs/SYN-01/extract');
+    const diagnostics=await (await request.get('/responses-fixture-diagnostics')).json();expect(diagnostics.request_count).toBe(count);expect(diagnostics.requests.every(r=>r.auth_valid&&r.schema_valid&&r.model_valid&&r.parameters_valid&&r.input_valid)).toBeTruthy();
   }
+  expect((await request.post('/responses-fixture/success')).ok()).toBeTruthy();
   const history=await (await request.get('/jobs/SYN-01/history')).json();expect(history.snapshots.some(s=>s.runs.some(r=>r.run_id===original.extraction.run_id))).toBeTruthy();
   await click(page,'Extract requirements');await expect(notice(page)).toContainText('Extraction saved');
 });
@@ -263,7 +266,7 @@ test('UI08 | Keyboard navigation, responsive layout and inert input',async({page
   await page.goto('/ui/#workbench?job=UI-INERT');await expect(page.getByLabel('Selected posting')).toHaveValue('UI-INERT');await page.getByLabel('Posting source').fill('Authored source <script>window.__injected=true</script>');await click(page,'Save immutable snapshot');
   await page.getByText(/Snapshot & extraction history/).click();await expect(page.locator('#history')).toContainText('<script>');expect(await page.locator('main script').count()).toBe(0);
   await page.reload();await expect(page.getByLabel('Selected posting')).toHaveValue('UI-INERT');
-  expect(await (await request.get('/ui/config')).json()).toEqual({demo:true,provider:'fixture',live_llm:false,acquisition_mode:'fixture-policy-proxy'});
+  expect(await (await request.get('/ui/config')).json()).toEqual({demo:true,provider:'fixture',execution_mode:'fixture',live_llm:false,acquisition_mode:'fixture-policy-proxy'});
   const readiness=await (await request.get('/health')).json();expect(readiness.provider).toBe('fixture');expect(readiness.configuration).toBe('fixture_normalized');expect(readiness.live_llm).toBe(false);expect(readiness.acquisition).toMatchObject({ready:true,mode:'policy-proxy',local_destination_dns:false});
   for(const view of ['Overview','Job registry','Source & extraction','Candidate evidence','Corpus analytics','Evaluation lab']){await nav(page,view);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBeTruthy();await expect(page.getByRole('navigation').getByRole('link',{name:view,exact:true})).toHaveAttribute('aria-current','page');await page.getByRole('link',{name:'Skip to content',exact:true}).focus();await page.keyboard.press('Enter');await expect(page.locator('main')).toBeFocused();await expect(page.getByRole('heading',{name:view,level:1,exact:true})).toBeVisible();}
   expect(errors).toEqual([]);

@@ -118,3 +118,10 @@ destination DNS. Exact body hash/bytes and verified TLS are required; failures
 fail CI. `work/acquisition-public.json` is uploaded alongside the controlled
 service outcome on all attempts. A restricted inherited proxy without the
 gateway contract must report `proxy_capability`, not readiness success.
+
+The container gate also runs `python -m scripts.responses_smoke` against a disposable
+API/PostgreSQL/Responses service stack. It uploads `work/responses-service.json` on
+all outcomes with actual case counts, commit/config/model identity and safe request
+checks. Python 3.11/3.12 test real provider-process sockets; browser UI07 uses the
+container emulator and uploads `work/responses-browser-diagnostics.json`. These
+are authored contract checks, with no paid calls or model-quality claim.

@@ -182,3 +182,14 @@ policy-proxy modes on SQLite/PostgreSQL. The container/browser API uses the
 policy gateway; CI separately verifies the immutable public SYN-01 URL through
 the production gateway with local client destination DNS forbidden. Unsupported
 inherited proxies have a distinct readiness/fetch refusal, not reachability evidence.
+
+Responses emulator contract checks use a separate process in
+`integration/test_responses_emulator.py` on migrated SQLite/PostgreSQL and the
+running container API in `python -m scripts.responses_smoke`. Authored success,
+refusal, malformed/schema/truncated output, invalid evidence, 429/quota, 5xx, delay
+and connection close verify the strict request contract, bounded retries, safe
+errors and append-only persistence. Stop/start/restart tests verify readiness and
+recovery. UI07 uses that HTTP service for provider failures; all sixteen journeys
+record successful desktop/mobile evidence. No emulator output establishes inference
+quality. Configuration guards prevent forwarding hosted secrets to local endpoints.
+See [the emulator contract](responses_emulator.md).

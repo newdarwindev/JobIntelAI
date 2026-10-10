@@ -13,6 +13,7 @@ def test_ui_is_packaged_and_demo_reset_is_not_exposed(client):
     assert client.get("/ui/config").json() == {
         "demo": False,
         "provider": "fixture",
+        "execution_mode": "fixture",
         "live_llm": False,
         "acquisition_mode": "auto",
     }

@@ -19,6 +19,7 @@ from jobintel.exports import ExportService
 from jobintel.extraction_attempts import attempt_extract
 from jobintel.normalization import Taxonomy
 from jobintel.openai_transport import ProviderError
+from jobintel.provider_execution import execution_status
 from jobintel.providers import ProviderUnavailable, selected_configuration, selected_provider
 from jobintel.registry import parse_csv
 from jobintel.schemas import (
@@ -89,17 +90,18 @@ def health(request: Request):
         raise HTTPException(503, "database unavailable or migrations required") from error
     provider = request.app.state.provider
     acquisition = request.app.state.acquirer.readiness()
+    execution = execution_status(provider)
+    ready = acquisition["ready"] and execution["provider_ready"]
     return JSONResponse(
         {
-            "status": "ok" if acquisition["ready"] else "not_ready",
+            "status": "ok" if ready else "not_ready",
             "database": "ok",
             "provider": provider.name,
-            "live_llm": provider.name == "openai",
-            "provider_ready": True,
+            **execution,
             "configuration": request.app.state.configuration,
             "acquisition": acquisition,
         },
-        status_code=200 if acquisition["ready"] else 503,
+        status_code=200 if ready else 503,
     )
 
 
