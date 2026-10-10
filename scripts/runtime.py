@@ -97,7 +97,7 @@ def compose_command(args, *, configured=False):
             if args.ca_bundle:
                 command += ["-f", "docker-compose.responses-proxy.yml"]
     else:
-        command += ["-f", "docker-compose.responses.yml"]
+        command += ["-f", "docker-compose.responses.yml", "--profile", "contract-test"]
     return command
 
 

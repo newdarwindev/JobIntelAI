@@ -7,7 +7,13 @@ from pathlib import Path
 import httpx
 
 from jobintel.openai_transport import EMULATOR_MODEL
-from scripts.responses_environment import compose, emulator_environment, request, write_evidence
+from scripts.responses_environment import (
+    base_url,
+    compose,
+    emulator_environment,
+    request,
+    write_evidence,
+)
 
 CASES = [
     ("refusal", 422, "refusal", False, 1),
@@ -112,6 +118,7 @@ def verify_recovery(base, emulator, saved, options, evidence):
     compose(
         emulator["project"], "up", "-d", "--no-build", "--wait", "responses-emulator", **options
     )
+    emulator["base"] = base_url(emulator["project"], options["ca_bundle"])
     request(emulator["base"], "/control", {"scenario": "success"})
     assert call(base, "/health")["provider_ready"]
     assert call(base, "/jobs/contract/extract", {})["run_id"] != saved
@@ -119,6 +126,7 @@ def verify_recovery(base, emulator, saved, options, evidence):
     compose(
         emulator["project"], "up", "-d", "--no-build", "--wait", "responses-emulator", **options
     )
+    emulator["base"] = base_url(emulator["project"], options["ca_bundle"])
     assert call(base, "/health")["provider_ready"]
     history = call(base, "/jobs/contract/history")
     assert sum(len(s["runs"]) for s in history["snapshots"]) == 2

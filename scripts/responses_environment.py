@@ -3,6 +3,7 @@
 import json
 import os
 import subprocess
+import sys
 from contextlib import contextmanager
 from pathlib import Path
 from uuid import uuid4
@@ -54,23 +55,46 @@ def base_url(project, ca_bundle=None):
     return f"http://{port}"
 
 
+def runtime_control(project, action, ca_bundle, api_port):
+    command = [sys.executable, "scripts/runtime.py", action, "--project", project]
+    if action == "up":
+        command += ["--mode", "contract-test", "--port", str(api_port)]
+        if ca_bundle:
+            command += ["--ca-bundle", str(ca_bundle)]
+    subprocess.run(command, env={**os.environ, "JOBINTEL_OPENAI_TIMEOUT": "1"}, check=True)
+
+
 @contextmanager
 def emulator_environment(*, api=False, project=None, ca_bundle=None, api_port=18083):
     project = project or "jobintel-responses-" + uuid4().hex[:12]
     options = {"ca_bundle": ca_bundle, "api_port": api_port}
     try:
-        services = [] if api else ["responses-emulator"]
-        compose(
-            project, "up", "-d", "--build", "--wait", "--wait-timeout", "120", *services, **options
-        )
+        if api:
+            runtime_control(project, "up", ca_bundle, api_port)
+        else:
+            compose(
+                project,
+                "up",
+                "-d",
+                "--build",
+                "--wait",
+                "--wait-timeout",
+                "120",
+                "responses-emulator",
+                **options,
+            )
         base = base_url(project, ca_bundle)
-        yield {
+        fixtures = {
             "base": base,
             "project": project,
-            "diagnostics": lambda: request(base, "/diagnostics"),
         }
+        fixtures["diagnostics"] = lambda: request(fixtures["base"], "/diagnostics")
+        yield fixtures
     finally:
-        compose(project, "down", "--volumes", **options)
+        if api:
+            runtime_control(project, "reset", ca_bundle, api_port)
+        else:
+            compose(project, "down", "--volumes", **options)
 
 
 def write_evidence(path, evidence):
