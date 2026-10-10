@@ -21,7 +21,9 @@ def ui_config(request: Request):
         "demo": request.app.state.demo,
         "provider": provider,
         "live_llm": provider == "openai",
-        "acquisition_mode": "synthetic" if request.app.state.demo else "http",
+        "acquisition_mode": getattr(
+            request.app.state, "acquisition_mode", "synthetic" if request.app.state.demo else "http"
+        ),
     }
 
 

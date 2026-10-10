@@ -1,5 +1,5 @@
 include LICENSE README.md alembic.ini requirements.lock.txt
-include Dockerfile Dockerfile.offline docker-compose*.yml .env.example
+include Dockerfile Dockerfile.offline Dockerfile.acquisition docker-compose*.yml .env.example
 recursive-include data *.json *.csv *.txt
 recursive-include alembic *.py *.mako
 recursive-include scripts *.py *.sh

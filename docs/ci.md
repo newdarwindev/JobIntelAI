@@ -17,6 +17,14 @@ recreation, explicit reset, demo-only route isolation and mounted OpenAI configu
 with a synthetic key. No extraction/evaluation call is made on the OpenAI profile.
 The runtime driver waits for migrations and API readiness; health checks stay local.
 
+The container gate also runs `python -m scripts.acquisition_smoke`: a disposable
+PostgreSQL/API/origin/proxy stack exercises actual fetch routes and verified TLS.
+Its JSON evidence records passed service cases and sanitized routing diagnostics.
+Both Python versions run the real-socket origin tests against SQLite/PostgreSQL
+alongside the fast transport doubles. The web workflow launches containerized
+acquisition fixtures for every desktop/mobile journey and uploads origin/proxy
+diagnostics on every outcome. Fixtures never make external acquisition/LLM calls.
+
 Python and container jobs depend on the quality gate. The container job also waits
 for both Python versions. Every command preserves its exit code: failed checks fail
 the workflow, rather than merely reporting findings. Container diagnostics run on

@@ -22,9 +22,9 @@ export default defineConfig({
     {name:'mobile-chromium',use:{...devices['Pixel 7'],viewport:{width:412,height:915},video:{mode:'on',size:{width:412,height:915}},defaultBrowserType:'chromium'}},
   ],
   webServer: {
-    command:`${process.env.UI_PYTHON || '.venv/bin/python'} scripts/serve_ui.py --port 8765`,
+    command:`${process.env.UI_PYTHON || '.venv/bin/python'} -m scripts.serve_ui --port 8765 --acquisition-fixtures`,
     url:'http://127.0.0.1:8765/health',
     reuseExistingServer:false,
-    timeout:30000,
+    timeout:180000,
   },
 });

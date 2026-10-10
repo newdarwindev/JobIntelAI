@@ -33,6 +33,13 @@ computed from saved source/extraction/match outcomes and survive refresh for the
 explicitly selected candidate revision. No API keys, third-party UI assets, or paid
 calls are needed.
 
+To exercise URL capture over real authored HTTP/HTTPS services, use
+`python -m scripts.serve_ui --acquisition-fixtures` (Docker Compose and OpenSSL
+required). The origin stays on an internal network, the controlled proxy accepts
+only an exact test pin, and TLS uses a disposable scoped CA. The full browser
+suite uses this mode automatically. [Acquisition fixtures](docs/acquisition.md)
+documents the service smoke, routing boundaries and sanitized diagnostics.
+
 Run every complete workflow on desktop and mobile Chromium (Node 22+):
 
 ```bash

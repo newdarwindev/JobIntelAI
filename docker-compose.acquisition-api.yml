@@ -1,0 +1,18 @@
+# Use with docker-compose.yml and docker-compose.acquisition.yml in a disposable project.
+services:
+  db:
+    networks: [fixtures]
+  migrate:
+    networks: [fixtures]
+  api:
+    command: ["python", "-m", "scripts.serve_acquisition_api"]
+    environment:
+      JOBINTEL_PROVIDER: fixture
+      JOBINTEL_CONFIGURATION: fixture_normalized
+    volumes:
+      - ./scripts:/app/scripts:ro
+      - ${JOBINTEL_ACQUISITION_TRUST_DIR:?Generate scoped fixture trust first}/ca.pem:/run/acquisition-ca.pem:ro
+    networks: [fixtures, control]
+    depends_on:
+      proxy:
+        condition: service_healthy

@@ -1,0 +1,5 @@
+FROM python:3.12-slim
+WORKDIR /app
+COPY scripts/__init__.py scripts/__init__.py
+COPY scripts/acquisition_fixtures scripts/acquisition_fixtures
+COPY data/sample_jobs/SYN-01.txt data/sample_jobs/SYN-01.txt

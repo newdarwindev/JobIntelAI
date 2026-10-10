@@ -1,9 +1,48 @@
 # Bounded URL acquisition
 
 `POST /jobs/{id}/fetch` acquires the registered official URL through `HttpAcquirer`.
-The transport, resolver, policy, clock and waits are injectable; CI supplies only
-authored offline responses. The normal API uses `HttpTransport`/`DNSResolver`.
+The transport, resolver, policy, clock and waits are injectable. Fast tests use
+authored responses; real-service checks use isolated HTTP/HTTPS origins and an
+exact-pin proxy. The normal API uses `HttpTransport`/`DNSResolver`.
 No fetching occurs during import, snapshot submission, extraction or API startup.
+
+## Authored real-service fixtures
+
+`docker-compose.acquisition.yml` runs an HTTP/HTTPS origin on an internal network
+and a controlled proxy with a loopback-only control port. Origin paths select
+HTML/text, redirect chains, gzip/deflate, oversized/chunked/slow streams, 403,
+CAPTCHA, JS-only, capped Retry-After/429 and 5xx scenarios. No scenario-selection
+routes or destination exceptions are installed in the production application.
+
+The test-only resolver admits only authored hostnames using the globally valid
+numeric pin `93.184.216.34`; this is a routing identity, not an Internet request.
+The unchanged production destination policy rejects private/mixed answers and
+rechecks every redirect/retry. The proxy maps only that pin on ports 80/443 to
+its local origin. Arbitrary hosts, pins and CONNECT ports are refused. TLS is
+end-to-end through CONNECT with verified `example.com` SNI/hostname and a scoped
+two-day CA. Keys are generated in ignored runtime storage and never shipped.
+Neither the production resolver nor the process-wide CA store is modified.
+
+```bash
+python -m scripts.acquisition_environment up --project jobintel-acquisition-example
+python -m scripts.acquisition_environment diagnostics --project jobintel-acquisition-example
+python -m scripts.acquisition_environment stop --project jobintel-acquisition-example
+python -m scripts.acquisition_smoke
+# Behind a verified build proxy: append --ca-bundle /path/to/combined-ca-bundle.pem
+# Prepared wheels: append --offline
+python -m scripts.serve_ui --acquisition-fixtures
+```
+
+The smoke uses a fresh disposable PostgreSQL/API project and removes only its
+own containers/volumes. Origin/proxy diagnostics contain bounded authored scenario,
+TLS identity, pin and disposition records, never payloads, credentials or query
+strings. `work/acquisition-service.json` preserves service checks, commit/config
+provenance and diagnostics. The full browser suite launches these Compose services
+automatically; UI02 verifies actual TLS/origin/proxy observations and manual recovery.
+`tests/integration/test_acquisition_wire.py` uses the same service code over real
+sockets for migrated SQLite/PostgreSQL limits, refusal, immutability and rollback.
+Existing replay/unit tests remain fast. These checks establish transport/persistence
+behavior on authored data, not Internet reachability or model quality.
 
 ## Limits and destination safety
 

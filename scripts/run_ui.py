@@ -1,0 +1,41 @@
+"""Own the browser fixture stack outside Playwright's forcibly terminated web server."""
+
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+from scripts.acquisition_environment import fixture_environment
+
+
+def main():
+    with TemporaryDirectory(prefix="jobintel-browser-services-") as directory:
+        with fixture_environment(directory) as fixtures:
+            environment = {
+                **os.environ,
+                "UI_FIXTURE_PROXY": fixtures["proxy"],
+                "UI_FIXTURE_CA": str(fixtures["ca"]),
+                "UI_FIXTURE_PROJECT": fixtures["project"],
+            }
+            try:
+                result = subprocess.run(
+                    ["npx", "playwright", "test", *sys.argv[1:]], env=environment
+                )
+            finally:
+                output = Path("work/acquisition-browser-diagnostics.json")
+                output.parent.mkdir(exist_ok=True)
+                evidence = {
+                    "commit": subprocess.check_output(
+                        ["git", "rev-parse", "HEAD"], text=True
+                    ).strip(),
+                    "transport": "production HTTP/TLS via exact-pin Compose proxy",
+                    "diagnostics": fixtures["diagnostics"](),
+                }
+                output.write_text(json.dumps(evidence, indent=2) + "\n")
+    raise SystemExit(result.returncode)
+
+
+if __name__ == "__main__":
+    main()
