@@ -68,6 +68,10 @@ test('UI02 | Source capture, URL fallback and immutable history',async({page,req
   const fetched=await (await request.get('/jobs/UI-URL')).json();expect(fetched.snapshot.fetch_status).toBe('http');expect(fetched.snapshot.clean_text).toBe(text.trim());
   const attempts=(await (await request.get('/jobs/UI-URL/history')).json()).acquisition_attempts;
   expect(attempts).toHaveLength(2);expect(attempts.find(a=>a.status==='success').snapshot_id).toBe(fetched.snapshot.id);expect(attempts.find(a=>a.status==='redirect').http_status).toBe(302);
+  const diagnostics=await (await request.get('/acquisition-fixture-diagnostics')).json();
+  expect(diagnostics.origin.events.some(e=>e.kind==='tls'&&e.hostname==='example.com')).toBeTruthy();
+  expect(diagnostics.origin.events.some(e=>e.scenario==='/authored-final'&&e.tls&&e.authority==='example.com')).toBeTruthy();
+  expect(diagnostics.proxy.events.some(e=>e.method==='CONNECT'&&e.pin==='93.184.216.34'&&e.disposition==='forwarded')).toBeTruthy();
   expect(await page.evaluate(()=>window.__fetched)).toBeUndefined();
   await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
   for(const [id,path] of [['UI-DENIED','authored-denied'],['UI-JS','authored-js']]){
@@ -259,7 +263,7 @@ test('UI08 | Keyboard navigation, responsive layout and inert input',async({page
   await page.goto('/ui/#workbench?job=UI-INERT');await expect(page.getByLabel('Selected posting')).toHaveValue('UI-INERT');await page.getByLabel('Posting source').fill('Authored source <script>window.__injected=true</script>');await click(page,'Save immutable snapshot');
   await page.getByText(/Snapshot & extraction history/).click();await expect(page.locator('#history')).toContainText('<script>');expect(await page.locator('main script').count()).toBe(0);
   await page.reload();await expect(page.getByLabel('Selected posting')).toHaveValue('UI-INERT');
-  expect(await (await request.get('/ui/config')).json()).toEqual({demo:true,provider:'fixture',live_llm:false,acquisition_mode:'synthetic'});
+  expect(await (await request.get('/ui/config')).json()).toEqual({demo:true,provider:'fixture',live_llm:false,acquisition_mode:'fixture-http'});
   const readiness=await (await request.get('/health')).json();expect(readiness.provider).toBe('fixture');expect(readiness.configuration).toBe('fixture_normalized');expect(readiness.live_llm).toBe(false);
   for(const view of ['Overview','Job registry','Source & extraction','Candidate evidence','Corpus analytics','Evaluation lab']){await nav(page,view);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBeTruthy();await expect(page.getByRole('navigation').getByRole('link',{name:view,exact:true})).toHaveAttribute('aria-current','page');await page.getByRole('link',{name:'Skip to content',exact:true}).focus();await page.keyboard.press('Enter');await expect(page.locator('main')).toBeFocused();await expect(page.getByRole('heading',{name:view,level:1,exact:true})).toBeVisible();}
   expect(errors).toEqual([]);

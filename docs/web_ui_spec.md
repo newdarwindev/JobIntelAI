@@ -58,18 +58,25 @@ The Unicode UI regression injects an authored API read fixture with an emoji
 prefix; transport-error regressions inject transient HTTP/connection failures.
 The rest of the browser pipeline uses the real fixture-backed service.
 
-UI02 calls the actual bounded acquisition/service contract through an explicitly
-synthetic HTTP transport and DNS resolver in the demo. It follows an authored redirect,
+UI02 calls the actual bounded acquisition/service contract through the production
+HTTP transport, an exact test DNS map and isolated Compose origins/proxy. It follows an authored redirect over verified HTTPS,
 persists an HTML source with the known SYN-01 clean hash, extracts it and verifies
 that its script never executes. Authored 403 and JS-only responses save failure
 history while preserving the prior usable source/extraction and unsaved manual
 editor text. Reload retains the attempt IDs, original/requested/final URLs, UTC
 timestamps, status/error codes and snapshot references; manual save/extract recovers.
-`/ui/config` identifies `acquisition_mode=synthetic` for the demo and `http` for
-the normal API. The normal API uses the pinned HTTP adapter described in
-[acquisition.md](acquisition.md). SSRF, TLS, deadlines, body limits and transactional
-edge cases are backend fake-transport regressions, not claims of real URL access
-from the browser videos. Rendering and anti-bot bypass are excluded.
+`/ui/config` identifies `acquisition_mode=fixture-http` for this test launcher,
+`synthetic` for the ordinary offline demo and `http` for the normal API. UI02 checks
+sanitized origin diagnostics for a real TLS handshake and the successful authored
+HTTP request, and proxy diagnostics for the numeric CONNECT pin. The full
+desktop/mobile suite uses these services; `/acquisition-fixture-diagnostics` is installed
+only by the test launcher and is absent from normal/demo production entrypoints.
+Real-socket integration tests cover SSRF/rebinding refusals with zero target HTTP
+requests, TLS trust/hostname refusal, deadlines, streaming/compression/body limits,
+bounded retries and SQLite/PostgreSQL transaction rollback. Fast fake-transport
+regressions remain alongside them. See [acquisition.md](acquisition.md).
+The recordings establish access to authored local services; Internet crawling,
+rendering and anti-bot bypass require separate evidence.
 
 Category coverage and candidate gaps come from shared persisted backend selection,
 including after refresh. The gap denominator is jobs with an eligible saved match
@@ -149,7 +156,7 @@ ID and inspected extraction ID; stale extraction selections fail with 409 and pr
 history. Missing saved revisions are reported; the browser never silently selects a
 newest revision after a saved selection disappears.
 
-UI08 verifies that the recorded sandbox advertises synthetic acquisition, fixture
+UI08 verifies that the recorded sandbox advertises fixture HTTP acquisition, fixture
 extraction, its explicit fixture configuration and no live LLM execution. Container
 runtime checks separately exercise the normal persistent PostgreSQL app across
 stop/recreation: saved records and exports survive, while `/ui/fixtures` and

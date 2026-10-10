@@ -33,6 +33,13 @@ computed from saved source/extraction/match outcomes and survive refresh for the
 explicitly selected candidate revision. No API keys, third-party UI assets, or paid
 calls are needed.
 
+To exercise URL capture over real authored HTTP/HTTPS services, use
+`python -m scripts.serve_ui --acquisition-fixtures` (Docker Compose and OpenSSL
+required). The origin stays on an internal network, the controlled proxy accepts
+only an exact test pin, and TLS uses a disposable scoped CA. The full browser
+suite uses this mode automatically. [Acquisition fixtures](docs/acquisition.md)
+documents the service smoke, routing boundaries and sanitized diagnostics.
+
 Run every complete workflow on desktop and mobile Chromium (Node 22+):
 
 ```bash
@@ -59,9 +66,9 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 <!-- UI-RECORDINGS:START -->
 
-Successful browser attempts: **16/16**, recorded 2026-10-09.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/37947459206) · commit `88f2e9ae57f4aaca728a84d16bd5d4a1944a7616`.
-Source content SHA-256: `b8db0557829b5b60fb8cb918bfdb593baf7cb26cae472ba0b2750953f1e009af`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Successful browser attempts: **16/16**, recorded 2026-10-10.
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `627f8653dd90b8d619ab73cd693c02daef2c7912c4d532d21823d54a609dc372`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |

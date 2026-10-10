@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:ui": "playwright test",
-    "test:ui:headed": "playwright test --headed --project=desktop-chromium",
+    "test:ui": "node scripts/run_ui.mjs",
+    "test:ui:headed": "node scripts/run_ui.mjs --headed --project=desktop-chromium",
     "record:ui": "node scripts/publish_ui_recordings.mjs",
     "check:ui": "node scripts/check_ui_contract.mjs",
     "test:recordings": "node tests/unit/ui_recordings.test.mjs"

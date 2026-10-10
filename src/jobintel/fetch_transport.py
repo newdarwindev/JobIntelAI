@@ -123,8 +123,10 @@ class TransportResponse:
             pass
 
     def read(self, size, timeout):
-        self.sock.settimeout(timeout)
+        if self.response.isclosed():
+            return b""
         try:
+            self.sock.settimeout(timeout)
             return self.response.read1(size)
         except TimeoutError:
             raise FetchError("read_timeout", 504, True) from None

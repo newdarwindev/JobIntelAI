@@ -1,0 +1,34 @@
+services:
+  origin:
+    build:
+      context: .
+      dockerfile: Dockerfile.acquisition
+    command: ["python", "-m", "scripts.acquisition_fixtures.origin", "--trust", "/run/trust"]
+    volumes:
+      - ${JOBINTEL_ACQUISITION_TRUST_DIR:?Generate scoped fixture trust first}/origin.pem:/run/trust/origin.pem:ro
+      - ${JOBINTEL_ACQUISITION_TRUST_DIR:?Generate scoped fixture trust first}/origin.key:/run/trust/origin.key:ro
+    networks: [fixtures]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import http.client; c=http.client.HTTPConnection('127.0.0.1',8080,timeout=2); c.request('GET','/health'); assert c.getresponse().status==200"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile.acquisition
+    command: ["python", "-m", "scripts.acquisition_fixtures.proxy"]
+    networks: [fixtures, control]
+    ports: ["127.0.0.1:${JOBINTEL_ACQUISITION_PROXY_PORT:-0}:8088"]
+    depends_on:
+      origin:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import http.client; c=http.client.HTTPConnection('127.0.0.1',8088,timeout=2); c.request('GET','/health'); assert c.getresponse().status==200"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+networks:
+  fixtures:
+    internal: true
+  control: {}
