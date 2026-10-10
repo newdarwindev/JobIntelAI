@@ -1,0 +1,579 @@
+{
+  "code_provenance": {
+    "source_sha256": "5382eb2eaa69d5020df8682c74969931544f4e8bf2d3d71be65661f754f59e1d",
+    "git_commit": "b7d677a81314612d778a9870865e64873a254c52",
+    "git_dirty": true
+  },
+  "execution_mode": "local-inference",
+  "inference": true,
+  "engine": "llama.cpp",
+  "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+  "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+  "model_repository": "ai/qwen2.5",
+  "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+  "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+  "model_license": "Apache-2.0",
+  "cases": [
+    {
+      "case": "unseen_persist_match_analytics_export",
+      "status": "passed",
+      "source_sha256": "9a18ea0ec22773d8d507fd7342772e1cf404a85d8908ddb91df3bf911e8ea7bd",
+      "provenance": {
+        "provider": "local",
+        "model": "jobintel-qwen2.5-1.5b-f16",
+        "configuration": "local_normalized_v1",
+        "configuration_version": "1",
+        "prompt_version": "job-requirements-local-v1",
+        "prompt_sha256": "bac588eaf5b964aedb663a597816cd517de34926eaf3a40ecd1853426f9c1529",
+        "schema_version": 2,
+        "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+        "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+        "normalization": true,
+        "execution_mode": "local-inference",
+        "source_sha256": "9a18ea0ec22773d8d507fd7342772e1cf404a85d8908ddb91df3bf911e8ea7bd",
+        "request_sha256": "e141d0e618f055fd69093c0eb35bfc34fa8325320328366727856fbf0a0b050b",
+        "request_parameters": {
+          "api": "chat_completions",
+          "max_tokens": 2048,
+          "temperature": 0,
+          "seed": 42,
+          "stream": false,
+          "timeout_seconds": 120.0
+        },
+        "response_model": "jobintel-qwen2.5-1.5b-f16",
+        "request_id": null,
+        "response_id": "chatcmpl-5l31GRv7uJlvff0872VheyusWZH3Vwkr",
+        "attempts": [
+          {
+            "elapsed_seconds": 79.24305266699957,
+            "request_id": null,
+            "response_id": "chatcmpl-5l31GRv7uJlvff0872VheyusWZH3Vwkr",
+            "response_model": "jobintel-qwen2.5-1.5b-f16",
+            "system_fingerprint": "b11541-f2918cabb",
+            "usage": {
+              "input_tokens": 1948,
+              "output_tokens": 197,
+              "total_tokens": 2145
+            },
+            "llm_elapsed_seconds": 79.227212
+          }
+        ],
+        "attempt_count": 1,
+        "usage": {
+          "input_tokens": 1948,
+          "output_tokens": 197,
+          "total_tokens": 2145
+        },
+        "elapsed_seconds": 79.25408925300144,
+        "llm_elapsed_seconds": 79.227212,
+        "estimated_cost": null,
+        "engine": "llama.cpp",
+        "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+        "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+        "model_repository": "ai/qwen2.5",
+        "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+        "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+        "model_license": "Apache-2.0",
+        "system_fingerprint": "b11541-f2918cabb"
+      },
+      "prediction": [
+        {
+          "raw_text": "Python is required.",
+          "normalized_skill_or_requirement": "Python",
+          "skills": [
+            "Python"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "MUST",
+          "category": "frontend",
+          "evidence": {
+            "start": 0,
+            "end": 19,
+            "quote": "Python is required."
+          },
+          "experience_obligation": "UNKNOWN",
+          "production_obligation": "UNKNOWN",
+          "explicit_production_required": null,
+          "years_required": null,
+          "version_constraints": [],
+          "source_skills": [
+            "Python"
+          ],
+          "confidence": 0.8,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "case": "reviewed_evaluation_and_reload",
+      "status": "passed",
+      "model_succeeded": 0,
+      "model_failed": 3
+    },
+    {
+      "case": "engine_unavailable_preserves_history",
+      "status": "passed"
+    },
+    {
+      "case": "stop_recreation_persistence_and_readiness",
+      "status": "passed"
+    }
+  ],
+  "status": "passed",
+  "first_stack_start_seconds": 61.94962598699931,
+  "evaluation": {
+    "evaluation_run_id": "8c0ab3f8faa34b81a4c6647d758f9448",
+    "format_version": 2,
+    "dataset": "reviewed",
+    "dataset_revision": "source-reviewed-v1/local-three-case-v1",
+    "dataset_size": 3,
+    "case_ids": [
+      "REV-01",
+      "REV-23",
+      "REV-25"
+    ],
+    "parent_dataset_sha256": "63356ace397e0034d86b207259cbea21ee0a0de870c161fb9a2561d7a328e329",
+    "dataset_sha256": "db9538418dab5d9bd4ff3fc944979e84cab1c7c66167c4d3d3fbfed81faf2a4f",
+    "review": {
+      "independent": true,
+      "reviewer": "Codex",
+      "method": "Source-only manual annotation and clause-by-clause specification review, independent of generator labels, replay responses and model predictions. This is one automated reviewer, not a human panel or independent-model benchmark.",
+      "revision": "source-review-2026-10-09-v1"
+    },
+    "mode": "local CPU inference \u2014 fixed source-reviewed subset; one automated reviewer",
+    "created_at": "2026-10-10T19:50:15.347213+00:00",
+    "status": "partial",
+    "results": [
+      {
+        "configuration": "local_normalized_v1",
+        "identity": {
+          "provider": "local",
+          "model": "jobintel-qwen2.5-1.5b-f16",
+          "configuration": "local_normalized_v1",
+          "configuration_version": "1",
+          "prompt_version": "job-requirements-local-v1",
+          "prompt_sha256": "bac588eaf5b964aedb663a597816cd517de34926eaf3a40ecd1853426f9c1529",
+          "schema_version": 2,
+          "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+          "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+          "normalization": true,
+          "engine": "llama.cpp",
+          "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+          "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+          "model_repository": "ai/qwen2.5",
+          "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+          "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+          "model_license": "Apache-2.0",
+          "execution_mode": "local-inference"
+        },
+        "model_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+        "configuration_sha256": "d09c13762245523cb723970109b382d123c2caafad48e2476c23f66db631aeda",
+        "per_case": [
+          {
+            "case_id": "REV-01",
+            "source_sha256": "6f13b2017ee21a59e26953947f50473b18dce5b1727b796bd7051c41ac9cb87a",
+            "status": "failed",
+            "prediction": null,
+            "provenance": {
+              "provider": "local",
+              "model": "jobintel-qwen2.5-1.5b-f16",
+              "configuration": "local_normalized_v1",
+              "configuration_version": "1",
+              "prompt_version": "job-requirements-local-v1",
+              "prompt_sha256": "bac588eaf5b964aedb663a597816cd517de34926eaf3a40ecd1853426f9c1529",
+              "schema_version": 2,
+              "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+              "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+              "normalization": true,
+              "execution_mode": "local-inference",
+              "source_sha256": "6f13b2017ee21a59e26953947f50473b18dce5b1727b796bd7051c41ac9cb87a",
+              "request_sha256": "f17a125a949b060e18df06dac52f3929ffabec10c83f85ef59af7989f751722e",
+              "request_parameters": {
+                "api": "chat_completions",
+                "max_tokens": 2048,
+                "temperature": 0,
+                "seed": 42,
+                "stream": false,
+                "timeout_seconds": 120.0
+              },
+              "response_model": "jobintel-qwen2.5-1.5b-f16",
+              "request_id": null,
+              "response_id": "chatcmpl-H71I8oQLB9x4yfS4gU58sokkxQJfE5dm",
+              "attempts": [
+                {
+                  "elapsed_seconds": 42.45564241200191,
+                  "request_id": null,
+                  "response_id": "chatcmpl-H71I8oQLB9x4yfS4gU58sokkxQJfE5dm",
+                  "response_model": "jobintel-qwen2.5-1.5b-f16",
+                  "system_fingerprint": "b11541-f2918cabb",
+                  "usage": {
+                    "input_tokens": 2071,
+                    "output_tokens": 200,
+                    "total_tokens": 2271
+                  },
+                  "llm_elapsed_seconds": 42.424943
+                }
+              ],
+              "attempt_count": 1,
+              "usage": {
+                "input_tokens": 2071,
+                "output_tokens": 200,
+                "total_tokens": 2271
+              },
+              "elapsed_seconds": 42.464549472002545,
+              "llm_elapsed_seconds": 42.424943,
+              "estimated_cost": null,
+              "engine": "llama.cpp",
+              "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+              "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+              "model_repository": "ai/qwen2.5",
+              "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+              "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+              "model_license": "Apache-2.0",
+              "system_fingerprint": "b11541-f2918cabb"
+            },
+            "error": {
+              "code": "invalid_evidence",
+              "status": 422,
+              "retryable": false,
+              "message": "extraction provider: invalid_evidence"
+            },
+            "reviewed_metrics": null,
+            "metrics": null,
+            "posting_elapsed_seconds": 42.47176075899915
+          },
+          {
+            "case_id": "REV-23",
+            "source_sha256": "a452d8ce5273a45f146f378bb970dc64f7d9656edef286e550e199f3b92e2782",
+            "status": "failed",
+            "prediction": null,
+            "provenance": {
+              "provider": "local",
+              "model": "jobintel-qwen2.5-1.5b-f16",
+              "configuration": "local_normalized_v1",
+              "configuration_version": "1",
+              "prompt_version": "job-requirements-local-v1",
+              "prompt_sha256": "bac588eaf5b964aedb663a597816cd517de34926eaf3a40ecd1853426f9c1529",
+              "schema_version": 2,
+              "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+              "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+              "normalization": true,
+              "execution_mode": "local-inference",
+              "source_sha256": "a452d8ce5273a45f146f378bb970dc64f7d9656edef286e550e199f3b92e2782",
+              "request_sha256": "fd3ee592ec5c43fe1ce9d4326428aa31678f6b9ac32c07ebe173476c90d58c27",
+              "request_parameters": {
+                "api": "chat_completions",
+                "max_tokens": 2048,
+                "temperature": 0,
+                "seed": 42,
+                "stream": false,
+                "timeout_seconds": 120.0
+              },
+              "response_model": "jobintel-qwen2.5-1.5b-f16",
+              "request_id": null,
+              "response_id": "chatcmpl-pmWSe0DwUNe4SXoHT6t2lUcMahAanF10",
+              "attempts": [
+                {
+                  "elapsed_seconds": 53.99467628500133,
+                  "request_id": null,
+                  "response_id": "chatcmpl-pmWSe0DwUNe4SXoHT6t2lUcMahAanF10",
+                  "response_model": "jobintel-qwen2.5-1.5b-f16",
+                  "system_fingerprint": "b11541-f2918cabb",
+                  "usage": {
+                    "input_tokens": 1972,
+                    "output_tokens": 258,
+                    "total_tokens": 2230
+                  },
+                  "llm_elapsed_seconds": 53.981597
+                }
+              ],
+              "attempt_count": 1,
+              "usage": {
+                "input_tokens": 1972,
+                "output_tokens": 258,
+                "total_tokens": 2230
+              },
+              "elapsed_seconds": 54.00339742500364,
+              "llm_elapsed_seconds": 53.981597,
+              "estimated_cost": null,
+              "engine": "llama.cpp",
+              "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+              "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+              "model_repository": "ai/qwen2.5",
+              "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+              "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+              "model_license": "Apache-2.0",
+              "system_fingerprint": "b11541-f2918cabb"
+            },
+            "error": {
+              "code": "invalid_evidence",
+              "status": 422,
+              "retryable": false,
+              "message": "extraction provider: invalid_evidence"
+            },
+            "reviewed_metrics": null,
+            "metrics": null,
+            "posting_elapsed_seconds": 54.0092771769996
+          },
+          {
+            "case_id": "REV-25",
+            "source_sha256": "8b15eb3f2282c8d4fa65ae6d28f675566ffbde73bb2c7ec5585afc3bd596a73b",
+            "status": "failed",
+            "prediction": null,
+            "provenance": {
+              "provider": "local",
+              "model": "jobintel-qwen2.5-1.5b-f16",
+              "configuration": "local_normalized_v1",
+              "configuration_version": "1",
+              "prompt_version": "job-requirements-local-v1",
+              "prompt_sha256": "bac588eaf5b964aedb663a597816cd517de34926eaf3a40ecd1853426f9c1529",
+              "schema_version": 2,
+              "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+              "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+              "normalization": true,
+              "execution_mode": "local-inference",
+              "source_sha256": "8b15eb3f2282c8d4fa65ae6d28f675566ffbde73bb2c7ec5585afc3bd596a73b",
+              "request_sha256": "41a24d8b58741fa18df211adb9f74eece9bbe42c1f01d60f0daf8af5a646172b",
+              "request_parameters": {
+                "api": "chat_completions",
+                "max_tokens": 2048,
+                "temperature": 0,
+                "seed": 42,
+                "stream": false,
+                "timeout_seconds": 120.0
+              },
+              "response_model": null,
+              "request_id": null,
+              "response_id": null,
+              "attempts": [
+                {
+                  "elapsed_seconds": 120.10442826600047,
+                  "request_id": null,
+                  "response_id": null,
+                  "response_model": null,
+                  "system_fingerprint": null,
+                  "usage": null,
+                  "llm_elapsed_seconds": null
+                }
+              ],
+              "attempt_count": 1,
+              "usage": null,
+              "elapsed_seconds": 120.11597549900034,
+              "llm_elapsed_seconds": null,
+              "estimated_cost": null,
+              "engine": "llama.cpp",
+              "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+              "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+              "model_repository": "ai/qwen2.5",
+              "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+              "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+              "model_license": "Apache-2.0",
+              "system_fingerprint": null
+            },
+            "error": {
+              "code": "timeout",
+              "status": 504,
+              "retryable": true,
+              "message": "extraction provider: timeout"
+            },
+            "reviewed_metrics": null,
+            "metrics": null,
+            "posting_elapsed_seconds": 120.12382623799931
+          }
+        ],
+        "provenance": [
+          {
+            "provider": "local",
+            "model": "jobintel-qwen2.5-1.5b-f16",
+            "configuration": "local_normalized_v1",
+            "configuration_version": "1",
+            "prompt_version": "job-requirements-local-v1",
+            "prompt_sha256": "bac588eaf5b964aedb663a597816cd517de34926eaf3a40ecd1853426f9c1529",
+            "schema_version": 2,
+            "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+            "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+            "normalization": true,
+            "execution_mode": "local-inference",
+            "source_sha256": "6f13b2017ee21a59e26953947f50473b18dce5b1727b796bd7051c41ac9cb87a",
+            "request_sha256": "f17a125a949b060e18df06dac52f3929ffabec10c83f85ef59af7989f751722e",
+            "request_parameters": {
+              "api": "chat_completions",
+              "max_tokens": 2048,
+              "temperature": 0,
+              "seed": 42,
+              "stream": false,
+              "timeout_seconds": 120.0
+            },
+            "response_model": "jobintel-qwen2.5-1.5b-f16",
+            "request_id": null,
+            "response_id": "chatcmpl-H71I8oQLB9x4yfS4gU58sokkxQJfE5dm",
+            "attempts": [
+              {
+                "elapsed_seconds": 42.45564241200191,
+                "request_id": null,
+                "response_id": "chatcmpl-H71I8oQLB9x4yfS4gU58sokkxQJfE5dm",
+                "response_model": "jobintel-qwen2.5-1.5b-f16",
+                "system_fingerprint": "b11541-f2918cabb",
+                "usage": {
+                  "input_tokens": 2071,
+                  "output_tokens": 200,
+                  "total_tokens": 2271
+                },
+                "llm_elapsed_seconds": 42.424943
+              }
+            ],
+            "attempt_count": 1,
+            "usage": {
+              "input_tokens": 2071,
+              "output_tokens": 200,
+              "total_tokens": 2271
+            },
+            "elapsed_seconds": 42.464549472002545,
+            "llm_elapsed_seconds": 42.424943,
+            "estimated_cost": null,
+            "engine": "llama.cpp",
+            "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+            "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+            "model_repository": "ai/qwen2.5",
+            "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+            "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+            "model_license": "Apache-2.0",
+            "system_fingerprint": "b11541-f2918cabb"
+          },
+          {
+            "provider": "local",
+            "model": "jobintel-qwen2.5-1.5b-f16",
+            "configuration": "local_normalized_v1",
+            "configuration_version": "1",
+            "prompt_version": "job-requirements-local-v1",
+            "prompt_sha256": "bac588eaf5b964aedb663a597816cd517de34926eaf3a40ecd1853426f9c1529",
+            "schema_version": 2,
+            "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+            "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+            "normalization": true,
+            "execution_mode": "local-inference",
+            "source_sha256": "a452d8ce5273a45f146f378bb970dc64f7d9656edef286e550e199f3b92e2782",
+            "request_sha256": "fd3ee592ec5c43fe1ce9d4326428aa31678f6b9ac32c07ebe173476c90d58c27",
+            "request_parameters": {
+              "api": "chat_completions",
+              "max_tokens": 2048,
+              "temperature": 0,
+              "seed": 42,
+              "stream": false,
+              "timeout_seconds": 120.0
+            },
+            "response_model": "jobintel-qwen2.5-1.5b-f16",
+            "request_id": null,
+            "response_id": "chatcmpl-pmWSe0DwUNe4SXoHT6t2lUcMahAanF10",
+            "attempts": [
+              {
+                "elapsed_seconds": 53.99467628500133,
+                "request_id": null,
+                "response_id": "chatcmpl-pmWSe0DwUNe4SXoHT6t2lUcMahAanF10",
+                "response_model": "jobintel-qwen2.5-1.5b-f16",
+                "system_fingerprint": "b11541-f2918cabb",
+                "usage": {
+                  "input_tokens": 1972,
+                  "output_tokens": 258,
+                  "total_tokens": 2230
+                },
+                "llm_elapsed_seconds": 53.981597
+              }
+            ],
+            "attempt_count": 1,
+            "usage": {
+              "input_tokens": 1972,
+              "output_tokens": 258,
+              "total_tokens": 2230
+            },
+            "elapsed_seconds": 54.00339742500364,
+            "llm_elapsed_seconds": 53.981597,
+            "estimated_cost": null,
+            "engine": "llama.cpp",
+            "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+            "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+            "model_repository": "ai/qwen2.5",
+            "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+            "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+            "model_license": "Apache-2.0",
+            "system_fingerprint": "b11541-f2918cabb"
+          },
+          {
+            "provider": "local",
+            "model": "jobintel-qwen2.5-1.5b-f16",
+            "configuration": "local_normalized_v1",
+            "configuration_version": "1",
+            "prompt_version": "job-requirements-local-v1",
+            "prompt_sha256": "bac588eaf5b964aedb663a597816cd517de34926eaf3a40ecd1853426f9c1529",
+            "schema_version": 2,
+            "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+            "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+            "normalization": true,
+            "execution_mode": "local-inference",
+            "source_sha256": "8b15eb3f2282c8d4fa65ae6d28f675566ffbde73bb2c7ec5585afc3bd596a73b",
+            "request_sha256": "41a24d8b58741fa18df211adb9f74eece9bbe42c1f01d60f0daf8af5a646172b",
+            "request_parameters": {
+              "api": "chat_completions",
+              "max_tokens": 2048,
+              "temperature": 0,
+              "seed": 42,
+              "stream": false,
+              "timeout_seconds": 120.0
+            },
+            "response_model": null,
+            "request_id": null,
+            "response_id": null,
+            "attempts": [
+              {
+                "elapsed_seconds": 120.10442826600047,
+                "request_id": null,
+                "response_id": null,
+                "response_model": null,
+                "system_fingerprint": null,
+                "usage": null,
+                "llm_elapsed_seconds": null
+              }
+            ],
+            "attempt_count": 1,
+            "usage": null,
+            "elapsed_seconds": 120.11597549900034,
+            "llm_elapsed_seconds": null,
+            "estimated_cost": null,
+            "engine": "llama.cpp",
+            "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+            "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+            "model_repository": "ai/qwen2.5",
+            "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+            "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+            "model_license": "Apache-2.0",
+            "system_fingerprint": null
+          }
+        ],
+        "elapsed_seconds": 216.61540400200465,
+        "metrics": null,
+        "succeeded": 0,
+        "failed": 3,
+        "metric_scope": "successful cases only; failures retained separately; matching uses gold requirements and sourced candidate",
+        "tokens": null,
+        "usage": null,
+        "estimated_cost": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 1,
+        "pricing": null,
+        "provider_elapsed_seconds": 216.58392239600653,
+        "llm_elapsed_seconds": null
+      }
+    ],
+    "code_provenance": {
+      "source_sha256": "5382eb2eaa69d5020df8682c74969931544f4e8bf2d3d71be65661f754f59e1d",
+      "git_commit": "b7d677a81314612d778a9870865e64873a254c52",
+      "git_dirty": true
+    }
+  },
+  "engine_cgroup_peak_bytes": 1448337408,
+  "warm_stack_start_seconds": 21.415030729003774,
+  "passed": 4,
+  "failed": 0,
+  "skipped": 0,
+  "cache_preserved": true
+}

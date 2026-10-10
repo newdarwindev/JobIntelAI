@@ -103,3 +103,29 @@ limit and uploads sanitized results on every outcome. It makes zero paid calls.
 Fast Python checks keep fake HTTP/provider coverage. Default UI recordings cover
 fixture and emulator journeys plus a labelled configuration rendering fixture;
 they do not count as model-quality evidence. Actual model evidence is separate.
+
+
+## Recorded measurements
+
+[Published authored results](../results/local-inference/README.md) retain both
+runs, including all errors and original development provenance. On this Linux
+amd64 host, initial weight/license preparation took 661.09 seconds for 2.88 GiB of
+weights plus the 12,624-byte license. This includes the inherited verified proxy
+path and varies with network/cache conditions.
+
+The source-bound run started a fresh scoped stack from already prepared weights
+in 39.84 seconds (including cache checks, image build and migrations); stop and
+recreation with the same weights/database took 16.24 seconds. The unseen model
+request reported 59.31 seconds of engine time and 2,173 tokens. Engine cgroup peak
+was 708,747,264 bytes. These timings use warm host/filesystem caches; a machine
+cold boot was not measured, and cgroup accounting may exclude shared host page
+cache. Keep the documented 8 GiB host/5 GiB engine budget rather than sizing from
+that observed peak alone.
+
+The fixed reviewed subset accepted 1/3 cases and rejected two with
+`invalid_evidence`. The accepted case missed Postgres and marked required Python
+as preferred: recall 1/2, type accuracy 0/1, exact gold evidence 1/1 on successful
+cases only. The initial run accepted 0/3 (two invalid evidence failures and one
+timeout); its fresh-stack/recreation times were 61.95/21.42 seconds and cgroup
+peak was 1,448,337,408 bytes. Missing aggregate usage/timing remains null in that
+run. These are measured limitations, not evidence of reliable extraction quality.

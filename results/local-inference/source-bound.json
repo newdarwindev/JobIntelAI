@@ -1,0 +1,854 @@
+{
+  "code_provenance": {
+    "source_sha256": "f43e02fe9193d63009febd3b85e00e813844ae9afbe50e742b6372b2ec009db8",
+    "git_commit": "b7d677a81314612d778a9870865e64873a254c52",
+    "git_dirty": true
+  },
+  "execution_mode": "local-inference",
+  "inference": true,
+  "engine": "llama.cpp",
+  "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+  "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+  "model_repository": "ai/qwen2.5",
+  "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+  "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+  "model_license": "Apache-2.0",
+  "cases": [
+    {
+      "case": "unseen_persist_match_analytics_export",
+      "status": "passed",
+      "source_sha256": "9a18ea0ec22773d8d507fd7342772e1cf404a85d8908ddb91df3bf911e8ea7bd",
+      "provenance": {
+        "provider": "local",
+        "model": "jobintel-qwen2.5-1.5b-f16",
+        "configuration": "local_normalized_v1",
+        "configuration_version": "1",
+        "prompt_version": "job-requirements-local-v2",
+        "prompt_sha256": "b7be8fc40a4d3b426fb3e73ab5979673e4917cfb4643a4d1b40871fd014dc9bf",
+        "schema_version": 2,
+        "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+        "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+        "normalization": true,
+        "execution_mode": "local-inference",
+        "source_sha256": "9a18ea0ec22773d8d507fd7342772e1cf404a85d8908ddb91df3bf911e8ea7bd",
+        "request_sha256": "7e7b8be497db09f3cf39c8833e5a1e1387be28d76ecfceada59ade0c13e0e08d",
+        "request_parameters": {
+          "api": "chat_completions",
+          "max_tokens": 2048,
+          "temperature": 0,
+          "seed": 42,
+          "stream": false,
+          "timeout_seconds": 120.0
+        },
+        "response_model": "jobintel-qwen2.5-1.5b-f16",
+        "request_id": null,
+        "response_id": "chatcmpl-2nbDHCU4V5n5lQr4He6eulVzWwbI62Fs",
+        "attempts": [
+          {
+            "elapsed_seconds": 59.33110288500029,
+            "request_id": null,
+            "response_id": "chatcmpl-2nbDHCU4V5n5lQr4He6eulVzWwbI62Fs",
+            "response_model": "jobintel-qwen2.5-1.5b-f16",
+            "system_fingerprint": "b11541-f2918cabb",
+            "usage": {
+              "input_tokens": 1986,
+              "output_tokens": 187,
+              "total_tokens": 2173
+            },
+            "llm_elapsed_seconds": 59.314754
+          }
+        ],
+        "attempt_count": 1,
+        "usage": {
+          "input_tokens": 1986,
+          "output_tokens": 187,
+          "total_tokens": 2173
+        },
+        "elapsed_seconds": 59.34140646600281,
+        "llm_elapsed_seconds": 59.314754,
+        "estimated_cost": null,
+        "engine": "llama.cpp",
+        "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+        "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+        "model_repository": "ai/qwen2.5",
+        "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+        "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+        "model_license": "Apache-2.0",
+        "generation_schema_sha256": "2739fd1d824aabd1fea104357df5d7fb40cf82462e6614ae4e95d7358e8929ca",
+        "system_fingerprint": "b11541-f2918cabb"
+      },
+      "prediction": [
+        {
+          "raw_text": "Python is required.",
+          "normalized_skill_or_requirement": "Python",
+          "skills": [
+            "Python"
+          ],
+          "operator": "SINGLE",
+          "requirement_type": "MUST",
+          "category": "frontend",
+          "evidence": {
+            "start": 0,
+            "end": 19,
+            "quote": "Python is required."
+          },
+          "experience_obligation": "UNKNOWN",
+          "production_obligation": "UNKNOWN",
+          "explicit_production_required": null,
+          "years_required": null,
+          "version_constraints": [],
+          "source_skills": [
+            "Python"
+          ],
+          "confidence": 0.8,
+          "notes": null
+        }
+      ]
+    },
+    {
+      "case": "reviewed_evaluation_and_reload",
+      "status": "passed",
+      "model_succeeded": 1,
+      "model_failed": 2
+    },
+    {
+      "case": "engine_unavailable_preserves_history",
+      "status": "passed"
+    },
+    {
+      "case": "stop_recreation_persistence_and_readiness",
+      "status": "passed"
+    }
+  ],
+  "status": "passed",
+  "first_stack_start_seconds": 39.83523806699668,
+  "evaluation": {
+    "evaluation_run_id": "f76d529496b447c5b74370f57cb4562f",
+    "format_version": 2,
+    "dataset": "reviewed",
+    "dataset_revision": "source-reviewed-v1/local-three-case-v1",
+    "dataset_size": 3,
+    "case_ids": [
+      "REV-01",
+      "REV-23",
+      "REV-25"
+    ],
+    "parent_dataset_sha256": "63356ace397e0034d86b207259cbea21ee0a0de870c161fb9a2561d7a328e329",
+    "dataset_sha256": "db9538418dab5d9bd4ff3fc944979e84cab1c7c66167c4d3d3fbfed81faf2a4f",
+    "review": {
+      "independent": true,
+      "reviewer": "Codex",
+      "method": "Source-only manual annotation and clause-by-clause specification review, independent of generator labels, replay responses and model predictions. This is one automated reviewer, not a human panel or independent-model benchmark.",
+      "revision": "source-review-2026-10-09-v1"
+    },
+    "mode": "local CPU inference \u2014 fixed source-reviewed subset; one automated reviewer",
+    "created_at": "2026-10-10T20:01:00.549645+00:00",
+    "status": "partial",
+    "results": [
+      {
+        "configuration": "local_normalized_v1",
+        "identity": {
+          "provider": "local",
+          "model": "jobintel-qwen2.5-1.5b-f16",
+          "configuration": "local_normalized_v1",
+          "configuration_version": "1",
+          "prompt_version": "job-requirements-local-v2",
+          "prompt_sha256": "b7be8fc40a4d3b426fb3e73ab5979673e4917cfb4643a4d1b40871fd014dc9bf",
+          "schema_version": 2,
+          "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+          "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+          "normalization": true,
+          "engine": "llama.cpp",
+          "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+          "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+          "model_repository": "ai/qwen2.5",
+          "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+          "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+          "model_license": "Apache-2.0",
+          "execution_mode": "local-inference"
+        },
+        "model_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+        "configuration_sha256": "d09c13762245523cb723970109b382d123c2caafad48e2476c23f66db631aeda",
+        "per_case": [
+          {
+            "case_id": "REV-01",
+            "source_sha256": "6f13b2017ee21a59e26953947f50473b18dce5b1727b796bd7051c41ac9cb87a",
+            "status": "succeeded",
+            "prediction": {
+              "schema_version": 2,
+              "requirements": [
+                {
+                  "raw_text": "Python is required.",
+                  "normalized_skill_or_requirement": "Python",
+                  "skills": [
+                    "Python"
+                  ],
+                  "operator": "SINGLE",
+                  "requirement_type": "PREFERRED",
+                  "category": "backend",
+                  "evidence": {
+                    "start": 111,
+                    "end": 130,
+                    "quote": "Python is required."
+                  },
+                  "experience_obligation": "UNKNOWN",
+                  "production_obligation": "UNKNOWN",
+                  "explicit_production_required": null,
+                  "years_required": null,
+                  "version_constraints": [],
+                  "source_skills": [
+                    "Python"
+                  ],
+                  "confidence": 0.8,
+                  "notes": null
+                }
+              ],
+              "responsibilities": [],
+              "geography": null,
+              "work_mode": null,
+              "filters": null
+            },
+            "provenance": {
+              "provider": "local",
+              "model": "jobintel-qwen2.5-1.5b-f16",
+              "configuration": "local_normalized_v1",
+              "configuration_version": "1",
+              "prompt_version": "job-requirements-local-v2",
+              "prompt_sha256": "b7be8fc40a4d3b426fb3e73ab5979673e4917cfb4643a4d1b40871fd014dc9bf",
+              "schema_version": 2,
+              "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+              "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+              "normalization": true,
+              "execution_mode": "local-inference",
+              "source_sha256": "6f13b2017ee21a59e26953947f50473b18dce5b1727b796bd7051c41ac9cb87a",
+              "request_sha256": "fc238789f5b202cb266db9d95d4d7fa0affa5cbf2618799353117e8a36f8448e",
+              "request_parameters": {
+                "api": "chat_completions",
+                "max_tokens": 2048,
+                "temperature": 0,
+                "seed": 42,
+                "stream": false,
+                "timeout_seconds": 120.0
+              },
+              "response_model": "jobintel-qwen2.5-1.5b-f16",
+              "request_id": null,
+              "response_id": "chatcmpl-FMLX8bdX3stmE1tnws25ybg8Cd7Ru2CQ",
+              "attempts": [
+                {
+                  "elapsed_seconds": 27.7077623160003,
+                  "request_id": null,
+                  "response_id": "chatcmpl-FMLX8bdX3stmE1tnws25ybg8Cd7Ru2CQ",
+                  "response_model": "jobintel-qwen2.5-1.5b-f16",
+                  "system_fingerprint": "b11541-f2918cabb",
+                  "usage": {
+                    "input_tokens": 2109,
+                    "output_tokens": 190,
+                    "total_tokens": 2299
+                  },
+                  "llm_elapsed_seconds": 27.675306
+                }
+              ],
+              "attempt_count": 1,
+              "usage": {
+                "input_tokens": 2109,
+                "output_tokens": 190,
+                "total_tokens": 2299
+              },
+              "elapsed_seconds": 27.721546782995574,
+              "llm_elapsed_seconds": 27.675306,
+              "estimated_cost": null,
+              "engine": "llama.cpp",
+              "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+              "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+              "model_repository": "ai/qwen2.5",
+              "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+              "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+              "model_license": "Apache-2.0",
+              "generation_schema_sha256": "86dea67d9bfb3893598672a083219c6aebb25aaeb6807f5acc818fb445541aac",
+              "system_fingerprint": "b11541-f2918cabb"
+            },
+            "error": null,
+            "reviewed_metrics": {
+              "semantic_unsupported_claim_rate": {
+                "numerator": 1,
+                "denominator": 1,
+                "value": 1.0
+              },
+              "semantic_unreviewable_span_rate": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "abstention_precision": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "abstention_recall": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "correct_unknown_rate": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "matching_agreement": {
+                "numerator": 2,
+                "denominator": 2,
+                "value": 1.0
+              },
+              "false_covered_rate": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "filters_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "filters_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            },
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.6666666666666666,
+              "type_accuracy": 0.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 3
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            },
+            "posting_elapsed_seconds": 27.730822806996002
+          },
+          {
+            "case_id": "REV-23",
+            "source_sha256": "a452d8ce5273a45f146f378bb970dc64f7d9656edef286e550e199f3b92e2782",
+            "status": "failed",
+            "prediction": null,
+            "provenance": {
+              "provider": "local",
+              "model": "jobintel-qwen2.5-1.5b-f16",
+              "configuration": "local_normalized_v1",
+              "configuration_version": "1",
+              "prompt_version": "job-requirements-local-v2",
+              "prompt_sha256": "b7be8fc40a4d3b426fb3e73ab5979673e4917cfb4643a4d1b40871fd014dc9bf",
+              "schema_version": 2,
+              "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+              "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+              "normalization": true,
+              "execution_mode": "local-inference",
+              "source_sha256": "a452d8ce5273a45f146f378bb970dc64f7d9656edef286e550e199f3b92e2782",
+              "request_sha256": "06633327fb2fa01e8be720f695ce2aef975b4b10d6363adf89780ee86fab7435",
+              "request_parameters": {
+                "api": "chat_completions",
+                "max_tokens": 2048,
+                "temperature": 0,
+                "seed": 42,
+                "stream": false,
+                "timeout_seconds": 120.0
+              },
+              "response_model": "jobintel-qwen2.5-1.5b-f16",
+              "request_id": null,
+              "response_id": "chatcmpl-PAYW8ZDRTsGINSSclbjZdnhqDr3a9eDU",
+              "attempts": [
+                {
+                  "elapsed_seconds": 35.018706317998294,
+                  "request_id": null,
+                  "response_id": "chatcmpl-PAYW8ZDRTsGINSSclbjZdnhqDr3a9eDU",
+                  "response_model": "jobintel-qwen2.5-1.5b-f16",
+                  "system_fingerprint": "b11541-f2918cabb",
+                  "usage": {
+                    "input_tokens": 2010,
+                    "output_tokens": 248,
+                    "total_tokens": 2258
+                  },
+                  "llm_elapsed_seconds": 34.999111000000006
+                }
+              ],
+              "attempt_count": 1,
+              "usage": {
+                "input_tokens": 2010,
+                "output_tokens": 248,
+                "total_tokens": 2258
+              },
+              "elapsed_seconds": 35.03087591700023,
+              "llm_elapsed_seconds": 34.999111000000006,
+              "estimated_cost": null,
+              "engine": "llama.cpp",
+              "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+              "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+              "model_repository": "ai/qwen2.5",
+              "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+              "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+              "model_license": "Apache-2.0",
+              "generation_schema_sha256": "e3408500417bf8e4a8ede5832ab5f265210d61b0a56b58fba65897e933315b47",
+              "system_fingerprint": "b11541-f2918cabb"
+            },
+            "error": {
+              "code": "invalid_evidence",
+              "status": 422,
+              "retryable": false,
+              "message": "extraction provider: invalid_evidence"
+            },
+            "reviewed_metrics": null,
+            "metrics": null,
+            "posting_elapsed_seconds": 35.03762163200008
+          },
+          {
+            "case_id": "REV-25",
+            "source_sha256": "8b15eb3f2282c8d4fa65ae6d28f675566ffbde73bb2c7ec5585afc3bd596a73b",
+            "status": "failed",
+            "prediction": null,
+            "provenance": {
+              "provider": "local",
+              "model": "jobintel-qwen2.5-1.5b-f16",
+              "configuration": "local_normalized_v1",
+              "configuration_version": "1",
+              "prompt_version": "job-requirements-local-v2",
+              "prompt_sha256": "b7be8fc40a4d3b426fb3e73ab5979673e4917cfb4643a4d1b40871fd014dc9bf",
+              "schema_version": 2,
+              "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+              "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+              "normalization": true,
+              "execution_mode": "local-inference",
+              "source_sha256": "8b15eb3f2282c8d4fa65ae6d28f675566ffbde73bb2c7ec5585afc3bd596a73b",
+              "request_sha256": "f89f3565403d58c27235d1fb3e76f10bc931949d47aa534bf47b0710e382c251",
+              "request_parameters": {
+                "api": "chat_completions",
+                "max_tokens": 2048,
+                "temperature": 0,
+                "seed": 42,
+                "stream": false,
+                "timeout_seconds": 120.0
+              },
+              "response_model": "jobintel-qwen2.5-1.5b-f16",
+              "request_id": null,
+              "response_id": "chatcmpl-sG2ZMAj2AUywt6igOEdl7ZraeLlGD3yc",
+              "attempts": [
+                {
+                  "elapsed_seconds": 64.37527160600439,
+                  "request_id": null,
+                  "response_id": "chatcmpl-sG2ZMAj2AUywt6igOEdl7ZraeLlGD3yc",
+                  "response_model": "jobintel-qwen2.5-1.5b-f16",
+                  "system_fingerprint": "b11541-f2918cabb",
+                  "usage": {
+                    "input_tokens": 2059,
+                    "output_tokens": 496,
+                    "total_tokens": 2555
+                  },
+                  "llm_elapsed_seconds": 64.36002400000001
+                }
+              ],
+              "attempt_count": 1,
+              "usage": {
+                "input_tokens": 2059,
+                "output_tokens": 496,
+                "total_tokens": 2555
+              },
+              "elapsed_seconds": 64.38762148699607,
+              "llm_elapsed_seconds": 64.36002400000001,
+              "estimated_cost": null,
+              "engine": "llama.cpp",
+              "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+              "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+              "model_repository": "ai/qwen2.5",
+              "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+              "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+              "model_license": "Apache-2.0",
+              "generation_schema_sha256": "793a982d13f8e73fc6cf63616f8cfd9058baa4e2c47f964cb1f58c5173410eab",
+              "system_fingerprint": "b11541-f2918cabb"
+            },
+            "error": {
+              "code": "invalid_evidence",
+              "status": 422,
+              "retryable": false,
+              "message": "extraction provider: invalid_evidence"
+            },
+            "reviewed_metrics": null,
+            "metrics": null,
+            "posting_elapsed_seconds": 64.3966775709996
+          }
+        ],
+        "provenance": [
+          {
+            "provider": "local",
+            "model": "jobintel-qwen2.5-1.5b-f16",
+            "configuration": "local_normalized_v1",
+            "configuration_version": "1",
+            "prompt_version": "job-requirements-local-v2",
+            "prompt_sha256": "b7be8fc40a4d3b426fb3e73ab5979673e4917cfb4643a4d1b40871fd014dc9bf",
+            "schema_version": 2,
+            "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+            "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+            "normalization": true,
+            "execution_mode": "local-inference",
+            "source_sha256": "6f13b2017ee21a59e26953947f50473b18dce5b1727b796bd7051c41ac9cb87a",
+            "request_sha256": "fc238789f5b202cb266db9d95d4d7fa0affa5cbf2618799353117e8a36f8448e",
+            "request_parameters": {
+              "api": "chat_completions",
+              "max_tokens": 2048,
+              "temperature": 0,
+              "seed": 42,
+              "stream": false,
+              "timeout_seconds": 120.0
+            },
+            "response_model": "jobintel-qwen2.5-1.5b-f16",
+            "request_id": null,
+            "response_id": "chatcmpl-FMLX8bdX3stmE1tnws25ybg8Cd7Ru2CQ",
+            "attempts": [
+              {
+                "elapsed_seconds": 27.7077623160003,
+                "request_id": null,
+                "response_id": "chatcmpl-FMLX8bdX3stmE1tnws25ybg8Cd7Ru2CQ",
+                "response_model": "jobintel-qwen2.5-1.5b-f16",
+                "system_fingerprint": "b11541-f2918cabb",
+                "usage": {
+                  "input_tokens": 2109,
+                  "output_tokens": 190,
+                  "total_tokens": 2299
+                },
+                "llm_elapsed_seconds": 27.675306
+              }
+            ],
+            "attempt_count": 1,
+            "usage": {
+              "input_tokens": 2109,
+              "output_tokens": 190,
+              "total_tokens": 2299
+            },
+            "elapsed_seconds": 27.721546782995574,
+            "llm_elapsed_seconds": 27.675306,
+            "estimated_cost": null,
+            "engine": "llama.cpp",
+            "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+            "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+            "model_repository": "ai/qwen2.5",
+            "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+            "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+            "model_license": "Apache-2.0",
+            "generation_schema_sha256": "86dea67d9bfb3893598672a083219c6aebb25aaeb6807f5acc818fb445541aac",
+            "system_fingerprint": "b11541-f2918cabb"
+          },
+          {
+            "provider": "local",
+            "model": "jobintel-qwen2.5-1.5b-f16",
+            "configuration": "local_normalized_v1",
+            "configuration_version": "1",
+            "prompt_version": "job-requirements-local-v2",
+            "prompt_sha256": "b7be8fc40a4d3b426fb3e73ab5979673e4917cfb4643a4d1b40871fd014dc9bf",
+            "schema_version": 2,
+            "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+            "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+            "normalization": true,
+            "execution_mode": "local-inference",
+            "source_sha256": "a452d8ce5273a45f146f378bb970dc64f7d9656edef286e550e199f3b92e2782",
+            "request_sha256": "06633327fb2fa01e8be720f695ce2aef975b4b10d6363adf89780ee86fab7435",
+            "request_parameters": {
+              "api": "chat_completions",
+              "max_tokens": 2048,
+              "temperature": 0,
+              "seed": 42,
+              "stream": false,
+              "timeout_seconds": 120.0
+            },
+            "response_model": "jobintel-qwen2.5-1.5b-f16",
+            "request_id": null,
+            "response_id": "chatcmpl-PAYW8ZDRTsGINSSclbjZdnhqDr3a9eDU",
+            "attempts": [
+              {
+                "elapsed_seconds": 35.018706317998294,
+                "request_id": null,
+                "response_id": "chatcmpl-PAYW8ZDRTsGINSSclbjZdnhqDr3a9eDU",
+                "response_model": "jobintel-qwen2.5-1.5b-f16",
+                "system_fingerprint": "b11541-f2918cabb",
+                "usage": {
+                  "input_tokens": 2010,
+                  "output_tokens": 248,
+                  "total_tokens": 2258
+                },
+                "llm_elapsed_seconds": 34.999111000000006
+              }
+            ],
+            "attempt_count": 1,
+            "usage": {
+              "input_tokens": 2010,
+              "output_tokens": 248,
+              "total_tokens": 2258
+            },
+            "elapsed_seconds": 35.03087591700023,
+            "llm_elapsed_seconds": 34.999111000000006,
+            "estimated_cost": null,
+            "engine": "llama.cpp",
+            "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+            "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+            "model_repository": "ai/qwen2.5",
+            "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+            "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+            "model_license": "Apache-2.0",
+            "generation_schema_sha256": "e3408500417bf8e4a8ede5832ab5f265210d61b0a56b58fba65897e933315b47",
+            "system_fingerprint": "b11541-f2918cabb"
+          },
+          {
+            "provider": "local",
+            "model": "jobintel-qwen2.5-1.5b-f16",
+            "configuration": "local_normalized_v1",
+            "configuration_version": "1",
+            "prompt_version": "job-requirements-local-v2",
+            "prompt_sha256": "b7be8fc40a4d3b426fb3e73ab5979673e4917cfb4643a4d1b40871fd014dc9bf",
+            "schema_version": 2,
+            "schema_sha256": "99119940af706b4528f975fdb05986b13c9afa0264bb0c14a8d98a7e6864e554",
+            "taxonomy_sha256": "ea0d4749cce25febeac9c37e6c69d9bc414ecff5add30566abbf37febbdda0d3",
+            "normalization": true,
+            "execution_mode": "local-inference",
+            "source_sha256": "8b15eb3f2282c8d4fa65ae6d28f675566ffbde73bb2c7ec5585afc3bd596a73b",
+            "request_sha256": "f89f3565403d58c27235d1fb3e76f10bc931949d47aa534bf47b0710e382c251",
+            "request_parameters": {
+              "api": "chat_completions",
+              "max_tokens": 2048,
+              "temperature": 0,
+              "seed": 42,
+              "stream": false,
+              "timeout_seconds": 120.0
+            },
+            "response_model": "jobintel-qwen2.5-1.5b-f16",
+            "request_id": null,
+            "response_id": "chatcmpl-sG2ZMAj2AUywt6igOEdl7ZraeLlGD3yc",
+            "attempts": [
+              {
+                "elapsed_seconds": 64.37527160600439,
+                "request_id": null,
+                "response_id": "chatcmpl-sG2ZMAj2AUywt6igOEdl7ZraeLlGD3yc",
+                "response_model": "jobintel-qwen2.5-1.5b-f16",
+                "system_fingerprint": "b11541-f2918cabb",
+                "usage": {
+                  "input_tokens": 2059,
+                  "output_tokens": 496,
+                  "total_tokens": 2555
+                },
+                "llm_elapsed_seconds": 64.36002400000001
+              }
+            ],
+            "attempt_count": 1,
+            "usage": {
+              "input_tokens": 2059,
+              "output_tokens": 496,
+              "total_tokens": 2555
+            },
+            "elapsed_seconds": 64.38762148699607,
+            "llm_elapsed_seconds": 64.36002400000001,
+            "estimated_cost": null,
+            "engine": "llama.cpp",
+            "engine_revision": "f2918cabbffe8abf8e2a90c1c089085fa116c2cf",
+            "engine_image": "ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd",
+            "model_repository": "ai/qwen2.5",
+            "model_revision": "sha256:b83c287163f67ba50ebebd583ae0f02fa3f9a8ebe5d4596c6d367460a75d88e6",
+            "model_weights_sha256": "b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee",
+            "model_license": "Apache-2.0",
+            "generation_schema_sha256": "793a982d13f8e73fc6cf63616f8cfd9058baa4e2c47f964cb1f58c5173410eab",
+            "system_fingerprint": "b11541-f2918cabb"
+          }
+        ],
+        "elapsed_seconds": 127.17442614599713,
+        "metrics": {
+          "true_positives": 1,
+          "predicted": 1,
+          "expected": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "type_accuracy": 0.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": 1.0,
+          "abstention_quality": 1.0,
+          "counts": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 2
+            },
+            "f1": {
+              "numerator": 2,
+              "denominator": 3
+            },
+            "type_accuracy": {
+              "numerator": 0,
+              "denominator": 1
+            },
+            "evidence_accuracy": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "unsupported_span_rate": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          },
+          "type_confusion_matrix": {
+            "MUST": {
+              "MUST": 0,
+              "PREFERRED": 1,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "PREFERRED": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "EXPERIENCE": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "OTHER": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            }
+          },
+          "must_preferred_accuracy": {
+            "numerator": 0,
+            "denominator": 1,
+            "value": 0.0
+          },
+          "reviewed_metrics": {
+            "semantic_unsupported_claim_rate": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "semantic_unreviewable_span_rate": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "abstention_precision": {
+              "numerator": 11,
+              "denominator": 11,
+              "value": 1.0
+            },
+            "abstention_recall": {
+              "numerator": 11,
+              "denominator": 11,
+              "value": 1.0
+            },
+            "correct_unknown_rate": {
+              "numerator": 11,
+              "denominator": 11,
+              "value": 1.0
+            },
+            "matching_agreement": {
+              "numerator": 2,
+              "denominator": 2,
+              "value": 1.0
+            },
+            "false_covered_rate": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "filters_precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "filters_recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "responsibilities_precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "responsibilities_recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            }
+          }
+        },
+        "succeeded": 1,
+        "failed": 2,
+        "metric_scope": "successful cases only; failures retained separately; matching uses gold requirements and sourced candidate",
+        "tokens": 7112,
+        "usage": {
+          "input_tokens": 6178,
+          "output_tokens": 934,
+          "total_tokens": 7112
+        },
+        "estimated_cost": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 0,
+        "pricing": null,
+        "provider_elapsed_seconds": 127.14004418699187,
+        "llm_elapsed_seconds": 127.03444100000002
+      }
+    ],
+    "code_provenance": {
+      "source_sha256": "f43e02fe9193d63009febd3b85e00e813844ae9afbe50e742b6372b2ec009db8",
+      "git_commit": "568a1914132a06d389ff0afb1c202e380d17cfde",
+      "git_dirty": false
+    }
+  },
+  "engine_cgroup_peak_bytes": 708747264,
+  "warm_stack_start_seconds": 16.24495130500145,
+  "passed": 4,
+  "failed": 0,
+  "skipped": 0,
+  "cache_preserved": true
+}
