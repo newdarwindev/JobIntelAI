@@ -179,14 +179,15 @@ build/profile/trust inputs participate in the recording source hash.
 
 `/ui/config` version 1 is the public capability contract: execution label/mode,
 model identity, supported raw/normalized configuration IDs, selected default,
-readiness, request time budgets and available actions. Browser controls derive
-options and budgets from this response and send only supported IDs. Fixture and
+readiness, request time budgets and available actions. Browser controls and sidebar/header execution labels derive
+options, identity and budgets from this response and send only supported IDs. Fixture and
 emulator labels distinguish authored replay from actual local CPU inference and
 explicit hosted OpenAI. Hosted readiness is unverified until a separately authorized
 call; a fake HTTP contract test covers hosted controls without making a paid call.
 No hosted credentials or endpoints are returned. Unavailable local/emulator services
 disable extraction/evaluation, preserve manual capture and historical results, and
-recover through Refresh provider status. Engine time and tokens appear only when
+recover through Refresh provider status. Failure/status refresh updates availability
+without replacing unsaved source text or the selected import format. Engine time and tokens appear only when
 supplied; replay/emulator measurements stay unavailable.
 
 UI09–UI11 use separate normal APIs on scoped migrated PostgreSQL databases, with

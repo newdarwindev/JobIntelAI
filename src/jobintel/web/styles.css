@@ -8,3 +8,5 @@
 .table-wrap{max-width:100%}
 td small{overflow-wrap:anywhere}
 @media(max-width:680px){.table-wrap{margin:0;padding:0}}
+
+.sidebar-note[data-readiness="unavailable"] .online-dot,.sidebar-note[data-readiness="unverified"] .online-dot{background:currentColor;opacity:.6}

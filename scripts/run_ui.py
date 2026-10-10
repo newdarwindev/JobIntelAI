@@ -15,6 +15,8 @@ from scripts.responses_environment import emulator_environment, request, write_e
 
 
 def main():
+    # Validate fixture declarations before starting costly provider services.
+    subprocess.run(["npx", "playwright", "test", "--list", *sys.argv[1:]], check=True)
     with TemporaryDirectory(prefix="jobintel-browser-services-") as directory:
         with (
             fixture_environment(directory) as fixtures,

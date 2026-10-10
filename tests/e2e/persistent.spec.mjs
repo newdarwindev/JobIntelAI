@@ -21,7 +21,7 @@ async function pipeline({page,request},info,mode){
   expect(config.actions.samples).toBe(false);expect(config.actions.reset).toBe(false);
   expect((await request.get(service.base+'/ui/fixtures')).status()).toBe(404);
   expect((await request.post(service.base+'/ui/reset')).status()).toBe(405);
-  await open(page,service,'registry');await expect(page.locator('.mode-badge')).toHaveText(config.execution_label.toUpperCase());
+  await open(page,service,'registry');await expect(page.locator('.mode-badge')).toHaveText(config.execution_label.toUpperCase());await expect(page.locator('.sidebar-note')).toContainText(config.execution_label);
   await expect(page.getByRole('button',{name:'Load sample registry'})).toHaveCount(0);
   await page.getByLabel('Import format').selectOption('json');
   await page.getByLabel('Registry content').fill(JSON.stringify([{job_id:id,company:`Authored ${id}`,role:'Engineer',official_url:`${info.project.name==='mobile-chromium'?'http':'https'}://example.com/${mode==='fixture'?'text':'unseen'}`} ]));
@@ -44,7 +44,7 @@ async function pipeline({page,request},info,mode){
   const revision=JSON.parse(await page.evaluate(()=>localStorage.getItem('jobintel-selected-revision')));
   await page.reload();await expect(page.locator('#main')).toContainText(revision.profile_revision_id);
   await page.getByRole('button',{name:'Match selected posting',exact:true}).click();await expect(page.locator('#main')).toContainText('COVERED');
-  const matches=await downloadJson(page,'Export matches JSON');expect(matches.profile_revision_id).toBe(revision.profile_revision_id);expect(matches.matches.map(m=>m.requirement_id).sort()).toEqual(saved.requirements.map(r=>r.requirement_id).sort());
+  const matches=await downloadJson(page,'Export matches JSON');expect(matches.profile_revision_id).toBe(revision.profile_revision_id);expect(matches.matches.map(m=>m.requirement_id).sort()).toEqual(exported.rows.map(r=>r.requirement_id).sort());
   await open(page,service,'analytics',id);const analytics=await json(request,service,'/analytics/skills');
   await expect(page.locator('#main')).toContainText(`N = ${analytics.N}`);
   const corpus=await downloadJson(page,'Export corpus JSON');expect(corpus.N).toBe(analytics.N);expect(corpus.selection.profile_revision_id).toBe(revision.profile_revision_id);expect(corpus.jobs.map(j=>j.job_id)).toContain(id);
@@ -82,10 +82,13 @@ test('UI10 | Normal PostgreSQL Responses contract pipeline and provider failure 
   const ctx={page,request};
   const {service,id,saved}=await pipeline(ctx,info,'emulator');
   await open(ctx.page,service,'workbench',id);
+  await ctx.page.getByLabel('Posting source').fill('Authored unsaved provider recovery text.');
   for(const scenario of ['refusal','invalid_evidence','malformed_json']){
     expect((await ctx.request.post(service.control_base+'/control',{headers:{Authorization:'Bearer jobintel-contract-only'},data:{scenario}})).ok()).toBeTruthy();
     await ctx.page.getByRole('button',{name:'Extract requirements',exact:true}).click();await expect(ctx.page.locator('#notice')).toContainText(scenario==='malformed_json'?'malformed_json':scenario);
     expect((await json(ctx.request,service,`/jobs/${id}`)).extraction.run_id).toBe(saved.run_id);
+    await expect(ctx.page.getByLabel('Posting source')).toHaveValue('Authored unsaved provider recovery text.');
+    const diagnostics=await (await ctx.request.get(service.control_base+'/diagnostics')).json();expect(diagnostics.request_count).toBe(scenario==='malformed_json'?2:1);
   }
   await ctx.request.post(service.control_base+'/control',{headers:{Authorization:'Bearer jobintel-contract-only'},data:{scenario:'success'}});
   await evaluation(ctx.page,ctx.request,service,'emulator');
@@ -104,6 +107,8 @@ test('UI11 | Normal PostgreSQL CPU inference, measured evaluation and readiness 
     await ctx.page.getByRole('button',{name:'Extract requirements',exact:true}).click();await expect(ctx.page.locator('#notice')).toContainText('provider_failure');
     await expect(ctx.page.getByRole('button',{name:'Extract requirements',exact:true})).toBeDisabled();
     expect((await json(ctx.request,service,`/jobs/${id}`)).extraction.run_id).toBe(saved.run_id);
+    await expect(ctx.page.getByLabel('Posting source')).toHaveValue('Authored unsaved provider recovery text.');
+    const diagnostics=await (await ctx.request.get(service.control_base+'/diagnostics')).json();expect(diagnostics.request_count).toBe(scenario==='malformed_json'?2:1);
   }finally{expect(spawnSync('docker',['start',container],{encoding:'utf8'}).status).toBe(0);}
   await expect.poll(async()=> (await json(ctx.request,service,'/ui/config')).readiness,{timeout:120000}).toBe('ready');
   await ctx.page.getByRole('button',{name:'Refresh provider status',exact:true}).click();await expect(ctx.page.getByRole('button',{name:'Extract requirements',exact:true})).toBeEnabled();
