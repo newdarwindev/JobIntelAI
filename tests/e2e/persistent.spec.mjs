@@ -24,7 +24,7 @@ async function pipeline({page,request},info,mode){
   await open(page,service,'registry');await expect(page.locator('.mode-badge')).toHaveText(config.execution_label.toUpperCase());
   await expect(page.getByRole('button',{name:'Load sample registry'})).toHaveCount(0);
   await page.getByLabel('Import format').selectOption('json');
-  await page.getByLabel('Registry content').fill(JSON.stringify([{job_id:id,company:`Authored ${id}`,role:'Engineer',official_url:`https://example.com/${mode==='fixture'?'text':'unseen'}`} ]));
+  await page.getByLabel('Registry content').fill(JSON.stringify([{job_id:id,company:`Authored ${id}`,role:'Engineer',official_url:`${info.project.name==='mobile-chromium'?'http':'https'}://example.com/${mode==='fixture'?'text':'unseen'}`} ]));
   await page.getByRole('button',{name:'Import registry',exact:true}).click();await expect(page.locator('#notice')).toContainText('Imported 1');
   await open(page,service,'workbench',id);await page.getByRole('button',{name:'Try URL acquisition',exact:true}).click();
   await expect(page.locator('#notice')).toContainText('URL source saved');
