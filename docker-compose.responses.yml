@@ -1,6 +1,7 @@
 services:
   responses-emulator:
-    build: .
+    build:
+      context: .
     profiles: [contract-test]
     command: [python, -m, scripts.responses_emulator.server, --host, 0.0.0.0]
     ports: ["127.0.0.1:${JOBINTEL_RESPONSES_PORT:-0}:8033"]

@@ -14,6 +14,8 @@ python scripts/runtime.py reset --project jobintel-contract
 ```
 
 Stop preserves data; explicit reset removes only the named project's volumes.
+`--offline` builds all three application images from the prepared, pinned local
+wheel cache, including the emulator; prepare wheels as described in the README.
 The API remains at `http://127.0.0.1:8003`, without demo fixture/reset routes.
 Use the ordinary import → snapshot → extract endpoints with an authored source
 such as `data/sample_jobs/SYN-01.txt`. The API's extraction configuration is
