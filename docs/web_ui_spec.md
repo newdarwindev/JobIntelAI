@@ -186,3 +186,7 @@ labels identify fixture, contract, local CPU and hosted requests. The separate
 [local CPU service check](local_inference.md) runs actual unseen inference through
 the normal PostgreSQL API, matching/export and the fixed reviewed subset. These
 model results remain separate from the sixteen default sandbox videos.
+Model preparation must retain verified weights and license even when a weight
+download outlasts registry authorization: renew authorization between cache objects.
+This runtime boundary is covered by the cache tests and recording source hash;
+it does not introduce a browser credential flow.
