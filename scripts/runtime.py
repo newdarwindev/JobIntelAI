@@ -21,17 +21,24 @@ def existing_file(value, setting):
 
 
 def provider_environment(mode, environment):
-    if mode == "contract-test":
-        raise ValueError("contract-test requires the provider/origin services from issues #23/#25")
     if mode == "local-inference":
         raise ValueError("local-inference requires the inference engine and adapter from issue #24")
-    if mode == "openai":
+    if mode == "contract-test":
+        environment.update(
+            JOBINTEL_PROVIDER="openai",
+            JOBINTEL_CONFIGURATION="openai_normalized_v1",
+            JOBINTEL_OPENAI_MODEL="contract-schema-v2",
+            JOBINTEL_RESPONSES_MODE="emulator",
+            JOBINTEL_RESPONSES_ENDPOINT="http://responses-emulator:8033/v1/responses",
+        )
+    elif mode == "openai":
         if not environment.get("JOBINTEL_OPENAI_MODEL", "").strip():
             raise ValueError("openai requires JOBINTEL_OPENAI_MODEL")
         environment["JOBINTEL_OPENAI_KEY_FILE"] = existing_file(
             environment.get("JOBINTEL_OPENAI_KEY_FILE"), "JOBINTEL_OPENAI_KEY_FILE"
         )
         environment["JOBINTEL_PROVIDER"] = "openai"
+        environment["JOBINTEL_RESPONSES_MODE"] = "hosted"
         environment.setdefault("JOBINTEL_CONFIGURATION", "openai_normalized_v1")
     else:
         if mode == "dev" and environment.get("JOBINTEL_PROVIDER", "fixture") != "fixture":
@@ -85,6 +92,12 @@ def compose_command(args, *, configured=False):
             command += ["-f", "docker-compose.proxy.yml"]
         if args.mode in {"demo", "openai"}:
             command += ["-f", f"docker-compose.{args.mode}.yml"]
+        if args.mode == "contract-test":
+            command += ["-f", "docker-compose.responses.yml"]
+            if args.ca_bundle:
+                command += ["-f", "docker-compose.responses-proxy.yml"]
+    else:
+        command += ["-f", "docker-compose.responses.yml"]
     return command
 
 

@@ -52,7 +52,7 @@ jobs:
         run: |
           node scripts/check_ui_contract.mjs --coverage-only
           npm run test:recordings
-      - name: Verify all desktop/mobile workflows with authored HTTP/TLS acquisition services
+      - name: Verify all desktop/mobile workflows with HTTP/TLS origins and Responses emulator
         run: npm run test:ui
       - name: Collect only successful attempts and update README
         run: |
@@ -68,6 +68,7 @@ jobs:
             playwright-report/
             work/ui-results.json
             work/acquisition-browser-diagnostics.json
+            work/responses-browser-diagnostics.json
           retention-days: 30
           if-no-files-found: error
       - name: Upload verified README and successful recordings

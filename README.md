@@ -239,11 +239,12 @@ python scripts/runtime.py up --mode dev --project jobintel-dev \
 
 BuildKit mounts this CA only during pip installation. Compose also mounts it at
 runtime for verified HTTPS; the image contains neither the session CA nor keys.
-Do not disable TLS verification. `contract-test` and `local-inference` name required
-dependencies from [#23](https://github.com/newdarwindev/JobIntelAI/issues/23),
-[#25](https://github.com/newdarwindev/JobIntelAI/issues/25) and
-[#24](https://github.com/newdarwindev/JobIntelAI/issues/24) before starting Docker,
-so unavailable machinery cannot silently become fixture replay.
+Do not disable TLS verification. `contract-test` runs a real HTTP Responses emulator
+with the API and PostgreSQL, using a fixed development token and authored schema-v2
+responses. It requires no hosted credentials and records contract execution separately
+from model inference. See [runtime, scenarios and evidence](docs/responses_emulator.md).
+`local-inference` requires the engine and adapter from
+[#24](https://github.com/newdarwindev/JobIntelAI/issues/24).
 
 Run real-container persistence and mode-isolation checks without paid calls:
 

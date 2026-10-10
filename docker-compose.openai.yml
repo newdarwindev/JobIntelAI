@@ -3,6 +3,7 @@ services:
     profiles: [openai]
     environment:
       JOBINTEL_PROVIDER: openai
+      JOBINTEL_RESPONSES_MODE: hosted
       JOBINTEL_OPENAI_MODEL: ${JOBINTEL_OPENAI_MODEL:?Set an explicit OpenAI model}
       JOBINTEL_CONFIGURATION: ${JOBINTEL_CONFIGURATION:-openai_normalized_v1}
       OPENAI_API_KEY_FILE: /run/secrets/openai_api_key

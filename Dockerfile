@@ -10,5 +10,7 @@ RUN --mount=type=secret,id=proxy_ca \
 COPY alembic.ini ./
 COPY alembic ./alembic
 COPY data ./data
+COPY scripts/__init__.py ./scripts/__init__.py
+COPY scripts/responses_emulator ./scripts/responses_emulator
 RUN mkdir -p local_data
 CMD ["python", "-m", "jobintel.runtime", "--host", "0.0.0.0"]

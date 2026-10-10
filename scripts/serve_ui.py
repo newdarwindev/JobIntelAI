@@ -45,6 +45,10 @@ def main():
                 else None
             )
             app = create_app(root=ROOT / "data", demo=True, acquirer=fetcher)
+            if os.getenv("UI_RESPONSES_BASE"):
+                from scripts.responses_ui import install
+
+                install(app, os.environ["UI_RESPONSES_BASE"], ROOT / "data")
             if fixtures:
                 app.state.acquisition_mode = "fixture-policy-proxy"
 

@@ -14,6 +14,7 @@ from jobintel.experiment_corpus import FrozenCase, digest
 from jobintel.normalization import Taxonomy
 from jobintel.openai_transport import ProviderError
 from jobintel.provider_config import configuration_for, identity
+from jobintel.provider_execution import execution_mode
 from jobintel.providers import ProviderUnavailable, extract_result
 from jobintel.schemas import Extraction
 from jobintel.snapshots import GroundingError, content_hash, validate_grounding
@@ -200,7 +201,8 @@ def run_report(provider, root, configurations, *, dataset="fixture", pricing=Non
     for configuration in configurations:
         configuration_for(configuration, provider.name)
     model = getattr(provider, "model", None)
-    if pricing and (provider.name != "openai" or pricing.model != model):
+    mode = execution_mode(provider)
+    if pricing and (mode != "hosted" or pricing.model != model):
         raise ValueError("evaluation pricing must match the selected live model")
     started = perf_counter()
     report = {
@@ -210,6 +212,8 @@ def run_report(provider, root, configurations, *, dataset="fixture", pricing=Non
         "created_at": datetime.now(UTC).isoformat(),
         "mode": "fixture replay — plumbing regression, not live LLM quality"
         if provider.name == "fixture"
+        else "Responses contract emulator — authored replay, not model quality"
+        if mode == "emulator"
         else "live structured extraction — independently source-reviewed labels"
         if corpus
         else "live structured extraction — authored fixture labels",
@@ -227,7 +231,10 @@ def run_report(provider, root, configurations, *, dataset="fixture", pricing=Non
         records = configuration_records(provider, cases, configuration, corpus, taxonomy)
         result = {
             "configuration": configuration,
-            "identity": identity(provider.name, configuration, model, taxonomy),
+            "identity": {
+                **identity(provider.name, configuration, model, taxonomy),
+                "execution_mode": mode,
+            },
             "model_sha256": digest({"provider": provider.name, "model": model}),
             "configuration_sha256": digest(
                 configuration_for(configuration, provider.name).__dict__

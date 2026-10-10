@@ -6,7 +6,7 @@ from typing import Protocol
 from jobintel.config import openai_key
 from jobintel.normalization import Taxonomy
 from jobintel.openai_provider import OpenAIProvider, ProviderResult
-from jobintel.openai_transport import HttpOpenAITransport
+from jobintel.openai_transport import EMULATOR_TOKEN, HttpOpenAITransport
 from jobintel.provider_config import configuration_for, identity
 from jobintel.schemas import Extraction
 from jobintel.snapshots import content_hash, validate_grounding
@@ -80,14 +80,17 @@ def selected_provider(root, name=None, *, transport=None, model=None):
     if not model or not model.strip():
         raise ValueError("JOBINTEL_OPENAI_MODEL is required for OpenAI")
     if transport is None:
-        key = openai_key()
+        mode = os.getenv("JOBINTEL_RESPONSES_MODE", "hosted")
+        key = EMULATOR_TOKEN if mode == "emulator" else openai_key()
         try:
             timeout = float(os.getenv("JOBINTEL_OPENAI_TIMEOUT", "30"))
         except ValueError as error:
             raise ValueError("OpenAI timeout must be between 1 and 120 seconds") from error
         if not 1 <= timeout <= 120:
             raise ValueError("OpenAI timeout must be between 1 and 120 seconds")
-        transport = HttpOpenAITransport(key, timeout)
+        transport = HttpOpenAITransport(
+            key, timeout, mode=mode, endpoint=os.getenv("JOBINTEL_RESPONSES_ENDPOINT")
+        )
     return OpenAIProvider(transport, model, Taxonomy(root / "taxonomy.json"))
 
 

@@ -53,7 +53,6 @@ def test_empty_secret_file_fails_before_provider_requests(tmp_path, monkeypatch,
         ("openai", {}, "JOBINTEL_OPENAI_MODEL"),
         ("openai", {"JOBINTEL_OPENAI_MODEL": "synthetic"}, "JOBINTEL_OPENAI_KEY_FILE"),
         ("dev", {"JOBINTEL_PROVIDER": "openai"}, "--mode openai"),
-        ("contract-test", {}, "#23/#25"),
         ("local-inference", {}, "#24"),
     ],
 )
