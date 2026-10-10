@@ -31,7 +31,7 @@ concurrency:
 jobs:
   workflows:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 40
     env:
       UI_PYTHON: python
     steps:
@@ -52,7 +52,12 @@ jobs:
         run: |
           node scripts/check_ui_contract.mjs --coverage-only
           npm run test:recordings
-      - name: Verify all desktop/mobile journeys, service failures and local-control rendering
+      - name: Cache checksum-pinned licensed CPU weights
+        uses: actions/cache@v4
+        with:
+          path: local_data/models
+          key: qwen25-15-f16-b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee
+      - name: Verify sandbox and normal PostgreSQL desktop/mobile service journeys
         run: npm run test:ui
       - name: Collect only successful attempts and update README
         run: |
@@ -69,6 +74,8 @@ jobs:
             work/ui-results.json
             work/acquisition-browser-diagnostics.json
             work/responses-browser-diagnostics.json
+            work/persistent-browser-services.json
+            work/persistent-browser-local-evaluation.json
           retention-days: 30
           if-no-files-found: error
       - name: Upload verified README and successful recordings
@@ -87,7 +94,7 @@ jobs:
             '## Complete browser workflow evidence' \
             'Download the diagnostics artifact for the HTML report, videos, screenshots, and failure traces.' \
             'Only a fully passing suite produces the successful-web-ui-recordings artifact. It contains an updated README and desktop/mobile recordings for every specified journey.' \
-            'Actual CPU-model results are published by the separate Local CPU inference workflow; the default browser sandbox remains fixture/contract evidence.' \
+            'UI09/UI10/UI11 run normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual CPU inference. UI01-UI08 retain the explicit synthetic sandbox. Hosted controls use fast contract tests; no paid service is called.' \
             >> "$GITHUB_STEP_SUMMARY"
 
   publish-readme-recordings:

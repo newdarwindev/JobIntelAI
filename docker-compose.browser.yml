@@ -1,0 +1,12 @@
+# Normal API routes on scoped PostgreSQL, with an already-running authored gateway.
+services:
+  api:
+    command: [python, -m, scripts.serve_browser_api]
+    volumes:
+      - ./scripts:/app/scripts:ro
+      - ${JOBINTEL_BROWSER_TRUST_DIR:?Scoped browser fixture trust required}/ca.pem:/run/acquisition-ca.pem:ro
+    networks: [default, browser-fixtures]
+networks:
+  browser-fixtures:
+    external: true
+    name: ${JOBINTEL_BROWSER_FIXTURE_NETWORK:?Scoped browser fixture network required}

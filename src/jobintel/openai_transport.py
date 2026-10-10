@@ -97,7 +97,7 @@ class HttpOpenAITransport:
         if self.mode != "emulator":
             return True
         try:
-            with httpx.Client(timeout=1, trust_env=False) as client:
+            with httpx.Client(timeout=1, trust_env=False, transport=self._transport) as client:
                 response = client.get(self.endpoint.removesuffix("/v1/responses") + "/health")
             body = response.json()
             return (

@@ -118,11 +118,11 @@ an existing official URL. The UI shows 409 and the whole batch is absent, includ
 its earlier valid row. The saved registry entry remains available after reload (V01).
 
 `web_ui_workflows.json` is the machine-readable workflow inventory. Every ID maps
-to one complete test in `tests/e2e/workflows.spec.mjs` and runs on desktop Chromium
+to one complete test in `tests/e2e/*.spec.mjs` and runs on desktop Chromium
 and mobile Chromium. Unit/API regressions cover domain edge cases beneath these
 journeys; listing an existing S/V scenario here is traceability, not promotion of
-every target scenario. Passing journeys are executable acceptance evidence for the
-mock UI only. No skipped/xfail tests count as delivery.
+every target scenario. Passing journeys establish their labelled execution mode and persisted service behavior;
+fixture and emulator results do not establish model quality. No skipped/xfail tests count as delivery.
 
 `npm run test:ui` records **all** attempts. `npm run record:ui` refuses incomplete,
 failed, skipped, unmapped, or video-less suites; it selects only the successful
@@ -177,15 +177,43 @@ The OpenAI profile's mounted-key readiness check uses only a synthetic key and
 makes no upstream request; it does not establish paid-service availability. Runtime
 build/profile/trust inputs participate in the recording source hash.
 
-UI03 also checks local CPU configuration names and the execution badge using a
-labelled configuration-read rendering fixture. That browser segment makes no
-inference request. The workbench and evaluation controls use the selected
-provider's raw/normalized configuration pair; local requests allow its bounded
-CPU timeout and display measured engine timing only when supplied. Evaluation
-labels identify fixture, contract, local CPU and hosted requests. The separate
-[local CPU service check](local_inference.md) runs actual unseen inference through
-the normal PostgreSQL API, matching/export and the fixed reviewed subset. These
-model results remain separate from the sixteen default sandbox videos.
+`/ui/config` version 1 is the public capability contract: execution label/mode,
+model identity, supported raw/normalized configuration IDs, selected default,
+readiness, request time budgets and available actions. Browser controls derive
+options and budgets from this response and send only supported IDs. Fixture and
+emulator labels distinguish authored replay from actual local CPU inference and
+explicit hosted OpenAI. Hosted readiness is unverified until a separately authorized
+call; a fake HTTP contract test covers hosted controls without making a paid call.
+No hosted credentials or endpoints are returned. Unavailable local/emulator services
+disable extraction/evaluation, preserve manual capture and historical results, and
+recover through Refresh provider status. Engine time and tokens appear only when
+supplied; replay/emulator measurements stay unavailable.
+
+UI09–UI11 use separate normal APIs on scoped migrated PostgreSQL databases, with
+`demo=False`, no sample/reset controls and no fixture/reset routes. The runner starts
+an authored HTTP/verified HTTPS acquisition gateway, a separate Responses service
+and the checksum-pinned CPU engine. Each desktop/mobile journey imports a new job,
+acquires and saves a snapshot, extracts, verifies exact exported evidence, highlights
+a quote, saves/reloads a candidate revision, matches, exports and reloads analytics
+and evaluation. The fixture journey acquires a known synthetic body under a new job
+ID, then explicitly rejects unseen text while retaining its old run. The emulator
+and local journeys acquire the unseen 19-character `Python is required.` source;
+only the emulator has separately authored output for that source. Fixture replay
+remains unable to answer it. UI10 refusal, invalid evidence and malformed output
+originate in the provider process and preserve the previous run. UI11 actually runs
+CPU inference and reloads the persisted REV-01/REV-23/REV-25 evaluation created by
+that engine, including its failures and imperfect results. It stops/restarts the
+engine, checks readiness/action recovery, and retains extraction history.
+
+The twenty-two required videos comprise sixteen explicit sandbox attempts and
+six normal PostgreSQL attempts. Browser interception remains limited to the Unicode
+rendering read fixture and browser-to-API connection failure; normal journeys have
+no substituted API responses. Their service inventory, measured local evaluation
+and commit provenance are diagnostic artifacts. Disposable project credentials/DB
+URLs override inherited application settings, teardown removes only their newly
+created volumes, and the verified licensed model cache survives. See
+[local CPU measurement](local_inference.md). Paid hosted browser execution remains
+conditional on explicit authorization and is not included in these recordings.
 Model preparation must retain verified weights and license even when a weight
 download outlasts registry authorization: renew authorization between cache objects.
 This runtime boundary is covered by the cache tests and recording source hash;

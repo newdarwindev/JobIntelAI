@@ -37,7 +37,7 @@ class FixtureProvider:
         response = self.responses.get(content_hash(text))
         if response is None:
             raise ProviderUnavailable(
-                "fixture provider only supports bundled synthetic snapshots; explicitly select OpenAI for other inputs"
+                "fixture provider only supports bundled synthetic snapshots; select a configured local or hosted provider for other inputs"
             )
         if response.get("schema_version") != 2:
             raise ValueError("fixture responses require extraction schema v2")

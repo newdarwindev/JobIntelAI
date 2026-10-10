@@ -11,7 +11,7 @@ from pathlib import Path
 
 from jobintel.openai_transport import EMULATOR_MODEL, EMULATOR_TOKEN
 from jobintel.provider_config import PROMPT, strict_schema
-from jobintel.schemas import Extraction
+from jobintel.schemas import Extraction, Requirement
 from jobintel.snapshots import content_hash
 
 SCENARIOS = {
@@ -34,6 +34,21 @@ SCENARIOS = {
 class State:
     def __init__(self, root):
         self.responses = json.loads((root / "provider_responses.json").read_text())
+        # Separate authored contract input; fixture replay remains unable to answer it.
+        text = "Python is required."
+        self.responses[content_hash(text)] = Extraction(
+            requirements=[
+                Requirement(
+                    raw_text=text,
+                    normalized_skill_or_requirement="Python",
+                    skills=["Python"],
+                    requirement_type="MUST",
+                    category="backend",
+                    evidence={"start": 0, "end": len(text), "quote": text},
+                    confidence=0.8,
+                )
+            ]
+        ).model_dump(mode="json")
         self.lock = threading.Lock()
         self.scenario = "success"
         self.requests = []
