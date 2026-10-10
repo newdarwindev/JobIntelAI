@@ -50,6 +50,13 @@ npm run record:ui
 npm run check:ui
 ```
 
+The suite keeps the SQLite sandbox and also owns three disposable PostgreSQL
+APIs for fixture replay, the Responses emulator and actual CPU inference. Docker
+Compose is required. The licensed model cache downloads about 3 GB once, verifies
+its checksums on reuse, and survives teardown; the engine is limited to two CPUs
+and five GiB. No paid hosted call is made. Normal UI controls use `/ui/config` for
+supported configurations, execution identity, readiness and request time budgets.
+
 Local Playwright defaults to `.venv/bin/python`; set `UI_PYTHON=python` if using an
 activated environment elsewhere. `UI_BROWSER_PATH` can select a local Chromium
 binary. The [Actions workflow](.github/workflows/web-ui.yml) runs all journeys,
