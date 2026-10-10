@@ -68,7 +68,8 @@ async function evaluation(page,request,service,mode){
   else expect(report.mode).toContain(mode==='fixture'?'fixture':'emulator');
 }
 
-test('UI09 | Normal PostgreSQL fixture pipeline and unsupported-input recovery',async(ctx,info)=>{
+test('UI09 | Normal PostgreSQL fixture pipeline and unsupported-input recovery',async({page,request},info)=>{
+  const ctx={page,request};
   const {service,id,saved}=await pipeline(ctx,info,'fixture');
   await open(ctx.page,service,'workbench',id);await ctx.page.getByLabel('Posting source').fill('Python is required.');
   await ctx.page.getByRole('button',{name:'Save immutable snapshot',exact:true}).click();await expect(ctx.page.locator('#notice')).toContainText('saved');
@@ -77,7 +78,8 @@ test('UI09 | Normal PostgreSQL fixture pipeline and unsupported-input recovery',
   await evaluation(ctx.page,ctx.request,service,'fixture');
 });
 
-test('UI10 | Normal PostgreSQL Responses contract pipeline and provider failure history',async(ctx,info)=>{
+test('UI10 | Normal PostgreSQL Responses contract pipeline and provider failure history',async({page,request},info)=>{
+  const ctx={page,request};
   const {service,id,saved}=await pipeline(ctx,info,'emulator');
   await open(ctx.page,service,'workbench',id);
   for(const scenario of ['refusal','invalid_evidence','malformed_json']){
@@ -89,7 +91,8 @@ test('UI10 | Normal PostgreSQL Responses contract pipeline and provider failure 
   await evaluation(ctx.page,ctx.request,service,'emulator');
 });
 
-test('UI11 | Normal PostgreSQL CPU inference, measured evaluation and readiness recovery',async(ctx,info)=>{
+test('UI11 | Normal PostgreSQL CPU inference, measured evaluation and readiness recovery',async({page,request},info)=>{
+  const ctx={page,request};
   test.setTimeout(360000);
   const {service,id,saved}=await pipeline(ctx,info,'local');
   expect(saved.provenance.execution_mode).toBe('local-inference');expect(saved.provenance.model_weights_sha256).toHaveLength(64);
