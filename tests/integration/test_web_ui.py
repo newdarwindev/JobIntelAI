@@ -14,7 +14,7 @@ def test_ui_is_packaged_and_demo_reset_is_not_exposed(client):
         "demo": False,
         "provider": "fixture",
         "live_llm": False,
-        "acquisition_mode": "http",
+        "acquisition_mode": "auto",
     }
     assert client.get("/ui/fixtures").status_code == 404
     assert client.post("/ui/reset").status_code == 405

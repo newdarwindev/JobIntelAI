@@ -7,25 +7,32 @@ import select
 import socket
 import threading
 import time
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from http.server import ThreadingHTTPServer
 from urllib.parse import urlsplit
 
+from jobintel.egress_policy import CAPABILITY_PATH, ROUTE_HEADER, EgressPolicy
+from jobintel.egress_proxy import EgressHandler
+from jobintel.fetch_types import FetchError
 from scripts.acquisition_fixtures.origin import Diagnostics
 
 PIN = "93.184.216.34"
 HOSTS = {"example.com", "rebind.example.test", "wrong.example.test"}
 
 
-class ProxyHandler(BaseHTTPRequestHandler):
+class ProxyHandler(EgressHandler):
     protocol_version = "HTTP/1.1"
 
     def log_message(self, *_):
         pass
 
-    def answer(self, status, body=b""):
+    def answer(self, status, body=b"", error=None):
+        if not isinstance(body, bytes):
+            body = json.dumps(body).encode()
         self.send_response(status)
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Connection", "close")
+        if error:
+            self.send_header("JobIntel-Egress-Error", error)
         self.end_headers()
         self.wfile.write(body)
         self.close_connection = True
@@ -44,6 +51,8 @@ class ProxyHandler(BaseHTTPRequestHandler):
         return accepted
 
     def do_GET(self):
+        if self.path == CAPABILITY_PATH or self.headers.get(ROUTE_HEADER):
+            return super().do_GET()
         if self.path in {"/health", "/diagnostics"}:
             body = (
                 b"ok"
@@ -84,6 +93,8 @@ class ProxyHandler(BaseHTTPRequestHandler):
             self.close_connection = True
 
     def do_CONNECT(self):
+        if self.headers.get(ROUTE_HEADER):
+            return super().do_CONNECT()
         # Never resolve a CONNECT hostname. Only this exact pin is routable.
         if self.path != f"{PIN}:443":
             self.allowed(None, None)
@@ -102,6 +113,13 @@ class ProxyHandler(BaseHTTPRequestHandler):
                     break
         self.close_connection = True
 
+    def open_upstream(self, destination):
+        if destination.address != PIN or destination.host not in HOSTS:
+            raise FetchError("proxy_denied")
+        self.allowed(destination.address, destination.port, destination.host)
+        port = self.server.https_port if destination.scheme == "https" else self.server.http_port
+        return socket.create_connection((self.server.origin_host, port), timeout=3)
+
     def relay(self, source, upstream):
         try:
             part = source.recv(16384)
@@ -114,6 +132,8 @@ class ProxyHandler(BaseHTTPRequestHandler):
 
 
 def server(host, port, origin_host, http_port, https_port):
+    from scripts.acquisition_fixtures.resolution import FixtureResolver
+
     instance = ThreadingHTTPServer((host, port), ProxyHandler)
     instance.origin_host, instance.http_port, instance.https_port = (
         origin_host,
@@ -121,6 +141,9 @@ def server(host, port, origin_host, http_port, https_port):
         https_port,
     )
     instance.diagnostics = Diagnostics()
+    instance.policy = EgressPolicy(
+        HOSTS | {"private.example.test", "mixed.example.test"}, resolver=FixtureResolver(repeat=2)
+    )
     threading.Thread(target=instance.serve_forever, daemon=True).start()
     return instance
 

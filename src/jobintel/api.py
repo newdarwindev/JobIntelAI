@@ -88,14 +88,19 @@ def health(request: Request):
     except SQLAlchemyError as error:
         raise HTTPException(503, "database unavailable or migrations required") from error
     provider = request.app.state.provider
-    return {
-        "status": "ok",
-        "database": "ok",
-        "provider": provider.name,
-        "live_llm": provider.name == "openai",
-        "provider_ready": True,
-        "configuration": request.app.state.configuration,
-    }
+    acquisition = request.app.state.acquirer.readiness()
+    return JSONResponse(
+        {
+            "status": "ok" if acquisition["ready"] else "not_ready",
+            "database": "ok",
+            "provider": provider.name,
+            "live_llm": provider.name == "openai",
+            "provider_ready": True,
+            "configuration": request.app.state.configuration,
+            "acquisition": acquisition,
+        },
+        status_code=200 if acquisition["ready"] else 503,
+    )
 
 
 @router.post("/jobs/import")
@@ -259,6 +264,8 @@ def create_app(
     app.state.acquirer = (
         acquirer if acquirer is not None else synthetic_acquirer(root) if demo else HttpAcquirer()
     )
+    if not demo:
+        app.state.acquisition_mode = getattr(app.state.acquirer.transport, "mode", "injected")
     if demo and app.state.provider.name != "fixture":
         raise ValueError("the synthetic demo requires fixture provider")
     app.include_router(router)

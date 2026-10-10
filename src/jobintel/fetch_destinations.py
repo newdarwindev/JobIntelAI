@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from urllib.parse import quote, urlsplit, urlunsplit
 
 from jobintel.fetch_types import FetchError
-from jobintel.registry import normalize_url
+from jobintel.url_identity import normalize_url
 
 TRANSITION_NETWORKS = [
     ipaddress.ip_network(value)
@@ -101,6 +101,8 @@ class Destination:
     port: int
     address: str
     scheme: str
+    route: str | None = None
+    proxy: tuple | None = None
 
     @property
     def authority(self):

@@ -30,7 +30,7 @@ def main():
                     "commit": subprocess.check_output(
                         ["git", "rev-parse", "HEAD"], text=True
                     ).strip(),
-                    "transport": "production HTTP/TLS via exact-pin Compose proxy",
+                    "transport": "production policy-proxy via trusted Compose DNS/pinning gateway",
                     "diagnostics": fixtures["diagnostics"](),
                 }
                 output.write_text(json.dumps(evidence, indent=2) + "\n")

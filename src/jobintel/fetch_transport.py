@@ -2,6 +2,7 @@
 
 import http.client
 import ipaddress
+import os
 import socket
 import ssl
 import threading
@@ -9,8 +10,10 @@ import time
 from urllib.parse import urlsplit, urlunsplit
 from urllib.request import getproxies, proxy_bypass_environment
 
-from jobintel.fetch_destinations import DNSResolver
+from jobintel.egress_policy import ROUTE_HEADER
+from jobintel.fetch_destinations import Destination, DNSResolver, resolve_destination
 from jobintel.fetch_types import FetchError
+from jobintel.policy_proxy_client import capability, policy_destination, rpc_failure
 
 
 def configured_proxy(destination, proxies):
@@ -89,14 +92,21 @@ class PinnedConnection(http.client.HTTPConnection):
         return str(ipaddress.ip_address(addresses[0])), self.proxy[1]
 
     def tunnel(self):
-        authority = self.destination.pinned_authority
+        authority = (
+            f"{self.destination.authority}:443"
+            if self.destination.route
+            else self.destination.pinned_authority
+        )
+        route = f"{ROUTE_HEADER}: {self.destination.route}\r\n" if self.destination.route else ""
         self.sock.sendall(
-            f"CONNECT {authority} HTTP/1.1\r\nHost: {authority}\r\n\r\n".encode("ascii")
+            f"CONNECT {authority} HTTP/1.1\r\nHost: {authority}\r\n{route}\r\n".encode("ascii")
         )
         response = http.client.HTTPResponse(self.sock, method="CONNECT")
         try:
             response.begin()
             if response.status != 200:
+                if self.destination.route:
+                    rpc_failure({"code": response.getheader("JobIntel-Egress-Error")})
                 raise FetchError("proxy_denied")
         finally:
             response.close()
@@ -145,17 +155,73 @@ class TransportResponse:
 
 
 class HttpTransport:
-    def __init__(self, *, proxies=None, context=None, proxy_resolver=None):
+    def __init__(self, *, proxies=None, context=None, proxy_resolver=None, mode=None):
         self.proxies = proxies
         self.proxy_resolver = proxy_resolver
+        self.mode = mode or os.getenv("JOBINTEL_ACQUISITION_MODE", "auto")
+        if self.mode not in {"auto", "direct", "pinned-proxy", "policy-proxy"}:
+            raise ValueError("unsupported JOBINTEL_ACQUISITION_MODE")
         self.context = context or ssl.create_default_context()
+        if context is None and os.getenv("JOBINTEL_ACQUISITION_CA_FILE"):
+            self.context.load_verify_locations(os.environ["JOBINTEL_ACQUISITION_CA_FILE"])
         if not self.context.check_hostname or self.context.verify_mode != ssl.CERT_REQUIRED:
             raise ValueError("acquisition requires verified TLS")
 
-    def get(self, destination, policy, remaining):
-        started = time.monotonic()
+    def selected_proxy(self, destination):
         proxies = getproxies() if self.proxies is None else self.proxies
         proxy = configured_proxy(destination, proxies)
+        if (self.mode == "direct" and proxy) or (
+            self.mode in {"pinned-proxy", "policy-proxy"} and not proxy
+        ):
+            raise FetchError("proxy_capability", 503)
+        return proxy
+
+    def resolve(self, url, resolver, timeout):
+        # Inspect routing before destination DNS; unsupported modes fail before origin traffic.
+        parsed = urlsplit(url)
+        hint = Destination(
+            url,
+            parsed.hostname,
+            parsed.port or (443 if parsed.scheme == "https" else 80),
+            "",
+            parsed.scheme,
+        )
+        proxy = self.selected_proxy(hint)
+        if self.mode == "policy-proxy":
+            if hint.port != (443 if hint.scheme == "https" else 80):
+                raise FetchError("invalid_url", 422)
+            return policy_destination(url, proxy, timeout, self.proxy_resolver)
+        return resolve_destination(url, resolver, timeout)
+
+    def readiness(self):
+        try:
+            for scheme in ("http", "https"):
+                hint = Destination(
+                    f"{scheme}://readiness.invalid/",
+                    "readiness.invalid",
+                    443 if scheme == "https" else 80,
+                    "",
+                    scheme,
+                )
+                proxy = self.selected_proxy(hint)
+                if self.mode == "policy-proxy":
+                    capability(proxy, 3, self.proxy_resolver)
+            return {
+                "ready": True,
+                "mode": self.mode,
+                "destination_check": "per-request",
+                "local_destination_dns": self.mode != "policy-proxy",
+            }
+        except FetchError as error:
+            return {"ready": False, "mode": self.mode, "error": error.detail()}
+
+    def get(self, destination, policy, remaining):
+        started = time.monotonic()
+        proxy = self.selected_proxy(destination)
+        if (self.mode == "policy-proxy") != bool(destination.route):
+            raise FetchError("proxy_capability", 503)
+        if destination.route and proxy != destination.proxy:
+            raise FetchError("proxy_capability", 503)
         connection = PinnedConnection(
             destination, policy, remaining, proxy, self.context, self.proxy_resolver
         )
@@ -167,8 +233,17 @@ class HttpTransport:
             target = urlunsplit(("", "", parsed.path, parsed.query, ""))
             if proxy and destination.scheme == "http":
                 target = urlunsplit(
-                    ("http", destination.pinned_authority, parsed.path, parsed.query, "")
+                    (
+                        "http",
+                        destination.authority
+                        if destination.route
+                        else destination.pinned_authority,
+                        parsed.path,
+                        parsed.query,
+                        "",
+                    )
                 )
+            route = {ROUTE_HEADER: destination.route} if destination.route else {}
             connection.request(
                 "GET",
                 target,
@@ -178,9 +253,16 @@ class HttpTransport:
                     "Accept": "text/html, text/plain, application/xhtml+xml",
                     "Accept-Encoding": "gzip, deflate",
                     "Connection": "close",
+                    **(route if destination.scheme == "http" else {}),
                 },
             )
             response = connection.getresponse()
+            if (
+                destination.route
+                and destination.scheme == "http"
+                and response.getheader("JobIntel-Egress-Error")
+            ):
+                rpc_failure({"code": response.getheader("JobIntel-Egress-Error")})
             return TransportResponse(
                 connection, response, sock, remaining - (time.monotonic() - started)
             )

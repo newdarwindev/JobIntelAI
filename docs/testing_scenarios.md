@@ -174,3 +174,11 @@ evaluation, failure recovery and accessible navigation journeys on desktop/mobil
 Chromium. The tests use the actual migrated API with the fixture provider. The
 README video manifest records executed successful attempts and their source hash.
 Implementation acceptance for persisted/live behavior is tracked in the linked issues.
+
+Proxy-capability regressions in `unit/test_egress_policy.py` cover complete DNS
+answers, single-use/expired pins, wrong host/scheme, peer mismatch, malformed
+contracts and routing refusals. The real wire matrix runs pinned-proxy and
+policy-proxy modes on SQLite/PostgreSQL. The container/browser API uses the
+policy gateway; CI separately verifies the immutable public SYN-01 URL through
+the production gateway with local client destination DNS forbidden. Unsupported
+inherited proxies have a distinct readiness/fetch refusal, not reachability evidence.

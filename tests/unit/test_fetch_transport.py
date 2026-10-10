@@ -3,6 +3,7 @@
 import io
 import socket
 import ssl
+from dataclasses import replace
 
 import pytest
 
@@ -261,3 +262,26 @@ def test_v05_deadline_guard_closes_socket_and_response_guards_cancel(monkeypatch
     ) as response:
         response.expire()
     assert response.guard.finished.is_set() and sock.shutdowns == [socket.SHUT_RDWR]
+
+
+def test_policy_proxy_requires_lease_and_keeps_control_header_outside_tls(monkeypatch):
+    proxy = ("proxy.internal", 8080)
+    transport = HttpTransport(
+        mode="policy-proxy",
+        proxies={"https": "http://proxy.internal:8080"},
+        context=VerifiedContext(),
+    )
+    with pytest.raises(FetchError) as error:
+        transport.get(destination(), FetchPolicy(), 10)
+    assert error.value.code == "proxy_capability"
+    packet = PACKET.replace(
+        b"Content-Type:", b"JobIntel-Egress-Error: blocked_destination\r\nContent-Type:"
+    )
+    sock = WireSocket(b"HTTP/1.1 200 Connection established\r\n\r\n", packet)
+    calls = install_socket(monkeypatch, sock)
+    leased = replace(destination(), route="a" * 64, proxy=proxy)
+    with transport.get(leased, FetchPolicy(), 10) as response:
+        assert response.read(100, 5) == b"Python"
+    assert len(calls) == 1 and b"CONNECT example.com:443" in sock.sent[0]
+    assert b"JobIntel-Route:" in sock.sent[0]
+    assert b"JobIntel-Route:" not in b"".join(sock.sent[1:])

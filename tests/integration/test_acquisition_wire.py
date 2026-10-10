@@ -10,8 +10,11 @@ from sqlalchemy.orm import Session
 
 from jobintel import db
 from jobintel.api import create_app
+from jobintel.egress_policy import EgressPolicy
 from jobintel.fetch_types import FetchPolicy
+from scripts.acquisition_fixtures.client import FixtureResolver
 from scripts.acquisition_fixtures.local import local_acquirer, local_fixtures
+from scripts.acquisition_fixtures.proxy import HOSTS
 from tests.integration.test_acquisition_boundary import SOURCE, register, row_counts
 from tests.integration.test_extraction_boundary_v2 import DATA, migrate
 from tests.integration.test_extraction_boundary_v2 import isolated_database as isolated_database
@@ -31,12 +34,19 @@ def http_requests(wire):
     )
 
 
-@pytest.fixture
-def wire_client(isolated_database, monkeypatch, wire):
+@pytest.fixture(params=["pinned-proxy", "policy-proxy"])
+def wire_client(isolated_database, monkeypatch, wire, request):
     migrate(isolated_database, "head", monkeypatch)
     policy = FetchPolicy(backoff=0.01, retry_after_cap=0.02)
+    wire["gateway"].policy = EgressPolicy(
+        HOSTS | {"private.example.test", "mixed.example.test"}, resolver=FixtureResolver(repeat=2)
+    )
     with TestClient(
-        create_app(isolated_database, DATA, acquirer=local_acquirer(wire, policy=policy))
+        create_app(
+            isolated_database,
+            DATA,
+            acquirer=local_acquirer(wire, policy=policy, mode=request.param),
+        )
     ) as client:
         yield client
 
@@ -167,16 +177,16 @@ def test_v03_private_mixed_and_rebinding_fail_before_target_http(wire_client, wi
 def test_v03_v07_untrusted_tls_wrong_hostname_and_proxy_denial_send_no_origin_http(
     wire_client, wire, trusted, host, code
 ):
-    wire_client.app.state.acquirer = local_acquirer(wire, trusted=trusted)
+    mode = wire_client.app.state.acquirer.transport.mode
+    wire_client.app.state.acquirer = local_acquirer(wire, trusted=trusted, mode=mode)
     register(wire_client, url=f"https://{host}/authored-final")
     before = http_requests(wire)
     proxy_before = len(wire["proxy_diagnostics"].snapshot()["events"])
     response = wire_client.post("/jobs/fetched/fetch")
     assert response.status_code == 502 and response.json()["detail"]["code"] == code
-    assert (
-        http_requests(wire) == before
-        and len(wire["proxy_diagnostics"].snapshot()["events"]) - proxy_before == 1
-    )
+    assert http_requests(wire) == before and len(
+        wire["proxy_diagnostics"].snapshot()["events"]
+    ) - proxy_before == (0 if mode == "policy-proxy" and host == "denied.example.test" else 1)
     assert row_counts(wire_client) == [0, 0, 1]
 
 
@@ -188,7 +198,8 @@ def test_v03_v07_untrusted_tls_wrong_hostname_and_proxy_denial_send_no_origin_ht
     ],
 )
 def test_v05_real_slow_chunk_stream_respects_read_and_total_budget(wire_client, wire, policy, code):
-    wire_client.app.state.acquirer = local_acquirer(wire, policy=policy)
+    mode = wire_client.app.state.acquirer.transport.mode
+    wire_client.app.state.acquirer = local_acquirer(wire, policy=policy, mode=mode)
     register(wire_client, url="https://example.com/slow")
     started = time.monotonic()
     response = wire_client.post("/jobs/fetched/fetch")

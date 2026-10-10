@@ -178,7 +178,7 @@ def main():
                 env=environment,
                 check=True,
             )
-            assert request(args.port, "/ui/config")["acquisition_mode"] == "fixture-http"
+            assert request(args.port, "/ui/config")["acquisition_mode"] == "fixture-policy-proxy"
             success_cases(args.port, results)
             failure_cases(args.port, results)
             negative_cases(args.port, project, trust, results)
@@ -201,7 +201,7 @@ def main():
                     "completed": failure is None,
                     "failure_kind": failure,
                     "database": "PostgreSQL",
-                    "transport": "production HttpTransport via exact-pin proxy; verified scoped CA",
+                    "transport": "production policy-proxy; gateway DNS/pinning leases; verified scoped CA",
                     "commit": subprocess.check_output(
                         ["git", "rev-parse", "HEAD"], text=True
                     ).strip(),
