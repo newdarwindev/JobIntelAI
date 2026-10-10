@@ -1,0 +1,41 @@
+services:
+  model-check:
+    build: .
+    profiles: [local-inference]
+    command: [python, -m, scripts.local_model, --cache, /models, --offline]
+    volumes:
+      - ${JOBINTEL_LOCAL_MODEL_CACHE:-./local_data/models}:/models
+    networks: [inference]
+    mem_limit: 256m
+    cpus: 1
+  llama-cpp:
+    image: ghcr.io/ggml-org/llama.cpp@sha256:bf3da52e92c083472b3d1c9f9da081f423ab9def95a87ec4bba51940382d75fd
+    profiles: [local-inference]
+    command: [--model, /models/qwen2.5-1.5b-instruct-f16.gguf, --alias, jobintel-qwen2.5-1.5b-f16, --host, 0.0.0.0, --port, "8080", --ctx-size, "8192", --parallel, "1", --threads, "2", --threads-batch, "2", --n-gpu-layers, "0", --no-context-shift, --log-disable]
+    volumes:
+      - ${JOBINTEL_LOCAL_MODEL_CACHE:-./local_data/models}:/models:ro
+    networks: [inference]
+    mem_limit: 5g
+    cpus: 2
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, http://127.0.0.1:8080/health]
+      interval: 2s
+      timeout: 2s
+      retries: 90
+    depends_on:
+      model-check:
+        condition: service_completed_successfully
+  api:
+    profiles: [local-inference]
+    networks: [default, inference]
+    environment:
+      JOBINTEL_PROVIDER: local
+      JOBINTEL_CONFIGURATION: local_normalized_v1
+      JOBINTEL_LOCAL_ENDPOINT: http://llama-cpp:8080/v1/chat/completions
+      JOBINTEL_LOCAL_TIMEOUT: ${JOBINTEL_LOCAL_TIMEOUT:-120}
+    depends_on:
+      llama-cpp:
+        condition: service_healthy
+networks:
+  inference:
+    internal: true

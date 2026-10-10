@@ -22,7 +22,7 @@ def ui_config(request: Request):
         "demo": request.app.state.demo,
         "provider": provider.name,
         "execution_mode": execution_mode(provider),
-        "live_llm": execution_mode(provider) == "hosted",
+        "live_llm": execution_mode(provider) in {"hosted", "local-inference"},
         "acquisition_mode": getattr(
             request.app.state, "acquisition_mode", "synthetic" if request.app.state.demo else "http"
         ),

@@ -11,5 +11,7 @@ COPY alembic ./alembic
 COPY data ./data
 COPY scripts/__init__.py ./scripts/__init__.py
 COPY scripts/responses_emulator ./scripts/responses_emulator
+COPY scripts/local_model.py ./scripts/local_model.py
+COPY scripts/local_evaluation.py ./scripts/local_evaluation.py
 RUN mkdir -p local_data
 CMD ["python", "-m", "jobintel.runtime", "--host", "0.0.0.0"]

@@ -193,3 +193,15 @@ recovery. UI07 uses that HTTP service for provider failures; all sixteen journey
 record successful desktop/mobile evidence. No emulator output establishes inference
 quality. Configuration guards prevent forwarding hosted secrets to local endpoints.
 See [the emulator contract](responses_emulator.md).
+
+Local inference boundary tests in `unit/test_local_provider.py`,
+`unit/test_local_model_cache.py` and `integration/test_local_boundary.py` use
+authored fake Chat Completions HTTP for fast schema/Unicode, model identity,
+secret isolation, bounded retries, cache integrity and append-only persistence
+checks on migrated SQLite/PostgreSQL. Actual model evidence comes from
+`python -m scripts.local_smoke`: an unseen authored input through the normal
+PostgreSQL API, matching/analytics/export, the frozen REV-01/REV-23/REV-25 reviewed
+subset, readiness failure, stop/recreation and persistent cache/history. Model
+errors remain separate from service-check counts. See [runtime and measurement
+details](local_inference.md). UI03's labelled configuration rendering check makes
+no model request; all sixteen sandbox journeys still record passing attempts.

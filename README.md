@@ -243,8 +243,11 @@ Do not disable TLS verification. `contract-test` runs a real HTTP Responses emul
 with the API and PostgreSQL, using a fixed development token and authored schema-v2
 responses. It requires no hosted credentials and records contract execution separately
 from model inference. See [runtime, scenarios and evidence](docs/responses_emulator.md).
-`local-inference` requires the engine and adapter from
-[#24](https://github.com/newdarwindev/JobIntelAI/issues/24).
+`local-inference` starts checksum-pinned Qwen2.5-1.5B CPU inference with an internal
+llama.cpp service and a persistent licensed model cache. Run
+`python scripts/runtime.py up --mode local-inference --project jobintel-local`.
+See [hardware, protocol, cache and measured evaluation](docs/local_inference.md);
+local model errors remain explicit and never fall back to replay.
 
 Run real-container persistence and mode-isolation checks without paid calls:
 

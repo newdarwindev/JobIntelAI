@@ -4,6 +4,7 @@ import argparse
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 from urllib.parse import quote
 
@@ -22,8 +23,16 @@ def existing_file(value, setting):
 
 def provider_environment(mode, environment):
     if mode == "local-inference":
-        raise ValueError("local-inference requires the inference engine and adapter from issue #24")
-    if mode == "contract-test":
+        environment.update(
+            JOBINTEL_PROVIDER="local",
+            JOBINTEL_CONFIGURATION="local_normalized_v1",
+            JOBINTEL_LOCAL_MODEL_CACHE=str(
+                Path(environment.get("JOBINTEL_LOCAL_MODEL_CACHE") or "local_data/models")
+                .expanduser()
+                .resolve()
+            ),
+        )
+    elif mode == "contract-test":
         environment.update(
             JOBINTEL_PROVIDER="openai",
             JOBINTEL_CONFIGURATION="openai_normalized_v1",
@@ -54,16 +63,19 @@ def validate_configuration(environment):
     configurations = {
         "fixture": {"fixture_raw", "fixture_normalized"},
         "openai": {"openai_structured_v1", "openai_normalized_v1"},
+        "local": {"local_structured_v1", "local_normalized_v1"},
     }
     configuration = environment.get("JOBINTEL_CONFIGURATION")
     if configuration and configuration not in configurations[provider]:
         raise ValueError("JOBINTEL_CONFIGURATION must match the explicitly selected provider")
+    setting = "JOBINTEL_LOCAL_TIMEOUT" if provider == "local" else "JOBINTEL_OPENAI_TIMEOUT"
+    limit = 600 if provider == "local" else 120
     try:
-        timeout = float(environment.get("JOBINTEL_OPENAI_TIMEOUT", "30"))
+        timeout = float(environment.get(setting, "120" if provider == "local" else "30"))
     except ValueError:
-        raise ValueError("JOBINTEL_OPENAI_TIMEOUT must be between 1 and 120 seconds") from None
-    if not 1 <= timeout <= 120:
-        raise ValueError("JOBINTEL_OPENAI_TIMEOUT must be between 1 and 120 seconds")
+        raise ValueError(f"{setting} must be between 1 and {limit} seconds") from None
+    if not 1 <= timeout <= limit:
+        raise ValueError(f"{setting} must be between 1 and {limit} seconds")
 
 
 def compose_environment(args):
@@ -80,24 +92,48 @@ def compose_environment(args):
     return environment
 
 
+def provider_files(args):
+    names = {
+        "demo": "demo",
+        "openai": "openai",
+        "contract-test": "responses",
+        "local-inference": "local",
+    }
+    name = names.get(args.mode)
+    if not name:
+        return []
+    files = [f"docker-compose.{name}.yml"]
+    if args.offline and name == "local":
+        files.append("docker-compose.local-offline.yml")
+    if args.ca_bundle and name in {"responses", "local"}:
+        files.append(f"docker-compose.{name}-proxy.yml")
+    return files
+
+
 def compose_command(args, *, configured=False):
     command = ["docker", "compose", "--project-name", args.project, "-f", "docker-compose.yml"]
-    if configured:
-        command += ["--profile", args.mode]
-        if args.offline:
-            if not list((ROOT / "build/wheels").glob("*.whl")):
-                raise ValueError("--offline requires prepared wheels in build/wheels; see README")
-            command += ["-f", "docker-compose.offline.yml"]
-        if args.ca_bundle:
-            command += ["-f", "docker-compose.proxy.yml"]
-        if args.mode in {"demo", "openai"}:
-            command += ["-f", f"docker-compose.{args.mode}.yml"]
-        if args.mode == "contract-test":
-            command += ["-f", "docker-compose.responses.yml"]
-            if args.ca_bundle:
-                command += ["-f", "docker-compose.responses-proxy.yml"]
-    else:
-        command += ["-f", "docker-compose.responses.yml", "--profile", "contract-test"]
+    if not configured:
+        return [
+            *command,
+            "-f",
+            "docker-compose.responses.yml",
+            "-f",
+            "docker-compose.local.yml",
+            "--profile",
+            "contract-test",
+            "--profile",
+            "local-inference",
+        ]
+    command += ["--profile", args.mode]
+    files = []
+    if args.offline:
+        if not list((ROOT / "build/wheels").glob("*.whl")):
+            raise ValueError("--offline requires prepared wheels in build/wheels; see README")
+        files.append("docker-compose.offline.yml")
+    if args.ca_bundle:
+        files.append("docker-compose.proxy.yml")
+    for file in [*files, *provider_files(args)]:
+        command += ["-f", file]
     return command
 
 
@@ -110,6 +146,17 @@ def execute(args):
     environment = compose_environment(args) if configured else dict(os.environ)
     command = compose_command(args, configured=configured)
     if configured:
+        if args.mode == "local-inference":
+            preparation = [
+                sys.executable,
+                "-m",
+                "scripts.local_model",
+                "--cache",
+                environment["JOBINTEL_LOCAL_MODEL_CACHE"],
+            ]
+            if args.offline:
+                preparation.append("--offline")
+            subprocess.run(preparation, env=environment, check=True)
         command += ["up", "-d", "--wait", "--wait-timeout", str(args.wait_timeout)]
         command += ["--no-build" if args.no_build else "--build"]
     elif args.action == "status":

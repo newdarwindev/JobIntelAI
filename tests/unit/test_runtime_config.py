@@ -53,7 +53,6 @@ def test_empty_secret_file_fails_before_provider_requests(tmp_path, monkeypatch,
         ("openai", {}, "JOBINTEL_OPENAI_MODEL"),
         ("openai", {"JOBINTEL_OPENAI_MODEL": "synthetic"}, "JOBINTEL_OPENAI_KEY_FILE"),
         ("dev", {"JOBINTEL_PROVIDER": "openai"}, "--mode openai"),
-        ("local-inference", {}, "#24"),
     ],
 )
 def test_missing_runtime_prerequisite_never_starts_docker(mode, environment, expected, monkeypatch):
@@ -71,6 +70,25 @@ def test_demo_never_inherits_live_provider_configuration():
         "fixture",
         "fixture_normalized",
     )
+
+
+def test_local_mode_uses_pinned_configuration_and_scoped_cleanup(tmp_path):
+    environment = {
+        "JOBINTEL_PROVIDER": "openai",
+        "JOBINTEL_CONFIGURATION": "fixture_raw",
+        "OPENAI_API_KEY": "authored-secret",
+        "JOBINTEL_LOCAL_MODEL_CACHE": str(tmp_path),
+    }
+    selected = driver.provider_environment("local-inference", environment)
+    assert selected["JOBINTEL_PROVIDER"] == "local"
+    assert selected["JOBINTEL_CONFIGURATION"] == "local_normalized_v1"
+    assert selected["JOBINTEL_LOCAL_MODEL_CACHE"] == str(tmp_path)
+    args = SimpleNamespace(
+        mode="local-inference", project="jobintel-local-scoped", offline=False, ca_bundle=None
+    )
+    assert "docker-compose.local.yml" in driver.compose_command(args, configured=True)
+    cleanup = driver.compose_command(args)
+    assert "docker-compose.local.yml" in cleanup and "docker-compose.responses.yml" in cleanup
 
 
 def test_reset_without_explicit_project_cannot_delete_any_volumes(monkeypatch):

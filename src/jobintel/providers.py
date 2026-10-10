@@ -4,6 +4,8 @@ from pathlib import Path
 from typing import Protocol
 
 from jobintel.config import openai_key
+from jobintel.local_provider import LocalProvider
+from jobintel.local_transport import HttpLocalTransport
 from jobintel.normalization import Taxonomy
 from jobintel.openai_provider import OpenAIProvider, ProviderResult
 from jobintel.openai_transport import EMULATOR_TOKEN, HttpOpenAITransport
@@ -74,13 +76,19 @@ def selected_provider(root, name=None, *, transport=None, model=None):
     name = name or os.getenv("JOBINTEL_PROVIDER", "fixture")
     if name == "fixture":
         return FixtureProvider(root)
+    if name == "local":
+        return local_provider(root, transport=transport, model=model)
     if name != "openai":
-        raise ValueError("unknown provider; choose fixture or openai")
+        raise ValueError("unknown provider; choose fixture, openai or local")
     model = model or os.getenv("JOBINTEL_OPENAI_MODEL")
     if not model or not model.strip():
         raise ValueError("JOBINTEL_OPENAI_MODEL is required for OpenAI")
     if transport is None:
         mode = os.getenv("JOBINTEL_RESPONSES_MODE", "hosted")
+        if mode not in {"hosted", "emulator"}:
+            raise ValueError(
+                "OpenAI mode must be hosted or emulator; use provider local for CPU inference"
+            )
         key = EMULATOR_TOKEN if mode == "emulator" else openai_key()
         try:
             timeout = float(os.getenv("JOBINTEL_OPENAI_TIMEOUT", "30"))
@@ -92,6 +100,22 @@ def selected_provider(root, name=None, *, transport=None, model=None):
             key, timeout, mode=mode, endpoint=os.getenv("JOBINTEL_RESPONSES_ENDPOINT")
         )
     return OpenAIProvider(transport, model, Taxonomy(root / "taxonomy.json"))
+
+
+def local_provider(root, *, transport=None, model=None):
+    from jobintel.local_model import MODEL
+
+    if model is not None and model != MODEL:
+        raise ValueError("local inference requires the pinned model")
+    if transport is None:
+        try:
+            timeout = float(os.getenv("JOBINTEL_LOCAL_TIMEOUT", "120"))
+        except ValueError:
+            raise ValueError("local timeout must be between 1 and 600 seconds") from None
+        if not 1 <= timeout <= 600:
+            raise ValueError("local timeout must be between 1 and 600 seconds")
+        transport = HttpLocalTransport(os.getenv("JOBINTEL_LOCAL_ENDPOINT"), timeout)
+    return LocalProvider(transport, Taxonomy(root / "taxonomy.json"))
 
 
 def selected_configuration(provider, configuration=None):
