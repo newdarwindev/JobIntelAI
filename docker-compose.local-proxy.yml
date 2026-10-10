@@ -1,0 +1,5 @@
+services:
+  model-check:
+    build:
+      context: .
+      secrets: [proxy_ca]

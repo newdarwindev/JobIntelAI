@@ -20,6 +20,13 @@ demo/provider modes, mounted credentials, verified proxy trust and explicit clea
 Local inference and network contract services have separate issue dependencies.
 This extension does not authorize paid calls or public exposure of the local API.
 
+The [local CPU contract](local_inference.md) specifies a pinned llama.cpp engine
+and licensed Qwen model, persistent verified weights, internal-only inference,
+resource/context limits and explicit failures. Its Chat Completions adapter shares
+schema-v2, exact Unicode grounding and deterministic normalization with the hosted
+provider. Local identity, actual usage/timing and measured reviewed outcomes remain
+distinct from fixture replay and Responses emulator evidence.
+
 ## 1. Purpose and audience
 
 Build a reproducible Python backend that converts heterogeneous job postings into

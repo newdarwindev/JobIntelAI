@@ -128,6 +128,13 @@ test('UI03 | Grounded extraction, aliases and operators',async({page,request})=>
   const unicodeExport=JSON.parse(await download(page,'Export evidence JSON'));
   expect(unicodeExport.extraction.requirements).toHaveLength(1);expect(unicodeExport.snapshot.clean_text).toContain('café');
   for(const r of unicodeExport.extraction.requirements)expect(Array.from(unicodeExport.snapshot.clean_text).slice(r.evidence.start,r.evidence.end).join('')).toBe(r.evidence.quote);
+  // Configuration-read rendering fixture only; this segment makes no inference request.
+  await page.route('**/ui/config',route=>route.fulfill({json:{demo:false,provider:'local',execution_mode:'local-inference',live_llm:true,acquisition_mode:'http'}}));
+  await page.reload();await expect(page.locator('.mode-badge')).toHaveText('LOCAL CPU INFERENCE');
+  await expect(page.getByLabel('Extraction configuration').locator('option')).toHaveText(['Normalized aliases','Raw aliases']);
+  expect(await page.getByLabel('Extraction configuration').locator('option').evaluateAll(items=>items.map(item=>item.value))).toEqual(['local_normalized_v1','local_structured_v1']);
+  await page.evaluate(()=>{const notice=document.querySelector('#notice');notice.textContent='Authored configuration rendering check — no model request in this segment.';notice.hidden=false;});
+  await page.unroute('**/ui/config');await page.reload();
   // Inject an authored API read fixture with a non-BMP prefix to catch UTF-16 slicing.
   const unicodeText='🧪 Authored source\nPython is required.';
   const start=Array.from(unicodeText).length-Array.from('Python is required.').length;

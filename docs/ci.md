@@ -125,3 +125,10 @@ all outcomes with actual case counts, commit/config/model identity and safe requ
 checks. Python 3.11/3.12 test real provider-process sockets; browser UI07 uses the
 container emulator and uploads `work/responses-browser-diagnostics.json`. These
 are authored contract checks, with no paid calls or model-quality claim.
+
+The separate `Local CPU inference` workflow executes `scripts.local_smoke` for
+local-provider changes or on demand. Its two-CPU/five-GiB engine uses pinned
+licensed weights and a checksum-verified cache. It uploads actual unseen pipeline
+checks, complete three-case reviewed outcomes, startup/memory measurements and
+commit/config/model provenance on every outcome. Model errors remain evaluation
+results; perfect metrics are not a CI requirement. See [local inference](local_inference.md).

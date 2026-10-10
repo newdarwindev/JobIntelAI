@@ -37,15 +37,16 @@ class OpenAIProvider:
         started = perf_counter()
         attempts = []
         for attempt in range(2):
-            attempts.append(response_metadata(None))
+            attempts.append(self.metadata(None))
             attempt_started = perf_counter()
             try:
                 response = self.transport.complete(payload)
-                attempts[-1] = response_metadata(response)
+                attempts[-1] = self.metadata(response)
                 if execution_mode(self) == "emulator":
                     attempts[-1]["usage"] = None
                 attempts[-1]["elapsed_seconds"] = perf_counter() - attempt_started
-                extraction = parse_response(response.body)
+                self.validate_response(response.body)
+                extraction = self.parse(response.body)
                 break
             except ProviderError as error:
                 attempts[-1]["elapsed_seconds"] = perf_counter() - attempt_started
@@ -98,6 +99,15 @@ class OpenAIProvider:
             "estimated_cost": None,
         }
 
+    def validate_response(self, body):
+        pass
+
+    def parse(self, body):
+        return parse_response(body)
+
+    def metadata(self, response):
+        return response_metadata(response)
+
     def request(self, text):
         return {
             "model": self.model,
@@ -136,8 +146,12 @@ def response_text(body):
 
 
 def parse_response(body):
+    return parse_extraction(response_text(body))
+
+
+def parse_extraction(text):
     try:
-        payload = json.loads(response_text(body))
+        payload = json.loads(text)
     except (ValueError, UnicodeError) as error:
         raise ProviderError("malformed_json", 502, True) from error
     if not isinstance(payload, dict) or payload.get("schema_version") != 2:

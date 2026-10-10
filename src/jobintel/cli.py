@@ -62,7 +62,7 @@ def execute(argv, transport):
     )
     parser.add_argument("command", choices=["demo", "evaluate", "export", "extract"])
     parser.add_argument("--output", type=Path, default=Path("results/generated"))
-    parser.add_argument("--provider", choices=["fixture", "openai"])
+    parser.add_argument("--provider", choices=["fixture", "openai", "local"])
     parser.add_argument("--configuration")
     parser.add_argument("--configurations", nargs="+")
     parser.add_argument("--job-id")

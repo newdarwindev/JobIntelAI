@@ -52,7 +52,7 @@ jobs:
         run: |
           node scripts/check_ui_contract.mjs --coverage-only
           npm run test:recordings
-      - name: Verify all desktop/mobile workflows with HTTP/TLS origins and Responses emulator
+      - name: Verify all desktop/mobile journeys, service failures and local-control rendering
         run: npm run test:ui
       - name: Collect only successful attempts and update README
         run: |
@@ -87,6 +87,7 @@ jobs:
             '## Complete browser workflow evidence' \
             'Download the diagnostics artifact for the HTML report, videos, screenshots, and failure traces.' \
             'Only a fully passing suite produces the successful-web-ui-recordings artifact. It contains an updated README and desktop/mobile recordings for every specified journey.' \
+            'Actual CPU-model results are published by the separate Local CPU inference workflow; the default browser sandbox remains fixture/contract evidence.' \
             >> "$GITHUB_STEP_SUMMARY"
 
   publish-readme-recordings:

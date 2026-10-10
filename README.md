@@ -67,8 +67,8 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **16/16**, recorded 2026-10-10.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38071087076) · commit `e48a813791a26ce2331542858fff3c4155b5474d`.
-Source content SHA-256: `68e05163def75e64698f7790354fd151fc45e80d1c15db8532aca1861bfdb2a3`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source: local Playwright run against the disposable fixture API. Remote GitHub Actions has not been verified by these local videos.
+Source content SHA-256: `ba0047a8e7698895ae3d03964e33f7425ad647b719b1f0bb31d4bb3861a53368`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -243,8 +243,11 @@ Do not disable TLS verification. `contract-test` runs a real HTTP Responses emul
 with the API and PostgreSQL, using a fixed development token and authored schema-v2
 responses. It requires no hosted credentials and records contract execution separately
 from model inference. See [runtime, scenarios and evidence](docs/responses_emulator.md).
-`local-inference` requires the engine and adapter from
-[#24](https://github.com/newdarwindev/JobIntelAI/issues/24).
+`local-inference` starts checksum-pinned Qwen2.5-1.5B CPU inference with an internal
+llama.cpp service and a persistent licensed model cache. Run
+`python scripts/runtime.py up --mode local-inference --project jobintel-local`.
+See [hardware, protocol, cache and measured evaluation](docs/local_inference.md);
+local model errors remain explicit and never fall back to replay.
 
 Run real-container persistence and mode-isolation checks without paid calls:
 

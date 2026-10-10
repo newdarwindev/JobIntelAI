@@ -157,7 +157,7 @@ traffic. Scenario controls are absent from normal/demo entrypoints. UI08 checks
 fixture execution identity; health/report/provenance identify emulator runs separately
 with unavailable LLM usage/cost/time. Backend process and container tests verify
 stop/start/restart recovery on SQLite/PostgreSQL. See [Responses emulator](responses_emulator.md).
-Paid execution and model quality need separate authorization.
+Paid hosted execution needs separate authorization. Actual local model execution has its own measured service evidence.
 
 UI04 saves multiple synthetic revisions, refreshes the page, re-matches the selected
 revision, selects an older revision without overwriting it, and inspects the persisted
@@ -176,3 +176,17 @@ stop/recreation: saved records and exports survive, while `/ui/fixtures` and
 The OpenAI profile's mounted-key readiness check uses only a synthetic key and
 makes no upstream request; it does not establish paid-service availability. Runtime
 build/profile/trust inputs participate in the recording source hash.
+
+UI03 also checks local CPU configuration names and the execution badge using a
+labelled configuration-read rendering fixture. That browser segment makes no
+inference request. The workbench and evaluation controls use the selected
+provider's raw/normalized configuration pair; local requests allow its bounded
+CPU timeout and display measured engine timing only when supplied. Evaluation
+labels identify fixture, contract, local CPU and hosted requests. The separate
+[local CPU service check](local_inference.md) runs actual unseen inference through
+the normal PostgreSQL API, matching/export and the fixed reviewed subset. These
+model results remain separate from the sixteen default sandbox videos.
+Model preparation must retain verified weights and license even when a weight
+download outlasts registry authorization: renew authorization between cache objects.
+This runtime boundary is covered by the cache tests and recording source hash;
+it does not introduce a browser credential flow.

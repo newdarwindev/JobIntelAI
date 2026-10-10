@@ -226,7 +226,7 @@ def evaluate(payload: EvaluateInput, request: Request, svc: ServiceDependency):
     )
     saved = save_report(svc.session, report)
     errors = [r["error"] for result in report["results"] for r in result["per_case"] if r["error"]]
-    if errors and request.app.state.provider.name == "openai":
+    if errors and request.app.state.provider.name in {"openai", "local"}:
         return JSONResponse(
             {"detail": errors[0], **saved},
             status_code=errors[0]["status"],

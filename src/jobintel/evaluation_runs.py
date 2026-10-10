@@ -11,6 +11,7 @@ from jobintel.evaluation_metrics import (
     reviewed_case_metrics,
 )
 from jobintel.experiment_corpus import FrozenCase, digest
+from jobintel.local_model import MODEL_SHA256, model_identity
 from jobintel.normalization import Taxonomy
 from jobintel.openai_transport import ProviderError
 from jobintel.provider_config import configuration_for, identity
@@ -158,7 +159,9 @@ def usage_summary(records, pricing):
         "provider_elapsed_seconds": sum(p["elapsed_seconds"] for p in provenances)
         if provenances and all(p and p.get("elapsed_seconds") is not None for p in provenances)
         else None,
-        "llm_elapsed_seconds": None,
+        "llm_elapsed_seconds": sum(p["llm_elapsed_seconds"] for p in provenances)
+        if provenances and all(p and p.get("llm_elapsed_seconds") is not None for p in provenances)
+        else None,
     }
 
 
@@ -214,6 +217,10 @@ def run_report(provider, root, configurations, *, dataset="fixture", pricing=Non
         if provider.name == "fixture"
         else "Responses contract emulator — authored replay, not model quality"
         if mode == "emulator"
+        else "local CPU inference — independently source-reviewed labels"
+        if mode == "local-inference" and corpus
+        else "local CPU inference — authored fixture labels"
+        if mode == "local-inference"
         else "live structured extraction — independently source-reviewed labels"
         if corpus
         else "live structured extraction — authored fixture labels",
@@ -234,8 +241,11 @@ def run_report(provider, root, configurations, *, dataset="fixture", pricing=Non
             "identity": {
                 **identity(provider.name, configuration, model, taxonomy),
                 "execution_mode": mode,
+                **(model_identity() if mode == "local-inference" else {}),
             },
-            "model_sha256": digest({"provider": provider.name, "model": model}),
+            "model_sha256": MODEL_SHA256
+            if mode == "local-inference"
+            else digest({"provider": provider.name, "model": model}),
             "configuration_sha256": digest(
                 configuration_for(configuration, provider.name).__dict__
             ),
