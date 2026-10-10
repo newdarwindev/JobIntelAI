@@ -110,3 +110,11 @@ fresh unpacked source release with the README migration/demo/evaluation/export p
 and API readiness/analytics, outside the original checkout. Only counts and archive
 hashes enter CI evidence; temporary databases and generated candidate/posting outputs
 are not uploaded. Every artifact has 30-day retention and PR/fork runs remain read-only.
+
+The container gate also runs `scripts.acquisition_public_smoke` on the hosted
+runner's authorized direct-egress gateway host. Its production policy proxy
+resolves and pins the immutable public SYN-01 URL, while the client refuses local
+destination DNS. Exact body hash/bytes and verified TLS are required; failures
+fail CI. `work/acquisition-public.json` is uploaded alongside the controlled
+service outcome on all attempts. A restricted inherited proxy without the
+gateway contract must report `proxy_capability`, not readiness success.

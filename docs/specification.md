@@ -141,6 +141,10 @@ allow HTML/plain text only; bounded decompressed body; retain final URL and fetc
 status; no unlimited redirects, credential forwarding or HTML execution. Access
 denial and CAPTCHA prompt manual entry, never bypass. Inject a fake transport for
 tests. Respect the environment's supported egress proxy rather than bypassing it.
+Explicit direct/pinned-proxy/policy-proxy capabilities and their DNS prerequisites
+are defined in the acquisition contract. Policy mode requires a trusted gateway
+with complete DNS validation, single-use pins and connection revalidation;
+unsupported proxy capabilities report acquisition readiness false with HTTP 503.
 
 ## 7. Structured extraction contract
 

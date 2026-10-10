@@ -1,9 +1,96 @@
 # Bounded URL acquisition
 
 `POST /jobs/{id}/fetch` acquires the registered official URL through `HttpAcquirer`.
+
+## Egress capabilities and readiness
+
+Select `JOBINTEL_ACQUISITION_MODE` explicitly when the runtime's capabilities are
+known. `auto` preserves the original per-destination routing using inherited
+HTTP_PROXY/HTTPS_PROXY/ALL_PROXY/NO_PROXY: direct connections or numeric pinned
+proxy requests, both requiring local destination DNS. It never upgrades to a
+hostname CONNECT after DNS or proxy refusal.
+
+| Mode | Required capability | Destination validation |
+| --- | --- | --- |
+| `direct` | Authorized direct egress and local DNS; selected proxy must be absent | Complete public DNS answer; numeric connection and peer check |
+| `pinned-proxy` | Local DNS and credential-free HTTP proxy accepting numeric destinations | Complete public DNS answer; numeric HTTP authority/CONNECT; original Host/SNI |
+| `policy-proxy` | Administrator-trusted JobIntel egress-v1 gateway, reachable via inherited HTTP proxies | Gateway complete-answer validation; expiring single-use numeric pin; DNS revalidation and peer check before forwarding |
+
+Explicit proxy modes require a proxy for every request, including redirect hops.
+NO_PROXY cannot silently switch them to direct access. Proxy policy denial never
+causes another route to be attempted. `direct` refuses destinations with a selected
+proxy. Nonstandard per-scheme ports are unsupported by the policy gateway.
+
+`GET /health` reports `acquisition.ready`, mode, destination-check scope and whether
+local destination DNS is required. Policy mode probes the exact versioned gateway
+contract before resolving any target. Missing/incomplete/unsupported contracts
+produce HTTP 503 with `proxy_capability`; fetch records the same nonretryable error
+with no HTTP status and offers manual entry. Readiness is a configuration/capability
+check, not a promise that every URL is allowed or reachable. DNS, proxy policy
+(`proxy_denied`), TLS (`tls_error`) and HTTP access denial remain distinct outcomes.
+
+The trusted gateway is an explicit administrator trust boundary, just like an
+administrator-provided numeric proxy. An ordinary domain allowlist proxy is not
+assumed to validate private/mixed DNS, pin upstream connections or prevent
+rebinding. Merely setting policy mode does not make that proxy supported. The
+capability protocol is not cryptographic remote attestation: configure only a
+gateway you administer on loopback or a protected private network. This
+credential-free HTTP control channel must not traverse an untrusted network.
+Destination HTTPS remains end-to-end verified TLS with its original hostname.
+
+The reference gateway runs on an **authorized direct-egress host** with destination
+DNS. It refuses startup with inherited outbound proxies rather than discarding
+their policy. Deploying it is an administrator prerequisite for DNS-restricted
+clients; running it inside a restricted client does not grant Internet access.
+Every allowed hostname is exact and explicit, all resolved addresses must be
+public, and only standard HTTP/HTTPS ports are accepted. It forwards no client
+cookies, credentials or arbitrary request headers. It stores at most 1024 leases
+for ten seconds; consumption checks host/scheme, rejects replay and revalidates
+the complete DNS answer. An upstream peer must match the selected numeric pin.
+The gateway never follows redirects; the client obtains a fresh lease for each
+hop/retry. It emits no URL, payload, header or lease logs.
+
+On an authorized host without an outbound proxy:
+
+```bash
+python -m jobintel.egress_proxy --port 8089 --allow-host raw.githubusercontent.com
+```
+
+In a client configured to trust that gateway (use its protected network address
+when the client is remote), preserve the environment's CA/NO_PROXY values and set:
+
+```bash
+JOBINTEL_ACQUISITION_MODE=policy-proxy \
+HTTP_PROXY=http://127.0.0.1:8089 HTTPS_PROXY=http://127.0.0.1:8089 \
+uvicorn jobintel.api:app --host 127.0.0.1 --port 8000
+curl --fail http://127.0.0.1:8000/health
+```
+
+Both proxy schemes must support the contract. Use the normal explicit Alembic
+migration before launching the API. Compose passes inherited proxies and the mode
+through to the API; its CA overlay still mounts the combined bundle. Optional
+`JOBINTEL_ACQUISITION_CA_FILE` adds a scoped CA to normal SSL_CERT_FILE/default
+trust; verification remains required. No global CA edits or TLS bypass are used.
+
+The controlled origin/proxy stack supports both numeric proxy requests and this
+policy contract using authored DNS answers and exact test routing. The API/browser
+launchers select `fixture-policy-proxy`, while the wire integration matrix runs
+both modes on migrated SQLite/PostgreSQL. It proves transport/history behavior,
+not general Internet reachability or model quality. On an authorized managed
+runner, `python -m scripts.acquisition_public_smoke` starts the production gateway
+and acquires only SYN-01 at the immutable audit commit through it. The client
+resolver deliberately refuses local destination DNS; the smoke checks exact body
+hash/bytes, TLS and readiness, then removes the gateway. CI uploads the sanitized
+`work/acquisition-public.json` outcome alongside controlled-service evidence on
+every outcome. A restricted runtime can instead run
+`python -m scripts.acquisition_public_smoke --inherited-proxy` to assert explicit
+unsupported readiness without an origin request. This negative check is not a
+successful public acquisition.
+
 The transport, resolver, policy, clock and waits are injectable. Fast tests use
-authored responses; real-service checks use isolated HTTP/HTTPS origins and an
-exact-pin proxy. The normal API uses `HttpTransport`/`DNSResolver`.
+authored responses; real-service checks use isolated HTTP/HTTPS origins and a
+controlled numeric/policy proxy. The normal API uses `HttpTransport` and the
+selected local-DNS or trusted gateway resolution path.
 No fetching occurs during import, snapshot submission, extraction or API startup.
 
 ## Authored real-service fixtures
@@ -76,13 +163,14 @@ sending HTTP. Host and TLS SNI/certificate identity use the original hostname.
 Redirect loops and a fourth redirect fail before any request to that extra hop.
 
 Environment HTTP/HTTPS proxy settings and `NO_PROXY` are honored. Supported proxies
-are credential-free **HTTP** gateways: HTTP uses the pinned IP in the absolute
+are credential-free **HTTP** gateways. Numeric mode uses the pinned IP in the absolute
 request target; HTTPS sends CONNECT to the pinned IP (bracketed for IPv6), then
 verifies TLS against the original hostname. The administrator's gateway may be
 private, but the job destination must pass the same public-IP checks. Proxy refusal
 never causes a direct retry; authenticated, HTTPS and SOCKS proxies fail explicitly.
 A hostname-only gateway policy may refuse numeric CONNECT: use manual entry or
-administrator-approved proxy configuration. Fixed request headers carry no cookies,
+the explicitly configured trusted policy gateway described above. Policy mode
+sends hostname CONNECT with a lease; the gateway enforces the numeric upstream pin. Fixed request headers carry no cookies,
 authorization or referrers. Certificates and configured CA trust remain verified.
 
 ## Content and immutable provenance
@@ -134,7 +222,7 @@ Success returns **201** with `fetch_id`, `status=success`, `snapshot_id`,
 | 415 | Unsupported MIME / invalid compression |
 | 422 | Invalid/blocked destination, redirect, text, empty/JS-only source |
 | 502 | TLS/proxy/network/DNS failure, exhausted 5xx or other unusable HTTP status |
-| 503 | Exhausted upstream 429 |
+| 503 | Exhausted upstream 429 or unsupported acquisition capability |
 | 504 | Connect/read/DNS timeout or exhausted deadline |
 
 Expected failures commit their attempts and leave the previous source/extraction

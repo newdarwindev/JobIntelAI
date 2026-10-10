@@ -3,12 +3,12 @@
   "projects": ["desktop-chromium", "mobile-chromium"],
   "workflows": [
     {"id":"UI01","title":"Atomic registry import and discovery","spec_sections":[5,12],"scenarios":["S01","S02","S05","S06","S07","V01"]},
-    {"id":"UI02","title":"Source capture, URL fallback and immutable history","spec_sections":[6,7],"scenarios":["S08","S09","S10","S34","V02","V03","V04","V05","V06","V07","V09","V10","V11"],"services":["authored HTTPS origin","exact-pin CONNECT proxy","scoped verified test CA"]},
+    {"id":"UI02","title":"Source capture, URL fallback and immutable history","spec_sections":[6,7],"scenarios":["S08","S09","S10","S34","V02","V03","V04","V05","V06","V07","V09","V10","V11"],"services":["authored HTTPS origin","trusted policy-proxy DNS and single-use pin gateway","scoped verified test CA"]},
     {"id":"UI03","title":"Grounded extraction, aliases and operators","spec_sections":[7,8,10],"scenarios":["S12","S14","S15","S23","S26","V19","V21","V22","V23","V12","V14","V31"]},
     {"id":"UI04","title":"Candidate evidence and four matching states","spec_sections":[9,10],"scenarios":["S18","S19","S20","S21","S22","S23","S24","V24","V25","V26","V31","V32"]},
     {"id":"UI05","title":"Corpus slices, gaps and safe provenance exports","spec_sections":[10],"scenarios":["S25","S26","S27","V27","V28","V29","V30","V31","V32"]},
     {"id":"UI06","title":"Fixture and source-reviewed evaluation diagnostics","spec_sections":[11],"scenarios":["S28","S29","S30","S31","V20","V33","V34","V35","V36","V37"]},
     {"id":"UI07","title":"Provider and connection failure recovery","spec_sections":[7,12],"scenarios":["S10","S17","S33","S37","V15","V16","V17","V18","V19"]},
-    {"id":"UI08","title":"Keyboard navigation, responsive layout and inert input","spec_sections":[4,12],"scenarios":["V43","V44"]}
+    {"id":"UI08","title":"Keyboard navigation, acquisition readiness, responsive layout and inert input","spec_sections":[4,12],"scenarios":["V43","V44"]}
   ]
 }

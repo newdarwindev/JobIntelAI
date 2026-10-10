@@ -14,6 +14,7 @@ MESSAGES = {
     "tls_error": "The destination's TLS certificate or connection could not be verified.",
     "proxy_unsupported": "The configured proxy is not a supported credential-free HTTP proxy.",
     "proxy_denied": "The configured proxy refused the pinned destination.",
+    "proxy_capability": "The selected acquisition mode requires a trusted DNS/pinning gateway capability.",
     "rate_limit": "The destination rate limit persisted after bounded retries.",
     "server_error": "The destination failed after bounded retries.",
     "access_denied": "The destination denied access.",

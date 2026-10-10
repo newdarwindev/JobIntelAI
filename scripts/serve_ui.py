@@ -39,10 +39,14 @@ def main():
             args.acquisition_fixtures, directory, fixture_environment, diagnostics
         )
         with stack as fixtures:
-            fetcher = acquirer(fixtures["proxy"], fixtures["ca"]) if fixtures else None
+            fetcher = (
+                acquirer(fixtures["proxy"], fixtures["ca"], mode="policy-proxy")
+                if fixtures
+                else None
+            )
             app = create_app(root=ROOT / "data", demo=True, acquirer=fetcher)
             if fixtures:
-                app.state.acquisition_mode = "fixture-http"
+                app.state.acquisition_mode = "fixture-policy-proxy"
 
                 @app.get("/acquisition-fixture-diagnostics")
                 def acquisition_diagnostics():

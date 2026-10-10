@@ -19,6 +19,7 @@ def local_fixtures(directory, source):
             "ca": trust / "ca.pem",
             "origin": origins[0].diagnostics,
             "proxy_diagnostics": proxy.diagnostics,
+            "gateway": proxy,
         }
     finally:
         for instance in [proxy, *origins]:

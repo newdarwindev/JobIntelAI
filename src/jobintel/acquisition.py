@@ -73,6 +73,11 @@ class HttpAcquirer:
             )
         return result
 
+    def readiness(self):
+        if isinstance(self.transport, HttpTransport):
+            return self.transport.readiness()
+        return {"ready": True, "mode": "injected", "destination_check": "per-request"}
+
     def walk(self, result, current, deadline):
         visited = {current}
         for hop in range(self.policy.redirects + 1):
@@ -122,9 +127,8 @@ class HttpAcquirer:
         result.final_url = url
         try:
             budget = remaining_budget(deadline, self.clock)
-            destination = resolve_destination(
-                url, self.resolver, min(self.policy.connect_timeout, budget)
-            )
+            resolve = getattr(self.transport, "resolve", resolve_destination)
+            destination = resolve(url, self.resolver, min(self.policy.connect_timeout, budget))
             with self.transport.get(
                 destination, self.policy, remaining_budget(deadline, self.clock)
             ) as response:

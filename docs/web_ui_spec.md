@@ -59,19 +59,24 @@ prefix; transport-error regressions inject transient HTTP/connection failures.
 The rest of the browser pipeline uses the real fixture-backed service.
 
 UI02 calls the actual bounded acquisition/service contract through the production
-HTTP transport, an exact test DNS map and isolated Compose origins/proxy. It follows an authored redirect over verified HTTPS,
+HTTP transport in `policy-proxy` mode and isolated Compose origins/gateway.
+The trusted test gateway validates its full authored DNS map, issues a single-use
+pin lease and checks it again before opening the connection. It follows an authored redirect over verified HTTPS,
 persists an HTML source with the known SYN-01 clean hash, extracts it and verifies
 that its script never executes. Authored 403 and JS-only responses save failure
 history while preserving the prior usable source/extraction and unsaved manual
 editor text. Reload retains the attempt IDs, original/requested/final URLs, UTC
 timestamps, status/error codes and snapshot references; manual save/extract recovers.
-`/ui/config` identifies `acquisition_mode=fixture-http` for this test launcher,
-`synthetic` for the ordinary offline demo and `http` for the normal API. UI02 checks
+`/ui/config` identifies `acquisition_mode=fixture-policy-proxy` for this test launcher,
+`synthetic` for the ordinary offline demo and the configured acquisition mode for the normal API. UI02 checks
 sanitized origin diagnostics for a real TLS handshake and the successful authored
-HTTP request, and proxy diagnostics for the numeric CONNECT pin. The full
+HTTP request, and gateway diagnostics for the selected numeric pin behind hostname CONNECT. The full
 desktop/mobile suite uses these services; `/acquisition-fixture-diagnostics` is installed
 only by the test launcher and is absent from normal/demo production entrypoints.
-Real-socket integration tests cover SSRF/rebinding refusals with zero target HTTP
+UI08 checks `/health` for verified gateway capabilities and no local destination
+DNS prerequisite. An unsupported policy proxy returns acquisition readiness false
+and HTTP 503; manual capture remains available.
+Real-socket integration tests cover both pinned and policy proxy modes, SSRF/rebinding refusals with zero target HTTP
 requests, TLS trust/hostname refusal, deadlines, streaming/compression/body limits,
 bounded retries and SQLite/PostgreSQL transaction rollback. Fast fake-transport
 regressions remain alongside them. See [acquisition.md](acquisition.md).
