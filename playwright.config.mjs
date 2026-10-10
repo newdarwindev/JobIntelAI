@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: false,
-  workers: 1, // Each journey resets the shared, disposable synthetic sandbox.
+  workers: 1, // Journeys share scoped provider services; only sandbox journeys reset demo data.
   timeout: 90000,
   expect: {timeout:10000},
   retries: process.env.CI ? 1 : 0,

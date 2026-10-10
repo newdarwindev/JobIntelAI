@@ -78,8 +78,8 @@ def validate_configuration(environment):
         raise ValueError(f"{setting} must be between 1 and {limit} seconds")
 
 
-def compose_environment(args):
-    environment = provider_environment(args.mode, dict(os.environ))
+def compose_environment(args, *, overrides=None):
+    environment = provider_environment(args.mode, {**os.environ, **(overrides or {})})
     validate_configuration(environment)
     environment["JOBINTEL_API_PORT"] = str(args.port)
     password = environment.get("JOBINTEL_POSTGRES_PASSWORD") or "local-demo-only"

@@ -10,13 +10,25 @@ def test_ui_is_packaged_and_demo_reset_is_not_exposed(client):
     assert "Evidence workspace" in client.get("/ui/").text
     assert client.get("/ui/app.js").status_code == 200
     assert client.get("/ui/styles.css").status_code == 200
-    assert client.get("/ui/config").json() == {
+    config = client.get("/ui/config").json()
+    assert {
+        key: config[key]
+        for key in ["demo", "provider", "execution_mode", "live_llm", "acquisition_mode"]
+    } == {
         "demo": False,
         "provider": "fixture",
         "execution_mode": "fixture",
         "live_llm": False,
         "acquisition_mode": "auto",
     }
+    assert config["contract_version"] == 1
+    assert config["actions"] == {
+        "samples": False,
+        "reset": False,
+        "extract": True,
+        "evaluate": True,
+    }
+    assert config["default_configuration"] in [c["id"] for c in config["configurations"]]
     assert client.get("/ui/fixtures").status_code == 404
     assert client.post("/ui/reset").status_code == 405
 

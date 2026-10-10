@@ -50,6 +50,13 @@ npm run record:ui
 npm run check:ui
 ```
 
+The suite keeps the SQLite sandbox and also owns three disposable PostgreSQL
+APIs for fixture replay, the Responses emulator and actual CPU inference. Docker
+Compose is required. The licensed model cache downloads about 3 GB once, verifies
+its checksums on reuse, and survives teardown; the engine is limited to two CPUs
+and five GiB. No paid hosted call is made. Normal UI controls use `/ui/config` for
+supported configurations, execution identity, readiness and request time budgets.
+
 Local Playwright defaults to `.venv/bin/python`; set `UI_PYTHON=python` if using an
 activated environment elsewhere. `UI_BROWSER_PATH` can select a local Chromium
 binary. The [Actions workflow](.github/workflows/web-ui.yml) runs all journeys,
@@ -66,9 +73,10 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 <!-- UI-RECORDINGS:START -->
 
-Successful browser attempts: **16/16**, recorded 2026-10-10.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38084042874) · commit `d42956cce00c107e88f2cfb2da46c2074747c40d`.
-Source content SHA-256: `ba0047a8e7698895ae3d03964e33f7425ad647b719b1f0bb31d4bb3861a53368`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Successful browser attempts: **22/22**, recorded 2026-10-10.
+Source: local Playwright run against the sandbox and normal PostgreSQL APIs. Remote GitHub Actions has not been verified by these local videos.
+UI01–UI08 use the explicit synthetic sandbox. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
+Source content SHA-256: `b432d14c19aa6b1eacb2246455dddf548a8a367580a45b380b59ccf865a9d8c3`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -80,6 +88,9 @@ Source content SHA-256: `ba0047a8e7698895ae3d03964e33f7425ad647b719b1f0bb31d4bb3
 | UI06 · Fixture and source-reviewed evaluation diagnostics | [Watch](docs/ui-recordings/UI06-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI06-mobile-chromium.webm) |
 | UI07 · Provider and connection failure recovery | [Watch](docs/ui-recordings/UI07-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI07-mobile-chromium.webm) |
 | UI08 · Keyboard navigation, acquisition readiness, responsive layout and inert input | [Watch](docs/ui-recordings/UI08-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI08-mobile-chromium.webm) |
+| UI09 · Normal PostgreSQL fixture pipeline and unsupported-input recovery | [Watch](docs/ui-recordings/UI09-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI09-mobile-chromium.webm) |
+| UI10 · Normal PostgreSQL Responses contract pipeline and provider failure history | [Watch](docs/ui-recordings/UI10-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI10-mobile-chromium.webm) |
+| UI11 · Normal PostgreSQL CPU inference, measured evaluation and readiness recovery | [Watch](docs/ui-recordings/UI11-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI11-mobile-chromium.webm) |
 
 <!-- UI-RECORDINGS:END -->
 

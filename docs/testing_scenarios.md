@@ -203,5 +203,15 @@ checks on migrated SQLite/PostgreSQL. Actual model evidence comes from
 PostgreSQL API, matching/analytics/export, the frozen REV-01/REV-23/REV-25 reviewed
 subset, readiness failure, stop/recreation and persistent cache/history. Model
 errors remain separate from service-check counts. See [runtime and measurement
-details](local_inference.md). UI03's labelled configuration rendering check makes
-no model request; all sixteen sandbox journeys still record passing attempts.
+details](local_inference.md). UI11 runs actual CPU inference and reloads the persisted
+three-case report through the normal PostgreSQL browser API.
+
+Provider-aware UI contract tests in `integration/test_ui_configuration.py` cover
+fixture, emulator, local and explicitly configured hosted options, secret isolation,
+non-demo route isolation and readiness recovery. Hosted HTTP is fake contract
+coverage, without paid calls. `e2e/persistent.spec.mjs` adds UI09–UI11 on desktop
+and mobile to the sixteen sandbox journeys: normal PostgreSQL acquisition/extraction,
+exact evidence, candidate revision reload/matching, exports and saved evaluation.
+Actual separate emulator failures and CPU-engine stop/start preserve saved history.
+The runner records the service inventory and actual three-case local outcomes; model
+quality is separate from browser acceptance counts. See [UI acceptance](web_ui_spec.md).

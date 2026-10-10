@@ -1,9 +1,10 @@
-import {readFile,stat} from 'node:fs/promises';
+import {readFile,readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {uiSourceHash} from './ui_source_hash.mjs';
 
 const contract=JSON.parse(await readFile('docs/web_ui_workflows.json','utf8'));
-const tests=await readFile('tests/e2e/workflows.spec.mjs','utf8');
+const files=(await readdir('tests/e2e')).filter(file=>file.endsWith('.spec.mjs'));
+const tests=(await Promise.all(files.map(file=>readFile(`tests/e2e/${file}`,'utf8')))).join('\n');
 const ids=[...tests.matchAll(/test\('(UI\d{2}) \|/g)].map(m=>m[1]).sort();
 if(JSON.stringify(ids)!==JSON.stringify(contract.workflows.map(w=>w.id).sort()))throw new Error('UI specification and workflow tests must have identical IDs.');
 if(process.argv.includes('--coverage-only')){console.log(`${ids.length} specified workflows have executable journeys.`);process.exit(0);}

@@ -40,6 +40,9 @@ def content_reply(path, source):
         "/mutable": Reply(body=html),
         "/changed": Reply(body=b"<!-- Authored raw change -->" + html),
         "/text": Reply(body=source.encode(), headers={"Content-Type": "text/plain; charset=utf-8"}),
+        "/unseen": Reply(
+            body=b"Python is required.", headers={"Content-Type": "text/plain; charset=utf-8"}
+        ),
         "/gzip": Reply(
             body=gzip.compress(html),
             headers={"Content-Type": "text/html", "Content-Encoding": "gzip"},

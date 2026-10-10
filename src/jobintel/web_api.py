@@ -8,8 +8,8 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import delete
 
 from jobintel import db
-from jobintel.provider_execution import execution_mode
 from jobintel.registry import parse_csv
+from jobintel.ui_configuration import ui_configuration
 
 router = APIRouter()
 demo_router = APIRouter()
@@ -17,16 +17,7 @@ demo_router = APIRouter()
 
 @router.get("/ui/config")
 def ui_config(request: Request):
-    provider = request.app.state.provider
-    return {
-        "demo": request.app.state.demo,
-        "provider": provider.name,
-        "execution_mode": execution_mode(provider),
-        "live_llm": execution_mode(provider) in {"hosted", "local-inference"},
-        "acquisition_mode": getattr(
-            request.app.state, "acquisition_mode", "synthetic" if request.app.state.demo else "http"
-        ),
-    }
+    return ui_configuration(request.app)
 
 
 @demo_router.get("/ui/fixtures")

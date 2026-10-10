@@ -111,8 +111,11 @@ npm run record:ui
 npm run check:ui
 ```
 
-The Playwright web server starts `scripts/serve_ui.py`, migrates a disposable DB,
-and uses only authored synthetic fixtures. Never record private postings, candidate
+The browser runner owns scoped PostgreSQL APIs and separate acquisition/provider
+services for UI09–UI11; the Playwright web server starts `scripts/serve_ui.py` for
+UI01–UI08 in a disposable SQLite sandbox. Migrations run explicitly. Only authored
+synthetic inputs and licensed model assets are used; CPU inference is real, while
+fixture/emulator output is labelled as authored contract coverage. Never record private postings, candidate
 history, real credentials or paid API calls. Keep `video: 'on'`: successful attempts
 must be recorded (`video: {mode: 'on', ...}` is equivalent). Publish only the passing attempt for every workflow/project;
 retain failures and traces as diagnostic artifacts, never as proof of success.

@@ -128,13 +128,6 @@ test('UI03 | Grounded extraction, aliases and operators',async({page,request})=>
   const unicodeExport=JSON.parse(await download(page,'Export evidence JSON'));
   expect(unicodeExport.extraction.requirements).toHaveLength(1);expect(unicodeExport.snapshot.clean_text).toContain('café');
   for(const r of unicodeExport.extraction.requirements)expect(Array.from(unicodeExport.snapshot.clean_text).slice(r.evidence.start,r.evidence.end).join('')).toBe(r.evidence.quote);
-  // Configuration-read rendering fixture only; this segment makes no inference request.
-  await page.route('**/ui/config',route=>route.fulfill({json:{demo:false,provider:'local',execution_mode:'local-inference',live_llm:true,acquisition_mode:'http'}}));
-  await page.reload();await expect(page.locator('.mode-badge')).toHaveText('LOCAL CPU INFERENCE');
-  await expect(page.getByLabel('Extraction configuration').locator('option')).toHaveText(['Normalized aliases','Raw aliases']);
-  expect(await page.getByLabel('Extraction configuration').locator('option').evaluateAll(items=>items.map(item=>item.value))).toEqual(['local_normalized_v1','local_structured_v1']);
-  await page.evaluate(()=>{const notice=document.querySelector('#notice');notice.textContent='Authored configuration rendering check — no model request in this segment.';notice.hidden=false;});
-  await page.unroute('**/ui/config');await page.reload();
   // Inject an authored API read fixture with a non-BMP prefix to catch UTF-16 slicing.
   const unicodeText='🧪 Authored source\nPython is required.';
   const start=Array.from(unicodeText).length-Array.from('Python is required.').length;
@@ -273,7 +266,7 @@ test('UI08 | Keyboard navigation, responsive layout and inert input',async({page
   await page.goto('/ui/#workbench?job=UI-INERT');await expect(page.getByLabel('Selected posting')).toHaveValue('UI-INERT');await page.getByLabel('Posting source').fill('Authored source <script>window.__injected=true</script>');await click(page,'Save immutable snapshot');
   await page.getByText(/Snapshot & extraction history/).click();await expect(page.locator('#history')).toContainText('<script>');expect(await page.locator('main script').count()).toBe(0);
   await page.reload();await expect(page.getByLabel('Selected posting')).toHaveValue('UI-INERT');
-  expect(await (await request.get('/ui/config')).json()).toEqual({demo:true,provider:'fixture',execution_mode:'fixture',live_llm:false,acquisition_mode:'fixture-policy-proxy'});
+  expect(await (await request.get('/ui/config')).json()).toMatchObject({contract_version:1,demo:true,provider:'fixture',execution_mode:'fixture',live_llm:false,acquisition_mode:'fixture-policy-proxy',actions:{samples:true,reset:true,extract:true,evaluate:true}});
   const readiness=await (await request.get('/health')).json();expect(readiness.provider).toBe('fixture');expect(readiness.configuration).toBe('fixture_normalized');expect(readiness.live_llm).toBe(false);expect(readiness.acquisition).toMatchObject({ready:true,mode:'policy-proxy',local_destination_dns:false});
   for(const view of ['Overview','Job registry','Source & extraction','Candidate evidence','Corpus analytics','Evaluation lab']){await nav(page,view);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1)).toBeTruthy();await expect(page.getByRole('navigation').getByRole('link',{name:view,exact:true})).toHaveAttribute('aria-current','page');await page.getByRole('link',{name:'Skip to content',exact:true}).focus();await page.keyboard.press('Enter');await expect(page.locator('main')).toBeFocused();await expect(page.getByRole('heading',{name:view,level:1,exact:true})).toBeVisible();}
   expect(errors).toEqual([]);

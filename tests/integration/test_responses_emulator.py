@@ -106,6 +106,24 @@ def api_client(url, monkeypatch, emulator):
         yield client, source
 
 
+def test_separate_authored_unseen_case_keeps_fixture_replay_unsupported(
+    isolated_database, monkeypatch, emulator
+):
+    text = "Python is required."
+    with api_client(isolated_database, monkeypatch, emulator) as (client, _source):
+        assert client.post("/jobs/live/snapshots", json={"text": text}).status_code == 201
+        saved = client.post("/jobs/live/extract", json={})
+        assert saved.status_code == 200
+        result = saved.json()
+        assert result["provenance"]["execution_mode"] == "emulator"
+        assert result["provenance"]["usage"] is None
+        assert result["requirements"][0]["evidence"] == {"start": 0, "end": 19, "quote": text}
+        client.app.state.provider = selected_provider(DATA, "fixture")
+        client.app.state.configuration = "fixture_normalized"
+        assert client.post("/jobs/live/extract", json={}).status_code == 501
+        assert client.get("/jobs/live").json()["extraction"]["run_id"] == result["run_id"]
+
+
 @pytest.mark.parametrize(
     "scenario,status,code,retryable,count",
     [
