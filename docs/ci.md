@@ -141,3 +141,12 @@ that cache after scoped teardown. Artifacts include the service inventory, code
 provenance and the engine's complete three-case reviewed report on every outcome.
 Only a complete passing suite publishes README/video evidence. Hosted controls
 have fake HTTP contract coverage; no paid call or hosted availability is claimed.
+
+The local CPU service gate additionally runs B/C experiments on identical frozen
+REV-01/REV-23/REV-25 snapshots through the actual internal Chat Completions engine.
+Its artifact includes all six HTTP attempts, source/config/model hashes, measured
+usage/quality, explicit failures and exactly reproduced saved scores. The Responses
+container gate runs B/C on frozen REV-01, retaining two actual HTTP attempts and
+unavailable inference/token/cost measurements. Both use `scripts.network_experiments`;
+no paid call occurs. Fast process/socket tests prove restart/resume with an uncertain
+slot preserved as a failure, rather than repeated or fabricated as success.

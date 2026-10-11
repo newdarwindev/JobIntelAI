@@ -217,7 +217,7 @@
       "services": [
         "normal PostgreSQL API",
         "authored verified HTTPS gateway",
-        "separate Responses emulator"
+        "separate Responses emulator with bounded structured contract"
       ]
     },
     {
@@ -242,7 +242,7 @@
       "services": [
         "normal PostgreSQL API",
         "authored verified HTTPS gateway",
-        "actual pinned llama.cpp/Qwen CPU model"
+        "actual pinned llama.cpp/Qwen CPU model; CLI B/C evidence remains separate"
       ]
     }
   ]

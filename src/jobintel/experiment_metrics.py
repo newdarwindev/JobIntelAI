@@ -27,13 +27,16 @@ def summarize_reviewed(records, corpus, metrics):
         )
     provenances = [r.get("provenance") for r in records]
     elapsed = [p.get("elapsed_seconds") if p else None for p in provenances]
+    llm_elapsed = [p.get("llm_elapsed_seconds") if p else None for p in provenances]
     return {
         "reviewed_per_case": details if reviewed else None,
         "not_attempted": sum(r["status"] == "not_attempted" for r in records),
         "provider_elapsed_seconds": sum(elapsed)
         if elapsed and all(e is not None for e in elapsed)
         else None,
-        "llm_elapsed_seconds": None,
+        "llm_elapsed_seconds": sum(llm_elapsed)
+        if llm_elapsed and all(e is not None for e in llm_elapsed)
+        else None,
     }
 
 

@@ -217,3 +217,76 @@ def test_wire_success_retry_report_and_process_recovery(isolated_database, monke
         assert request(emulator.base, "/diagnostics")["request_count"] == 21
         assert client.get("/responses-fixture-diagnostics").status_code == 404
         assert client.post("/responses-fixture/success").status_code == 404
+
+
+def test_network_experiment_budgets_rescore_and_process_restart(emulator, tmp_path, monkeypatch):
+    from jobintel.experiment_cli import main
+    from jobintel.experiment_corpus import write_json
+    from jobintel.experiment_reviewed import freeze_reviewed
+    from jobintel.experiments import ExperimentSpec
+
+    monkeypatch.setenv("OPENAI_API_KEY_FILE", "/never-read/hosted-secret")
+    corpus = freeze_reviewed(DATA, ["REV-01"])
+    frozen, config, output = tmp_path / "corpus.json", tmp_path / "spec.json", tmp_path / "run"
+    write_json(frozen, corpus.model_dump(mode="json"))
+    spec = ExperimentSpec(
+        configurations=["B", "C"], model=EMULATOR_MODEL, max_calls=2, max_output_tokens=512
+    )
+    write_json(config, spec.model_dump(mode="json"))
+    arguments = [
+        "--provider",
+        "emulator",
+        "--corpus",
+        str(frozen),
+        "--config",
+        str(config),
+        "--endpoint",
+        emulator.base + "/v1/responses",
+        "--output",
+        str(output),
+    ]
+    transport = HttpOpenAITransport(
+        EMULATOR_TOKEN, mode="emulator", endpoint=emulator.base + "/v1/responses"
+    )
+
+    class Interrupted:
+        def complete(self, payload):
+            transport.complete(payload)
+            raise KeyboardInterrupt()
+
+    with pytest.raises(SystemExit) as stopped:
+        main(["run", *arguments], transport=Interrupted())
+    assert stopped.value.code == 1
+    assert request(emulator.base, "/diagnostics")["request_count"] == 1
+    incomplete = json.loads((output / "report.json").read_text())
+    assert incomplete["complete"] is False
+    emulator.stop()
+    emulator.start()
+    assert main(["resume", *arguments, "--report", str(output / "report.json")]) == 1
+    report = json.loads((output / "report.json").read_text())
+    assert report["complete"] is True
+    assert report["results"][0]["records"][0]["error_code"] == "interrupted"
+    assert report["results"][1]["summary"]["succeeded"] == 1
+    diagnostics = request(emulator.base, "/diagnostics")
+    assert diagnostics["request_count"] == 1
+    assert diagnostics["requests"][0]["max_output_tokens"] == 512
+    assert (
+        main(
+            [
+                "rescore",
+                "--report",
+                str(output / "report.json"),
+                "--output",
+                str(tmp_path / "rescore.json"),
+            ]
+        )
+        == 0
+    )
+    assert (tmp_path / "rescore.json").read_bytes() == (output / "scores.json").read_bytes()
+    assert request(emulator.base, "/diagnostics")["request_count"] == 1
+    spec.max_calls = 1
+    config.write_text(spec.model_dump_json())
+    with pytest.raises(SystemExit) as rejected:
+        main(["run", *arguments[:-2], "--output", str(tmp_path / "over-budget")])
+    assert rejected.value.code == 2
+    assert request(emulator.base, "/diagnostics")["request_count"] == 1

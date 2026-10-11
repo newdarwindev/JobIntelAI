@@ -36,6 +36,10 @@ UI06 must identify exported results as fixture replay rather than live model
 quality. The separate `jobintel experiment` CLI preserves `/evaluate` and cannot
 enable paid browser calls. Live A/B/C configuration, budgeting and output audit stay
 in the opt-in CLI; UI06 exports retain fixture identity and unavailable paid usage.
+Local B/C model reports and network-emulator B/C contract reports also stay in the
+CLI. UI10/UI11 preserve their runtime identity and null unmeasured costs after
+shared provider changes; CLI reports cannot become persisted browser evaluations
+or enable paid actions.
 The journey checks the exported mode and null usage/cost. Original regression
 semantic/abstention metrics remain null. The source-reviewed benchmark displays
 reviewed counts, successful-case scope, matching on gold requirements, and five

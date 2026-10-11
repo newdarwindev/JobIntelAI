@@ -1,0 +1,734 @@
+{
+  "corpus_sha256": "dea25cda21d05f80d9e991eddb78f02cd26a76d17bddafb5a1f7a706a8493f7b",
+  "spec_sha256": "c0f45ecddd97e2f10896552ce4762873f93953c6f21800c9bfa930b5e03e1e02",
+  "results": [
+    {
+      "configuration": "B",
+      "summary": {
+        "succeeded": 2,
+        "failed": 1,
+        "metric_scope": "successful cases only; failures excluded, never empty predictions",
+        "metrics": {
+          "true_positives": 1,
+          "predicted": 1,
+          "expected": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "type_accuracy": 1.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": 0.0,
+          "abstention_quality": 1.0,
+          "counts": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 2
+            },
+            "f1": {
+              "numerator": 2,
+              "denominator": 3
+            },
+            "type_accuracy": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "evidence_accuracy": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "unsupported_span_rate": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          },
+          "type_confusion_matrix": {
+            "MUST": {
+              "MUST": 1,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "PREFERRED": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "EXPERIENCE": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "OTHER": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            }
+          },
+          "must_preferred_accuracy": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "reviewed_metrics": {
+            "semantic_unsupported_claim_rate": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "semantic_unreviewable_span_rate": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "abstention_precision": {
+              "numerator": 14,
+              "denominator": 14,
+              "value": 1.0
+            },
+            "abstention_recall": {
+              "numerator": 14,
+              "denominator": 14,
+              "value": 1.0
+            },
+            "correct_unknown_rate": {
+              "numerator": 14,
+              "denominator": 14,
+              "value": 1.0
+            },
+            "matching_agreement": {
+              "numerator": 2,
+              "denominator": 2,
+              "value": 1.0
+            },
+            "false_covered_rate": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "filters_precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "filters_recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "responsibilities_precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "responsibilities_recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            }
+          }
+        },
+        "per_case": [
+          {
+            "case_id": "REV-01",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.6666666666666666,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 3
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "REV-23",
+            "status": "failed",
+            "error_code": "invalid_evidence",
+            "metrics": null
+          },
+          {
+            "case_id": "REV-25",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 0,
+              "expected": 0,
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": null,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 0
+                }
+              }
+            }
+          }
+        ],
+        "tokens": {
+          "input": 1753,
+          "output": 478
+        },
+        "cost_usd": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 0,
+        "elapsed_seconds": 102.28498517700064,
+        "reviewed_per_case": [
+          {
+            "case_id": "REV-01",
+            "reviewed_metrics": {
+              "semantic_unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "semantic_unreviewable_span_rate": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "abstention_precision": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "abstention_recall": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "correct_unknown_rate": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "matching_agreement": {
+                "numerator": 2,
+                "denominator": 2,
+                "value": 1.0
+              },
+              "false_covered_rate": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "filters_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "filters_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            }
+          },
+          {
+            "case_id": "REV-25",
+            "reviewed_metrics": {
+              "semantic_unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "semantic_unreviewable_span_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "abstention_precision": {
+                "numerator": 3,
+                "denominator": 3,
+                "value": 1.0
+              },
+              "abstention_recall": {
+                "numerator": 3,
+                "denominator": 3,
+                "value": 1.0
+              },
+              "correct_unknown_rate": {
+                "numerator": 3,
+                "denominator": 3,
+                "value": 1.0
+              },
+              "matching_agreement": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "false_covered_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "filters_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "filters_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            }
+          }
+        ],
+        "not_attempted": 0,
+        "provider_elapsed_seconds": 102.25481395299721,
+        "llm_elapsed_seconds": 102.080408
+      }
+    },
+    {
+      "configuration": "C",
+      "summary": {
+        "succeeded": 2,
+        "failed": 1,
+        "metric_scope": "successful cases only; failures excluded, never empty predictions",
+        "metrics": {
+          "true_positives": 1,
+          "predicted": 1,
+          "expected": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666,
+          "type_accuracy": 1.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": 0.0,
+          "abstention_quality": 1.0,
+          "counts": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 2
+            },
+            "f1": {
+              "numerator": 2,
+              "denominator": 3
+            },
+            "type_accuracy": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "evidence_accuracy": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "unsupported_span_rate": {
+              "numerator": 0,
+              "denominator": 1
+            }
+          },
+          "type_confusion_matrix": {
+            "MUST": {
+              "MUST": 1,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "PREFERRED": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "EXPERIENCE": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "OTHER": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            }
+          },
+          "must_preferred_accuracy": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "reviewed_metrics": {
+            "semantic_unsupported_claim_rate": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "semantic_unreviewable_span_rate": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "abstention_precision": {
+              "numerator": 14,
+              "denominator": 14,
+              "value": 1.0
+            },
+            "abstention_recall": {
+              "numerator": 14,
+              "denominator": 14,
+              "value": 1.0
+            },
+            "correct_unknown_rate": {
+              "numerator": 14,
+              "denominator": 14,
+              "value": 1.0
+            },
+            "matching_agreement": {
+              "numerator": 2,
+              "denominator": 2,
+              "value": 1.0
+            },
+            "false_covered_rate": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "filters_precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "filters_recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "responsibilities_precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "responsibilities_recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            }
+          }
+        },
+        "per_case": [
+          {
+            "case_id": "REV-01",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 0.5,
+              "f1": 0.6666666666666666,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 3
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "REV-23",
+            "status": "failed",
+            "error_code": "invalid_evidence",
+            "metrics": null
+          },
+          {
+            "case_id": "REV-25",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 0,
+              "expected": 0,
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": null,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 0
+                }
+              }
+            }
+          }
+        ],
+        "tokens": {
+          "input": 1753,
+          "output": 478
+        },
+        "cost_usd": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 0,
+        "elapsed_seconds": 96.00085299601778,
+        "reviewed_per_case": [
+          {
+            "case_id": "REV-01",
+            "reviewed_metrics": {
+              "semantic_unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "semantic_unreviewable_span_rate": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "abstention_precision": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "abstention_recall": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "correct_unknown_rate": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "matching_agreement": {
+                "numerator": 2,
+                "denominator": 2,
+                "value": 1.0
+              },
+              "false_covered_rate": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "filters_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "filters_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            }
+          },
+          {
+            "case_id": "REV-25",
+            "reviewed_metrics": {
+              "semantic_unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "semantic_unreviewable_span_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "abstention_precision": {
+                "numerator": 3,
+                "denominator": 3,
+                "value": 1.0
+              },
+              "abstention_recall": {
+                "numerator": 3,
+                "denominator": 3,
+                "value": 1.0
+              },
+              "correct_unknown_rate": {
+                "numerator": 3,
+                "denominator": 3,
+                "value": 1.0
+              },
+              "matching_agreement": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "false_covered_rate": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "filters_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "filters_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            }
+          }
+        ],
+        "not_attempted": 0,
+        "provider_elapsed_seconds": 95.94547046498337,
+        "llm_elapsed_seconds": 95.89469700000001
+      }
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 import re
 from datetime import datetime
 from pathlib import Path
@@ -29,24 +30,34 @@ from jobintel.providers import ProviderUnavailable
 
 def save_checkpoint(path: Path, report: dict) -> None:
     temporary = path.with_suffix(".partial")
-    temporary.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    from jobintel.experiment_corpus import digest
+
+    value = {k: v for k, v in report.items() if k != "checkpoint_sha256"}
+    value["checkpoint_sha256"] = digest(value)
+    with temporary.open("w", encoding="utf-8") as output:
+        output.write(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + "\n")
+        output.flush()
+        os.fsync(output.fileno())
     temporary.replace(path)
 
 
 def run(args, corpus, spec, transport=None):
-    plan(corpus, spec, "live" if args.provider == "openai" else "fake")
+    plan(corpus, spec, provider_mode(args.provider))
     if corpus.public:
         verify_public(corpus, public_reference(corpus, fixture_root()))
     elif not args.output.resolve().is_relative_to(Path("local_data").resolve()):
         raise ValueError("private corpus output must stay under ignored local_data/")
-    provider = selected_experiment_provider(args.provider, transport)
-    args.output.mkdir(parents=True, exist_ok=False)
+    saved = resume_input(args)
+    provider = selected_experiment_provider(args.provider, transport, args.endpoint)
+    if saved is None:
+        args.output.mkdir(parents=True, exist_ok=False)
     report_path = args.output / "report.json"
     report = run_experiment(
         provider,
         corpus,
         spec,
         checkpoint=lambda current: save_checkpoint(report_path, current),
+        resume=saved,
     )
     save_checkpoint(report_path, report)
     write_json(args.output / "scores.json", rescore(report))
@@ -57,12 +68,53 @@ def run(args, corpus, spec, transport=None):
     return 1 if any(r["summary"]["failed"] for r in report["results"]) else 0
 
 
-def selected_experiment_provider(name, transport):
+def provider_mode(name):
+    return {"openai": "live", "local": "local-inference"}.get(name, name)
+
+
+def resume_input(args):
+    if args.action != "resume":
+        return None
+    if args.provider not in {"local", "emulator"}:
+        raise ValueError(
+            "resume requires local or emulator mode; hosted retries need separate authorization"
+        )
+    if not args.report or args.report.resolve() != (args.output / "report.json").resolve():
+        raise ValueError("resume must target its existing output/report.json")
+    return read_json(args.report)
+
+
+def selected_experiment_provider(name, transport, endpoint=None):
     if name == "fake":
         return FakeExperimentProvider(fixture_root())
     from jobintel.experiment_provider import OpenAIExperimentProvider
     from jobintel.openai_transport import HttpOpenAITransport
 
+    if name == "local":
+        from jobintel.experiment_network import LocalExperimentProvider
+        from jobintel.local_transport import HttpLocalTransport
+
+        return LocalExperimentProvider(
+            transport
+            or HttpLocalTransport(
+                endpoint or os.getenv("JOBINTEL_LOCAL_ENDPOINT"),
+                timeout=network_timeout("JOBINTEL_LOCAL_TIMEOUT", 120, 600),
+            )
+        )
+    if name == "emulator":
+        from jobintel.experiment_network import EmulatorExperimentProvider
+        from jobintel.openai_transport import EMULATOR_TOKEN
+
+        return EmulatorExperimentProvider(
+            transport
+            or HttpOpenAITransport(
+                EMULATOR_TOKEN,
+                mode="emulator",
+                endpoint=endpoint or os.getenv("JOBINTEL_RESPONSES_ENDPOINT"),
+            )
+        )
+    if endpoint:
+        raise ValueError("hosted endpoint is fixed; --endpoint is only for scoped network modes")
     if transport is None:
         try:
             key = openai_key()
@@ -75,11 +127,18 @@ def selected_experiment_provider(name, transport):
     return OpenAIExperimentProvider(transport)
 
 
+def network_timeout(variable, default, maximum):
+    value = float(os.getenv(variable, str(default)))
+    if not 1 <= value <= maximum:
+        raise ValueError("network timeout is outside runtime bounds")
+    return value
+
+
 def publish(args):
     report = read_json(args.report)
     corpus = load_corpus_from_report(report)
     verify_public(corpus, public_reference(corpus, fixture_root()))
-    if report["mode"] == "live":
+    if report["mode"] in {"live", "local-inference", "emulator"}:
         from jobintel.experiment_publication import publish_live
 
         return publish_live(args, report, corpus)
@@ -192,10 +251,16 @@ def load_corpus_from_report(report):
 
 def main(arguments, *, transport=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["freeze", "plan", "run", "rescore", "audit", "publish"])
+    parser.add_argument(
+        "action", choices=["freeze", "plan", "run", "resume", "rescore", "audit", "publish"]
+    )
     parser.add_argument("--corpus", type=Path)
     parser.add_argument("--config", type=Path)
-    parser.add_argument("--provider", choices=["fake", "openai"], default="fake")
+    parser.add_argument(
+        "--provider", choices=["fake", "openai", "local", "emulator"], default="fake"
+    )
+    parser.add_argument("--endpoint")
+    parser.add_argument("--cases", nargs="+")
     parser.add_argument("--report", type=Path)
     parser.add_argument("--audit", type=Path)
     parser.add_argument("--readme", type=Path)
@@ -215,8 +280,10 @@ def main(arguments, *, transport=None):
 
 def execute(args, transport=None):
     if args.action == "freeze":
+        if args.cases and args.dataset != "reviewed":
+            raise ValueError("--cases requires the source-reviewed dataset")
         corpus = (
-            freeze_reviewed(fixture_root())
+            freeze_reviewed(fixture_root(), args.cases)
             if args.dataset == "reviewed"
             else freeze_bundled(fixture_root())
         )
@@ -236,14 +303,16 @@ def execute(args, transport=None):
         return 0
     if not args.corpus:
         raise ValueError("--corpus is required")
+    if args.cases:
+        raise ValueError("--cases selects immutable inputs during freeze only")
     corpus = load_corpus(args.corpus)
     spec = (
         ExperimentSpec.model_validate(read_json(args.config))
         if args.config
         else default_spec(corpus)
     )
-    if args.action == "run":
+    if args.action in {"run", "resume"}:
         return run(args, corpus, spec, transport)
-    reservation = plan(corpus, spec, "live" if args.provider == "openai" else "fake")
+    reservation = plan(corpus, spec, provider_mode(args.provider))
     write_json(args.output, {"reservation": reservation, "spec": spec.model_dump(mode="json")})
     return 0

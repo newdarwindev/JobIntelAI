@@ -73,10 +73,10 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 <!-- UI-RECORDINGS:START -->
 
-Successful browser attempts: **22/22**, recorded 2026-10-10.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38088803428) · commit `16e0e3f543294adf4f3794938872683013c39604`.
+Successful browser attempts: **22/22**, recorded 2026-10-11.
+Source: local Playwright run against the sandbox and normal PostgreSQL APIs. Remote GitHub Actions has not been verified by these local videos.
 UI01–UI08 use the explicit synthetic sandbox. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
-Source content SHA-256: `b432d14c19aa6b1eacb2246455dddf548a8a367580a45b380b59ccf865a9d8c3`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source content SHA-256: `2bb0dfe90d534fa284b85597d9181975a9d5be000f1f0a5bba4e9f8e5f35ce0c`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -407,6 +407,8 @@ retain failures and remain retrievable through `/evaluation-runs/{id}` or
 The source reviewer and limitations are recorded in the methodology; this replay
 run supplies no live-model quality claim. See the [saved diagnostic JSON](results/reviewed_fixture_evaluation.json)
 and [human-readable errors](results/reviewed_fixture_evaluation.txt). Do not substitute fixture measurements for independently reviewed model results.
+
+The [reviewed network experiments](results/network-experiments/README.md) include six actual CPU B/C requests (each 2/3 valid, successful-case recall 1/2) and two separately labelled emulator requests. Saved scores reproduce without calls; complete failures and automated output audits are retained. No paid hosted call occurred.
 
 The opt-in [experiment command](docs/experiments.md) freezes snapshots and labels,
 checks call/token/USD reservations, checkpoints failures and rescores saved outputs

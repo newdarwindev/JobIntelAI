@@ -215,3 +215,13 @@ exact evidence, candidate revision reload/matching, exports and saved evaluation
 Actual separate emulator failures and CPU-engine stop/start preserve saved history.
 The runner records the service inventory and actual three-case local outcomes; model
 quality is separate from browser acceptance counts. See [UI acceptance](web_ui_spec.md).
+
+V38 network regressions in `unit/test_network_experiments.py` enforce reviewed
+selection, pinned models, actual output caps and pre-request call/token/context/cost
+rejection. The process/socket experiment test in
+`integration/test_responses_emulator.py` interrupts after a real request, restarts the
+provider, resumes without repeating the uncertain slot and reproduces saved scores.
+`scripts.network_experiments` adds actual B/C CPU measurements to the local service
+workflow and separately labelled B/C contract evidence to the Responses smoke.
+Generator labels never acquire independent-review status; paid authorization and
+hash-bound publication audits remain separate gates.

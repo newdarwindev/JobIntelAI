@@ -9,6 +9,7 @@ import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+from jobintel.experiment_corpus import digest
 from jobintel.openai_transport import EMULATOR_MODEL, EMULATOR_TOKEN
 from jobintel.provider_config import PROMPT, strict_schema
 from jobintel.schemas import Extraction, Requirement
@@ -83,12 +84,22 @@ class State:
                 }
             },
             "parameters_valid": payload.get("store") is False
-            and payload.get("max_output_tokens") == 8192,
+            and type(payload.get("max_output_tokens")) is int
+            and 1 <= payload["max_output_tokens"] <= 8192,
             "input_valid": valid_input,
         }
         with self.lock:
-            self.requests.append({"scenario": self.scenario, **checks})
-            self.history.append({"scenario": self.scenario, **checks})
+            record = {
+                "scenario": self.scenario,
+                **checks,
+                "source_sha256": content_hash(text),
+                "request_sha256": digest(payload),
+                "max_output_tokens": payload.get("max_output_tokens")
+                if type(payload.get("max_output_tokens")) is int
+                else None,
+            }
+            self.requests.append(record)
+            self.history.append(record)
             return text, self.scenario, len(self.requests), all(checks.values())
 
     def diagnostics(self):

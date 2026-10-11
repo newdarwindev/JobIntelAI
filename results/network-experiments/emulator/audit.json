@@ -1,0 +1,10 @@
+{
+  "report_sha256": "166bd1173976cdf71b91d6debc60acc208932a0595ea989cd0b1d40bb9fc6cbf",
+  "corpus_sha256": "0481c38cfc191e3bd4f4be1fd360673cc178c6de3e34520c7d9c592680e26545",
+  "reviewer": "Codex automated reviewer",
+  "method": "Reviewed pinned MIT-authored REV-01 source, both raw/scored outputs, provenance, failure records and metric denominators. B retains Postgres alias: precision/recall 1/2; C normalizes to PostgreSQL: 2/2. Authored contract output is plumbing evidence only, no inference/model-quality claim. Tokens/cost/LLM time stay null. Exact saved scores reproduce; recognizable-secret scan and pinned public-source checks pass. Source-label review remains separate; no paid execution occurred.",
+  "revision": "335c5b9",
+  "reviewed_at": "2026-10-11T06:09:21.841233Z",
+  "approved": true,
+  "findings": []
+}

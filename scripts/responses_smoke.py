@@ -7,6 +7,7 @@ from pathlib import Path
 import httpx
 
 from jobintel.openai_transport import EMULATOR_MODEL
+from scripts.network_experiments import measure
 from scripts.responses_environment import (
     base_url,
     compose,
@@ -169,6 +170,14 @@ def main():
             verify_failures(base, emulator, saved, evidence)
             verify_recovery(base, emulator, saved, options, evidence)
             verify_report(base, evidence)
+            evidence["experiments"] = measure("emulator", emulator["base"] + "/v1/responses")
+            evidence["cases"].append(
+                {
+                    "case": "frozen_reviewed_B_C_network_experiments_and_saved_rescore",
+                    "status": "passed",
+                    "actual_http_attempts": evidence["experiments"]["observed_http_attempts"],
+                }
+            )
             evidence.update(status="passed", passed=len(evidence["cases"]), failed=0, skipped=0)
     finally:
         write_evidence("work/responses-service.json", evidence)

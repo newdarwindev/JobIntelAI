@@ -1,7 +1,6 @@
 """Offline-verifiable experiment orchestration, isolated from production persistence."""
 
 import subprocess
-from copy import deepcopy
 from datetime import UTC, date, datetime
 from pathlib import Path
 from time import perf_counter
@@ -117,6 +116,7 @@ class CaseRecord(StrictModel):
             "model_mismatch",
             "token_limit",
             "not_attempted",
+            "interrupted",
         ]
         | None
     )
@@ -153,7 +153,7 @@ class CaseRecord(StrictModel):
 
 
 class ExperimentProvider(Protocol):
-    mode: Literal["fake", "live"]
+    mode: Literal["fake", "live", "local-inference", "emulator"]
 
     def predict(self, text: str, configuration: dict, spec: ExperimentSpec) -> Prediction: ...
 
@@ -185,23 +185,32 @@ def live_preflight(corpus: FrozenCorpus, spec: ExperimentSpec) -> None:
 
 
 def plan(corpus: FrozenCorpus, spec: ExperimentSpec, mode: str) -> dict:
-    if mode not in {"fake", "live"}:
+    from jobintel.experiment_network import NETWORK_MODES, configurations, preflight
+
+    if mode not in {"fake", "live", *NETWORK_MODES}:
         raise ValueError("unknown experiment provider mode")
     if mode == "live":
         live_preflight(corpus, spec)
+    elif mode in NETWORK_MODES:
+        preflight(corpus, spec, mode)
     calls = len(corpus.cases) * len(spec.configurations)
     if calls > spec.max_calls:
         raise ValueError("experiment exceeds the call budget before any provider request")
     import json
 
+    from jobintel.experiment_network import local_payload
     from jobintel.experiment_provider import request_payload
+
+    configs = configurations(mode)
+    builder = local_payload if mode == "local-inference" else request_payload
 
     # Reserve UTF-8 bytes for the exact request plus envelope overhead, never measured tokens.
     for case in corpus.cases:
         request_bytes = max(
             len(
                 json.dumps(
-                    request_payload(case.text, CONFIGURATIONS[c], spec), ensure_ascii=False
+                    reservation_payload(builder(case.text, configs[c], spec), mode),
+                    ensure_ascii=False,
                 ).encode("utf-8")
             )
             for c in spec.configurations
@@ -221,6 +230,11 @@ def plan(corpus: FrozenCorpus, spec: ExperimentSpec, mode: str) -> dict:
         if reserved > spec.budget_usd:
             raise ValueError("experiment exceeds the USD budget before any provider request")
     return {"calls": calls, "reserved_cost_usd": reserved, "mode": mode, "retries": 0}
+
+
+def reservation_payload(payload, mode):
+    # llama.cpp grammar is compiled separately; only messages consume prompt context.
+    return payload["messages"] if mode == "local-inference" else payload
 
 
 def code_provenance() -> dict:
@@ -412,8 +426,16 @@ def extended_metrics(records, corpus, version, metrics):
 
 
 def run_experiment(
-    provider: ExperimentProvider, corpus: FrozenCorpus, spec: ExperimentSpec, checkpoint=None
+    provider: ExperimentProvider,
+    corpus: FrozenCorpus,
+    spec: ExperimentSpec,
+    checkpoint=None,
+    *,
+    resume=None,
 ) -> dict:
+    from jobintel.experiment_checkpoint import restore_checkpoint
+    from jobintel.experiment_network import configurations
+
     reservation = plan(corpus, spec, provider.mode)
     started = perf_counter()
     report = {
@@ -421,7 +443,11 @@ def run_experiment(
         "mode": provider.mode,
         "quality_claim": "fake provider plumbing only"
         if provider.mode == "fake"
-        else "live experiment",
+        else {
+            "live": "live experiment",
+            "local-inference": "measured local model quality",
+            "emulator": "authored network contract plumbing only; no model quality",
+        }[provider.mode],
         "created_at": datetime.now(UTC).isoformat(),
         "provenance": code_provenance(),
         "corpus": corpus.model_dump(mode="json"),
@@ -434,19 +460,23 @@ def run_experiment(
         "complete": False,
         "active_case": None,
     }
+    if resume is not None:
+        report = restore_checkpoint(resume, report, corpus, spec)
     if checkpoint:
         checkpoint(report)
-    stopped = None
+    stopped = report.get("stopped_after_error")
     for name in spec.configurations:
-        configuration = deepcopy(CONFIGURATIONS[name])
-        result = {
-            "configuration": name,
-            "config": configuration,
-            "config_sha256": digest(configuration),
-            "records": [],
-        }
-        report["results"].append(result)
-        for case in corpus.cases:
+        configuration = configurations(provider.mode)[name]
+        result = next((r for r in report["results"] if r["configuration"] == name), None)
+        if result is None:
+            result = {
+                "configuration": name,
+                "config": configuration,
+                "config_sha256": digest(configuration),
+                "records": [],
+            }
+            report["results"].append(result)
+        for case in corpus.cases[len(result["records"]) :]:
             report["active_case"] = {"configuration": name, "case_id": case.case_id}
             if checkpoint:
                 checkpoint(report)
@@ -456,7 +486,7 @@ def run_experiment(
                 else predict_case(provider, case, configuration, spec, corpus.taxonomy)
             )
             result["records"].append(record)
-            if provider.mode == "live" and record["error_code"] in {
+            if provider.mode != "fake" and record["error_code"] in {
                 "timeout",
                 "quota",
                 "rate_limit",
@@ -466,6 +496,7 @@ def run_experiment(
                 "token_limit",
             }:
                 stopped = record["error_code"]
+                report["stopped_after_error"] = stopped
             report["active_case"] = None
             if checkpoint:
                 checkpoint(report)
@@ -473,7 +504,10 @@ def run_experiment(
         result["records_sha256"] = digest(result["records"])
     report["complete"] = True
     report["completed_at"] = datetime.now(UTC).isoformat()
-    report["end_to_end_elapsed_seconds"] = perf_counter() - started
+    report["last_session_elapsed_seconds"] = perf_counter() - started
+    report["end_to_end_elapsed_seconds"] = (
+        None if resume else report["last_session_elapsed_seconds"]
+    )
     report["stopped_after_error"] = stopped
     return report
 
@@ -512,7 +546,9 @@ def rescore(report: dict) -> dict:
     version = report.get("format_version", 1)
     if version not in {1, 2}:
         raise ValueError("unsupported experiment format")
-    configurations = LEGACY_CONFIGURATIONS if version == 1 else CONFIGURATIONS
+    from jobintel.experiment_network import configurations as mode_configurations
+
+    configurations = LEGACY_CONFIGURATIONS if version == 1 else mode_configurations(report["mode"])
     expected = [(c.case_id, c.snapshot_sha256) for c in corpus.cases]
     for result in report["results"]:
         if (
