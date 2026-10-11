@@ -202,6 +202,13 @@ Fake transport, semantic, API/CLI and migrated database regressions are in
 
 ## PostgreSQL / Docker
 
+Use the [shared on-demand runner](docs/environments.md) for bounded disposable
+API/CLI/browser environments and explicit persistent sessions. It discovers unique
+loopback ports, records owned resources and removes expired runs without touching
+developer volumes or licensed model caches. `python -m scripts.environment_smoke`
+checks simultaneous isolation and the complete real-wire emulator pipeline with
+zero paid calls.
+
 ```bash
 python scripts/runtime.py up --mode dev --project jobintel-dev
 docker compose -p jobintel-dev exec -T api jobintel demo

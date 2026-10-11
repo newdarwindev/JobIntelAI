@@ -10,6 +10,8 @@ from pathlib import Path
 from uuid import uuid4
 
 from scripts.acquisition_fixtures.certificates import certificates
+from scripts.environment_lifecycle import ROOT as ENV_ROOT
+from scripts.environment_lifecycle import Lease
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -54,16 +56,50 @@ def diagnostics(project, trust):
 
 
 @contextmanager
+def managed_fixtures(project, *, persistent=False, lifetime=3600, resume=False, expires_at=None):
+    with Lease(
+        project, persistent=persistent, lifetime=lifetime, resume=resume, expires_at=expires_at
+    ) as lease:
+        directory = ENV_ROOT / "local_data/environments" / project
+        if not resume:
+            directory.mkdir(parents=True, exist_ok=False)
+            (directory / "owner").write_text(lease.record["owner"])
+        trust = directory / "trust"
+        certificates(trust)
+        lease.configure(
+            [
+                "docker",
+                "compose",
+                "--project-name",
+                project,
+                "-f",
+                "docker-compose.acquisition.yml",
+            ],
+            {
+                **os.environ,
+                "JOBINTEL_ACQUISITION_TRUST_DIR": str(trust),
+                "JOBINTEL_ACQUISITION_PROXY_PORT": "0",
+            },
+        )
+        lease.command("up", "-d", "--build", "--wait", "--wait-timeout", "120")
+        address = lease.command("port", "proxy", "8088", capture=True).stdout.strip()
+        fixtures = {
+            "proxy": "http://" + address,
+            "ca": trust / "ca.pem",
+            "project": project,
+            "_lease": lease,
+        }
+        fixtures["diagnostics"] = lambda: diagnostics(project, trust)
+        lease.collectors["acquisition"] = fixtures["diagnostics"]
+        lease.ready({"proxy": fixtures["proxy"]})
+        yield fixtures
+
+
+@contextmanager
 def fixture_environment(directory):
     project = "jobintel-acquisition-" + uuid4().hex[:12]
-    trust = Path(directory).resolve() / "trust"
-    try:
-        fixtures = start(project, trust)
-        fixtures["project"] = project
-        fixtures["diagnostics"] = lambda: diagnostics(project, trust)
+    with managed_fixtures(project) as fixtures:
         yield fixtures
-    finally:
-        compose(project, trust, "down", "--volumes")
 
 
 def main():

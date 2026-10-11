@@ -3,14 +3,12 @@
 import argparse
 import http.client
 import json
-import os
 import subprocess
 from pathlib import Path
-from tempfile import TemporaryDirectory
-from uuid import uuid4
+from urllib.parse import urlsplit
 
 from scripts.acquisition_environment import diagnostics
-from scripts.acquisition_fixtures.certificates import certificates
+from scripts.environment import Environment
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -145,72 +143,40 @@ def main():
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--output", type=Path, default=ROOT / "work/acquisition-service.json")
     args = parser.parse_args()
-    project = "jobintel-acquisition-" + uuid4().hex[:12]
     results = []
     failure = None
-    with TemporaryDirectory(prefix="jobintel-acquisition-") as directory:
-        trust = certificates(Path(directory) / "trust")
-        environment = {
-            **os.environ,
-            "JOBINTEL_ACQUISITION_TRUST_DIR": str(trust),
-            "JOBINTEL_API_PORT": str(args.port),
-        }
-        command = [
-            "docker",
-            "compose",
-            "-p",
-            project,
-            "-f",
-            "docker-compose.yml",
-            "-f",
-            "docker-compose.acquisition.yml",
-            "-f",
-            "docker-compose.acquisition-api.yml",
-        ]
-        if args.offline:
-            command += ["-f", "docker-compose.offline.yml"]
-        if args.ca_bundle:
-            command += ["-f", "docker-compose.proxy.yml"]
-            environment["JOBINTEL_CA_BUNDLE"] = str(args.ca_bundle.resolve())
-        try:
-            subprocess.run(
-                [*command, "up", "-d", "--build", "--wait", "--wait-timeout", "120"],
-                env=environment,
-                check=True,
-            )
+    try:
+        with Environment(
+            "fixture", acquisition=True, offline=args.offline, ca_bundle=args.ca_bundle
+        ) as session:
+            args.port = urlsplit(session.info["base"]).port
+            project = session.fixtures["project"]
+            trust = session.fixtures["ca"].parent
             assert request(args.port, "/ui/config")["acquisition_mode"] == "fixture-policy-proxy"
             success_cases(args.port, results)
             failure_cases(args.port, results)
             negative_cases(args.port, project, trust, results)
             recovery(args.port, results)
-        except BaseException as error:
-            failure = type(error).__name__
-            raise
-        finally:
-            try:
-                try:
-                    observed = diagnostics(project, trust)
-                except (OSError, subprocess.CalledProcessError, ValueError):
-                    observed = {"unavailable": True}
-                evidence = {
-                    "cases": results,
-                    "passed": len(results),
-                    "failed": int(failure == "AssertionError"),
-                    "errors": int(failure is not None and failure != "AssertionError"),
-                    "skipped": 0,
-                    "completed": failure is None,
-                    "failure_kind": failure,
-                    "database": "PostgreSQL",
-                    "transport": "production policy-proxy; gateway DNS/pinning leases; verified scoped CA",
-                    "commit": subprocess.check_output(
-                        ["git", "rev-parse", "HEAD"], text=True
-                    ).strip(),
-                    "diagnostics": observed,
-                }
-                args.output.parent.mkdir(parents=True, exist_ok=True)
-                args.output.write_text(json.dumps(evidence, indent=2) + "\n")
-            finally:
-                subprocess.run([*command, "down", "--volumes"], env=environment, check=True)
+            observed = session.fixtures["diagnostics"]()
+    except BaseException as error:
+        failure = type(error).__name__
+        raise
+    finally:
+        evidence = {
+            "cases": results,
+            "passed": len(results),
+            "failed": int(failure == "AssertionError"),
+            "errors": int(failure is not None and failure != "AssertionError"),
+            "skipped": 0,
+            "completed": failure is None,
+            "failure_kind": failure,
+            "database": "PostgreSQL",
+            "transport": "production policy-proxy; gateway DNS/pinning leases; verified scoped CA",
+            "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+            "diagnostics": observed if failure is None else {"see_scoped_lease_diagnostics": True},
+        }
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(evidence, indent=2) + "\n")
     print(f"Acquisition container checks: {len(results)} passed; 0 failed/skipped.")
 
 

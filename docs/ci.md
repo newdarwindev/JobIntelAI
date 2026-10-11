@@ -150,3 +150,16 @@ container gate runs B/C on frozen REV-01, retaining two actual HTTP attempts and
 unavailable inference/token/cost measurements. Both use `scripts.network_experiments`;
 no paid call occurs. Fast process/socket tests prove restart/resume with an uncertain
 slot preserved as a failure, rather than repeated or fabricated as success.
+
+
+The mandatory container gate runs `python -m scripts.environment_smoke` through
+the shared [environment lifecycle](environments.md). It exercises the complete
+real-wire/API/CLI contract and coexisting stacks, persistent-volume preservation,
+failure/interruption cleanup and expiry after SIGKILL. Exact completed case counts
+and failure/error/skip counts are saved to `work/environment-service.json` on every
+outcome. `work/environments/` contains source/config hashes, discovered endpoints,
+lease outcomes, sanitized service states and protocol diagnostics; it never contains
+TLS keys, process environments or private database contents. Container and browser
+jobs reap only recorded disposable leases on every outcome. CPU checks use the
+same runner, retain checksum-pinned licensed weights, and stay a separately labelled
+resource-bounded inference job. All PR/fork jobs remain read-only.

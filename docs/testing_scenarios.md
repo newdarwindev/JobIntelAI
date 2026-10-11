@@ -225,3 +225,18 @@ provider, resumes without repeating the uncertain slot and reproduces saved scor
 workflow and separately labelled B/C contract evidence to the Responses smoke.
 Generator labels never acquire independent-review status; paid authorization and
 hash-bound publication audits remain separate gates.
+
+
+Environment lifecycle regressions in `unit/test_environment_lifecycle.py` reject
+claiming existing resources, require ownership before deletion, preserve persistent
+volumes, reject foreign resources on resume, exclude secrets from diagnostics and
+verify expiry, SIGTERM and child-process-group termination. The normal browser
+boundary still overrides inherited private database/provider settings and cleans
+failed startups. `python -m scripts.environment_smoke` uses the same runner as
+UI09–UI11 and the acquisition/Responses/CPU smoke drivers: real verified HTTPS
+acquisition, grounded extraction, persisted revision/match, API/CLI export and
+saved authored evaluation; simultaneous independent runs; persistent stop/resume;
+scoped failure/SIGINT/SIGTERM cleanup and an orphan SIGKILL expiry watchdog.
+The container gate is mandatory and makes zero paid calls. Browser recordings
+remain 22 full desktop/mobile journeys; actual model outcomes are reported in
+separate optional CPU measurement evidence, not emulator quality claims.

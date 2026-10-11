@@ -11,13 +11,14 @@ from tempfile import TemporaryDirectory
 from jobintel.experiments import code_provenance
 from scripts.acquisition_environment import fixture_environment
 from scripts.browser_services import normal_api
+from scripts.environment_lifecycle import bounded_command, collect_diagnostics, interruption_guard
 from scripts.responses_environment import emulator_environment, request, write_evidence
 
 
 def main():
     # Validate fixture declarations before starting costly provider services.
     subprocess.run(["npx", "playwright", "test", "--list", *sys.argv[1:]], check=True)
-    with TemporaryDirectory(prefix="jobintel-browser-services-") as directory:
+    with interruption_guard(), TemporaryDirectory(prefix="jobintel-browser-services-") as directory:
         with (
             fixture_environment(directory) as fixtures,
             emulator_environment(
@@ -37,8 +38,11 @@ def main():
                     "UI_RESPONSES_BASE": emulator["base"],
                     "UI_NORMAL_SERVICES": json.dumps(normal),
                 }
-                result = subprocess.run(
-                    ["npx", "playwright", "test", *sys.argv[1:]], env=environment
+                result = bounded_command(
+                    ["npx", "playwright", "test", *sys.argv[1:]],
+                    environment=environment,
+                    timeout=2100,
+                    check=False,
                 )
             finally:
                 output = Path("work/acquisition-browser-diagnostics.json")
@@ -48,7 +52,9 @@ def main():
                         ["git", "rev-parse", "HEAD"], text=True
                     ).strip(),
                     "transport": "production policy-proxy via trusted Compose DNS/pinning gateway",
-                    "diagnostics": fixtures["diagnostics"](),
+                    "diagnostics": collect_diagnostics({"acquisition": fixtures["diagnostics"]})[
+                        "acquisition"
+                    ],
                 }
                 output.write_text(json.dumps(evidence, indent=2) + "\n")
                 write_evidence(
@@ -57,7 +63,9 @@ def main():
                         "commit": evidence["commit"],
                         "mode": "emulator",
                         "inference": False,
-                        "diagnostics": emulator["diagnostics"](),
+                        "diagnostics": collect_diagnostics({"responses": emulator["diagnostics"]})[
+                            "responses"
+                        ],
                     },
                 )
                 write_evidence(
@@ -65,9 +73,13 @@ def main():
                     {
                         "code_provenance": code_provenance(),
                         "services": normal,
-                        "emulator_diagnostics": request(
-                            normal["emulator"]["control_base"], "/diagnostics"
-                        )
+                        "emulator_diagnostics": collect_diagnostics(
+                            {
+                                "responses": lambda: request(
+                                    normal["emulator"]["control_base"], "/diagnostics"
+                                )
+                            }
+                        )["responses"]
                         if "emulator" in normal
                         else None,
                     },

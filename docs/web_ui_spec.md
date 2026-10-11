@@ -223,3 +223,18 @@ Model preparation must retain verified weights and license even when a weight
 download outlasts registry authorization: renew authorization between cache objects.
 This runtime boundary is covered by the cache tests and recording source hash;
 it does not introduce a browser credential flow.
+
+
+The shared environment runner provisions UI09–UI11 with fresh labelled Compose
+leases and Docker-assigned loopback ports. Each journey verifies its disposable
+ownership record, configuration hash, live deadline and distinct API endpoint.
+Acquisition fixtures and the sandbox Responses emulator use the same lifecycle;
+they stop after dependent APIs. A detached expiry watchdog also removes owned
+resources after an abrupt launcher death. SIGINT/SIGTERM and command timeouts
+terminate the browser process group before scoped teardown. Every outcome retains
+sanitized per-service state and mode/source/config provenance in `work/environments/`;
+failed diagnostic collectors cannot prevent other collectors or cleanup. Generated
+TLS material is private runtime data and is excluded from uploaded artifacts.
+Persistent developer sessions and verified model weights remain outside disposable
+cleanup. These controls are runtime evidence, without adding a product credential
+or paid-call flow. See [environment lifecycle](environments.md).
