@@ -114,6 +114,30 @@ def verify_evaluation(args, evidence):
     )
 
 
+def verify_experiments(args, evidence):
+    result = compose(
+        args,
+        "exec",
+        "-T",
+        "api",
+        "python",
+        "-m",
+        "scripts.network_experiments",
+        "--provider",
+        "local",
+        capture=True,
+    )
+    evidence["experiments"] = json.loads(result.stdout)
+    evidence["experiments"]["host_code_provenance"] = code_provenance()
+    evidence["cases"].append(
+        {
+            "case": "frozen_reviewed_B_C_network_experiments_and_saved_rescore",
+            "status": "passed",
+            "actual_http_attempts": evidence["experiments"]["observed_http_attempts"],
+        }
+    )
+
+
 def verify_lifecycle(args, evidence, saved):
     compose(args, "stop", "llama-cpp")
     assert call(args, "/health", status=503)["provider_ready"] is False
@@ -158,6 +182,7 @@ def main():
         evidence["first_stack_start_seconds"] = perf_counter() - started
         saved = verify_pipeline(args, evidence)
         verify_evaluation(args, evidence)
+        verify_experiments(args, evidence)
         memory = compose(
             args,
             "exec",

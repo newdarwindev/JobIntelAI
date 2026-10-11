@@ -8,7 +8,7 @@ from pydantic import Field, field_validator
 
 from jobintel.experiment_corpus import digest, parse_corpus, read_json, verify_public, write_json
 from jobintel.experiment_reviewed import public_reference
-from jobintel.experiments import ExperimentSpec, live_preflight, rescore
+from jobintel.experiments import ExperimentSpec, rescore
 from jobintel.schemas import StrictModel
 
 
@@ -68,7 +68,11 @@ def publish_live(args, report, corpus):
     from jobintel.config import fixture_root
 
     public_checks(report, fixture_root())
-    live_preflight(corpus, ExperimentSpec.model_validate(report["spec"]))
+    from jobintel.experiments import plan
+
+    plan(corpus, ExperimentSpec.model_validate(report["spec"]), report["mode"])
+    if report["mode"] != "live" and args.readme:
+        raise ValueError("network evidence cannot replace the authorized hosted README results")
     if report.get("format_version") != 2 or not args.audit:
         raise ValueError("live publication requires a format-v2 report and separate reviewer audit")
     audit = PublicationAudit.model_validate(read_json(args.audit))
@@ -93,7 +97,9 @@ def publish_live(args, report, corpus):
     (args.output / "comparison.md").write_text(comparison(report), encoding="utf-8")
     if args.readme:
         args.readme.write_text(readme, encoding="utf-8")
-    print(f"Audited live report published to {args.output}; failures remain in the comparison.")
+    print(
+        f"Audited {report['mode']} report published to {args.output}; failures remain in the comparison."
+    )
     return 0
 
 
@@ -105,7 +111,7 @@ def publish_configurations(output, report):
             output / f"configuration-{result['configuration']}.json",
             {
                 "format_version": 2,
-                "mode": "live",
+                "mode": report["mode"],
                 "created_at": report["created_at"],
                 "report_sha256": digest(report),
                 "corpus_sha256": report["corpus_sha256"],
@@ -174,7 +180,7 @@ def comparison(report):
             ]
         ]
         name = result["configuration"]
-        label = f"[{name}](configuration-{name}.json)" if report["mode"] == "live" else name
+        label = f"[{name}](configuration-{name}.json)" if report["mode"] != "fake" else name
         lines.append(
             f"| {label} | {summary['succeeded']}/{len(report['corpus']['cases'])} | {summary['failed']} | "
             + " | ".join(values)
@@ -194,6 +200,14 @@ def comparison(report):
     if report["mode"] == "fake":
         lines.append(
             "Fake provider regression only; no live model quality or purchased usage claim. Raw fixture responses are identical across A/B/C; only C applies normalization."
+        )
+    elif report["mode"] == "emulator":
+        lines.append(
+            "Authored network contract plumbing only; no inference, measured model quality, tokens or purchased cost. [Output audit](audit.json)."
+        )
+    elif report["mode"] == "local-inference":
+        lines.append(
+            "Measured pinned local CPU model on the selected reviewed snapshots. B/C use the same source-bound Chat grammar and separate calls; only C normalizes. No hosted benchmark or purchased-cost claim. [Output audit](audit.json)."
         )
     else:
         lines.append(

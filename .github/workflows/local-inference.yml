@@ -3,9 +3,9 @@ name: Local CPU inference
 on:
   workflow_dispatch:
   push:
-    paths: ['src/jobintel/**', 'scripts/local_*.py', 'scripts/runtime.py', 'docker-compose*.yml', 'Dockerfile*', 'requirements.lock.txt', 'pyproject.toml', '.github/workflows/local-inference.yml']
+    paths: ['src/jobintel/**', 'scripts/local_*.py', 'scripts/network_experiments.py', 'scripts/runtime.py', 'docker-compose*.yml', 'Dockerfile*', 'requirements.lock.txt', 'pyproject.toml', '.github/workflows/local-inference.yml']
   pull_request:
-    paths: ['src/jobintel/**', 'scripts/local_*.py', 'scripts/runtime.py', 'docker-compose*.yml', 'Dockerfile*', 'requirements.lock.txt', 'pyproject.toml', '.github/workflows/local-inference.yml']
+    paths: ['src/jobintel/**', 'scripts/local_*.py', 'scripts/network_experiments.py', 'scripts/runtime.py', 'docker-compose*.yml', 'Dockerfile*', 'requirements.lock.txt', 'pyproject.toml', '.github/workflows/local-inference.yml']
 
 permissions:
   contents: read

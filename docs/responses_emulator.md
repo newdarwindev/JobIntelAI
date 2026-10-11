@@ -47,6 +47,7 @@ For an independently running API, set `JOBINTEL_PROVIDER=openai`,
 `http://127.0.0.1:PORT/v1/responses`, and `JOBINTEL_OPENAI_MODEL=contract-schema-v2`.
 The default transport mode remains `hosted`. The emulator validates the exact
 strict schema, system prompt, model, input shape, `store=false`, token limit and
+explicit integer output bound (1–8192, including smaller experiment reservations),
 development authentication. Diagnostics contain boolean checks and request counts,
 never request/response bodies, source text or tokens. Access logging is disabled.
 

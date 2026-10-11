@@ -155,3 +155,83 @@ raw-output failures, interruption checkpoints, saved rescoring, source pins, aud
 freshness and README publication. Simulated transport/model/usage records are test
 evidence only; at least two actual authorized live configuration reports and reviewer
 audit remain the release gate.
+
+## Local CPU and network contract experiments
+
+Credential-free `local` and `emulator` modes use separately running scoped services;
+they never load hosted credentials or substitute fixture output. Freeze a bounded
+selection in benchmark order, retaining original source pins, rationales, candidate
+and independent review:
+
+```bash
+jobintel experiment freeze --dataset reviewed --cases REV-01 REV-23 REV-25 \
+  --output local_data/experiments/cpu-corpus.json
+```
+
+`--cases` is valid only during reviewed freezing. Generator labels retain
+`independent=false` and cannot become local/network reviewed input. Both
+configurations receive identical frozen snapshots. Public selections are checked
+against the repository source pin before execution or publication.
+
+| Provider | Model/protocol | Configurations | Bounds |
+| --- | --- | --- | --- |
+| local | pinned `jobintel-qwen2.5-1.5b-f16`, llama.cpp Chat Completions | B source-line grammar; C identical request then taxonomy normalization | 8192 context, output <=2048, input+output reservations <=8192 |
+| emulator | `contract-schema-v2`, Responses | B strict schema; C identical request then normalization | output <=8192; only authored source hashes |
+| openai | explicitly selected hosted Responses model | A prompt-only schema, B strict schema, C normalized B | separately authorized priced plan |
+
+A is explicitly unsupported in local/emulator modes. Local experiments use
+`local-experiment-v1`: the production local policy and example, omitting the
+duplicate schema from the prompt because the source-bound schema already constrains
+generation. Request/source/prompt/generation-schema hashes identify this protocol.
+Grammar constrains spans; semantic entailment remains measured, never repaired.
+B/C separate calls can produce different output despite identical requests, so
+comparisons cannot isolate normalization causally.
+
+Use a config with B/C, the pinned model, max_calls=6, max_input_tokens=6144,
+max_output_tokens=2048, budget_usd=0 and no pricing/hosted authorization. Local
+planning reserves UTF-8 message bytes plus 1024 template/envelope tokens; grammar
+compilation does not consume prompt context. Responses reserves the full request.
+Reservations are conservative bounds, never measured usage. Calls, input/context/
+output bounds and mismatched model/cost settings reject before requests. Actual
+`max_tokens`/`max_output_tokens` equals the plan, with no hidden retries. Reported
+usage beyond bounds stops later calls. Local CPU/power cost stays null because it
+is unmeasured; emulator usage and inference time stay null.
+
+Inside the normal local-inference Compose API, on its internal engine network:
+
+```bash
+jobintel experiment plan --provider local --corpus local_data/experiments/cpu-corpus.json \
+  --config local_data/experiments/cpu-config.json --output local_data/experiments/cpu-plan.json
+jobintel experiment run --provider local --corpus local_data/experiments/cpu-corpus.json \
+  --config local_data/experiments/cpu-config.json --output local_data/experiments/cpu-run
+```
+
+The runtime supplies `JOBINTEL_LOCAL_ENDPOINT`; emulator uses
+`JOBINTEL_RESPONSES_ENDPOINT`. `--endpoint` accepts only the corresponding scoped
+HTTP service/protocol, never a hosted override. No engine port is published. For
+emulator plumbing, freeze REV-01 only and set its model/max_calls=2; unknown authored
+hashes fail. `python -m scripts.network_experiments --provider local` measures the
+three-case CPU subset; `--provider emulator` measures the one-case contract subset.
+Service smoke workflows retain full reports, actual HTTP attempts, matching B/C
+request hashes and exact saved rescoring. Model errors remain separate from service
+checks, with successful-case metric denominators and failures visible.
+
+Atomic, fsynced checkpoints contain a content hash and name the active case. Resume
+only an interrupted zero-cost run using the same corpus/config/code:
+
+```bash
+jobintel experiment resume --provider local --corpus local_data/experiments/cpu-corpus.json \
+  --config local_data/experiments/cpu-config.json --report local_data/experiments/cpu-run/report.json \
+  --output local_data/experiments/cpu-run
+```
+
+Saved predictions and failures remain intact. An active request has uncertain
+outcome after process loss: its reserved slot becomes `failed/interrupted`, with no
+prediction, usage or duration. Resume never repeats that slot; remaining slots stay
+within the original call bound. Fatal saved errors keep later slots not attempted.
+Unfinished checkpoints cannot rescore or publish. Completed failures exit 1. Resumed
+end-to-end timing stays null; last-session timing is measured. Hosted resume is
+unsupported because uncertain paid attempts require a separate authorization decision.
+Local/emulator publication requires the same exact-report, privacy and per-case
+reviewer audit as hosted output. These reports cannot replace the hosted README
+section or close issue #9.
