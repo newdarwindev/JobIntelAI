@@ -408,6 +408,8 @@ The source reviewer and limitations are recorded in the methodology; this replay
 run supplies no live-model quality claim. See the [saved diagnostic JSON](results/reviewed_fixture_evaluation.json)
 and [human-readable errors](results/reviewed_fixture_evaluation.txt). Do not substitute fixture measurements for independently reviewed model results.
 
+The [reviewed network experiments](results/network-experiments/README.md) include six actual CPU B/C requests (each 2/3 valid, successful-case recall 1/2) and two separately labelled emulator requests. Saved scores reproduce without calls; complete failures and automated output audits are retained. No paid hosted call occurred.
+
 The opt-in [experiment command](docs/experiments.md) freezes snapshots and labels,
 checks call/token/USD reservations, checkpoints failures and rescores saved outputs
 without requests. The [complete fake report](results/experiments/fake/report.json)

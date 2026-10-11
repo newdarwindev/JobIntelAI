@@ -1,0 +1,10 @@
+{
+  "report_sha256": "fc969c012c4b93c13f4849e933aef60a26ff18406574e02dec308cf840fa3198",
+  "corpus_sha256": "dea25cda21d05f80d9e991eddb78f02cd26a76d17bddafb5a1f7a706a8493f7b",
+  "reviewer": "Codex automated reviewer",
+  "method": "Reviewed all six actual Chat outputs against pinned MIT-authored REV-01/REV-23/REV-25 source labels and rationales, raw/scored predictions, source/model/config hashes, failures and denominators. Both B/C: 2/3 valid; REV-01 correctly marks Python MUST but omits preferred PostgreSQL (recall 1/2); REV-23 fails exact evidence and also omits version predicates/misclassifies category; REV-25 correctly abstains with empty output. Precision/type/evidence are 1/1 only on successful records, never whole-corpus claims. All usage is engine-reported: 1753 input/478 output tokens per config, including failed REV-23; CPU/power cost stays null. B/C request hashes and raw outputs are identical; no normalization benefit or causal improvement demonstrated. Container lacks Git, so original commit/dirty fields remain null; actual image source hash and separate host provenance are retained. Three-case development measurement, not a hosted benchmark. Pinned public-source and recognizable-secret checks pass; exact saved scores reproduce without requests.",
+  "revision": "335c5b9",
+  "reviewed_at": "2026-10-11T06:11:32.498684Z",
+  "approved": true,
+  "findings": []
+}

@@ -1,0 +1,508 @@
+{
+  "corpus_sha256": "0481c38cfc191e3bd4f4be1fd360673cc178c6de3e34520c7d9c592680e26545",
+  "spec_sha256": "7baf9941ed54ef1916c4a83ec86043d3093f19111de7ac7f4120b1585e8b46c6",
+  "results": [
+    {
+      "configuration": "B",
+      "summary": {
+        "succeeded": 1,
+        "failed": 0,
+        "metric_scope": "successful cases only; failures excluded, never empty predictions",
+        "metrics": {
+          "true_positives": 1,
+          "predicted": 2,
+          "expected": 2,
+          "precision": 0.5,
+          "recall": 0.5,
+          "f1": 0.5,
+          "type_accuracy": 1.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": 0.0,
+          "abstention_quality": 1.0,
+          "counts": {
+            "precision": {
+              "numerator": 1,
+              "denominator": 2
+            },
+            "recall": {
+              "numerator": 1,
+              "denominator": 2
+            },
+            "f1": {
+              "numerator": 2,
+              "denominator": 4
+            },
+            "type_accuracy": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "evidence_accuracy": {
+              "numerator": 1,
+              "denominator": 1
+            },
+            "unsupported_span_rate": {
+              "numerator": 0,
+              "denominator": 2
+            }
+          },
+          "type_confusion_matrix": {
+            "MUST": {
+              "MUST": 1,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "PREFERRED": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "EXPERIENCE": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "OTHER": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            }
+          },
+          "must_preferred_accuracy": {
+            "numerator": 1,
+            "denominator": 1,
+            "value": 1.0
+          },
+          "reviewed_metrics": {
+            "semantic_unsupported_claim_rate": {
+              "numerator": 0,
+              "denominator": 2,
+              "value": 0.0
+            },
+            "semantic_unreviewable_span_rate": {
+              "numerator": 0,
+              "denominator": 2,
+              "value": 0.0
+            },
+            "abstention_precision": {
+              "numerator": 11,
+              "denominator": 11,
+              "value": 1.0
+            },
+            "abstention_recall": {
+              "numerator": 11,
+              "denominator": 11,
+              "value": 1.0
+            },
+            "correct_unknown_rate": {
+              "numerator": 11,
+              "denominator": 11,
+              "value": 1.0
+            },
+            "matching_agreement": {
+              "numerator": 2,
+              "denominator": 2,
+              "value": 1.0
+            },
+            "false_covered_rate": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "filters_precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "filters_recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "responsibilities_precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "responsibilities_recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            }
+          }
+        },
+        "per_case": [
+          {
+            "case_id": "REV-01",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 0.5,
+              "recall": 0.5,
+              "f1": 0.5,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          }
+        ],
+        "tokens": null,
+        "cost_usd": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 1,
+        "elapsed_seconds": 0.06202816100267228,
+        "reviewed_per_case": [
+          {
+            "case_id": "REV-01",
+            "reviewed_metrics": {
+              "semantic_unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 2,
+                "value": 0.0
+              },
+              "semantic_unreviewable_span_rate": {
+                "numerator": 0,
+                "denominator": 2,
+                "value": 0.0
+              },
+              "abstention_precision": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "abstention_recall": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "correct_unknown_rate": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "matching_agreement": {
+                "numerator": 2,
+                "denominator": 2,
+                "value": 1.0
+              },
+              "false_covered_rate": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "filters_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "filters_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            }
+          }
+        ],
+        "not_attempted": 0,
+        "provider_elapsed_seconds": 0.06141288600338157,
+        "llm_elapsed_seconds": null
+      }
+    },
+    {
+      "configuration": "C",
+      "summary": {
+        "succeeded": 1,
+        "failed": 0,
+        "metric_scope": "successful cases only; failures excluded, never empty predictions",
+        "metrics": {
+          "true_positives": 2,
+          "predicted": 2,
+          "expected": 2,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "type_accuracy": 1.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": 0.0,
+          "abstention_quality": 1.0,
+          "counts": {
+            "precision": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "recall": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "f1": {
+              "numerator": 4,
+              "denominator": 4
+            },
+            "type_accuracy": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "evidence_accuracy": {
+              "numerator": 2,
+              "denominator": 2
+            },
+            "unsupported_span_rate": {
+              "numerator": 0,
+              "denominator": 2
+            }
+          },
+          "type_confusion_matrix": {
+            "MUST": {
+              "MUST": 1,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "PREFERRED": {
+              "MUST": 0,
+              "PREFERRED": 1,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "EXPERIENCE": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "OTHER": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            }
+          },
+          "must_preferred_accuracy": {
+            "numerator": 2,
+            "denominator": 2,
+            "value": 1.0
+          },
+          "reviewed_metrics": {
+            "semantic_unsupported_claim_rate": {
+              "numerator": 0,
+              "denominator": 2,
+              "value": 0.0
+            },
+            "semantic_unreviewable_span_rate": {
+              "numerator": 0,
+              "denominator": 2,
+              "value": 0.0
+            },
+            "abstention_precision": {
+              "numerator": 11,
+              "denominator": 11,
+              "value": 1.0
+            },
+            "abstention_recall": {
+              "numerator": 11,
+              "denominator": 11,
+              "value": 1.0
+            },
+            "correct_unknown_rate": {
+              "numerator": 11,
+              "denominator": 11,
+              "value": 1.0
+            },
+            "matching_agreement": {
+              "numerator": 2,
+              "denominator": 2,
+              "value": 1.0
+            },
+            "false_covered_rate": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "filters_precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "filters_recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "responsibilities_precision": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "responsibilities_recall": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            }
+          }
+        },
+        "per_case": [
+          {
+            "case_id": "REV-01",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 4,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "evidence_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          }
+        ],
+        "tokens": null,
+        "cost_usd": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 1,
+        "elapsed_seconds": 0.018870075000450015,
+        "reviewed_per_case": [
+          {
+            "case_id": "REV-01",
+            "reviewed_metrics": {
+              "semantic_unsupported_claim_rate": {
+                "numerator": 0,
+                "denominator": 2,
+                "value": 0.0
+              },
+              "semantic_unreviewable_span_rate": {
+                "numerator": 0,
+                "denominator": 2,
+                "value": 0.0
+              },
+              "abstention_precision": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "abstention_recall": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "correct_unknown_rate": {
+                "numerator": 11,
+                "denominator": 11,
+                "value": 1.0
+              },
+              "matching_agreement": {
+                "numerator": 2,
+                "denominator": 2,
+                "value": 1.0
+              },
+              "false_covered_rate": {
+                "numerator": 0,
+                "denominator": 1,
+                "value": 0.0
+              },
+              "filters_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "filters_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_precision": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              },
+              "responsibilities_recall": {
+                "numerator": 0,
+                "denominator": 0,
+                "value": null
+              }
+            }
+          }
+        ],
+        "not_attempted": 0,
+        "provider_elapsed_seconds": 0.018349752004723996,
+        "llm_elapsed_seconds": null
+      }
+    }
+  ]
+}
