@@ -74,7 +74,7 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **22/22**, recorded 2026-10-11.
-Source: local Playwright run against the sandbox and normal PostgreSQL APIs. Remote GitHub Actions has not been verified by these local videos.
+Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38164684071) · commit `e78ecb3ccf8af54558fc9288a80d066b8ae519fa`.
 UI01–UI08 use the explicit synthetic sandbox. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
 Source content SHA-256: `86345999ec72a6f877f8521dec909aba298e79cf2e65d6aaf0567add1b3f9389`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
