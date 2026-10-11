@@ -242,3 +242,7 @@ or paid-call flow. See [environment lifecycle](environments.md).
 B/C service diagnostics retain counted HTTP attempts and the last atomic checkpoint
 even on fatal errors or interruption. Incomplete/rescore-unverified results remain
 failures with unknown measurements; they cannot become successful browser evidence.
+
+The README publishing job is disabled for fork repositories, including pushes to
+a fork's own default branch. Fork and pull-request workflow execution retains
+read-only permissions; only a trusted upstream default-branch run can publish.
