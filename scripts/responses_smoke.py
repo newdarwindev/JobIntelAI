@@ -171,7 +171,11 @@ def main():
             verify_failures(base, emulator, saved, evidence)
             verify_recovery(base, emulator, saved, options, evidence)
             verify_report(base, evidence)
-            evidence["experiments"] = measure("emulator", emulator["base"] + "/v1/responses")
+            evidence["experiments"] = measure(
+                "emulator",
+                emulator["base"] + "/v1/responses",
+                on_update=lambda current: evidence.update(experiments=current),
+            )
             evidence["cases"].append(
                 {
                     "case": "frozen_reviewed_B_C_network_experiments_and_saved_rescore",

@@ -120,9 +120,15 @@ def verify_experiments(args, evidence):
         "--provider",
         "local",
         capture=True,
+        check=False,
     )
-    evidence["experiments"] = json.loads(result.stdout)
+    evidence["experiments"] = (
+        json.loads(result.stdout)
+        if result.stdout.strip()
+        else {"status": "unavailable", "observed_http_attempts": None}
+    )
     evidence["experiments"]["host_code_provenance"] = code_provenance()
+    result.check_returncode()
     evidence["cases"].append(
         {
             "case": "frozen_reviewed_B_C_network_experiments_and_saved_rescore",

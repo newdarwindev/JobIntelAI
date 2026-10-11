@@ -197,3 +197,33 @@ def test_command_timeout_kills_descendant_even_after_leader_exits(tmp_path):
         )
     pid = int(child.read_text())
     assert_stopped(pid)
+
+
+@pytest.mark.parametrize("error", [RuntimeError, KeyboardInterrupt])
+def test_network_measurement_retains_partial_checkpoint_and_actual_attempts(monkeypatch, error):
+    from scripts import network_experiments
+
+    def failed_transport(_payload):
+        raise error("authored failure")
+
+    provider = SimpleNamespace(
+        mode="emulator", transport=SimpleNamespace(complete=failed_transport)
+    )
+    monkeypatch.setattr(
+        network_experiments, "selected_experiment_provider", lambda *_args: provider
+    )
+
+    def run(provider, _corpus, _spec, *, checkpoint):
+        checkpoint({"records": [{"status": "active", "prediction": None, "usage": None}]})
+        provider.transport.complete({"model": "authored", "input": "public fixture"})
+
+    monkeypatch.setattr(network_experiments, "run_experiment", run)
+    observed = {}
+    with pytest.raises(error):
+        network_experiments.measure("emulator", on_update=observed.update)
+    assert observed["status"] == "failed" and observed["failure_kind"] == error.__name__
+    assert observed["observed_http_attempts"] == 1 and len(observed["request_sha256"]) == 1
+    assert observed["report"]["records"] == [
+        {"status": "active", "prediction": None, "usage": None}
+    ]
+    assert observed["scores"] is observed["rescore_without_requests"] is None

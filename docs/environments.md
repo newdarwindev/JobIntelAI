@@ -73,3 +73,7 @@ Every Actions outcome uploads per-run diagnostics plus the driver's exact counts
 full browser reports retain all attempts/traces/videos and only successful attempts
 enter README recordings. PR/fork permissions are read-only. Remote private preview
 is not implemented or needed for this loopback contract.
+
+Network B/C measurement failures retain their last atomic checkpoint and actual
+counted request hashes in driver evidence. Uncertain predictions/usage remain
+unknown, and failed or unverified rescoring never counts as a passed service case.

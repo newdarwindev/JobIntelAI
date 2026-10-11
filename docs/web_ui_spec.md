@@ -238,3 +238,7 @@ TLS material is private runtime data and is excluded from uploaded artifacts.
 Persistent developer sessions and verified model weights remain outside disposable
 cleanup. These controls are runtime evidence, without adding a product credential
 or paid-call flow. See [environment lifecycle](environments.md).
+
+B/C service diagnostics retain counted HTTP attempts and the last atomic checkpoint
+even on fatal errors or interruption. Incomplete/rescore-unverified results remain
+failures with unknown measurements; they cannot become successful browser evidence.
