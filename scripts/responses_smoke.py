@@ -163,14 +163,19 @@ def main():
         "status": "failed",
     }
     options = {"ca_bundle": args.ca_bundle, "api_port": args.port}
+    failure = None
     try:
         with emulator_environment(api=True, **options) as emulator:
-            base = f"http://127.0.0.1:{args.port}"
+            base = emulator["api_base"]
             saved = verify_success(base, evidence)
             verify_failures(base, emulator, saved, evidence)
             verify_recovery(base, emulator, saved, options, evidence)
             verify_report(base, evidence)
-            evidence["experiments"] = measure("emulator", emulator["base"] + "/v1/responses")
+            evidence["experiments"] = measure(
+                "emulator",
+                emulator["base"] + "/v1/responses",
+                on_update=lambda current: evidence.update(experiments=current),
+            )
             evidence["cases"].append(
                 {
                     "case": "frozen_reviewed_B_C_network_experiments_and_saved_rescore",
@@ -179,7 +184,17 @@ def main():
                 }
             )
             evidence.update(status="passed", passed=len(evidence["cases"]), failed=0, skipped=0)
+    except BaseException as error:
+        failure = type(error).__name__
+        raise
     finally:
+        evidence.update(
+            passed=len(evidence["cases"]),
+            failed=int(failure == "AssertionError"),
+            errors=int(failure is not None and failure != "AssertionError"),
+            skipped=0,
+            failure_kind=failure,
+        )
         write_evidence("work/responses-service.json", evidence)
     print(
         f"Responses service: {evidence['passed']} passed, 0 failed, 0 skipped; authored contract only."

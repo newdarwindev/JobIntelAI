@@ -46,7 +46,8 @@
       "services": [
         "authored HTTPS origin",
         "trusted policy-proxy DNS and single-use pin gateway",
-        "scoped verified test CA"
+        "scoped verified test CA",
+        "shared owned Compose lease, discovered loopback ports and bounded cleanup"
       ]
     },
     {
@@ -155,7 +156,8 @@
       ],
       "services": [
         "separate authored Responses emulator",
-        "real API and HttpOpenAITransport sockets"
+        "real API and HttpOpenAITransport sockets",
+        "shared owned Compose lease, discovered loopback ports and bounded cleanup"
       ]
     },
     {
@@ -192,7 +194,8 @@
       "services": [
         "normal PostgreSQL API",
         "authored verified HTTPS gateway",
-        "fixture replay"
+        "fixture replay",
+        "shared owned Compose lease, discovered loopback ports and bounded cleanup"
       ]
     },
     {
@@ -217,7 +220,8 @@
       "services": [
         "normal PostgreSQL API",
         "authored verified HTTPS gateway",
-        "separate Responses emulator with bounded structured contract"
+        "separate Responses emulator with bounded structured contract",
+        "shared owned Compose lease, discovered loopback ports and bounded cleanup"
       ]
     },
     {
@@ -242,7 +246,8 @@
       "services": [
         "normal PostgreSQL API",
         "authored verified HTTPS gateway",
-        "actual pinned llama.cpp/Qwen CPU model; CLI B/C evidence remains separate"
+        "actual pinned llama.cpp/Qwen CPU model; CLI B/C evidence remains separate",
+        "shared owned Compose lease, discovered loopback ports and bounded cleanup"
       ]
     }
   ]

@@ -24,7 +24,7 @@ class CountedTransport:
         return self.transport.complete(payload)
 
 
-def measure(name, endpoint=None):
+def measure(name, endpoint=None, *, on_update=None):
     cases = ["REV-01", "REV-23", "REV-25"] if name == "local" else ["REV-01"]
     corpus = freeze_reviewed(Path("data"), cases)
     spec = ExperimentSpec(
@@ -37,31 +37,54 @@ def measure(name, endpoint=None):
     provider = selected_experiment_provider(name, None, endpoint)
     transport = CountedTransport(provider.transport)
     provider.transport = transport
+    evidence = {
+        "status": "failed",
+        "execution_mode": provider.mode,
+        "observed_http_attempts": 0,
+        "request_sha256": [],
+        "report": None,
+        "scores": None,
+        "identical_B_C_requests": None,
+        "rescore_without_requests": None,
+    }
     with TemporaryDirectory(prefix="jobintel-experiment-") as directory:
         path = Path(directory) / "report.json"
-        report = run_experiment(
-            provider, corpus, spec, checkpoint=lambda current: save_checkpoint(path, current)
-        )
-        save_checkpoint(path, report)
-        saved = json.loads(path.read_text())
-    count = len(transport.requests)
-    scores = rescore(saved)
-    assert [r["summary"] for r in scores["results"]] == [r["summary"] for r in saved["results"]]
-    assert len(transport.requests) == count == spec.max_calls
-    assert transport.requests[: len(cases)] == transport.requests[len(cases) :]
-    assert all(
-        r["status"] != "not_attempted" for result in saved["results"] for r in result["records"]
-    )
-    return {
-        "status": "passed",
-        "execution_mode": provider.mode,
-        "observed_http_attempts": count,
-        "request_sha256": transport.requests,
-        "identical_B_C_requests": True,
-        "rescore_without_requests": True,
-        "report": saved,
-        "scores": scores,
-    }
+        try:
+            report = run_experiment(
+                provider, corpus, spec, checkpoint=lambda current: save_checkpoint(path, current)
+            )
+            save_checkpoint(path, report)
+            saved = json.loads(path.read_text())
+            count = len(transport.requests)
+            scores = rescore(saved)
+            assert [r["summary"] for r in scores["results"]] == [
+                r["summary"] for r in saved["results"]
+            ]
+            assert len(transport.requests) == count == spec.max_calls
+            assert transport.requests[: len(cases)] == transport.requests[len(cases) :]
+            assert all(
+                r["status"] != "not_attempted"
+                for result in saved["results"]
+                for r in result["records"]
+            )
+            evidence.update(
+                status="passed",
+                scores=scores,
+                identical_B_C_requests=True,
+                rescore_without_requests=True,
+            )
+        except BaseException as error:
+            evidence["failure_kind"] = type(error).__name__
+            raise
+        finally:
+            evidence.update(
+                observed_http_attempts=len(transport.requests),
+                request_sha256=transport.requests.copy(),
+                report=json.loads(path.read_text()) if path.is_file() else None,
+            )
+            if on_update:
+                on_update(evidence)
+    return evidence
 
 
 def main():
@@ -69,7 +92,11 @@ def main():
     parser.add_argument("--provider", choices=["local", "emulator"], required=True)
     parser.add_argument("--endpoint")
     args = parser.parse_args()
-    print(json.dumps(measure(args.provider, args.endpoint), ensure_ascii=False))
+    output = {}
+    try:
+        measure(args.provider, args.endpoint, on_update=output.update)
+    finally:
+        print(json.dumps(output, ensure_ascii=False), flush=True)
 
 
 if __name__ == "__main__":

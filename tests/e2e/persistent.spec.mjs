@@ -16,6 +16,8 @@ async function open(page,service,view,job){
 async function json(request,service,path){const r=await request.get(service.base+path);expect(r.ok()).toBeTruthy();return r.json();}
 async function pipeline({page,request},info,mode){
   const service=services[mode];expect(service?.demo).toBe(false);expect(service.database).toBe('postgresql');
+  const lease=JSON.parse(await readFile(service.lease,'utf8'));expect(lease.persistent).toBe(false);expect(lease.status).toBe('ready');expect(lease.compose_config_sha256).toHaveLength(64);expect(lease.endpoints.base).toBe(service.base);expect(lease.expires_at*1000).toBeGreaterThan(Date.now());
+  expect(new Set(Object.values(services).map(s=>s.base)).size).toBe(3);
   const id=`browser-${mode}-${info.project.name}`;
   const config=await json(request,service,'/ui/config');expect(config.demo).toBe(false);
   expect(config.actions.samples).toBe(false);expect(config.actions.reset).toBe(false);

@@ -2,9 +2,9 @@
 
 import argparse
 import json
-import subprocess
 from pathlib import Path
 from time import perf_counter
+from urllib.parse import urlsplit
 from uuid import uuid4
 
 import httpx
@@ -13,8 +13,8 @@ from jobintel.experiments import code_provenance
 from jobintel.local_model import MODEL, MODEL_FILE, model_identity
 from jobintel.snapshots import content_hash
 from scripts import runtime
+from scripts.environment import Environment
 from scripts.responses_environment import write_evidence
-from scripts.runtime_smoke import control, require_fresh_projects
 
 SOURCE = "Python is required."
 
@@ -31,13 +31,7 @@ def call(args, path, payload=None, *, status=200):
 
 
 def compose(args, *arguments, capture=False, check=True):
-    return subprocess.run(
-        [*runtime.compose_command(args, configured=True), *arguments],
-        env=runtime.compose_environment(args),
-        check=check,
-        text=True,
-        capture_output=capture,
-    )
+    return args.stack.command(*arguments, capture=capture, check=check)
 
 
 def verify_pipeline(args, evidence):
@@ -126,9 +120,15 @@ def verify_experiments(args, evidence):
         "--provider",
         "local",
         capture=True,
+        check=False,
     )
-    evidence["experiments"] = json.loads(result.stdout)
+    evidence["experiments"] = (
+        json.loads(result.stdout)
+        if result.stdout.strip()
+        else {"status": "unavailable", "observed_http_attempts": None}
+    )
     evidence["experiments"]["host_code_provenance"] = code_provenance()
+    result.check_returncode()
     evidence["cases"].append(
         {
             "case": "frozen_reviewed_B_C_network_experiments_and_saved_rescore",
@@ -147,9 +147,10 @@ def verify_lifecycle(args, evidence, saved):
     )
     assert call(args, "/jobs/cpu-unseen")["extraction"]["run_id"] == saved["run_id"]
     evidence["cases"].append({"case": "engine_unavailable_preserves_history", "status": "passed"})
-    control(args, "stop", args.project)
+    args.stack.suspend()
     started = perf_counter()
-    control(args, "up", args.project, "local-inference", no_build=True)
+    args.stack.start(no_build=True)
+    args.port = urlsplit(args.stack.info["base"]).port
     evidence["warm_stack_start_seconds"] = perf_counter() - started
     assert call(args, "/jobs/cpu-unseen")["extraction"]["run_id"] == saved["run_id"]
     assert call(args, "/health")["provider_ready"]
@@ -167,7 +168,6 @@ def main():
     parser.add_argument("--output", type=Path, default=Path("work/local-inference-service.json"))
     args = parser.parse_args()
     args.mode = "local-inference"
-    require_fresh_projects(args.project)
     evidence = {
         "code_provenance": code_provenance(),
         "execution_mode": "local-inference",
@@ -177,32 +177,46 @@ def main():
         "status": "failed",
     }
     started = perf_counter()
+    failure = None
     try:
-        control(args, "up", args.project, "local-inference")
-        evidence["first_stack_start_seconds"] = perf_counter() - started
-        saved = verify_pipeline(args, evidence)
-        verify_evaluation(args, evidence)
-        verify_experiments(args, evidence)
-        memory = compose(
-            args,
-            "exec",
-            "-T",
-            "llama-cpp",
-            "cat",
-            "/sys/fs/cgroup/memory.peak",
-            capture=True,
-            check=False,
-        )
-        evidence["engine_cgroup_peak_bytes"] = (
-            int(memory.stdout)
-            if memory.returncode == 0 and memory.stdout.strip().isdigit()
-            else None
-        )
-        verify_lifecycle(args, evidence, saved)
-        evidence.update(status="passed", passed=len(evidence["cases"]), failed=0, skipped=0)
+        with Environment(
+            "local", project=args.project, ca_bundle=args.ca_bundle, offline=args.offline
+        ) as session:
+            args.stack = session
+            args.port = urlsplit(session.info["base"]).port
+            evidence["first_stack_start_seconds"] = perf_counter() - started
+            saved = verify_pipeline(args, evidence)
+            verify_evaluation(args, evidence)
+            verify_experiments(args, evidence)
+            memory = compose(
+                args,
+                "exec",
+                "-T",
+                "llama-cpp",
+                "cat",
+                "/sys/fs/cgroup/memory.peak",
+                capture=True,
+                check=False,
+            )
+            evidence["engine_cgroup_peak_bytes"] = (
+                int(memory.stdout)
+                if memory.returncode == 0 and memory.stdout.strip().isdigit()
+                else None
+            )
+            verify_lifecycle(args, evidence, saved)
+            evidence.update(status="passed", passed=len(evidence["cases"]), failed=0, skipped=0)
+    except BaseException as error:
+        failure = type(error).__name__
+        raise
     finally:
+        evidence.update(
+            passed=len(evidence["cases"]),
+            failed=int(failure == "AssertionError"),
+            errors=int(failure is not None and failure != "AssertionError"),
+            skipped=0,
+            failure_kind=failure,
+        )
         try:
-            control(args, "reset", args.project)
             cache = Path(runtime.compose_environment(args)["JOBINTEL_LOCAL_MODEL_CACHE"])
             evidence["cache_preserved"] = (cache / MODEL_FILE).is_file()
             if evidence["status"] == "passed":

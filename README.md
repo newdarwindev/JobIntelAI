@@ -74,9 +74,9 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 <!-- UI-RECORDINGS:START -->
 
 Successful browser attempts: **22/22**, recorded 2026-10-11.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38118822752) · commit `199d43061687cda060fffa3898a093bf8df75989`.
+Source: local Playwright run against the sandbox and normal PostgreSQL APIs. Remote GitHub Actions has not been verified by these local videos.
 UI01–UI08 use the explicit synthetic sandbox. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
-Source content SHA-256: `2bb0dfe90d534fa284b85597d9181975a9d5be000f1f0a5bba4e9f8e5f35ce0c`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Source content SHA-256: `86345999ec72a6f877f8521dec909aba298e79cf2e65d6aaf0567add1b3f9389`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -201,6 +201,13 @@ Fake transport, semantic, API/CLI and migrated database regressions are in
 `tests/unit/test_openai*` and `tests/integration/test_openai_boundary.py` (V12–V19).
 
 ## PostgreSQL / Docker
+
+Use the [shared on-demand runner](docs/environments.md) for bounded disposable
+API/CLI/browser environments and explicit persistent sessions. It discovers unique
+loopback ports, records owned resources and removes expired runs without touching
+developer volumes or licensed model caches. `python -m scripts.environment_smoke`
+checks simultaneous isolation and the complete real-wire emulator pipeline with
+zero paid calls.
 
 ```bash
 python scripts/runtime.py up --mode dev --project jobintel-dev

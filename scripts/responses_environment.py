@@ -11,6 +11,7 @@ from uuid import uuid4
 import httpx
 
 from jobintel.openai_transport import EMULATOR_TOKEN
+from scripts.environment_lifecycle import Lease, bounded_command, read_record, record_path
 
 
 def compose(project, *arguments, capture=False, ca_bundle=None, api_port=18083):
@@ -31,8 +32,10 @@ def compose(project, *arguments, capture=False, ca_bundle=None, api_port=18083):
     environment = {**os.environ, "JOBINTEL_API_PORT": str(api_port), "JOBINTEL_OPENAI_TIMEOUT": "1"}
     if ca_bundle:
         environment["JOBINTEL_CA_BUNDLE"] = str(ca_bundle)
-    return subprocess.run(
-        [*command, *arguments], env=environment, check=True, capture_output=capture, text=True
+    if read_record(project):
+        command += ["-f", str(record_path(project).parent / "ownership.json")]
+    return bounded_command(
+        [*command, *arguments], environment=environment, timeout=180, capture=capture
     )
 
 
@@ -65,36 +68,46 @@ def runtime_control(project, action, ca_bundle, api_port):
 
 
 @contextmanager
-def emulator_environment(*, api=False, project=None, ca_bundle=None, api_port=18083):
+def emulator_environment(*, api=False, project=None, ca_bundle=None, api_port=0):
     project = project or "jobintel-responses-" + uuid4().hex[:12]
-    options = {"ca_bundle": ca_bundle, "api_port": api_port}
-    try:
-        if api:
-            runtime_control(project, "up", ca_bundle, api_port)
-        else:
-            compose(
-                project,
-                "up",
-                "-d",
-                "--build",
-                "--wait",
-                "--wait-timeout",
-                "120",
-                "responses-emulator",
-                **options,
-            )
-        base = base_url(project, ca_bundle)
-        fixtures = {
-            "base": base,
-            "project": project,
-        }
+    if api:
+        from scripts.environment import Environment
+
+        with Environment("emulator", project=project, ca_bundle=ca_bundle) as session:
+            fixtures = {
+                "base": session.info["control_base"],
+                "project": project,
+                "api_base": session.info["base"],
+            }
+            fixtures["diagnostics"] = lambda: request(fixtures["base"], "/diagnostics")
+            yield fixtures
+        return
+    with Lease(project) as lease:
+        prefix = [
+            "docker",
+            "compose",
+            "-p",
+            project,
+            "-f",
+            "docker-compose.yml",
+            "-f",
+            "docker-compose.responses.yml",
+            "--profile",
+            "contract-test",
+        ]
+        environment = {**os.environ, "JOBINTEL_API_PORT": "0", "JOBINTEL_RESPONSES_PORT": "0"}
+        if ca_bundle:
+            prefix += ["-f", "docker-compose.proxy.yml", "-f", "docker-compose.responses-proxy.yml"]
+            environment["JOBINTEL_CA_BUNDLE"] = str(ca_bundle)
+        lease.configure(prefix, environment)
+        lease.command(
+            "up", "-d", "--build", "--wait", "--wait-timeout", "120", "responses-emulator"
+        )
+        fixtures = {"base": base_url(project, ca_bundle), "project": project}
         fixtures["diagnostics"] = lambda: request(fixtures["base"], "/diagnostics")
+        lease.collectors["responses"] = fixtures["diagnostics"]
+        lease.ready({"responses": fixtures["base"]})
         yield fixtures
-    finally:
-        if api:
-            runtime_control(project, "reset", ca_bundle, api_port)
-        else:
-            compose(project, "down", "--volumes", **options)
 
 
 def write_evidence(path, evidence):

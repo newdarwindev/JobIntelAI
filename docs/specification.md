@@ -19,6 +19,11 @@ uses named Compose environments, persistent PostgreSQL and output volumes, expli
 demo/provider modes, mounted credentials, verified proxy trust and explicit cleanup.
 Local inference and network contract services have separate issue dependencies.
 This extension does not authorize paid calls or public exposure of the local API.
+The [environment lifecycle](environments.md) separates bounded disposable runs
+from explicitly persistent sessions. Fresh Compose ownership labels, ephemeral
+loopback endpoints, explicit migrations/readiness and per-run diagnostic records
+serve API, CLI and browser journeys. Origins, contract emulators and the pinned
+CPU engine are provisioned only for the selected mode/journey.
 
 The [local CPU contract](local_inference.md) specifies a pinned llama.cpp engine
 and licensed Qwen model, persistent verified weights, internal-only inference,
