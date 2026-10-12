@@ -10,3 +10,5 @@ td small{overflow-wrap:anywhere}
 @media(max-width:680px){.table-wrap{margin:0;padding:0}}
 
 .sidebar-note[data-readiness="unavailable"] .online-dot,.sidebar-note[data-readiness="unverified"] .online-dot{background:currentColor;opacity:.6}
+
+.field-error{color:#963344}textarea[aria-invalid="true"]{border-color:#a62d3b}

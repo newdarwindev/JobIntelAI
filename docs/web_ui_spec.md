@@ -167,6 +167,16 @@ UI04 saves multiple synthetic revisions, refreshes the page, re-matches the sele
 revision, selects an older revision without overwriting it, and inspects the persisted
 match-run identity. Dated tenure satisfies the years predicate; location evidence is
 shown with the job quote and candidate source. Version predicates remain unsupported.
+The candidate JSON is authoritative for skill completeness. Pasting explicit
+`complete: true` or `false` immediately synchronizes the checkbox; saving preserves
+that value. Toggling the checkbox edits the JSON declaration without changing a
+saved revision until the user saves. An omitted declaration uses the schema default
+`false`. Malformed JSON, non-object roots and non-boolean completeness are rejected
+with a labelled field error, retained editor text and no candidate import request.
+Backend schema errors likewise appear beside the editor without saving a revision.
+UI04 pastes complete/incomplete profiles without manually setting the checkbox,
+edits it in both directions, reloads/selects immutable revisions, and verifies that
+absent skill evidence changes between MISSING and UNKNOWN with the saved declaration.
 Revision selection clears current projections. Matching sends the selected revision
 ID and inspected extraction ID; stale extraction selections fail with 409 and preserve
 history. Missing saved revisions are reported; the browser never silently selects a

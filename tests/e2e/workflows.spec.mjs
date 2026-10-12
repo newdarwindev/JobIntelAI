@@ -9,7 +9,7 @@ const nav = async (page,view) => {await page.getByRole('navigation').getByRole('
 const inspect = async (page,id) => {await nav(page,'Source & extraction');await page.getByLabel('Selected posting').selectOption(id);await expect(page.getByLabel('Selected posting')).toHaveValue(id);};
 async function importSample(page){await nav(page,'Job registry');await click(page,'Load sample registry');await click(page,'Import registry');await expect(notice(page)).toContainText('Imported 20');}
 async function capture(page,id,extract=true){await inspect(page,id);await click(page,'Load synthetic source');await click(page,'Save immutable snapshot');if(extract){await click(page,'Extract requirements');await expect(page.getByText('No current extraction',{exact:true})).toHaveCount(0);}}
-async function saveProfile(page,profile){await nav(page,'Candidate evidence');await page.getByLabel('Candidate JSON',{exact:true}).fill(JSON.stringify(profile,null,2));await page.getByLabel('This profile explicitly declares complete skill coverage').setChecked(profile.complete);await click(page,'Validate & save profile');await expect(notice(page)).toContainText('validated and activated');}
+async function saveProfile(page,profile){await nav(page,'Candidate evidence');await page.getByLabel('Candidate JSON',{exact:true}).fill(JSON.stringify(profile,null,2));await expect(page.getByLabel('This profile explicitly declares complete skill coverage')).toHaveJSProperty('checked',profile.complete??false);await click(page,'Validate & save profile');await expect(notice(page)).toContainText('validated and activated');}
 async function download(page,name){const event=page.waitForEvent('download');await click(page,name);const file=await event;return readFile(await file.path(),'utf8');}
 test.beforeEach(async({page,request,browser},info)=>{
   info.annotations.push({type:'browser-version',description:browser.version()});
@@ -145,12 +145,36 @@ test('UI04 | Candidate evidence and four matching states',async({page,request})=
   await page.getByLabel('Selected posting').selectOption('SYN-05');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('UNKNOWN 1');
   await page.getByLabel('Selected posting').selectOption('SYN-15');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('UNKNOWN 1');
   await page.getByLabel('Selected posting').selectOption('SYN-02');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('PARTIAL 1');
-  const complete={...(await candidate()),complete:true};await saveProfile(page,complete);await page.getByLabel('Selected posting').selectOption('SYN-03');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('MISSING 1');
+  const complete={...(await candidate()),complete:true,tenure:[],tenure_complete:false,eligibility:[],eligibility_complete:[]};await saveProfile(page,complete);await page.getByLabel('Selected posting').selectOption('SYN-03');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('MISSING 1');
+  const completeRevision=await page.getByLabel('Saved revision').inputValue();
+  expect((await (await request.get(`/candidates/${complete.profile_id}/revisions/${completeRevision}`)).json()).profile).toEqual(complete);
+  await page.reload();await expect(page.getByLabel('Saved revision')).toHaveValue(completeRevision);await expect(page.getByLabel('This profile explicitly declares complete skill coverage')).toBeChecked();
+  const editedComplete={...complete,complete:false};
+  await page.getByLabel('This profile explicitly declares complete skill coverage').uncheck();
+  expect(JSON.parse(await page.getByLabel('Candidate JSON',{exact:true}).inputValue())).toEqual(editedComplete);
+  expect((await (await request.get(`/candidates/${complete.profile_id}/revisions/${completeRevision}`)).json()).profile.complete).toBe(true);
+  await click(page,'Validate & save profile');const incompleteRevision=await page.getByLabel('Saved revision').inputValue();expect(incompleteRevision).not.toBe(completeRevision);
+  await page.reload();await expect(page.getByLabel('This profile explicitly declares complete skill coverage')).not.toBeChecked();await page.getByLabel('Selected posting').selectOption('SYN-03');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('UNKNOWN 1');
+  await page.getByLabel('This profile explicitly declares complete skill coverage').check();expect(JSON.parse(await page.getByLabel('Candidate JSON',{exact:true}).inputValue())).toEqual(complete);
+  await click(page,'Validate & save profile');await expect(page.getByLabel('Saved revision')).toHaveValue(completeRevision);
+  await page.getByLabel('Saved revision').selectOption(incompleteRevision);await expect(page.getByLabel('This profile explicitly declares complete skill coverage')).not.toBeChecked();expect(JSON.parse(await page.getByLabel('Candidate JSON',{exact:true}).inputValue()).complete).toBe(false);
+  await page.getByLabel('Saved revision').selectOption(completeRevision);await expect(page.getByLabel('This profile explicitly declares complete skill coverage')).toBeChecked();await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('MISSING 1');
   const any={profile_id:'authored-any',complete:true,evidence:[{skill:'Azure',current_capability:'strong',production_evidence:'none',source:'synthetic://azure',quote:'Explicit strong Azure capability in this authored example.'}]};
   await saveProfile(page,any);await page.getByLabel('Selected posting').selectOption('SYN-02');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('COVERED 1');
   const conflicting={...(await candidate()),evidence:[...(await candidate()).evidence,{skill:'Python',current_capability:'none',production_evidence:'none',source:'synthetic://contradiction',quote:'Contradictory synthetic record.'}]};
   await saveProfile(page,conflicting);await page.getByLabel('Selected posting').selectOption('SYN-01');await click(page,'Match selected posting');await expect(page.locator('.status-totals')).toContainText('UNKNOWN 2');
-  await page.getByLabel('Candidate JSON',{exact:true}).fill('{"profile_id":"bad","evidence":[{"skill":"Python"}]}');await click(page,'Validate & save profile');await expect(notice(page)).toContainText('422:');
+  const activeRevision=await page.getByLabel('Saved revision').inputValue();
+  const beforeInvalid=(await (await request.get(`/candidates/${conflicting.profile_id}/revisions`)).json()).revisions;
+  const imports=[];const collectImports=r=>{if(new URL(r.url()).pathname==='/candidates/import')imports.push(r);};page.on('request',collectImports);
+  for(const invalid of ['{','null','[]','true','"not a profile"','{"complete":"true"}','{"complete":1}','{"complete":null}']){
+    await page.getByLabel('Candidate JSON',{exact:true}).fill(invalid);await click(page,'Validate & save profile');
+    await expect(page.locator('#candidate-error')).toBeVisible();await expect(page.getByLabel('Candidate JSON',{exact:true})).toHaveAttribute('aria-invalid','true');await expect(page.getByLabel('Candidate JSON',{exact:true})).toHaveValue(invalid);
+    await expect(page.getByLabel('This profile explicitly declares complete skill coverage')).toBeDisabled();await expect(page.getByLabel('Saved revision')).toHaveValue(activeRevision);
+  }
+  page.off('request',collectImports);expect(imports).toHaveLength(0);
+  const invalidEvidence='{"profile_id":"bad","evidence":[{"skill":"Python"}]}';await page.getByLabel('Candidate JSON',{exact:true}).fill(invalidEvidence);await click(page,'Validate & save profile');await expect(notice(page)).toContainText('422:');await expect(page.locator('#candidate-error')).toContainText('evidence');await expect(page.getByLabel('Candidate JSON',{exact:true})).toHaveValue(invalidEvidence);
+  expect((await (await request.get('/candidates/bad/revisions')).json()).revisions).toEqual([]);expect((await (await request.get(`/candidates/${conflicting.profile_id}/revisions`)).json()).revisions).toEqual(beforeInvalid);
+  const omittedComplete={...(await candidate()),profile_id:'authored-default-completeness'};delete omittedComplete.complete;await saveProfile(page,omittedComplete);const defaultRevision=await page.getByLabel('Saved revision').inputValue();expect((await (await request.get(`/candidates/${omittedComplete.profile_id}/revisions/${defaultRevision}`)).json()).profile.complete).toBe(false);
   await saveProfile(page,await candidate());await click(page,'Match extracted corpus');await expect(notice(page)).toContainText('Matched 20');
   const matched=JSON.parse(await download(page,'Export matches JSON'));expect(matched.snapshot_id).toBeTruthy();expect(matched.run_id).toBeTruthy();expect(matched.matches[0].requirement_id).toBeTruthy();
   expect(matched.match_run_id).toBeTruthy();expect(matched.profile_revision_id).toBeTruthy();
