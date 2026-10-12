@@ -133,14 +133,15 @@ checks, complete three-case reviewed outcomes, startup/memory measurements and
 commit/config/model provenance on every outcome. Model errors remain evaluation
 results; perfect metrics are not a CI requirement. See [local inference](local_inference.md).
 
-The browser workflow runs twenty-six recorded desktop/mobile attempts: UI01–UI08 and UI12–UI13
+The browser workflow runs twenty-eight recorded desktop/mobile attempts: UI01–UI08 and UI12–UI14
 on the explicit synthetic sandbox and UI09–UI11 on separate normal PostgreSQL
 APIs using fixture replay, the Responses emulator and actual CPU inference. It
 prepares/verifies the same licensed model cache as the CPU workflow and preserves
 that cache after scoped teardown. Artifacts include the service inventory, code
 provenance and the engine's complete three-case reviewed report on every outcome.
 Only a complete passing suite publishes README/video evidence. UI13 also publishes
-a hashed rendered mutation comparison and observation JSON from both viewports. Hosted controls
+a hashed rendered mutation comparison and observation JSON from both viewports.
+UI14 adds a 32-case batch comparison proving bounded continuation and retained IDs. Hosted controls
 have fake HTTP contract coverage; no paid call or hosted availability is claimed.
 
 The local CPU service gate additionally runs B/C experiments on identical frozen
@@ -164,3 +165,11 @@ TLS keys, process environments or private database contents. Container and brows
 jobs reap only recorded disposable leases on every outcome. CPU checks use the
 same runner, retain checksum-pinned licensed weights, and stay a separately labelled
 resource-bounded inference job. All PR/fork jobs remain read-only.
+
+
+Successful browser publication stages every README/video/manifest/report file in
+parts of at most 22 MiB (up to four parts). The partitioner rejects oversized files,
+missing evidence and excess parts; no recording is omitted. Actions uploads only
+the created `successful-web-ui-recordings-*` parts and merges all parts for trusted
+default-branch publication. PR artifacts remain read-only and can be retained with
+per-archive digests plus the individual manifest hashes.

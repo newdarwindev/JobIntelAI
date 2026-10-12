@@ -15,6 +15,13 @@ export class MutationClient {
   get canRetry(){return this.blocked&&this.latest?.state==='not_received'&&this.pending.encoded!==null;}
   get canCancel(){return this.blocked&&this.latest?.state==='not_received';}
 
+  restorePending(id,context){
+    if(this.pending)throw new PendingOperationError('Resolve the existing operation before restoring another.');
+    this.storage?.setItem(storageKey,id);
+    this.pending={id,path:null,encoded:null,context,timeout:20000};
+    this.notify({state:'uncertain'});
+  }
+
   notify(outcome){
     this.latest={...outcome,operation_id:this.pending?.id??outcome.operation_id,path:outcome.path??this.pending?.path};
     this.onChange(this.latest);
