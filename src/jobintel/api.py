@@ -17,6 +17,14 @@ from jobintel.evaluation_store import get_report, list_reports, save_report
 from jobintel.export_selection import ExportInput
 from jobintel.exports import ExportService
 from jobintel.extraction_attempts import attempt_extract
+from jobintel.mutation_middleware import MutationMiddleware
+from jobintel.mutation_operations import (
+    cancel_unsent,
+    finish,
+    lookup,
+    operation_id,
+    tracked_mutation,
+)
 from jobintel.normalization import Taxonomy
 from jobintel.openai_transport import ProviderError
 from jobintel.provider_execution import execution_status
@@ -49,24 +57,32 @@ def service(request: Request):
     with request.app.state.session_factory() as session:
         try:
             yield Service(session, request.app.state.provider, request.app.state.taxonomy)
+            if getattr(request.state, "operation_response", None):
+                finish(session, request.state.operation_id, request.state.operation_response, 1)
             session.commit()
         except KeyError as error:
             session.rollback()
+            request.state.operation_rejected = True
             raise HTTPException(404, "job, candidate revision or match run not found") from error
         except Conflict as error:
             session.rollback()
+            request.state.operation_rejected = True
             raise HTTPException(409, str(error)) from error
         except IntegrityError as error:
             session.rollback()
+            request.state.operation_rejected = True
             raise HTTPException(409, "registry conflict or missing prerequisite") from error
         except ProviderError as error:
             session.rollback()
+            request.state.operation_rejected = True
             raise HTTPException(error.status, error.detail()) from error
         except ProviderUnavailable as error:
             session.rollback()
+            request.state.operation_rejected = True
             raise HTTPException(501, str(error)) from error
         except (GroundingError, ValueError) as error:
             session.rollback()
+            request.state.operation_rejected = True
             raise HTTPException(422, str(error)) from error
         except SQLAlchemyError as error:
             session.rollback()
@@ -86,6 +102,7 @@ def health(request: Request):
             session.execute(select(db.MatchRun.id).limit(1))
             session.execute(select(db.AcquisitionAttempt.id).limit(1))
             session.execute(select(db.ExtractionAttempt.id).limit(1))
+            session.execute(select(db.MutationOperation.id).limit(1))
     except SQLAlchemyError as error:
         raise HTTPException(503, "database unavailable or migrations required") from error
     provider = request.app.state.provider
@@ -106,7 +123,8 @@ def health(request: Request):
 
 
 @router.post("/jobs/import")
-def import_jobs(payload: ImportInput, svc: ServiceDependency):
+@tracked_mutation
+def import_jobs(payload: ImportInput, request: Request, svc: ServiceDependency):
     return svc.import_jobs(
         payload.jobs if payload.jobs is not None else parse_csv(payload.csv_text)
     )
@@ -128,7 +146,8 @@ def validate_candidate(payload: CandidateProfile):
 
 
 @router.post("/candidates/import", status_code=201)
-def import_candidate(payload: CandidateProfile, svc: ServiceDependency):
+@tracked_mutation
+def import_candidate(payload: CandidateProfile, request: Request, svc: ServiceDependency):
     return svc.import_candidate(payload)
 
 
@@ -148,18 +167,21 @@ def match_run(match_run_id: str, svc: ServiceDependency):
 
 
 @router.post("/jobs/{job_id}/snapshots", status_code=201)
-def snapshots(job_id: str, payload: SnapshotInput, svc: ServiceDependency):
+@tracked_mutation
+def snapshots(job_id: str, payload: SnapshotInput, request: Request, svc: ServiceDependency):
     snapshot = svc.snapshot(job_id, payload)
     return {"snapshot_id": snapshot.id, "content_hash": snapshot.content_hash}
 
 
 @router.post("/jobs/{job_id}/fetch")
+@tracked_mutation
 def fetch(job_id: str, request: Request, svc: ServiceDependency):
     report, status = AcquisitionService(svc).fetch(job_id, request.app.state.acquirer)
     return JSONResponse(report, status_code=status, headers={"Cache-Control": "no-store"})
 
 
 @router.post("/jobs/{job_id}/extract")
+@tracked_mutation
 def extract(job_id: str, payload: ExtractInput, request: Request, svc: ServiceDependency):
     configuration = payload.configuration or request.app.state.configuration
     result, error = attempt_extract(svc, job_id, configuration)
@@ -181,7 +203,13 @@ def job(job_id: str, svc: ServiceDependency):
 
 
 @router.post("/jobs/{job_id}/match")
-def match(job_id: str, payload: CandidateProfile | MatchSelection, svc: ServiceDependency):
+@tracked_mutation
+def match(
+    job_id: str,
+    payload: CandidateProfile | MatchSelection,
+    request: Request,
+    svc: ServiceDependency,
+):
     return svc.match(job_id, payload)
 
 
@@ -212,6 +240,7 @@ def exports(payload: ExportInput, svc: ServiceDependency):
 
 
 @router.post("/evaluate")
+@tracked_mutation
 def evaluate(payload: EvaluateInput, request: Request, svc: ServiceDependency):
     svc.session.execute(select(db.EvaluationRun.id).limit(1))
     configurations = payload.configurations or [request.app.state.configuration]
@@ -245,6 +274,26 @@ def evaluation_run(run_id: str, svc: ServiceDependency):
     return JSONResponse(get_report(svc.session, run_id), headers={"Cache-Control": "no-store"})
 
 
+@router.get("/operations/{key}")
+def operation_status(key: str, request: Request):
+    try:
+        return JSONResponse(
+            lookup(request.app.state.session_factory, operation_id(key)),
+            headers={"Cache-Control": "no-store"},
+        )
+    except SQLAlchemyError as error:
+        raise HTTPException(503, "operation status unavailable") from error
+
+
+@router.post("/operations/{key}/cancel-unsent")
+def cancel_operation(key: str, request: Request):
+    try:
+        record = cancel_unsent(request.app.state.session_factory, operation_id(key))
+    except SQLAlchemyError as error:
+        raise HTTPException(503, "operation status unavailable") from error
+    return JSONResponse(record, headers={"Cache-Control": "no-store"})
+
+
 def create_app(
     url: str | None = None,
     root=None,
@@ -272,6 +321,7 @@ def create_app(
         raise ValueError("the synthetic demo requires fixture provider")
     app.include_router(router)
     configure_web_ui(app, demo)
+    app.add_middleware(MutationMiddleware)
     return app
 
 

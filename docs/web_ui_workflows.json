@@ -275,6 +275,39 @@
         "authored acquisition gateway",
         "delayed delivery of actual API responses and browser connection abort"
       ]
+    },
+    {
+      "id": "UI13",
+      "title": "Durable mutation identity, lost-response recovery and safe replay",
+      "spec_sections": [
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "scenarios": [
+        "S01",
+        "S08",
+        "S17",
+        "S18",
+        "S23",
+        "S28",
+        "S33",
+        "V39",
+        "V40",
+        "V41",
+        "V42"
+      ],
+      "services": [
+        "actual migrated sandbox API with durable operation ledger",
+        "authored acquisition gateway",
+        "separate Responses emulator with bounded delayed response",
+        "lost delivery of actual API responses and browser connection abort"
+      ]
     }
   ]
 }

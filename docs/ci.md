@@ -133,13 +133,14 @@ checks, complete three-case reviewed outcomes, startup/memory measurements and
 commit/config/model provenance on every outcome. Model errors remain evaluation
 results; perfect metrics are not a CI requirement. See [local inference](local_inference.md).
 
-The browser workflow runs twenty-four recorded desktop/mobile attempts: UI01–UI08 and UI12
+The browser workflow runs twenty-six recorded desktop/mobile attempts: UI01–UI08 and UI12–UI13
 on the explicit synthetic sandbox and UI09–UI11 on separate normal PostgreSQL
 APIs using fixture replay, the Responses emulator and actual CPU inference. It
 prepares/verifies the same licensed model cache as the CPU workflow and preserves
 that cache after scoped teardown. Artifacts include the service inventory, code
 provenance and the engine's complete three-case reviewed report on every outcome.
-Only a complete passing suite publishes README/video evidence. Hosted controls
+Only a complete passing suite publishes README/video evidence. UI13 also publishes
+a hashed rendered mutation comparison and observation JSON from both viewports. Hosted controls
 have fake HTTP contract coverage; no paid call or hosted availability is claimed.
 
 The local CPU service gate additionally runs B/C experiments on identical frozen

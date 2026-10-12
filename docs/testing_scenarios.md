@@ -204,7 +204,7 @@ running container API in `python -m scripts.responses_smoke`. Authored success,
 refusal, malformed/schema/truncated output, invalid evidence, 429/quota, 5xx, delay
 and connection close verify the strict request contract, bounded retries, safe
 errors and append-only persistence. Stop/start/restart tests verify readiness and
-recovery. UI07 uses that HTTP service for provider failures; all eighteen sandbox journeys
+recovery. UI07 uses that HTTP service for provider failures; all twenty sandbox journeys
 record successful desktop/mobile evidence. No emulator output establishes inference
 quality. Configuration guards prevent forwarding hosted secrets to local endpoints.
 See [the emulator contract](responses_emulator.md).
@@ -225,7 +225,7 @@ Provider-aware UI contract tests in `integration/test_ui_configuration.py` cover
 fixture, emulator, local and explicitly configured hosted options, secret isolation,
 non-demo route isolation and readiness recovery. Hosted HTTP is fake contract
 coverage, without paid calls. `e2e/persistent.spec.mjs` adds UI09–UI11 on desktop
-and mobile to the eighteen sandbox journeys: normal PostgreSQL acquisition/extraction,
+and mobile to the twenty sandbox journeys: normal PostgreSQL acquisition/extraction,
 exact evidence, candidate revision reload/matching, exports and saved evaluation.
 Actual separate emulator failures and CPU-engine stop/start preserve saved history.
 The runner records the service inventory and actual three-case local outcomes; model
@@ -253,5 +253,23 @@ acquisition, grounded extraction, persisted revision/match, API/CLI export and
 saved authored evaluation; simultaneous independent runs; persistent stop/resume;
 scoped failure/SIGINT/SIGTERM cleanup and an orphan SIGKILL expiry watchdog.
 The container gate is mandatory and makes zero paid calls. Browser recordings
-cover 24 full desktop/mobile journeys; actual model outcomes are reported in
+cover 26 full desktop/mobile journeys; actual model outcomes are reported in
 separate optional CPU measurement evidence, not emulator quality claims.
+
+
+Issue #40 regressions in `integration/test_mutation_operations.py` use migrated
+SQLite/PostgreSQL and count actual domain records around replay. They cover all
+stored mutation types, canonical-body identity, conflicting reuse, validation
+rejection, active/concurrent reservations, cancellation/late packets, process
+recreation, failed domain/response writes and preserved historical records.
+`unit/mutation_client.test.mjs` exercises lost response versus lookup, immutable
+same-identity retry, uncertain barriers, failed display reads, opaque-ID reload,
+unavailable lookup, saved failed evaluations and cancellation.
+
+UI13 (`e2e/operations.spec.mjs`) records real pre-delivery/post-commit loss for
+registry, snapshot, candidate, extraction, matching, evaluation and acquisition
+on desktop/mobile. It additionally shows failed display/status reads and reload,
+unsent cancellation, validation rejection and actual delayed emulator work in flight.
+The rendered saved-operation comparison and observation JSON accompany successful
+videos and are exposed in issue comments. Missing catalogue counts remain explicit;
+completed keyed handler counts and model/service quality are separate measures.
