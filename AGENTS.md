@@ -94,6 +94,44 @@ mark portfolio Definition of Done complete without evidence for all required iss
 acceptance criteria. Do not claim production experience or résumé evidence
 from this project before the implemented behavior supports it.
 
+## Every issue — visual demonstration and closure comments
+
+Every open issue, including newly created and reopened issues, must contain an
+explicit visual-demonstration acceptance requirement. Reevaluate existing open
+issues when this policy or their scope changes. Name the scenario, expected visible
+result and artifact needed to demonstrate the change; make this a closure criterion.
+Planning issues must also carry this requirement into every child issue they create.
+
+Choose evidence appropriate to the work:
+
+- UI changes require successful recordings of the affected complete journeys on
+  desktop and mobile. Show the changed behavior and relevant failure/recovery
+  states; use labelled before/after evidence when it helps demonstrate a fix.
+  Follow the full-suite, recording and provenance requirements below.
+- Backend, API, performance and model work requires a readable rendered report,
+  comparison table/chart or terminal recording demonstrating actual outputs and
+  measured outcomes, linked to the underlying machine-readable results. Label
+  fixture, emulator and actual model/service execution accurately.
+- Planning and documentation work requires a rendered table, diagram or document
+  excerpt showing the resulting change and linking the deliverables it covers.
+
+Use permissible public/synthetic inputs and preserve source/configuration/run
+provenance. Evidence must match the final relevant implementation; retain verified
+source hashes where available. Never fabricate screenshots, outcomes or measurements.
+
+**Before closing an issue, post a comment on that issue exposing its demonstration
+artifacts.** Embed viewable artifacts where supported and provide direct, durable
+links to the recordings, images or rendered reports. Explain what to inspect and
+which acceptance criteria each artifact demonstrates; include the tested commit,
+run provenance and actual test results. Post this comment even when the artifacts
+are already linked from the issue body, README or PR. Keep expiring CI downloads as
+supplementary evidence and retain the public demonstration at a stable location.
+
+Verify the artifact links and coverage, then mark the visual-demonstration and
+closure-comment criteria complete. Leave the issue open while required evidence
+is missing, stale or unsuccessful. Existing implementation, privacy, authorization
+and review/merge gates still apply; visual evidence does not replace them.
+
 ## Web UI changes — mandatory workflow and recording updates
 
 For every change to a web UI, its API contract, fixture/provider data, or browser
