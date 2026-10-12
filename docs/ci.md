@@ -133,7 +133,7 @@ checks, complete three-case reviewed outcomes, startup/memory measurements and
 commit/config/model provenance on every outcome. Model errors remain evaluation
 results; perfect metrics are not a CI requirement. See [local inference](local_inference.md).
 
-The browser workflow runs twenty-two recorded desktop/mobile attempts: UI01–UI08
+The browser workflow runs twenty-four recorded desktop/mobile attempts: UI01–UI08 and UI12
 on the explicit synthetic sandbox and UI09–UI11 on separate normal PostgreSQL
 APIs using fixture replay, the Responses emulator and actual CPU inference. It
 prepares/verifies the same licensed model cache as the CPU workflow and preserves

@@ -113,7 +113,8 @@ npm run check:ui
 
 The browser runner owns scoped PostgreSQL APIs and separate acquisition/provider
 services for UI09–UI11; the Playwright web server starts `scripts/serve_ui.py` for
-UI01–UI08 in a disposable SQLite sandbox. Migrations run explicitly. Only authored
+UI01–UI08 and UI12 in a disposable SQLite sandbox. UI12 delays delivery of real API
+responses to check editor drafts during navigation. Migrations run explicitly. Only authored
 synthetic inputs and licensed model assets are used; CPU inference is real, while
 fixture/emulator output is labelled as authored contract coverage. Never record private postings, candidate
 history, real credentials or paid API calls. Keep `video: 'on'`: successful attempts

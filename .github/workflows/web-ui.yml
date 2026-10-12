@@ -52,6 +52,7 @@ jobs:
         run: |
           node scripts/check_ui_contract.mjs --coverage-only
           npm run test:recordings
+          npm run test:drafts
       - name: Cache checksum-pinned licensed CPU weights
         uses: actions/cache@v4
         with:
@@ -98,7 +99,7 @@ jobs:
             '## Complete browser workflow evidence' \
             'Download the diagnostics artifact for the HTML report, videos, screenshots, and failure traces.' \
             'Only a fully passing suite produces the successful-web-ui-recordings artifact. It contains an updated README and desktop/mobile recordings for every specified journey.' \
-            'UI09/UI10/UI11 run normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual CPU inference. UI01-UI08 retain the explicit synthetic sandbox. Hosted controls use fast contract tests; no paid service is called.' \
+            'UI09/UI10/UI11 run normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual CPU inference. UI01-UI08 and UI12 retain the explicit synthetic sandbox. UI12 delays real API response delivery for navigation races. Hosted controls use fast contract tests; no paid service is called.' \
             >> "$GITHUB_STEP_SUMMARY"
 
   publish-readme-recordings:
