@@ -73,10 +73,12 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 <!-- UI-RECORDINGS:START -->
 
-Successful browser attempts: **26/26**, recorded 2026-10-12.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38305588007) · commit `f7869937abcea70dfdd1b535289058cd0285b068`.
-UI01–UI08 and UI12–UI13 use the explicit synthetic sandbox; UI12 delays real API responses for navigation races, and UI13 verifies durable mutation recovery. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
-Source content SHA-256: `4d7089d5e733086940330612067b90f2cace45c042b45fffb933fedae041f0b1`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Successful browser attempts: **28/28**, recorded 2026-10-12.
+Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38312031669) · commit `dfca80099bb64af736db436556546f9f08de1493`.
+UI01–UI08 and UI12–UI14 use the explicit synthetic sandbox; UI12 delays real API responses for navigation races, UI13 verifies durable mutation recovery, and UI14 demonstrates partial batch outcomes and safe continuation. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
+Source content SHA-256: `2df4acda6f4e4b1fca56f2c5397f11f01efd23ac54976934c809bfbd7bc5c59d`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+
+[Measured batch outcome comparison](docs/issue-evidence/41/batch-comparison.md) · [Batch observation JSON](docs/issue-evidence/41/batch-comparison.json).
 
 [Measured mutation recovery comparison](docs/issue-evidence/40/mutation-comparison.md) · [Observation JSON](docs/issue-evidence/40/mutation-comparison.json).
 
@@ -95,6 +97,7 @@ Source content SHA-256: `4d7089d5e733086940330612067b90f2cace45c042b45fffb933fed
 | UI11 · Normal PostgreSQL CPU inference, measured evaluation and readiness recovery | [Watch](docs/ui-recordings/UI11-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI11-mobile-chromium.webm) |
 | UI12 · Scoped editor drafts, explicit discard and pending navigation | [Watch](docs/ui-recordings/UI12-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI12-mobile-chromium.webm) |
 | UI13 · Durable mutation identity, lost-response recovery and safe replay | [Watch](docs/ui-recordings/UI13-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI13-mobile-chromium.webm) |
+| UI14 · Partial corpus batches, retained outcomes and bounded continuation | [Watch](docs/ui-recordings/UI14-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI14-mobile-chromium.webm) |
 
 <!-- UI-RECORDINGS:END -->
 
