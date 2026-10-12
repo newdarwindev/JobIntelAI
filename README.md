@@ -73,10 +73,10 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 <!-- UI-RECORDINGS:START -->
 
-Successful browser attempts: **22/22**, recorded 2026-10-12.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38236085331) · commit `62fd09ca6325662ca8e6f5f0109db586310fcc80`.
-UI01–UI08 use the explicit synthetic sandbox. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
-Source content SHA-256: `67ee4862f06670e02042b816e765ca9a61662629038e120037cc97599b59d008`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Successful browser attempts: **24/24**, recorded 2026-10-12.
+Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38265847049) · commit `304a777ddbba78eb87e18e64f8b1b74c29e94f83`.
+UI01–UI08 and UI12 use the explicit synthetic sandbox; UI12 delays delivery of real API responses to check navigation races. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
+Source content SHA-256: `5fad1a09230f20824227d31ed67800a14e940862f9f8651721f358142d5b906f`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -91,6 +91,7 @@ Source content SHA-256: `67ee4862f06670e02042b816e765ca9a61662629038e120037cc975
 | UI09 · Normal PostgreSQL fixture pipeline and unsupported-input recovery | [Watch](docs/ui-recordings/UI09-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI09-mobile-chromium.webm) |
 | UI10 · Normal PostgreSQL Responses contract pipeline and provider failure history | [Watch](docs/ui-recordings/UI10-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI10-mobile-chromium.webm) |
 | UI11 · Normal PostgreSQL CPU inference, measured evaluation and readiness recovery | [Watch](docs/ui-recordings/UI11-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI11-mobile-chromium.webm) |
+| UI12 · Scoped editor drafts, explicit discard and pending navigation | [Watch](docs/ui-recordings/UI12-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI12-mobile-chromium.webm) |
 
 <!-- UI-RECORDINGS:END -->
 
