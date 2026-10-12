@@ -26,9 +26,9 @@ Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 | Screen | Required behavior | Journey |
 | --- | --- | --- |
 | Overview | Empty onboarding, registry/success/pending counts, complete 20-posting replay, direct navigation | UI01, UI03, UI08 |
-| Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters | UI01, UI09–UI11 |
-| Source & extraction | Manual text/HTML, bounded URL acquisition/manual recovery, immutable hash/timestamp/URL, source/extraction/attempt history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON | UI02, UI03, UI07, UI09–UI11 |
-| Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export | UI04, UI09–UI11 |
+| Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters, in-memory import drafts and discard | UI01, UI09–UI12 |
+| Source & extraction | Manual text/HTML, bounded URL acquisition/manual recovery, immutable hash/timestamp/URL, source/extraction/attempt history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON, per-posting source/URL/format drafts and discard | UI02, UI03, UI07, UI09–UI12 |
+| Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export, revision-scoped JSON/lookup/completeness drafts and discard | UI04, UI09–UI12 |
 | Corpus analytics | Saved latest-source n/N, mutually exclusive coverage and explicit failure overlaps, applied/grounded remote slices, alternatives, distinct-job categories and revision-selected group gaps after refresh, JSON and formula-safe CSV with source/run/profile provenance | UI05, UI09–UI11 |
 | Evaluation lab | Select supported raw/normalized configs from the API, reject empty selection, original 20-case regression and frozen 25-case source-reviewed benchmark, explicit metric counts, semantic/abstention/matching metrics, null unavailable measurements, per-case failures, report reload after refresh and by ID, JSON export | UI06, UI09–UI11 |
 
@@ -61,6 +61,26 @@ HTML is cleaned server-side and is never inserted as executable source markup.
 The Unicode UI regression injects an authored API read fixture with an emoji
 prefix; UI07 provider errors come from the separately running Responses emulator; its browser-to-API connection abort is intercepted locally.
 The rest of the browser pipeline uses the real fixture-backed service.
+
+UI12 retains unsaved registry content/format, source text/URL/format for each
+posting, and candidate JSON/lookup/completeness for each saved revision (or the
+initial unsaved profile). Navigation, registry refresh, provider status, matching,
+extraction and failed mutations restore the appropriate draft. Switching revisions
+restores that revision's draft without saving it. Each editor displays an unsaved
+notice and a discard control: discard resets only that scope to its latest saved
+values; successful explicit import/save consumes only the submitted draft version.
+URL acquisition updates saved source values and preserves dirty manual drafts.
+Draft bodies and validation errors stay in memory, never localStorage/sessionStorage;
+page reload starts from saved data, as the unsaved notice explains.
+
+UI12 delays delivery of actual acquisition, extraction, source-save, candidate-save/422
+and history-read responses while navigating between routes/postings. Underlying
+API operations execute normally and their results are read back from the service;
+the interception does not fabricate successful responses. Late history cannot
+paint a different posting, and callbacks never assign another scope's editor
+fields or validation errors. A browser-to-API connection abort verifies retryable
+failure preservation. `npm run test:drafts` covers stale submission/error versions,
+latest saved baselines, independent scopes and copied values.
 
 UI02 calls the actual bounded acquisition/service contract through the production
 HTTP transport in `policy-proxy` mode and isolated Compose origins/gateway.
@@ -220,9 +240,10 @@ CPU inference and reloads the persisted REV-01/REV-23/REV-25 evaluation created 
 that engine, including its failures and imperfect results. It stops/restarts the
 engine, checks readiness/action recovery, and retains extraction history.
 
-The twenty-two required videos comprise sixteen explicit sandbox attempts and
-six normal PostgreSQL attempts. Browser interception remains limited to the Unicode
-rendering read fixture and browser-to-API connection failure; normal journeys have
+The twenty-four required videos comprise eighteen explicit sandbox attempts and
+six normal PostgreSQL attempts. Browser interception comprises the Unicode
+rendering read fixture, browser-to-API connection failure and UI12's delayed
+delivery of real responses; normal journeys have
 no substituted API responses. Their service inventory, measured local evaluation
 and commit provenance are diagnostic artifacts. Disposable project credentials/DB
 URLs override inherited application settings, teardown removes only their newly
