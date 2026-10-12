@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {readFile} from 'node:fs/promises';
+import {readFile,writeFile} from 'node:fs/promises';
 
 const panel=page=>page.getByRole('region',{name:'Saved operation status',exact:true});
 const click=async(page,name)=>{await page.getByRole('button',{name,exact:true}).click();await expect(page.locator('main')).toHaveAttribute('aria-busy','false');};
@@ -203,7 +203,9 @@ test('UI13 | Durable mutation identity, lost-response recovery and safe replay',
   expect(await get(request,`/match-runs/${priorMatch.match_run_id}`)).toEqual(priorMatch);
   expect(await get(request,`/evaluation-runs/${priorEvaluation.evaluation_run_id}`)).toEqual(priorEvaluation);
   expect(errors).toEqual([]);
-  await info.attach('mutation-comparison',{body:Buffer.from(JSON.stringify({schema_version:1,mode:'authored fixture replay and Responses emulator; actual API/DB operations',rows},null,2)),contentType:'application/json'});
+  const comparisonPath=info.outputPath('mutation-comparison.json');
+  await writeFile(comparisonPath,JSON.stringify({schema_version:1,mode:'authored fixture replay and Responses emulator; actual API/DB operations',rows},null,2));
+  await info.attach('mutation-comparison',{path:comparisonPath,contentType:'application/json'});
   await page.evaluate(()=>{document.activeElement?.blur();window.scrollTo(0,0);});
   await page.screenshot({path:info.outputPath('successful-screen.png'),fullPage:true});
   await page.waitForTimeout(1200);
