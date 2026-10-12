@@ -1,7 +1,7 @@
 # Mutation recovery — measured browser verification
 
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38305588007) · tested commit `f7869937abcea70dfdd1b535289058cd0285b068`.
-Source content SHA-256: `4d7089d5e733086940330612067b90f2cace45c042b45fffb933fedae041f0b1`. [Machine-readable observations](mutation-comparison.json).
+Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38312031669) · tested commit `dfca80099bb64af736db436556546f9f08de1493`.
+Source content SHA-256: `2df4acda6f4e4b1fca56f2c5397f11f01efd23ac54976934c809bfbd7bc5c59d`. [Machine-readable observations](mutation-comparison.json).
 
 authored fixture replay and Responses emulator; actual API/DB operations; no paid calls.
 
@@ -12,42 +12,42 @@ Snapshot/extraction/registry/revision/evaluation counts come from their actual A
 | Viewport | Mutation | Interrupted boundary | Observed outcome | Browser POSTs | Conflicting test POSTs | Completed handler executions | Saved records before → after | Exact saved identity |
 | --- | --- | --- | --- | ---: | ---: | ---: | --- | --- |
 | desktop-chromium | registry | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | No new saved result |
-| desktop-chromium | snapshot | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | e40a9c8cb822440b97e36550d554423d |
-| desktop-chromium | candidate | before_delivery | not_received → committed | 2 | 1 | 1 | 0 → 1 | ae006d61e4784e518e33b6e6c85c5b34 |
-| desktop-chromium | extract | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 176e347932cc48b98bbfbafa90c765af |
-| desktop-chromium | match | before_delivery | not_received → committed | 2 | 1 | 1 | Not enumerated → Not enumerated | 907bdfac8384484e870fb01b62a66d84 |
-| desktop-chromium | evaluate | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 65dab049f8c64e999047ef41077c2f97 |
-| desktop-chromium | fetch | before_delivery | not_received → committed | 2 | 1 | 1 | 2 → 3 | e8cd3b602b6445b68a1c13250f042e28 |
+| desktop-chromium | snapshot | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | d452cc75bbac4a6cadc041912b44826f |
+| desktop-chromium | candidate | before_delivery | not_received → committed | 2 | 1 | 1 | 0 → 1 | 527ba5aaff574942beac317cb0c302c6 |
+| desktop-chromium | extract | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 792486fcad9a4e9fa1158fb675ce753b |
+| desktop-chromium | match | before_delivery | not_received → committed | 2 | 1 | 1 | Not enumerated → Not enumerated | d813d4e89ae0444bb7c4860ffe96f75d |
+| desktop-chromium | evaluate | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 3d1f7361744b418685740a4943e0aa85 |
+| desktop-chromium | fetch | before_delivery | not_received → committed | 2 | 1 | 1 | 2 → 3 | 4aed4be204c44f0e8e953ac3578568c8 |
 | desktop-chromium | registry | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | No new saved result |
-| desktop-chromium | snapshot | after_commit | committed → committed | 1 | 1 | 1 | 3 → 4 | 8e835a04fa5e4fbc87cae49dc2544345 |
-| desktop-chromium | candidate | after_commit | committed → committed | 1 | 1 | 1 | 0 → 1 | ec6fc3ade9e64942a13e5cdc1e4d4c7a |
-| desktop-chromium | extract | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | b31ce4e67e2544e5b92cb91aaa9850d2 |
-| desktop-chromium | match | after_commit | committed → committed | 1 | 1 | 1 | Not enumerated → Not enumerated | 367d5ebaee01445ea8847bcc644bff5d |
-| desktop-chromium | evaluate | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | 7e96d37351b4456f9a1b971421cbb7b3 |
-| desktop-chromium | fetch | after_commit | committed → committed | 1 | 1 | 1 | 4 → 5 | 58a62e2eebfd469396587c2e481cc126 |
-| desktop-chromium | extract | display_read_lost | committed/display_pending → committed | 1 | 0 | 1 | Not enumerated → Not enumerated | 07e7f14b15b148cfa2111282c54acb0c |
+| desktop-chromium | snapshot | after_commit | committed → committed | 1 | 1 | 1 | 3 → 4 | e6d701b82b3346d9b3094252c3c7752a |
+| desktop-chromium | candidate | after_commit | committed → committed | 1 | 1 | 1 | 0 → 1 | dd6495ebd4b94ed5b3ea9739b0dbf5b9 |
+| desktop-chromium | extract | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | abda179136ac4c00acb0831b0f8a7a45 |
+| desktop-chromium | match | after_commit | committed → committed | 1 | 1 | 1 | Not enumerated → Not enumerated | f81c76d6bd5049e19f1163308d588c87 |
+| desktop-chromium | evaluate | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | b828df322dbf4c5e8c0974aa0ce766ce |
+| desktop-chromium | fetch | after_commit | committed → committed | 1 | 1 | 1 | 4 → 5 | c8f73b61362a45ca907ef539dab89a63 |
+| desktop-chromium | extract | display_read_lost | committed/display_pending → committed | 1 | 0 | 1 | Not enumerated → Not enumerated | deeb5db5e99749f3b028b53f011020cd |
 | desktop-chromium | snapshot | unsent_reload_cancel | not_received → rejected | 1 | 1 | 0 | 5 → 5 | No new saved result |
-| desktop-chromium | extract | provider_in_flight | uncertain → committed | 1 | 0 | 1 | Not enumerated → Not enumerated | a526faae1c724cbba1ac9619f12a7938 |
-| desktop-chromium | extract | lookup_lost_reload | uncertain → committed | 1 | 0 | 1 | 6 → 6 | 45cb223be8a14d639926e7759e6e6545 |
+| desktop-chromium | extract | provider_in_flight | uncertain → committed | 1 | 0 | 1 | Not enumerated → Not enumerated | 1186cfbb5cde4c3fa1412345b95363c6 |
+| desktop-chromium | extract | lookup_lost_reload | uncertain → committed | 1 | 0 | 1 | 6 → 6 | 8a98a15da8a540498160807698ef3d03 |
 | desktop-chromium | candidate | validation_rejected | rejected → rejected | 1 | 0 | 0 | 0 → 0 | No new saved result |
 | mobile-chromium | registry | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | No new saved result |
-| mobile-chromium | snapshot | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | d0aeb93f660342c79d9bce0d5713134f |
-| mobile-chromium | candidate | before_delivery | not_received → committed | 2 | 1 | 1 | 0 → 1 | bc766d56b05f4b0ea18bc04b2a71b872 |
-| mobile-chromium | extract | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | cd60d27bfd5f4d8492670feb640214b2 |
-| mobile-chromium | match | before_delivery | not_received → committed | 2 | 1 | 1 | Not enumerated → Not enumerated | 2bdcb7d7cca54efea2df1d0d790eb393 |
-| mobile-chromium | evaluate | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 4f813bebc5a44efcb7bcb6b8f0aae69c |
-| mobile-chromium | fetch | before_delivery | not_received → committed | 2 | 1 | 1 | 2 → 3 | 162b56a43fbd48ddb80d466865f382d9 |
+| mobile-chromium | snapshot | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | ac695b7827bd48438373533204766c8f |
+| mobile-chromium | candidate | before_delivery | not_received → committed | 2 | 1 | 1 | 0 → 1 | c7084b1a67304ca0a15e84af251410a4 |
+| mobile-chromium | extract | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 3d90a5dc57014229981779641c24937c |
+| mobile-chromium | match | before_delivery | not_received → committed | 2 | 1 | 1 | Not enumerated → Not enumerated | a528879e1f494f13a17edfd4977cf152 |
+| mobile-chromium | evaluate | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 46f3b7a3f894481db4f6b21e2f81132f |
+| mobile-chromium | fetch | before_delivery | not_received → committed | 2 | 1 | 1 | 2 → 3 | 26c96100968f463f8e1967830c3adb52 |
 | mobile-chromium | registry | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | No new saved result |
-| mobile-chromium | snapshot | after_commit | committed → committed | 1 | 1 | 1 | 3 → 4 | 6642c5f240744dfbb508736303d1a00f |
-| mobile-chromium | candidate | after_commit | committed → committed | 1 | 1 | 1 | 0 → 1 | d2b9b667933f40fa812b6d38547f2428 |
-| mobile-chromium | extract | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | 2b5d698070d34d91b137bf7f4c1ec668 |
-| mobile-chromium | match | after_commit | committed → committed | 1 | 1 | 1 | Not enumerated → Not enumerated | f0e15f3a6f3f499eb2a91ccf2e7fb626 |
-| mobile-chromium | evaluate | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | e9ed9040e04d4e1c903da7d3e8c047f3 |
-| mobile-chromium | fetch | after_commit | committed → committed | 1 | 1 | 1 | 4 → 5 | f53da4ba245f4d25a6609fea95f8c776 |
-| mobile-chromium | extract | display_read_lost | committed/display_pending → committed | 1 | 0 | 1 | Not enumerated → Not enumerated | 5787a767d5314d90bab0697aaaaf2e90 |
+| mobile-chromium | snapshot | after_commit | committed → committed | 1 | 1 | 1 | 3 → 4 | 17bba7a1e30e4910a56081fcf3916661 |
+| mobile-chromium | candidate | after_commit | committed → committed | 1 | 1 | 1 | 0 → 1 | 865fd2987d2e41c48d7a4709c87ae0b5 |
+| mobile-chromium | extract | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | 35f33e29d407459ca222cba3b03220f5 |
+| mobile-chromium | match | after_commit | committed → committed | 1 | 1 | 1 | Not enumerated → Not enumerated | 304d54a883af40338fdcd72d7af59ddb |
+| mobile-chromium | evaluate | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | 000b7581e06e404987f81c53a3ca4718 |
+| mobile-chromium | fetch | after_commit | committed → committed | 1 | 1 | 1 | 4 → 5 | d64fce55c0e74ab196bd131381c8981a |
+| mobile-chromium | extract | display_read_lost | committed/display_pending → committed | 1 | 0 | 1 | Not enumerated → Not enumerated | fdb238edafdc42f48cef5483037d1e00 |
 | mobile-chromium | snapshot | unsent_reload_cancel | not_received → rejected | 1 | 1 | 0 | 5 → 5 | No new saved result |
-| mobile-chromium | extract | provider_in_flight | uncertain → committed | 1 | 0 | 1 | Not enumerated → Not enumerated | 2b203e1b536c4362bb557e30f1a7410a |
-| mobile-chromium | extract | lookup_lost_reload | uncertain → committed | 1 | 0 | 1 | 6 → 6 | 632d39036be547b893feef704704b366 |
+| mobile-chromium | extract | provider_in_flight | uncertain → committed | 1 | 0 | 1 | Not enumerated → Not enumerated | 7d1d4a5683cd401cbc22ff1c677dfd81 |
+| mobile-chromium | extract | lookup_lost_reload | uncertain → committed | 1 | 0 | 1 | 6 → 6 | e255b10eb98e4c10b81e9772de81a9ff |
 | mobile-chromium | candidate | validation_rejected | rejected → rejected | 1 | 0 | 0 | 0 → 0 | No new saved result |
 
 [Desktop UI13 recording](../../ui-recordings/UI13-desktop-chromium.webm) · [Mobile UI13 recording](../../ui-recordings/UI13-mobile-chromium.webm)
