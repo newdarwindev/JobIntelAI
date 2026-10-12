@@ -266,6 +266,7 @@ test('UI07 | Provider and connection failure recovery',async({page,request})=>{
   await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
   const emulated=await (await request.get('/jobs/SYN-01')).json();expect(emulated.extraction.provenance.execution_mode).toBe('emulator');expect(emulated.extraction.provenance.usage).toBeNull();
   await page.route('**/jobs/SYN-01/extract',route=>route.abort('connectionrefused'));await click(page,'Extract requirements');await expect(notice(page)).toContainText('Connection unavailable');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();await page.unroute('**/jobs/SYN-01/extract');
+  await click(page,'Retry same operation');await expect(notice(page)).toContainText('reconciled without starting another attempt');
   const latestSaved=await (await request.get('/jobs/SYN-01')).json();
   // The real API and adapter call the separately running authored HTTP emulator.
   for(const [scenario,httpStatus,code,retryable,count] of [['delay',504,'timeout',true,1],['quota',502,'quota',false,1],['refusal',422,'refusal',false,1],['server_error',502,'provider_failure',true,1],['invalid_evidence',422,'invalid_evidence',false,1],['malformed_json',502,'malformed_json',false,2],['connection_close',502,'provider_failure',true,1]]){

@@ -12,3 +12,4 @@ td small{overflow-wrap:anywhere}
 .sidebar-note[data-readiness="unavailable"] .online-dot,.sidebar-note[data-readiness="unverified"] .online-dot{background:currentColor;opacity:.6}
 
 .field-error{color:#963344}textarea[aria-invalid="true"]{border-color:#a62d3b}
+.operation-status{margin:20px 36px 0;padding:16px;border:1px solid var(--line);border-radius:7px;background:white;overflow-wrap:anywhere}.operation-status[hidden]{display:none}.operation-status h2{margin-bottom:7px}.operation-status .meta{margin-bottom:9px}.operation-status[data-state="uncertain"],.operation-status[data-state="not_received"]{border-color:#dbc590;background:#fffbef}.operation-status[data-state="rejected"]{border-color:#f2ccd2}.operation-status .actions{margin-top:10px}@media(max-width:680px){.operation-status{margin:15px 15px 0}}

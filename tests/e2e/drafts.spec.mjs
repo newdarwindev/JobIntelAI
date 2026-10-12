@@ -208,6 +208,7 @@ test('UI12 | Scoped editor drafts, explicit discard and pending navigation',asyn
     await sourceFields(page,b);await nav(page,'Overview');await openJob(page,'DRAFT-B');await sourceFields(page,b);
     const storage=await page.evaluate(()=>JSON.stringify({local:{...localStorage},session:{...sessionStorage}}));
     for(const marker of ['Authored unsaved source marker','Authored registry draft marker','authored-unsaved-lookup-marker','Authored denied manual draft','authored-invalid','Authored unsaved candidate body marker'])expect(storage).not.toContain(marker);
+    await click(page,'Cancel unsent operation');
     await click(page,'Discard source draft');
     await sourceFields(page,{text:'',format:'text',url:''});
     await openJob(page,'DRAFT-A');await sourceFields(page,a);

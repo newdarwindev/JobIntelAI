@@ -26,11 +26,11 @@ Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 | Screen | Required behavior | Journey |
 | --- | --- | --- |
 | Overview | Empty onboarding, registry/success/pending counts, complete 20-posting replay, direct navigation | UI01, UI03, UI08 |
-| Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters, in-memory import drafts and discard | UI01, UI09–UI12 |
-| Source & extraction | Manual text/HTML, bounded URL acquisition/manual recovery, immutable hash/timestamp/URL, source/extraction/attempt history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON, per-posting source/URL/format drafts and discard | UI02, UI03, UI07, UI09–UI12 |
-| Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export, revision-scoped JSON/lookup/completeness drafts and discard | UI04, UI09–UI12 |
+| Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters, in-memory import drafts and discard | UI01, UI09–UI13 |
+| Source & extraction | Manual text/HTML, bounded URL acquisition/manual recovery, immutable hash/timestamp/URL, source/extraction/attempt history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON, per-posting source/URL/format drafts and discard | UI02, UI03, UI07, UI09–UI13 |
+| Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export, revision-scoped JSON/lookup/completeness drafts and discard | UI04, UI09–UI13 |
 | Corpus analytics | Saved latest-source n/N, mutually exclusive coverage and explicit failure overlaps, applied/grounded remote slices, alternatives, distinct-job categories and revision-selected group gaps after refresh, JSON and formula-safe CSV with source/run/profile provenance | UI05, UI09–UI11 |
-| Evaluation lab | Select supported raw/normalized configs from the API, reject empty selection, original 20-case regression and frozen 25-case source-reviewed benchmark, explicit metric counts, semantic/abstention/matching metrics, null unavailable measurements, per-case failures, report reload after refresh and by ID, JSON export | UI06, UI09–UI11 |
+| Evaluation lab | Select supported raw/normalized configs from the API, reject empty selection, original 20-case regression and frozen 25-case source-reviewed benchmark, explicit metric counts, semantic/abstention/matching metrics, null unavailable measurements, per-case failures, report reload after refresh and by ID, JSON export | UI06, UI09–UI11, UI13 |
 
 UI06 must identify exported results as fixture replay rather than live model
 quality. The separate `jobintel experiment` CLI preserves `/evaluate` and cannot
@@ -81,6 +81,36 @@ paint a different posting, and callbacks never assign another scope's editor
 fields or validation errors. A browser-to-API connection abort verifies retryable
 failure preservation. `npm run test:drafts` covers stale submission/error versions,
 latest saved baselines, independent scopes and copied values.
+
+UI13 verifies a durable identity for each stored mutation: registry import,
+snapshot/candidate import, URL acquisition, extraction, matching and evaluation.
+The browser sends an opaque UUID in `Idempotency-Key`; the API reserves it before
+execution and stores the original result atomically with domain writes. A repeated
+identity replays its saved status/body, and different request content is rejected.
+Legacy API clients without the header continue to explicitly create new operations.
+
+Lost delivery triggers `GET /operations/{id}` before any retransmission. The UI
+shows pending, not-received, uncertain, committed or rejected outcomes, preserves
+drafts and blocks new stored mutations while unresolved. A not-received request
+can be retransmitted with its original identity and immutable body. An uncertain
+reservation is never rerun; check saved outcome instead. Saved partial evaluations
+still display failures. Failure of a display refresh retains the known committed
+operation and recovers with reads. Navigation remains usable and other editors
+retain their own drafts. Browser storage contains only the unresolved opaque ID;
+reload can restore a saved result. If an unsent request's body is no longer in
+memory, explicit cancellation reserves a rejection so delayed packets cannot run.
+
+The complete UI13 journey interrupts real delivery before execution and after
+commit for all seven mutation kinds, checks one identity/one completed handler,
+reads old/new records and rejects identity reuse with different content. It also
+demonstrates failed display/status reads, reload, cancellation, validation rejection
+and actual delayed Responses-emulator work in flight. The test-only provider
+control permits a bounded 1–5 second transport timeout; normal APIs have no scenario
+controls. Successful desktop/mobile observations produce a rendered comparison and
+JSON at `docs/issue-evidence/40/`; both artifacts are hashed in the video manifest,
+linked from README and exposed with the recordings in the implementing issue's
+comments. Missing catalogue counts are explicitly not enumerated. Completed keyed
+handler counts do not measure model quality or internal provider retries.
 
 UI02 calls the actual bounded acquisition/service contract through the production
 HTTP transport in `policy-proxy` mode and isolated Compose origins/gateway.
@@ -240,10 +270,11 @@ CPU inference and reloads the persisted REV-01/REV-23/REV-25 evaluation created 
 that engine, including its failures and imperfect results. It stops/restarts the
 engine, checks readiness/action recovery, and retains extraction history.
 
-The twenty-four required videos comprise eighteen explicit sandbox attempts and
+The twenty-six required videos comprise twenty explicit sandbox attempts and
 six normal PostgreSQL attempts. Browser interception comprises the Unicode
 rendering read fixture, browser-to-API connection failure and UI12's delayed
-delivery of real responses; normal journeys have
+delivery of real responses, plus UI13's loss of real response delivery and
+browser-to-API lookup failure; normal journeys have
 no substituted API responses. Their service inventory, measured local evaluation
 and commit provenance are diagnostic artifacts. Disposable project credentials/DB
 URLs override inherited application settings, teardown removes only their newly
