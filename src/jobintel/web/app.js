@@ -1,13 +1,17 @@
 import {EditorDrafts} from './drafts.js';
 import {MutationClient,storedMutation} from './operations.js';
+import {CorpusBatches,batchLimit} from './batches.js';
 
 const drafts = new EditorDrafts();
 const main = document.querySelector('#main');
 const notice = document.querySelector('#notice');
 const operationPanel = document.querySelector('#operation-status');
+const batchPanel = document.querySelector('#batch-status');
 const names = {overview:'Overview', registry:'Job registry', workbench:'Source & extraction', candidate:'Candidate evidence', analytics:'Corpus analytics', evaluation:'Evaluation lab'};
 const state = {jobs:[], fixtures:null, config:null, selected:null, profile:null, revision:null, revisions:[], matches:new Map(), evaluation:null, search:'', status:'all', applied:'all', remote:'all', activeEvidence:null, busy:false, rendering:false, rendered:null, renderId:0};
+const batches = new CorpusBatches({storage:sessionStorage,onChange:updateBatchPanel});
 const operations = new MutationClient({storage:localStorage,onChange:updateOperationPanel,apply:applySavedOperation,readableError});
+if(operations.pending)operations.pending.context={batch:batches.pendingContext(operations.pending.id)};
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pretty = value => JSON.stringify(value, null, 2);
 const badge = (value, cls=value) => `<span class="badge ${esc(cls)}">${esc(value)}</span>`;
@@ -149,16 +153,77 @@ function recordEditor(){
   drafts.change(key,value);syncDraftNotice();syncBusy();
 }
 function syncDraftNotice(){const note=main.querySelector('[data-draft-note]');if(note)note.hidden=!drafts.dirty(editorKey());}
-function syncBusy(){main.setAttribute('aria-busy',String(state.busy||state.rendering));main.querySelectorAll('button,input,select,textarea').forEach(b=>b.disabled=state.busy||state.rendering||b.dataset.invalidInput==='true'||(b.hasAttribute('data-discard-draft')&&!drafts.dirty(editorKey()))||Boolean(b.dataset.providerAction&&!state.config.actions[b.dataset.providerAction])||(operations.blocked&&mutationControl(b)));operationPanel.querySelectorAll('button').forEach(b=>b.disabled=state.busy||state.rendering);}
+function syncBusy(){main.setAttribute('aria-busy',String(state.busy||state.rendering));main.querySelectorAll('button,input,select,textarea').forEach(b=>b.disabled=state.busy||state.rendering||b.dataset.invalidInput==='true'||(b.hasAttribute('data-discard-draft')&&!drafts.dirty(editorKey()))||Boolean(b.dataset.providerAction&&!state.config.actions[b.dataset.providerAction])||(operations.blocked&&mutationControl(b))||(b.dataset.action==='corpus'&&batches.remaining('extraction').length>0)||(b.dataset.action==='match-corpus'&&batches.remaining('matching').length>0));operationPanel.querySelectorAll('button').forEach(b=>b.disabled=state.busy||state.rendering);batchPanel.querySelectorAll('button').forEach(b=>b.disabled=state.busy||state.rendering||operations.blocked);}
 function mutationControl(element){return ['corpus','fetch','extract','match','match-corpus'].includes(element.dataset.action)||(element.type==='submit'&&['import-form','source-form','profile-form','evaluation-form'].includes(element.closest('form')?.id));}
 function operationLabel(path){if(!path)return 'saved request';if(path==='/jobs/import')return 'registry import';if(path==='/candidates/import')return 'candidate import';if(path==='/evaluate')return 'evaluation';const parts=path.split('/');return `${parts.at(-1)} for ${decodeURIComponent(parts[2]??'posting')}`;}
 function updateOperationPanel(outcome){
+  batches.observe(operations.pending?.context?.batch,outcome,readableError);
   const labels={pending:'Pending — waiting for the server',uncertain:'Outcome uncertain — check before new work',not_received:'Not received — retry the same operation',committed:outcome.http_status>=400?'Committed — report saved with failures':'Committed — saved outcome confirmed',rejected:'Rejected — original outcome retained'};
   const explanation=outcome.display_pending?'Saved outcome confirmed; display refresh is pending. Check saved outcome again without repeating the mutation.':outcome.state==='uncertain'?'Work may still be running or delivery may have failed. No repeat request is sent automatically.':outcome.state==='not_received'?'The server has no reservation for this identity. Retry uses the original request and identity; cancellation prevents any late packet from executing.':outcome.state==='pending'?'This operation has its own recovery identity. Navigation remains available.':'Saved identities and history remain authoritative. Starting new work uses a new operation identity.';
   operationPanel.hidden=false;operationPanel.dataset.state=outcome.state;
   operationPanel.innerHTML=`<h2>${esc(labels[outcome.state])}</h2><p>${esc(operationLabel(outcome.path))} · ${esc(explanation)}</p><p class="meta">Operation ${esc(outcome.operation_id)}</p>${operations.blocked?`<div class="actions"><button type="button" data-recovery="check">Check saved outcome</button>${operations.canRetry?'<button type="button" data-recovery="retry">Retry same operation</button>':''}${operations.canCancel?'<button type="button" data-recovery="cancel">Cancel unsent operation</button>':''}</div>`:''}`;
   syncBusy();
 }
+function updateBatchPanel(){
+  batchPanel.hidden=batches.entries.size===0;
+  batchPanel.innerHTML=[...batches.entries.values()].map(batch=>{
+    const counts=batches.counts(batch),remaining=batches.remaining(batch.kind).length;
+    const summary=`${counts.completed} completed · ${counts.failed} failed · ${counts.unattempted} unattempted · ${counts.uncertain} uncertain · ${counts.running} running`;
+    const rows=batch.items.map(item=>`<tr data-batch-job="${esc(item.jobId)}" data-state="${esc(item.state)}"><td><a class="linked" href="#workbench?job=${encodeURIComponent(item.jobId)}">${esc(item.jobId)}</a></td><td>${esc(item.state)}<small>${esc(item.stage)}</small></td><td>${esc(item.resultId??'No completed result')}<small>Snapshot ${esc(item.snapshotId??'not saved')} · extraction ${esc(item.expectedRunId??'not selected')}</small></td><td>${item.error?`<p class="error">${esc(item.error)}</p>`:''}${item.attempts.map(a=>`<small>${esc(a.stage)} · ${esc(a.state)} · HTTP ${esc(a.http_status??'unavailable')}<br>Operation ${esc(a.operation_id)}${a.error?`<br>${esc(a.error)}`:''}</small>`).join('')}</td></tr>`).join('');
+    const registry=batch.registry.state==='completed'?'':`<p>Registry preparation: ${esc(batch.registry.state)}. ${esc(batch.registry.error??'No item execution until registry preparation succeeds.')}</p>${batch.registry.attempts.map(a=>`<p class="meta">Operation ${esc(a.operation_id)} · ${esc(a.state)} · HTTP ${esc(a.http_status??'unavailable')}</p>`).join('')}`;
+    return `<article data-batch-kind="${esc(batch.kind)}" data-running="${batch.running}"><h2>${batch.kind==='extraction'?'Extraction':'Matching'} batch outcomes</h2><p class="batch-counts">${summary}</p><p class="hint">At most ${batchLimit} remaining items per continuation. Completed items and saved stages are excluded. Captured source/run IDs and errors remain in this session across navigation and reload.</p>${batch.selection.profile_revision_id?`<p class="meta">Candidate ${esc(batch.selection.profile_id)} · revision ${esc(batch.selection.profile_revision_id)}</p>`:''}${registry}${batch.error?`<p class="error">${esc(batch.error)}</p>`:''}${batch.refreshError?`<p class="error">Authoritative counters unavailable: ${esc(batch.refreshError)}. Refresh before relying on displayed counts.</p>`:''}${remaining?`<div class="actions"><button data-batch-action="resume" data-batch-kind="${esc(batch.kind)}">Continue remaining ${batch.kind}</button><button data-batch-action="replan" data-batch-kind="${esc(batch.kind)}">Use current sources for remaining ${batch.kind}</button>${batch.kind==='matching'?'<button data-batch-action="restore" data-batch-kind="matching">Restore batch candidate revision</button>':''}</div><p class="hint">Continue retains the captured inputs. Use current sources explicitly updates only the failed/unattempted subset; prior errors and completed results stay visible. A matching batch retains its original candidate revision.</p>`:''}<details ${!batch.running&&remaining?'open':''}><summary>Posting outcomes (${batch.items.length})</summary><div class="table-wrap"><table><thead><tr><th>POSTING</th><th>OUTCOME / NEXT STAGE</th><th>SAVED IDENTITY</th><th>RETAINED ATTEMPTS / ERRORS</th></tr></thead><tbody>${rows}</tbody></table></div></details>${batch.items.length===0?'<p>No eligible items. No mutation request was sent.</p>':''}</article>`;
+  }).join('');
+  syncBusy();
+}
+async function refreshBatchState(){await reload();await render();}
+function requireBatchRevision(batch){if(batch.kind==='matching'&&batch.items.length&&state.revision?.profile_revision_id!==batch.selection.profile_revision_id)throw new Error('Candidate selection changed. Restore the captured batch revision before continuing.');}
+async function continueBatch(kind){
+  const batch=await batches.run(kind,{blocked:()=>operations.blocked,prepare:async batch=>{
+    requireBatchRevision(batch);batch.error=null;
+    if(kind==='extraction'&&batch.registry.state!=='completed'){
+      if(!batch.items.length){batch.registry.state='completed';batches.changed();return;}
+      const ids=new Set(batch.items.map(item=>item.jobId));
+      await api('/jobs/import',{jobs:state.fixtures.jobs.filter(job=>ids.has(job.job_id))},'json',20000,{batch:batches.context(kind,null,'registry')});
+    }
+  },process:async(item,batch)=>{
+    const path=`/jobs/${encodeURIComponent(item.jobId)}`;
+    if(kind==='extraction'){
+      if(item.stage==='snapshot')await api(`${path}/snapshots`,{text:state.fixtures.sources[item.jobId],expected_snapshot_id:item.expectedSnapshotId},'json',20000,{batch:batches.context(kind,item.jobId,'snapshot')});
+      await api(`${path}/extract`,{configuration:batch.selection.configuration,expected_snapshot_id:item.snapshotId},'json',providerTimeout(),{batch:batches.context(kind,item.jobId,'extract')});
+    }else{
+      requireBatchRevision(batch);
+      if(!item.expectedRunId)throw new Error('No current extraction. Review current sources for the remaining items before continuing.');
+      await api(`${path}/match`,{profile_id:batch.selection.profile_id,profile_revision_id:batch.selection.profile_revision_id,expected_run_id:item.expectedRunId},'json',20000,{batch:batches.context(kind,item.jobId,'match')});
+    }
+  },refresh:refreshBatchState});
+  const counts=batches.counts(batch),complete=batches.remaining(kind).length===0&&batch.registry.state==='completed';
+  if(complete&&counts.completed===0)tell('Empty batch: no eligible items; no mutation request was sent.');
+  else if(complete)tell(kind==='matching'?`Matched ${counts.completed} current extracted jobs. Group gaps are available in corpus analytics.`:`${counts.completed} synthetic postings imported, snapshotted, and extracted with fixture replay.`);
+  else tell(`${kind==='extraction'?'Extraction':'Matching'} batch stopped: ${counts.completed} completed, ${counts.failed} failed, ${counts.unattempted} unattempted, ${counts.uncertain} uncertain. Review the retained outcomes before continuing.`,true);
+}
+async function startExtractionBatch(){
+  await reload();const byId=new Map(state.jobs.map(job=>[job.job_id,job]));
+  batches.start('extraction',state.fixtures.jobs.map(job=>({jobId:job.job_id,stage:'snapshot',expectedSnapshotId:byId.get(job.job_id)?.snapshot?.id??null})),{configuration:state.config.default_configuration});
+  return continueBatch('extraction');
+}
+async function startMatchingBatch(){
+  await reload();const jobs=state.jobs.filter(job=>job.extraction);
+  if(jobs.length)requireProfile();
+  batches.start('matching',jobs.map(job=>({jobId:job.job_id,stage:'match',snapshotId:job.snapshot.id,expectedRunId:job.extraction.run_id})),state.revision?{profile_id:state.revision.profile_id,profile_revision_id:state.revision.profile_revision_id}:{});
+  return continueBatch('matching');
+}
+batchPanel.addEventListener('click',event=>{
+  const button=event.target.closest('[data-batch-action]');if(!button)return;
+  void run(async()=>{
+    const kind=button.dataset.batchKind,batch=batches.get(kind);
+    if(button.dataset.batchAction==='resume')await continueBatch(kind);
+    else if(button.dataset.batchAction==='restore'){
+      await activateRevision(await api(`/candidates/${encodeURIComponent(batch.selection.profile_id)}/revisions/${batch.selection.profile_revision_id}`));await render();tell('Captured batch candidate revision restored. Continue only the remaining items.');
+    }else{
+      requireBatchRevision(batch);await reload();batches.replan(kind,state.jobs);await render();tell('Current source/run IDs selected for the remaining items. Completed items are excluded; continue explicitly to execute.');
+    }
+  });
+});
 async function applySavedOperation(operation,outcome){
   const path=operation.path,submitted=operation.context?.submitted,success=outcome.http_status<400;
   await reload();
@@ -221,7 +286,7 @@ const actions={
   'sample-registry':()=>{document.querySelector('#registry-input').value=document.querySelector('#import-format').value==='csv'?state.fixtures.csv:pretty(state.fixtures.jobs);recordEditor();tell('Authored synthetic registry loaded into the editor.');},
   'sample-source':()=>{const job=requireJob();document.querySelector('#source-input').value=state.fixtures.sources[job.job_id];document.querySelector('#source-format').value='text';recordEditor();tell('Authored synthetic source loaded. Save a snapshot to continue.');},
   'discard-draft':()=>{drafts.discard(editorKey());restoreEditors();syncBusy();tell('Draft discarded. The editor now shows its saved values.');},
-  'corpus':async()=>{await api('/jobs/import',{jobs:state.fixtures.jobs});for(const [i,job]of state.fixtures.jobs.entries()){tell(`Processing authored fixtures ${i+1}/${state.fixtures.jobs.length}…`);await api(`/jobs/${job.job_id}/snapshots`,{text:state.fixtures.sources[job.job_id]});await api(`/jobs/${job.job_id}/extract`,{});state.matches.delete(job.job_id);}await reload();await render();tell('20 synthetic postings imported, snapshotted, and extracted with fixture replay.');},
+  'corpus':startExtractionBatch,
   'fetch':async()=>{const job=requireJob();try{const result=await api(`/jobs/${encodeURIComponent(job.job_id)}/fetch`,{},'json',65000);tell(`${job.job_id}: URL source saved as Snapshot #${result.snapshot_id}. SHA-256 ${result.content_hash}. Unsaved manual drafts are preserved. Acquisition history records every attempt.`);}catch(error){throw new Error(`${job.job_id}: ${error.message} Use the manual source editor for this posting. Prior snapshots, runs and drafts are preserved.`);}},
   'provider-status':async()=>{await refreshConfiguration();tell(`Provider status: ${state.config.readiness}. Prior sources and results remain available.`);},
   'extract':async()=>{const job=requireJob();await api(`/jobs/${encodeURIComponent(job.job_id)}/extract`,{configuration:document.querySelector('#extract-config').value},'json',providerTimeout());tell('Extraction saved. Every source span passed the grounding guard.');},
@@ -229,7 +294,7 @@ const actions={
   'load-revisions':async()=>{const id=document.querySelector('#profile-lookup').value.trim();state.revisions=(await api(`/candidates/${encodeURIComponent(id)}/revisions`)).revisions;await render();tell(state.revisions.length?'Select a saved revision to activate it.':'No saved revisions for this profile ID.');},
   'sample-candidate':()=>{document.querySelector('#candidate-input').value=pretty(state.fixtures.candidate);recordEditor();syncCandidateCompleteness();tell('Synthetic candidate loaded. Validate and save to activate it.');},
   'match':async()=>{const job=requireJob();const result=await doMatch(job);await render();tell(`Matched ${result.matches.length} requirement(s) against ${result.profile_id}.`);},
-  'match-corpus':async()=>{requireProfile();const jobs=state.jobs.filter(j=>j.extraction);if(!jobs.length)throw new Error('Extract at least one posting before matching the corpus.');for(const [i,job]of jobs.entries()){tell(`Matching current sources ${i+1}/${jobs.length}…`);await doMatch(job);}await render();tell(`Matched ${jobs.length} current extracted jobs. Group gaps are available in corpus analytics.`);},
+  'match-corpus':startMatchingBatch,
   'export-evidence':()=>{const job=requireJob();return exportSaved('evidence',`${job.job_id}-evidence.json`,'json',{job_ids:[job.job_id]});},
   'export-matches':()=>{const job=requireJob();requireProfile();return exportSaved('matches',`${job.job_id}-matches.json`,'json',{...exportSelection(),applied:null,remote:null,job_ids:[job.job_id]});},
   'export-matches-csv':()=>{const job=requireJob();requireProfile();return exportSaved('matches',`${job.job_id}-matches.csv`,'csv',{...exportSelection(),applied:null,remote:null,job_ids:[job.job_id]});},
@@ -261,5 +326,5 @@ window.addEventListener('hashchange',()=>{if(!state.config)return;void render().
 function eligibilityTable(run){return `<p class="meta">Match run #${esc(run.match_run_id)} · Assessment ${esc(run.as_of)}</p>${run.eligibility.length?`<h3>Location & eligibility</h3>${run.eligibility.map(p=>`<article class="requirement"><h4>${esc(p.predicate)}: ${esc(p.value)}</h4>${badge(p.status)}<p>${esc(p.explanation)}</p><div class="quote">${esc(p.requirement_evidence.quote)}</div>${p.candidate_sources.map(r=>`<div class="quote">${esc(r.quote)}</div><p class="meta">${esc(r.source)}</p>`).join('')}</article>`).join('')}`:''}`;}
 async function activateRevision(revision){const revisions=(await api(`/candidates/${encodeURIComponent(revision.profile_id)}/revisions`)).revisions;state.revision=revision;state.profile=revision.profile;state.matches.clear();state.revisions=revisions;localStorage.setItem('jobintel-selected-revision',JSON.stringify({profile_id:revision.profile_id,profile_revision_id:revision.profile_revision_id}));}
 async function restoreRevision(){const saved=localStorage.getItem('jobintel-selected-revision');if(!saved)return;try{const selection=JSON.parse(saved);await activateRevision(await api(`/candidates/${encodeURIComponent(selection.profile_id)}/revisions/${encodeURIComponent(selection.profile_revision_id)}`));}catch(error){localStorage.removeItem('jobintel-selected-revision');tell(`Saved selection unavailable. ${error.message}`,true);}}
-async function init(){main.innerHTML='<div class="loading">Connecting to the evidence workspace…</div>';try{await refreshConfiguration();if(state.config.actions.samples)state.fixtures=await api('/ui/fixtures');await reload();await restoreRevision();await restoreEvaluation();await render();if(operations.blocked)await run(()=>operations.check());}catch(error){main.innerHTML=`<section class="panel"><h1>Workspace unavailable</h1><p>${esc(error.message)}</p><p>Start the local API and reload this page.</p></section>`;tell(error.message,true);}}
+async function init(){main.innerHTML='<div class="loading">Connecting to the evidence workspace…</div>';try{await refreshConfiguration();if(state.config.actions.samples)state.fixtures=await api('/ui/fixtures');await reload();await restoreRevision();await restoreEvaluation();await render();await batches.restoreErrors(api,readableError);updateBatchPanel();if(!operations.blocked){const id=batches.unresolvedOperation();if(id)operations.restorePending(id,{batch:batches.pendingContext(id)});}if(operations.blocked)await run(()=>operations.check());}catch(error){main.innerHTML=`<section class="panel"><h1>Workspace unavailable</h1><p>${esc(error.message)}</p><p>Start the local API and reload this page.</p></section>`;tell(error.message,true);}}
 void init();

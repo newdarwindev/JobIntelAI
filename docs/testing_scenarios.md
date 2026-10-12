@@ -204,7 +204,7 @@ running container API in `python -m scripts.responses_smoke`. Authored success,
 refusal, malformed/schema/truncated output, invalid evidence, 429/quota, 5xx, delay
 and connection close verify the strict request contract, bounded retries, safe
 errors and append-only persistence. Stop/start/restart tests verify readiness and
-recovery. UI07 uses that HTTP service for provider failures; all twenty sandbox journeys
+recovery. UI07 uses that HTTP service for provider failures; all twenty-two sandbox journeys
 record successful desktop/mobile evidence. No emulator output establishes inference
 quality. Configuration guards prevent forwarding hosted secrets to local endpoints.
 See [the emulator contract](responses_emulator.md).
@@ -225,7 +225,7 @@ Provider-aware UI contract tests in `integration/test_ui_configuration.py` cover
 fixture, emulator, local and explicitly configured hosted options, secret isolation,
 non-demo route isolation and readiness recovery. Hosted HTTP is fake contract
 coverage, without paid calls. `e2e/persistent.spec.mjs` adds UI09–UI11 on desktop
-and mobile to the twenty sandbox journeys: normal PostgreSQL acquisition/extraction,
+and mobile to the twenty-two sandbox journeys: normal PostgreSQL acquisition/extraction,
 exact evidence, candidate revision reload/matching, exports and saved evaluation.
 Actual separate emulator failures and CPU-engine stop/start preserve saved history.
 The runner records the service inventory and actual three-case local outcomes; model
@@ -253,7 +253,7 @@ acquisition, grounded extraction, persisted revision/match, API/CLI export and
 saved authored evaluation; simultaneous independent runs; persistent stop/resume;
 scoped failure/SIGINT/SIGTERM cleanup and an orphan SIGKILL expiry watchdog.
 The container gate is mandatory and makes zero paid calls. Browser recordings
-cover 26 full desktop/mobile journeys; actual model outcomes are reported in
+cover 28 full desktop/mobile journeys; actual model outcomes are reported in
 separate optional CPU measurement evidence, not emulator quality claims.
 
 
@@ -273,3 +273,14 @@ unsent cancellation, validation rejection and actual delayed emulator work in fl
 The rendered saved-operation comparison and observation JSON accompany successful
 videos and are exposed in issue comments. Missing catalogue counts remain explicit;
 completed keyed handler counts and model/service quality are separate measures.
+
+
+Issue #41 adds `integration/test_batch_source_selection.py`: migrated SQLite and
+PostgreSQL stale snapshot/extraction guards, zero provider calls, durable rejection,
+retained prior runs and explicit empty/current source selection. Client batch tests
+cover first/middle/last failures, the 20-item bound with 45 items, unknown outcome
+barriers, committed display failures, ID-only reload, retained source stages and
+explicit remaining-input replan. UI14 covers 16 complete scenarios on each viewport
+with actual writes, saved identities and measured before/partial/resumed results;
+UI03/UI05 preserve the full 20-posting corpus. Passing artifacts are partitioned
+without dropping files, remain source-hashed and are exposed in issue comments.

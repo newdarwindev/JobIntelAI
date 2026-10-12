@@ -25,10 +25,10 @@ Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
 
 | Screen | Required behavior | Journey |
 | --- | --- | --- |
-| Overview | Empty onboarding, registry/success/pending counts, complete 20-posting replay, direct navigation | UI01, UI03, UI08 |
-| Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters, in-memory import drafts and discard | UI01, UI09–UI13 |
-| Source & extraction | Manual text/HTML, bounded URL acquisition/manual recovery, immutable hash/timestamp/URL, source/extraction/attempt history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON, per-posting source/URL/format drafts and discard | UI02, UI03, UI07, UI09–UI13 |
-| Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export, revision-scoped JSON/lookup/completeness drafts and discard | UI04, UI09–UI13 |
+| Overview | Empty onboarding, registry/success/pending counts, complete 20-posting replay, partial batch outcomes, bounded continuation, direct navigation | UI01, UI03, UI08, UI14 |
+| Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters, in-memory import drafts and discard | UI01, UI09–UI14 |
+| Source & extraction | Manual text/HTML, bounded URL acquisition/manual recovery, immutable hash/timestamp/URL, source/extraction/attempt history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON, per-posting source/URL/format drafts and discard | UI02, UI03, UI07, UI09–UI14 |
+| Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export, revision-scoped JSON/lookup/completeness drafts, partial matching outcomes and bounded continuation | UI04, UI09–UI14 |
 | Corpus analytics | Saved latest-source n/N, mutually exclusive coverage and explicit failure overlaps, applied/grounded remote slices, alternatives, distinct-job categories and revision-selected group gaps after refresh, JSON and formula-safe CSV with source/run/profile provenance | UI05, UI09–UI11 |
 | Evaluation lab | Select supported raw/normalized configs from the API, reject empty selection, original 20-case regression and frozen 25-case source-reviewed benchmark, explicit metric counts, semantic/abstention/matching metrics, null unavailable measurements, per-case failures, report reload after refresh and by ID, JSON export | UI06, UI09–UI11, UI13 |
 
@@ -111,6 +111,42 @@ JSON at `docs/issue-evidence/40/`; both artifacts are hashed in the video manife
 linked from README and exposed with the recordings in the implementing issue's
 comments. Missing catalogue counts are explicitly not enumerated. Completed keyed
 handler counts do not measure model quality or internal provider retries.
+
+UI14 exposes a batch outcome panel across every route. A captured extraction or
+matching plan lists completed, failed, unattempted and uncertain posting identities,
+next stages, saved snapshot/run/match IDs and prior rejected operation IDs/errors.
+A pass stops at its first failure or unresolved outcome and always attempts an
+authoritative registry refresh. Unavailable counters are explicitly labelled.
+Each continuation attempts at most 20 unfinished items. Completed items and saved
+snapshot stages are excluded, including after a delivery fault or page reload.
+An explicit new batch is separate work; an unfinished batch cannot be overwritten
+by the ordinary corpus button.
+
+The session journal contains only identifiers, configuration/revision references
+and states; posting/profile bodies and error messages stay in memory. On reload,
+the UI reads saved errors and attaches the pending operation to its original batch
+item. Recovery remains governed by UI13: unknown outcomes block continuation,
+not-received retry retains its exact request/identity, and committed recovery uses
+reads. The original candidate revision stays fixed. A changed active revision
+blocks matching until explicitly restored; it never silently combines revisions.
+Use current sources explicitly replans only failed/unattempted items from saved
+sources/current extraction IDs, preserving prior errors and completed results.
+
+Optional expected_snapshot_id guards on snapshot/extraction requests reject a
+stale source before replacement or provider execution. An explicit null snapshot
+creation guard requires that no source exists; omitted guards retain the legacy
+single-item contract. Matching retains its expected_run_id guard.
+
+The complete UI14 journey selects three jobs through an authored fixture-metadata
+read to cover first/middle/last extraction and matching failures, navigation,
+before-delivery loss, post-commit lookup/display refresh loss, reload, empty plans,
+stale sources and a changed candidate selection. Every domain write/result comes
+from the actual API; unsupported replay inputs and actual stale run/source changes
+produce the failures. No successful domain response is substituted. UI03/UI05
+retain the complete 20-posting flows; unit coverage also verifies the continuation
+bound with 45 items. Successful desktop/mobile attempts publish 32 measured cases
+in a rendered before/partial/resumed comparison and observation JSON under
+`docs/issue-evidence/41/`, hashed in the video manifest and exposed in issue comments.
 
 UI02 calls the actual bounded acquisition/service contract through the production
 HTTP transport in `policy-proxy` mode and isolated Compose origins/gateway.
@@ -270,9 +306,9 @@ CPU inference and reloads the persisted REV-01/REV-23/REV-25 evaluation created 
 that engine, including its failures and imperfect results. It stops/restarts the
 engine, checks readiness/action recovery, and retains extraction history.
 
-The twenty-six required videos comprise twenty explicit sandbox attempts and
+The twenty-eight required videos comprise twenty-two explicit sandbox attempts and
 six normal PostgreSQL attempts. Browser interception comprises the Unicode
-rendering read fixture, browser-to-API connection failure and UI12's delayed
+rendering read fixture, browser-to-API connection failure, UI14's authored fixture-selection read, and UI12's delayed
 delivery of real responses, plus UI13's loss of real response delivery and
 browser-to-API lookup failure; normal journeys have
 no substituted API responses. Their service inventory, measured local evaluation

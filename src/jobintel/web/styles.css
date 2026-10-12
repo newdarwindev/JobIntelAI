@@ -13,3 +13,5 @@ td small{overflow-wrap:anywhere}
 
 .field-error{color:#963344}textarea[aria-invalid="true"]{border-color:#a62d3b}
 .operation-status{margin:20px 36px 0;padding:16px;border:1px solid var(--line);border-radius:7px;background:white;overflow-wrap:anywhere}.operation-status[hidden]{display:none}.operation-status h2{margin-bottom:7px}.operation-status .meta{margin-bottom:9px}.operation-status[data-state="uncertain"],.operation-status[data-state="not_received"]{border-color:#dbc590;background:#fffbef}.operation-status[data-state="rejected"]{border-color:#f2ccd2}.operation-status .actions{margin-top:10px}@media(max-width:680px){.operation-status{margin:15px 15px 0}}
+
+.batch-status article+article{border-top:1px solid var(--line);margin-top:24px;padding-top:24px}.batch-status td{vertical-align:top;max-width:300px}.batch-status td small{display:block;margin-top:8px;overflow-wrap:anywhere}.batch-status .batch-counts{font-weight:700}.batch-status details{margin-top:16px}.batch-status .actions{flex-wrap:wrap}

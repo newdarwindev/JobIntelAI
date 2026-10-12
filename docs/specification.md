@@ -116,6 +116,17 @@ unsent request with a lost in-memory body can be explicitly cancelled through
 late delivery, while an existing reservation cannot be cancelled or restarted.
 No queue, external worker or automatic new provider attempt is introduced.
 
+Corpus extraction/matching batches capture posting IDs, source/run IDs and a fixed
+candidate revision. Their session journal stores ID/state metadata and server
+operation references, without posting/profile bodies or error text. Completed
+items and saved stages are never repeated by continuation. Each explicit pass
+attempts at most 20 unfinished items and stops on failure/uncertainty; every exit
+refreshes authoritative state or labels counters unavailable. Prior rejected
+identities remain visible, including after reload. Explicit source replan updates
+only unfinished items; matching requires restoring its captured candidate revision
+if the active selection changed. Optional snapshot/extraction source guards reject
+stale inputs before replacing a source or invoking the provider.
+
 ## 4. Data ownership and privacy
 
 Public mode: 20 authored synthetic postings are included; v1 accepts 20–30 labelled
@@ -383,9 +394,9 @@ single-user API has no authentication; the authorized mock UI uses these contrac
 | GET /candidates/{profile_id}/revisions | List saved revisions |
 | GET /candidates/{profile_id}/revisions/{revision_id} | Read/select an exact saved revision |
 | GET /match-runs/{match_run_id} | Read a historical match run and its provenance |
-| POST /jobs/{id}/snapshots | Manual text/HTML, source URL; return snapshot ID/hash |
+| POST /jobs/{id}/snapshots | Manual text/HTML, source URL, optional captured-source guard; return snapshot ID/hash |
 | POST /jobs/{id}/fetch | Bounded HTTP fetch; 201 with snapshot/hash and attempts, or persisted typed failure with manual fallback |
-| POST /jobs/{id}/extract | Configuration, latest snapshot; return run, requirements, evidence |
+| POST /jobs/{id}/extract | Configuration, latest snapshot, optional expected_snapshot_id guard; return run, requirements, evidence |
 | GET /jobs/{id} | Metadata, latest snapshot and its latest extraction; no stale results |
 | POST /jobs/{id}/match | Candidate profile payload; requirement-linked states/sources |
 | GET /analytics/skills | Saved-source skill/category/group aggregates, coverage buckets; applied/remote slices and explicit candidate revision |

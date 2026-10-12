@@ -184,7 +184,9 @@ def fetch(job_id: str, request: Request, svc: ServiceDependency):
 @tracked_mutation
 def extract(job_id: str, payload: ExtractInput, request: Request, svc: ServiceDependency):
     configuration = payload.configuration or request.app.state.configuration
-    result, error = attempt_extract(svc, job_id, configuration)
+    result, error = attempt_extract(
+        svc, job_id, configuration, expected_snapshot_id=payload.expected_snapshot_id
+    )
     if error:
         return extraction_failure(error)
     return result

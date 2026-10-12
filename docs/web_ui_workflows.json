@@ -308,6 +308,34 @@
         "separate Responses emulator with bounded delayed response",
         "lost delivery of actual API responses and browser connection abort"
       ]
+    },
+    {
+      "id": "UI14",
+      "title": "Partial corpus batches, retained outcomes and bounded continuation",
+      "spec_sections": [
+        5,
+        6,
+        7,
+        9,
+        10,
+        12,
+        13
+      ],
+      "scenarios": [
+        "S01",
+        "S08",
+        "S23",
+        "S28",
+        "V39",
+        "V40",
+        "V41",
+        "V42"
+      ],
+      "services": [
+        "actual migrated sandbox API with durable operation ledger",
+        "authored three-job fixture selection and unsupported replay input",
+        "real stale source/run conflicts and actual delivery/lookup interruption"
+      ]
     }
   ]
 }

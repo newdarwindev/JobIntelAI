@@ -140,6 +140,7 @@ class SnapshotInput(StrictModel):
     text: str = Field(min_length=1, max_length=200_000)
     source_url: str | None = None
     format: Literal["text", "html"] = "text"
+    expected_snapshot_id: str | None = Field(default=None, min_length=1, max_length=32)
 
 
 class CandidateEvidence(StrictModel):
@@ -205,6 +206,7 @@ class MatchSelection(StrictModel):
 
 class ExtractInput(StrictModel):
     configuration: str | None = Field(default=None, min_length=1, max_length=100)
+    expected_snapshot_id: str | None = Field(default=None, min_length=1, max_length=32)
 
 
 class EvaluationPricing(StrictModel):
