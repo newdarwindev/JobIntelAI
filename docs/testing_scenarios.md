@@ -173,6 +173,13 @@ permanently skipped or xfail tests as implementation evidence.
 
 ## Mock web UI workflows
 
+Surface-audit S13 (issue #47) uses `integration/test_catalogue.py` on migrated
+SQLite/PostgreSQL for bounded pages, deterministic timestamp ties, cursor/selection
+validation, source invalidation, successful-empty runs, unchanged legacy detail and
+export contracts, and constant query counts without source/prediction bodies.
+UI15 exercises the complete paginated discovery/history/revision/evaluation journey
+on desktop/mobile; UI01–UI14 retain their full existing contracts.
+
 The authorized UI extension has a separate acceptance contract in
 [web_ui_spec.md](web_ui_spec.md) and ID map in `web_ui_workflows.json`. UI01–UI08
 exercise full registry, capture/history, evidence, matching, analytics/export,

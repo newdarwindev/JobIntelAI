@@ -344,3 +344,25 @@ failures with unknown measurements; they cannot become successful browser eviden
 The README publishing job is disabled for fork repositories, including pushes to
 a fork's own default branch. Fork and pull-request workflow execution retains
 read-only permissions; only a trusted upstream default-branch run can publish.
+
+
+## Bounded discovery and saved catalogues (UI15)
+
+The [v2 read contract](catalogues.md) keeps navigation independent of full source,
+requirement, candidate and prediction bodies. UI15 imports more than two pages of
+authored jobs, pages next/previous/first, searches and filters the full registry,
+reloads a selection route, and opens a posting outside the first page. Global
+overview counts and explicit corpus batches cover all eligible jobs. Source
+replacement selects the latest immutable snapshot; successful empty extraction
+remains successful. Record every workflow on desktop/mobile.
+
+Create more than one page of saved snapshots, extraction runs, acquisition attempts,
+candidate revisions and evaluations. Inspect older pages, return to the first page,
+and load one exact saved source/revision/evaluation without new provider calls.
+Show safe inert source text, timestamp/ID ordering, exact IDs and counts, failure
+read recovery and preserved drafts during navigation. Assert bounded list responses
+exclude full bodies and retain no previous-page bodies. Existing legacy API and
+export parity checks remain part of the complete workflows. Publish successful
+UI15 recordings and rendered SQLite/PostgreSQL query/response-size comparisons,
+with actual source/configuration and machine-readable results, in the issue's
+closure evidence comment.

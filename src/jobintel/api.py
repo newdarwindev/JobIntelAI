@@ -10,6 +10,13 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from jobintel import db
 from jobintel.acquisition import HttpAcquirer
 from jobintel.acquisition_service import AcquisitionService
+from jobintel.catalogue import (
+    PageInput,
+    RegistryInput,
+    catalogue_page,
+    registry_page,
+    snapshot_detail,
+)
 from jobintel.config import database_url, fixture_root
 from jobintel.corpus_analytics import AnalyticsInput
 from jobintel.evaluation_runs import run_report
@@ -133,6 +140,69 @@ def import_jobs(payload: ImportInput, request: Request, svc: ServiceDependency):
 @router.get("/jobs")
 def jobs(svc: ServiceDependency):
     return {"jobs": svc.list_jobs()}
+
+
+@router.get("/v2/jobs")
+def registry_catalogue(svc: ServiceDependency, selection: Annotated[RegistryInput, Query()]):
+    return registry_page(svc.session, selection)
+
+
+@router.get("/v2/jobs/{job_id}/snapshots")
+def snapshot_catalogue(
+    job_id: str, svc: ServiceDependency, selection: Annotated[PageInput, Query()]
+):
+    return catalogue_page(svc, "snapshots", selection, job_id)
+
+
+@router.get("/v2/jobs/{job_id}/acquisition-attempts")
+def acquisition_catalogue(
+    job_id: str, svc: ServiceDependency, selection: Annotated[PageInput, Query()]
+):
+    return catalogue_page(svc, "acquisition", selection, job_id)
+
+
+@router.get("/v2/jobs/{job_id}/extraction-attempts")
+def attempt_catalogue(
+    job_id: str, svc: ServiceDependency, selection: Annotated[PageInput, Query()]
+):
+    return catalogue_page(svc, "attempts", selection, job_id)
+
+
+@router.get("/v2/jobs/{job_id}/snapshots/{snapshot_id}")
+def saved_snapshot(job_id: str, snapshot_id: str, svc: ServiceDependency):
+    return snapshot_detail(svc, job_id, snapshot_id)
+
+
+@router.get("/v2/jobs/{job_id}/snapshots/{snapshot_id}/runs")
+def run_catalogue(
+    job_id: str, snapshot_id: str, svc: ServiceDependency, selection: Annotated[PageInput, Query()]
+):
+    found = svc.session.scalar(
+        select(db.Snapshot.id).where(db.Snapshot.id == snapshot_id, db.Snapshot.job_id == job_id)
+    )
+    if found is None:
+        raise KeyError(snapshot_id)
+    return catalogue_page(svc, "runs", selection, snapshot_id)
+
+
+@router.get("/v2/extraction-runs/{run_id}")
+def saved_extraction(run_id: str, svc: ServiceDependency):
+    row = svc.session.get(db.ExtractionRun, run_id)
+    if row is None:
+        raise KeyError(run_id)
+    return svc.run_output(row)
+
+
+@router.get("/v2/candidates/{profile_id}/revisions")
+def revision_catalogue(
+    profile_id: str, svc: ServiceDependency, selection: Annotated[PageInput, Query()]
+):
+    return catalogue_page(svc, "revisions", selection, profile_id)
+
+
+@router.get("/v2/evaluation-runs")
+def evaluation_catalogue(svc: ServiceDependency, selection: Annotated[PageInput, Query()]):
+    return catalogue_page(svc, "evaluations", selection)
 
 
 @router.get("/jobs/{job_id}/history")
