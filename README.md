@@ -73,8 +73,8 @@ as files because GitHub Markdown does not reliably render inline HTML video tags
 
 <!-- UI-RECORDINGS:START -->
 
-Successful browser attempts: **28/28**, recorded 2026-10-12.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38312031669) · commit `dfca80099bb64af736db436556546f9f08de1493`.
+Successful browser attempts: **28/28**, recorded 2026-10-15.
+Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38726964867) · commit `2b4a88b20258341cc7594dc76491ae716c0c7e8b`.
 UI01–UI08 and UI12–UI14 use the explicit synthetic sandbox; UI12 delays real API responses for navigation races, UI13 verifies durable mutation recovery, and UI14 demonstrates partial batch outcomes and safe continuation. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
 Source content SHA-256: `2df4acda6f4e4b1fca56f2c5397f11f01efd23ac54976934c809bfbd7bc5c59d`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
 
