@@ -126,6 +126,12 @@ periods, missing dates, source contradictions, production/current capability sep
 exact-scope eligibility and dated validity, immutable revision reuse, stale extraction
 selection, migration preservation and atomic rollback on SQLite/PostgreSQL. UI04 saves,
 reloads, selects and re-matches synthetic revisions with match-run provenance.
+UI04 also covers issue #38's candidate-import boundary: JSON completeness and the
+checkbox stay synchronized, omitted completeness defaults to false, malformed roots
+and non-boolean assertions preserve editor text with field errors and zero import
+requests, and saved complete/incomplete revisions retain MISSING/UNKNOWN behavior
+after reload and selection. The helper pastes the profile without overriding its
+checkbox, so it exercises the actual import contract.
 
 ## Implementation acceptance in GitHub issues
 
