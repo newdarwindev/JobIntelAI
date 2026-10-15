@@ -1,11 +1,11 @@
-Experiment mode: emulator; requested model: contract-schema-v2.
-Created: 2026-10-11T06:05:19.053369+00:00; corpus SHA-256: `0481c38cfc191e3bd4f4be1fd360673cc178c6de3e34520c7d9c592680e26545`.
-Configuration SHA-256: `7baf9941ed54ef1916c4a83ec86043d3093f19111de7ac7f4120b1585e8b46c6`. [Complete report](report.json); [reproduced scores](scores.json).
+Режим эксперимента: emulator; запрошенная модель: contract-schema-v2.
+Создан: 2026-10-11T06:05:19.053369+00:00; SHA-256 корпуса: `0481c38cfc191e3bd4f4be1fd360673cc178c6de3e34520c7d9c592680e26545`.
+SHA-256 конфигурации: `7baf9941ed54ef1916c4a83ec86043d3093f19111de7ac7f4120b1585e8b46c6`. [Полный отчёт](report.json); [Повторно подсчитанные метрики](scores.json).
 
-| Config | Success / cases | Failures | Precision | Recall | Type | Evidence | Semantic unsupported | Correct unknown | Posting seconds | Tokens in/out | Cost USD |
+| Конфигурация | Успех / случаи | Ошибки | Precision | Recall | Тип | Цитата | Неподтверждённые claims | Верный unknown | Секунды на вакансию | Tokens вход/выход | Стоимость USD |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: |
-| [B](configuration-B.json) | 1/1 | 0 | 0.5000 | 0.5000 | 1.0000 | 1.0000 | 0.0000 | 1.0000 | 0.0620 | unavailable | unavailable |
-| [C](configuration-C.json) | 1/1 | 0 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 1.0000 | 0.0189 | unavailable | unavailable |
+| [B](configuration-B.json) | 1/1 | 0 | 0.5000 | 0.5000 | 1.0000 | 1.0000 | 0.0000 | 1.0000 | 0.0620 | нет данных | нет данных |
+| [C](configuration-C.json) | 1/1 | 0 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 0.0000 | 1.0000 | 0.0189 | нет данных | нет данных |
 
-Metrics cover successful cases; failures and raw outputs remain in the complete report. Matching isolates gold requirements and the sourced candidate. Zero denominators and unmeasured usage/cost/provider-only LLM latency remain unavailable.
-Authored network contract plumbing only; no inference, measured model quality, tokens or purchased cost. [Output audit](audit.json).
+Метрики относятся к успешным случаям; ошибки и исходные ответы сохранены в полном отчёте. Matching использует gold-требования и подтверждённые сведения кандидата. Нулевые знаменатели и неизмеренные usage/cost/LLM latency остаются неизвестными.
+Авторская проверка сетевого контракта: без inference, качества модели, tokens и оплаченной стоимости. [Аудит output](audit.json).

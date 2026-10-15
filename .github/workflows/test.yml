@@ -25,16 +25,8 @@ jobs:
           cache-dependency-path: requirements.lock.txt
       - name: Install pinned development tools
         run: python -m pip install -c requirements.lock.txt -e '.[dev]'
-      - name: Ruff lint (includes C901 complexity <= 10)
-        run: python -m ruff check . --output-format github
-      - name: Ruff formatting
-        run: python -m ruff format --check .
-      - name: ShellCheck
-        run: shellcheck scripts/*.sh
-      - name: Install checksum-verified actionlint
-        run: bash scripts/install_actionlint.sh
-      - name: GitHub Actions validation
-        run: local_data/bin/actionlint -color
+      - name: Shared lint, format, complexity, workflow and documentation gates
+        run: make quality PYTHON=python
 
   python:
     name: Python ${{ matrix.python-version }} / PostgreSQL
@@ -70,7 +62,7 @@ jobs:
       - name: Tests, migrations, fixture drift, CLI smoke and distribution build
         run: |
           mkdir -p work/ci
-          if python scripts/check.py --require-postgres --junitxml work/ci/junit.xml >work/ci/check.log 2>&1; then
+          if python -m scripts.task_postgres --junitxml work/ci/junit.xml >work/ci/check.log 2>&1; then
             result=0
           else
             result=$?
@@ -150,7 +142,7 @@ jobs:
           retention-days: 30
       - name: Prepare verified wheels and exercise the offline runtime
         run: |
-          python -m pip wheel --wheel-dir build/wheels -c requirements.lock.txt -r requirements.lock.txt 'setuptools>=75' wheel .
+          make prepare-offline PYTHON=python
           python scripts/runtime_smoke.py --project jobintel-runtime-offline --port 18081 --offline
       - name: Container diagnostics
         if: failure()

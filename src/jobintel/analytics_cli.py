@@ -1,4 +1,4 @@
-"""Read saved corpus aggregates without invoking extraction or live providers."""
+"""Чтение сохранённых агрегатов корпуса без extraction или provider calls."""
 
 import argparse
 import json

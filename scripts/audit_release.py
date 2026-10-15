@@ -1,4 +1,4 @@
-"""V44: audit distributions for licensed fixtures and forbidden private runtime files."""
+"""V44: аудит лицензированных fixtures и исключения приватных файлов из дистрибутива."""
 
 import argparse
 import json

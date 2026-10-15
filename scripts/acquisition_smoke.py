@@ -1,4 +1,4 @@
-"""Run real PostgreSQL/API/origin/TLS/proxy container checks without Internet fetches."""
+"""Реальные PostgreSQL/API/origin/TLS/proxy проверки без внешнего fetch."""
 
 import argparse
 import http.client

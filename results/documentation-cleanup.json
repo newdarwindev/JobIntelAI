@@ -1,0 +1,67 @@
+{
+  "tested": {
+    "source_sha256": "933945a54c1f31822e5ac528dbb2ff7bcacb5c1b250eb9417798cd5cb5e8e78d",
+    "git_commit": "fbd029121e51ba1fd7d010ad10138df1534d0f9c",
+    "git_dirty": false
+  },
+  "command": "synthetic operational acceptance for issue #58",
+  "checks": [
+    {
+      "check": "postgres_existing_project_refused",
+      "status": "passed"
+    },
+    {
+      "check": "postgres_failure_cleanup",
+      "status": "passed"
+    },
+    {
+      "check": "neighbor_preserved",
+      "status": "passed"
+    },
+    {
+      "check": "postgres_success_cleanup",
+      "status": "passed"
+    },
+    {
+      "check": "postgres_repeat_uses_independent_projects",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_import",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_snapshot",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_extraction",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_control_port_and_failure",
+      "status": "passed"
+    },
+    {
+      "check": "persistent_volume_survives_stop",
+      "status": "passed"
+    },
+    {
+      "check": "persistent_history_survives_restart",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_control_rediscovers_port",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_scoped_reset",
+      "status": "passed"
+    }
+  ],
+  "passed": 13,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "paid_calls": 0
+}

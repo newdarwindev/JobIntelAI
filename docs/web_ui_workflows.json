@@ -7,7 +7,7 @@
   "workflows": [
     {
       "id": "UI01",
-      "title": "Atomic registry import and discovery",
+      "title": "Атомарный импорт реестра и поиск",
       "spec_sections": [
         5,
         12
@@ -23,7 +23,7 @@
     },
     {
       "id": "UI02",
-      "title": "Source capture, URL fallback and immutable history",
+      "title": "Получение источника, ручное восстановление и история",
       "spec_sections": [
         6,
         7
@@ -44,15 +44,15 @@
         "V11"
       ],
       "services": [
-        "authored HTTPS origin",
-        "trusted policy-proxy DNS and single-use pin gateway",
-        "scoped verified test CA",
-        "shared owned Compose lease, discovered loopback ports and bounded cleanup"
+        "авторский HTTPS origin",
+        "доверенный policy-proxy с DNS и одноразовыми pins",
+        "проверенный scoped test CA",
+        "общий owned Compose lease, обнаруженные loopback-порты и ограниченная очистка"
       ]
     },
     {
       "id": "UI03",
-      "title": "Grounded extraction, aliases and operators",
+      "title": "Извлечение с цитатами, aliases и операторы",
       "spec_sections": [
         7,
         8,
@@ -73,13 +73,13 @@
         "V31"
       ],
       "provider_checks": [
-        "fixture API evidence and browser-specific Unicode rendering",
-        "actual local provider workflow UI11"
+        "fixture API evidence и браузерное отображение Unicode",
+        "реальный local provider в UI11"
       ]
     },
     {
       "id": "UI04",
-      "title": "Candidate evidence and four matching states",
+      "title": "Свидетельства кандидата и четыре состояния matching",
       "spec_sections": [
         9,
         10
@@ -101,7 +101,7 @@
     },
     {
       "id": "UI05",
-      "title": "Corpus slices, gaps and safe provenance exports",
+      "title": "Срезы корпуса, пробелы и безопасный экспорт",
       "spec_sections": [
         10
       ],
@@ -119,7 +119,7 @@
     },
     {
       "id": "UI06",
-      "title": "Fixture and source-reviewed evaluation diagnostics",
+      "title": "Диагностика fixture и source-reviewed оценки",
       "spec_sections": [
         11
       ],
@@ -138,7 +138,7 @@
     },
     {
       "id": "UI07",
-      "title": "Provider and connection failure recovery",
+      "title": "Восстановление после provider/connection failure",
       "spec_sections": [
         7,
         12
@@ -155,14 +155,14 @@
         "V19"
       ],
       "services": [
-        "separate authored Responses emulator",
-        "real API and HttpOpenAITransport sockets",
-        "shared owned Compose lease, discovered loopback ports and bounded cleanup"
+        "отдельный авторский Responses emulator",
+        "реальные сокеты API и HttpOpenAITransport",
+        "общий owned Compose lease, обнаруженные loopback-порты и ограниченная очистка"
       ]
     },
     {
       "id": "UI08",
-      "title": "Keyboard navigation, acquisition readiness, responsive layout and inert input",
+      "title": "Клавиатура, readiness, адаптивность и безопасный ввод",
       "spec_sections": [
         4,
         12
@@ -174,7 +174,7 @@
     },
     {
       "id": "UI09",
-      "title": "Normal PostgreSQL fixture pipeline and unsupported-input recovery",
+      "title": "Обычный PostgreSQL fixture pipeline и неподдержанный ввод",
       "spec_sections": [
         7,
         9,
@@ -192,15 +192,15 @@
         "V39"
       ],
       "services": [
-        "normal PostgreSQL API",
-        "authored verified HTTPS gateway",
-        "fixture replay",
-        "shared owned Compose lease, discovered loopback ports and bounded cleanup"
+        "обычный PostgreSQL API",
+        "авторский gateway с проверенным HTTPS",
+        "воспроизведение fixture",
+        "общий owned Compose lease, обнаруженные loopback-порты и ограниченная очистка"
       ]
     },
     {
       "id": "UI10",
-      "title": "Normal PostgreSQL Responses contract pipeline and provider failure history",
+      "title": "Обычный PostgreSQL Responses pipeline и история ошибок",
       "spec_sections": [
         7,
         9,
@@ -218,15 +218,15 @@
         "V39"
       ],
       "services": [
-        "normal PostgreSQL API",
-        "authored verified HTTPS gateway",
-        "separate Responses emulator with bounded structured contract",
-        "shared owned Compose lease, discovered loopback ports and bounded cleanup"
+        "обычный PostgreSQL API",
+        "авторский gateway с проверенным HTTPS",
+        "отдельный Responses emulator с ограниченным structured contract",
+        "общий owned Compose lease, обнаруженные loopback-порты и ограниченная очистка"
       ]
     },
     {
       "id": "UI11",
-      "title": "Normal PostgreSQL CPU inference, measured evaluation and readiness recovery",
+      "title": "Обычный PostgreSQL CPU inference, оценка и восстановление",
       "spec_sections": [
         7,
         9,
@@ -244,15 +244,15 @@
         "V39"
       ],
       "services": [
-        "normal PostgreSQL API",
-        "authored verified HTTPS gateway",
-        "actual pinned llama.cpp/Qwen CPU model; CLI B/C evidence remains separate",
-        "shared owned Compose lease, discovered loopback ports and bounded cleanup"
+        "обычный PostgreSQL API",
+        "авторский gateway с проверенным HTTPS",
+        "реальная закреплённая llama.cpp/Qwen CPU-модель; CLI B/C evidence отдельно",
+        "общий owned Compose lease, обнаруженные loopback-порты и ограниченная очистка"
       ]
     },
     {
       "id": "UI12",
-      "title": "Scoped editor drafts, explicit discard and pending navigation",
+      "title": "Несохранённые drafts при навигации и поздних ответах",
       "spec_sections": [
         4,
         5,
@@ -271,14 +271,14 @@
         "V40"
       ],
       "services": [
-        "real migrated sandbox API and fixture replay",
-        "authored acquisition gateway",
-        "delayed delivery of actual API responses and browser connection abort"
+        "реальный мигрированный sandbox API и fixture replay",
+        "авторский acquisition gateway",
+        "задержка реальных ответов API и browser connection abort"
       ]
     },
     {
       "id": "UI13",
-      "title": "Durable mutation identity, lost-response recovery and safe replay",
+      "title": "Восстановление сохранённых mutations без повторного исполнения",
       "spec_sections": [
         5,
         6,
@@ -303,15 +303,15 @@
         "V42"
       ],
       "services": [
-        "actual migrated sandbox API with durable operation ledger",
-        "authored acquisition gateway",
-        "separate Responses emulator with bounded delayed response",
-        "lost delivery of actual API responses and browser connection abort"
+        "реальный мигрированный sandbox API с durable operation ledger",
+        "авторский acquisition gateway",
+        "отдельный Responses emulator с ограниченной задержкой",
+        "потеря доставки реальных ответов API и browser connection abort"
       ]
     },
     {
       "id": "UI14",
-      "title": "Partial corpus batches, retained outcomes and bounded continuation",
+      "title": "Частичные batches и ограниченное продолжение",
       "spec_sections": [
         5,
         6,
@@ -332,9 +332,9 @@
         "V42"
       ],
       "services": [
-        "actual migrated sandbox API with durable operation ledger",
-        "authored three-job fixture selection and unsupported replay input",
-        "real stale source/run conflicts and actual delivery/lookup interruption"
+        "реальный мигрированный sandbox API с durable operation ledger",
+        "авторская выборка трёх jobs и неподдерживаемый replay input",
+        "реальные stale source/run conflicts и прерывание доставки/lookup"
       ]
     }
   ]

@@ -1,4 +1,4 @@
-"""Start, inspect or stop a named local Compose environment from the repository root."""
+"""Запуск, проверка и остановка именованного локального Compose-окружения."""
 
 import argparse
 import os
@@ -176,12 +176,14 @@ def arguments():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=["up", "status", "stop", "reset"])
     parser.add_argument("--mode", choices=MODES, default="dev")
-    parser.add_argument("--project", help="isolated Compose name beginning with jobintel-")
+    parser.add_argument("--project", help="Изолированное имя Compose, начинающееся на jobintel-")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--wait-timeout", type=int, default=120)
     parser.add_argument("--offline", action="store_true")
     parser.add_argument("--no-build", action="store_true")
-    parser.add_argument("--ca-bundle", help="combined normal/proxy CA bundle; mounted read-only")
+    parser.add_argument(
+        "--ca-bundle", help="Combined normal/proxy CA bundle; подключается read-only"
+    )
     args = parser.parse_args()
     args.explicit_project = args.project is not None
     args.project = args.project or f"jobintel-{args.mode}"

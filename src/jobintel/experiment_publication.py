@@ -137,7 +137,7 @@ def prepare_readme(report, output, path):
         body = body.replace(f"]({target})", f"]({prefix}/{target})")
     start, end = "<!-- LIVE-EXPERIMENTS:START -->", "<!-- LIVE-EXPERIMENTS:END -->"
     original = path.read_text(encoding="utf-8")
-    section = start + "\n\n## Authorized live extraction results\n\n" + body + "\n" + end
+    section = start + "\n\n## Разрешённые live-измерения\n\n" + body + "\n" + end
     if start not in original and end not in original:
         return original.rstrip() + "\n\n" + section + "\n"
     if (
@@ -150,24 +150,24 @@ def prepare_readme(report, output, path):
 
 
 def metric(value):
-    return "unavailable" if value is None else f"{value:.4f}"
+    return "нет данных" if value is None else f"{value:.4f}"
 
 
 def comparison(report):
     spec = report["spec"]
     lines = [
-        f"Experiment mode: {report['mode']}; requested model: {spec['model']}.",
-        f"Created: {report['created_at']}; corpus SHA-256: `{report['corpus_sha256']}`.",
-        f"Configuration SHA-256: `{report['spec_sha256']}`. [Complete report](report.json); [reproduced scores](scores.json).",
+        f"Режим эксперимента: {report['mode']}; запрошенная модель: {spec['model']}.",
+        f"Создан: {report['created_at']}; SHA-256 корпуса: `{report['corpus_sha256']}`.",
+        f"SHA-256 конфигурации: `{report['spec_sha256']}`. [Полный отчёт](report.json); [Повторно подсчитанные метрики](scores.json).",
         "",
-        "| Config | Success / cases | Failures | Precision | Recall | Type | Evidence | Semantic unsupported | Correct unknown | Posting seconds | Tokens in/out | Cost USD |",
+        "| Конфигурация | Успех / случаи | Ошибки | Precision | Recall | Тип | Цитата | Неподтверждённые claims | Верный unknown | Секунды на вакансию | Tokens вход/выход | Стоимость USD |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: |",
     ]
     for result in rescore(report)["results"]:
         summary = result["summary"]
         metrics = summary["metrics"] or {}
         tokens = summary["tokens"]
-        usage = f"{tokens['input']}/{tokens['output']}" if tokens else "unavailable"
+        usage = f"{tokens['input']}/{tokens['output']}" if tokens else "нет данных"
         values = [
             metric(metrics.get(k))
             for k in [
@@ -189,29 +189,29 @@ def comparison(report):
     lines.extend(
         [
             "",
-            "Metrics cover successful cases; failures and raw outputs remain in the complete report. Matching isolates gold requirements and the sourced candidate. Zero denominators and unmeasured usage/cost/provider-only LLM latency remain unavailable.",
+            "Метрики относятся к успешным случаям; ошибки и исходные ответы сохранены в полном отчёте. Matching использует gold-требования и подтверждённые сведения кандидата. Нулевые знаменатели и неизмеренные usage/cost/LLM latency остаются неизвестными.",
         ]
     )
     if spec["pricing"]:
         lines.append(
-            "Dated estimate, not billing reconciliation: "
+            "Датированная оценка стоимости, не сверка списаний: "
             + json.dumps(spec["pricing"], sort_keys=True)
         )
     if report["mode"] == "fake":
         lines.append(
-            "Fake provider regression only; no live model quality or purchased usage claim. Raw fixture responses are identical across A/B/C; only C applies normalization."
+            "Регрессия fake provider: качество live-модели и оплаченный usage не измеряются. Исходные fixture-ответы одинаковы в A/B/C, только C применяет normalization."
         )
     elif report["mode"] == "emulator":
         lines.append(
-            "Authored network contract plumbing only; no inference, measured model quality, tokens or purchased cost. [Output audit](audit.json)."
+            "Авторская проверка сетевого контракта: без inference, качества модели, tokens и оплаченной стоимости. [Аудит output](audit.json)."
         )
     elif report["mode"] == "local-inference":
         lines.append(
-            "Measured pinned local CPU model on the selected reviewed snapshots. B/C use the same source-bound Chat grammar and separate calls; only C normalizes. No hosted benchmark or purchased-cost claim. [Output audit](audit.json)."
+            "Измерена закреплённая локальная CPU-модель на выбранных reviewed snapshots. B/C используют одинаковую source-bound Chat grammar и отдельные вызовы; только C нормализует. Это не hosted benchmark или измерение оплаченной стоимости. [Аудит output](audit.json)."
         )
     else:
         lines.append(
-            "B and C use separate requests with identical prompts and snapshots; response variation can confound attribution to normalization. [Reviewer audit](audit.json) records the output/privacy review separately from the source-label review."
+            "B и C используют отдельные запросы с одинаковыми prompts/snapshots; вариативность ответов мешает приписать разницу normalization. [Аудит](audit.json) проверяет output/privacy отдельно от source-label review."
         )
     lines.extend(error_analysis(report))
     return "\n".join(lines) + "\n"
@@ -229,6 +229,6 @@ def error_analysis(report):
             rate = detail["reviewed_metrics"]["semantic_unsupported_claim_rate"]
             if rate["numerator"]:
                 lines.append(
-                    f"- {result['configuration']} / {detail['case_id']}: {rate['numerator']}/{rate['denominator']} source-reviewed claims unsupported; compare raw predictions with the frozen gold and source rationale."
+                    f"- {result['configuration']} / {detail['case_id']}: {rate['numerator']}/{rate['denominator']} claims не подтверждены source-review; сравните исходные predictions с frozen gold и обоснованием источника."
                 )
     return lines

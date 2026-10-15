@@ -1,4 +1,4 @@
-"""Prepare verified licensed weights in a reusable cache; never download during inference."""
+"""Проверенные лицензированные веса в общем cache; без download во время inference."""
 
 import argparse
 import fcntl

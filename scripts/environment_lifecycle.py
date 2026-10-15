@@ -1,4 +1,4 @@
-"""Owned Compose leases, bounded commands and cleanup independent of provider configuration."""
+"""Owned Compose leases, ограниченные команды и очистка независимо от provider config."""
 
 import argparse
 import fcntl

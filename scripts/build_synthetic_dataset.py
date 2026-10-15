@@ -1,8 +1,7 @@
-"""Rebuild explicitly authored synthetic examples. Never use this for live gold labels.
+"""Авторские synthetic fixtures; не генератор live gold labels.
 
-Fixture replay and gold share these authored examples, so their agreement only tests
-the pipeline. Deliberately bad predictions belong in unit tests, not claimed results.
-"""
+Gold и replay происходят из общих определений: совпадение проверяет pipeline.
+Неверные predictions допустимы в тестах, но не как заявленные измерения."""
 
 import csv
 import hashlib

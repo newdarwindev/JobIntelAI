@@ -1,4 +1,4 @@
-"""Provision loopback-only disposable runs or explicitly persistent developer sessions."""
+"""Локальные временные окружения или явно persistent developer sessions."""
 
 import argparse
 import json
