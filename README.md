@@ -19,7 +19,7 @@ make serve
 Откройте <http://127.0.0.1:8000/ui/> и загрузите синтетический корпус.
 `demo` мигрирует отдельную временную SQLite и пишет результаты в ignored
 `results/generated/demo`; `serve` создаёт собственный синтетический sandbox и удаляет
-его при выходе. Обычный `uvicorn jobintel.api:app` использует настроенную БД без demo/reset routes;
+его при выходе. Обычный `.venv/bin/uvicorn jobintel.api:app` использует настроенную БД без demo/reset routes;
 перед ним выполните явный `make migrate`. Настройки — в [.env.example](.env.example),
 приложение читает экспортированные переменные, а не загружает `.env` автоматически.
 
@@ -86,7 +86,7 @@ API не аутентифицирован и работает только на 
 переписка/секреты — в ignored local_data либо вне Git. Public URL не означает право на
 перепубликацию. [Контракты и ограничения](docs/specification.md), [правила работы](AGENTS.md),
 [UI-приёмка](docs/web_ui_spec.md), [исходный brief](docs/source_brief.txt).
-Полный перечень API/полей доступен в локальном `/docs`; команды — `jobintel --help`.
+Полный перечень API/полей доступен в локальном `/docs`; команды — `.venv/bin/jobintel --help`.
 
 ## Успешные записи desktop/mobile
 

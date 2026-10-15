@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Pin the workflow linter and verify the upstream release checksum before execution.
+# Закреплённый workflow linter с проверкой upstream checksum до исполнения.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 if [[ "$(uname -s)" != Linux || "$(uname -m)" != x86_64 ]]; then
@@ -16,5 +16,9 @@ curl --fail --location --silent --show-error "$release/actionlint_${version}_che
   -o "$download_dir/checksums.txt"
 (cd "$download_dir" && sha256sum --check --ignore-missing checksums.txt)
 mkdir -p local_data/bin
-tar -xzf "$download_dir/$archive" -C local_data/bin actionlint
+tar -xzf "$download_dir/$archive" -C "$download_dir" actionlint
+temporary_binary=$(mktemp local_data/bin/.actionlint.XXXXXX)
+trap 'rm -rf "$download_dir"; rm -f "${temporary_binary:-}"' EXIT
+install -m 755 "$download_dir/actionlint" "$temporary_binary"
+mv -f "$temporary_binary" local_data/bin/actionlint
 local_data/bin/actionlint -version

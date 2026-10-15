@@ -106,7 +106,7 @@ def pipeline(session, evidence):
         "/app/results/generated/lease-evaluation",
         capture=True,
     )
-    assert "20 cases" in cli.stdout
+    assert "20 случаев" in cli.stdout
     stored = session.command(
         "exec",
         "-T",
