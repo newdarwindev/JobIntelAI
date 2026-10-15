@@ -1,5 +1,6 @@
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
 import {resolve,relative,sep} from 'node:path';
 import {uiSourceHash} from './ui_source_hash.mjs';
 import {selectSuccessfulVideos} from './ui_evidence.mjs';
@@ -27,6 +28,9 @@ const directory='docs/issue-evidence/47',performance=JSON.parse(await readFile(`
 const python=process.env.UI_PYTHON||'.venv/bin/python';
 const current=JSON.parse(execFileSync(python,['-c','import json; from jobintel.experiments import code_provenance; print(json.dumps(code_provenance()))'],{encoding:'utf8'}));
 if(performance.code_provenance.source_sha256!==current.source_sha256||performance.rows.length!==10||new Set(performance.rows.map(r=>r.database)).size!==2||performance.rows.some(r=>r.bounded.select_statements!==2||r.bounded.selected_source_body_columns||r.bounded.returned_jobs>20))throw new Error('Performance evidence is missing, stale or unsuccessful.');
+const inputs=['data/sample_jobs/SYN-01.txt','data/provider_responses.json','data/taxonomy.json','scripts/catalogue_benchmark.py'];
+if(performance.input_provenance?.provider!=='fixture'||performance.input_provenance.configuration!=='fixture_normalized')throw new Error('Performance input/configuration provenance is missing.');
+for(const file of inputs)if(createHash('sha256').update(await readFile(file)).digest('hex')!==performance.input_provenance.sha256?.[file])throw new Error('Performance input or measurement source changed.');
 const github=process.env.GITHUB_ACTIONS==='true';
 const runUrl=github?`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`:null;
 const evidence={schema_version:1,origin:github?'github-actions':'local-playwright',run_url:runUrl,git_sha:process.env.GITHUB_SHA??execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),source_hash:await uiSourceHash(),observations};
