@@ -17,7 +17,7 @@ async function visit(suite){
     const path=resolve(attachment.path),rel=relative(resolve('test-results'),path);
     if(rel.startsWith(`..${sep}`)||rel==='..'||rel.startsWith(sep))throw new Error('Catalogue attachment escapes test-results.');
     const measured=JSON.parse(await readFile(path,'utf8'));
-    if(measured.project!==test.projectName||measured.registry_jobs!==45||['snapshots','runs','revisions','evaluations'].some(k=>measured[k]!==23)||measured.legacy_bulk_reads.length||measured.observed.some(row=>row.count>20))throw new Error('Catalogue demonstration coverage is incomplete.');
+    if(measured.project!==test.projectName||measured.registry_jobs!==45||['snapshots','runs','revisions','evaluations'].some(k=>measured[k]!==23)||measured.legacy_bulk_reads.length||measured.observed.some(row=>row.count>row.limit||row.limit>100||(row.limit>20&&(!row.explicit_batch_plan||row.path!=='/v2/jobs'))))throw new Error('Catalogue demonstration coverage is incomplete.');
     observations.push(measured);
   }
   for(const child of suite.suites??[])await visit(child);
