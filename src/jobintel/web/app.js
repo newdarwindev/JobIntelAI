@@ -1,10 +1,13 @@
 import {EditorDrafts} from './drafts.js';
+import {MutationClient,storedMutation} from './operations.js';
 
 const drafts = new EditorDrafts();
 const main = document.querySelector('#main');
 const notice = document.querySelector('#notice');
+const operationPanel = document.querySelector('#operation-status');
 const names = {overview:'Overview', registry:'Job registry', workbench:'Source & extraction', candidate:'Candidate evidence', analytics:'Corpus analytics', evaluation:'Evaluation lab'};
 const state = {jobs:[], fixtures:null, config:null, selected:null, profile:null, revision:null, revisions:[], matches:new Map(), evaluation:null, search:'', status:'all', applied:'all', remote:'all', activeEvidence:null, busy:false, rendering:false, rendered:null, renderId:0};
+const operations = new MutationClient({storage:localStorage,onChange:updateOperationPanel,apply:applySavedOperation,readableError});
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pretty = value => JSON.stringify(value, null, 2);
 const badge = (value, cls=value) => `<span class="badge ${esc(cls)}">${esc(value)}</span>`;
@@ -38,7 +41,8 @@ function readableError(data){
   if (Array.isArray(data.detail)) return data.detail.map(x=>`${x.loc.filter(y=>y!=='body').join('.')}: ${x.msg}`).join('; ');
   return 'The operation could not be completed.';
 }
-async function api(path, body, format='json',timeout=20000){
+async function api(path, body, format='json',timeout=20000,context=null){
+  if(body!==undefined&&storedMutation(path))return operations.execute(path,body,timeout,context);
   let response;
   try {response=await fetch(path,{method:body===undefined?'GET':'POST',headers:body===undefined?{}:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(timeout)});}
   catch {throw new Error('Connection unavailable or timed out. Your source and prior results are preserved. Retry when the local server is ready.');}
@@ -145,7 +149,32 @@ function recordEditor(){
   drafts.change(key,value);syncDraftNotice();syncBusy();
 }
 function syncDraftNotice(){const note=main.querySelector('[data-draft-note]');if(note)note.hidden=!drafts.dirty(editorKey());}
-function syncBusy(){main.setAttribute('aria-busy',String(state.busy||state.rendering));main.querySelectorAll('button,input,select,textarea').forEach(b=>b.disabled=state.busy||state.rendering||b.dataset.invalidInput==='true'||(b.hasAttribute('data-discard-draft')&&!drafts.dirty(editorKey()))||Boolean(b.dataset.providerAction&&!state.config.actions[b.dataset.providerAction]));}
+function syncBusy(){main.setAttribute('aria-busy',String(state.busy||state.rendering));main.querySelectorAll('button,input,select,textarea').forEach(b=>b.disabled=state.busy||state.rendering||b.dataset.invalidInput==='true'||(b.hasAttribute('data-discard-draft')&&!drafts.dirty(editorKey()))||Boolean(b.dataset.providerAction&&!state.config.actions[b.dataset.providerAction])||(operations.blocked&&mutationControl(b)));operationPanel.querySelectorAll('button').forEach(b=>b.disabled=state.busy||state.rendering);}
+function mutationControl(element){return ['corpus','fetch','extract','match','match-corpus'].includes(element.dataset.action)||(element.type==='submit'&&['import-form','source-form','profile-form','evaluation-form'].includes(element.closest('form')?.id));}
+function operationLabel(path){if(!path)return 'saved request';if(path==='/jobs/import')return 'registry import';if(path==='/candidates/import')return 'candidate import';if(path==='/evaluate')return 'evaluation';const parts=path.split('/');return `${parts.at(-1)} for ${decodeURIComponent(parts[2]??'posting')}`;}
+function updateOperationPanel(outcome){
+  const labels={pending:'Pending — waiting for the server',uncertain:'Outcome uncertain — check before new work',not_received:'Not received — retry the same operation',committed:outcome.http_status>=400?'Committed — report saved with failures':'Committed — saved outcome confirmed',rejected:'Rejected — original outcome retained'};
+  const explanation=outcome.display_pending?'Saved outcome confirmed; display refresh is pending. Check saved outcome again without repeating the mutation.':outcome.state==='uncertain'?'Work may still be running or delivery may have failed. No repeat request is sent automatically.':outcome.state==='not_received'?'The server has no reservation for this identity. Retry uses the original request and identity; cancellation prevents any late packet from executing.':outcome.state==='pending'?'This operation has its own recovery identity. Navigation remains available.':'Saved identities and history remain authoritative. Starting new work uses a new operation identity.';
+  operationPanel.hidden=false;operationPanel.dataset.state=outcome.state;
+  operationPanel.innerHTML=`<h2>${esc(labels[outcome.state])}</h2><p>${esc(operationLabel(outcome.path))} · ${esc(explanation)}</p><p class="meta">Operation ${esc(outcome.operation_id)}</p>${operations.blocked?`<div class="actions"><button type="button" data-recovery="check">Check saved outcome</button>${operations.canRetry?'<button type="button" data-recovery="retry">Retry same operation</button>':''}${operations.canCancel?'<button type="button" data-recovery="cancel">Cancel unsent operation</button>':''}</div>`:''}`;
+  syncBusy();
+}
+async function applySavedOperation(operation,outcome){
+  const path=operation.path,submitted=operation.context?.submitted,success=outcome.http_status<400;
+  await reload();
+  if(success){
+    if(path==='/candidates/import')await activateRevision(outcome.result);
+    else if(path==='/evaluate')rememberEvaluation(outcome.result);
+    else if(path?.endsWith('/match'))state.matches.set(decodeURIComponent(path.split('/')[2]),outcome.result);
+    else if(/^\/jobs\/[^/]+\/(snapshots|extract|fetch)$/.test(path??'')){state.matches.delete(decodeURIComponent(path.split('/')[2]));state.activeEvidence=null;}
+    if(submitted)drafts.accept(submitted);
+  }else{
+    if(outcome.result?.evaluation_run_id){const {detail,...report}=outcome.result;rememberEvaluation(report);}
+    if(path==='/candidates/import'&&outcome.http_status===422&&submitted)candidateError(`422: ${readableError(outcome.result)}`,submitted);
+  }
+  await render();
+}
+operationPanel.addEventListener('click',event=>{const action=event.target.closest('[data-recovery]')?.dataset.recovery;if(action)void run(async()=>{await operations[action]();tell(action==='cancel'?'Unsent operation cancelled. New work can now use a new identity.':'Saved operation outcome reconciled without starting another attempt.');});});
 async function run(fn){if(state.busy||state.rendering)return;state.busy=true;syncBusy();notice.hidden=true;try{await fn();}catch(error){if(error.report){rememberEvaluation(error.report);await render();}try{await refreshConfiguration();}catch{}tell(error.message,true);}finally{state.busy=false;syncBusy();}}
 function requireJob(){const job=state.jobs.find(j=>j.job_id===(state.rendered?.jobId??state.selected));if(!job)throw new Error('Import a posting first.');return job;}
 function requireProfile(){if(!state.profile)throw new Error('Validate and save candidate evidence first.');return state.profile;}
@@ -153,7 +182,7 @@ function download(name,data,type='application/json'){const blob=new Blob([typeof
 function exportSelection(){return {applied:state.applied==='all'?null:state.applied==='yes',remote:state.remote==='all'?null:state.remote==='yes',...(state.revision?{profile_id:state.revision.profile_id,profile_revision_id:state.revision.profile_revision_id}:{})};}
 async function analyticsReport(){const selection=exportSelection(),query=new URLSearchParams();for(const [key,value]of Object.entries(selection))if(value!==null)query.set(key,String(value));return api(`/analytics/skills?${query}`);}
 async function exportSaved(kind,name,format='json',selection={}){const data=await api('/exports',{kind,format,...selection},format);download(name,data,format==='csv'?'text/csv':'application/json');}
-async function doMatch(job){requireProfile();const result=await api(`/jobs/${encodeURIComponent(job.job_id)}/match`,{profile_id:state.profile.profile_id,profile_revision_id:state.revision.profile_revision_id,expected_run_id:job.extraction?.run_id??'unavailable'});state.matches.set(job.job_id,result);return result;}
+async function doMatch(job){requireProfile();return api(`/jobs/${encodeURIComponent(job.job_id)}/match`,{profile_id:state.profile.profile_id,profile_revision_id:state.revision.profile_revision_id,expected_run_id:job.extraction?.run_id??'unavailable'});}
 function parseCandidateJSON(text){
   let profile;
   try{profile=JSON.parse(text);}catch{throw new Error('Invalid candidate JSON. Check the profile and evidence records.');}
@@ -183,10 +212,9 @@ async function saveCandidate(){
   const submitted=drafts.capture(editorKey());
   let profile;
   try{profile=parseCandidateJSON(submitted.value.text);}catch(error){candidateError(error.message,submitted);throw error;}
-  try{await activateRevision(await api('/candidates/import',profile));}
+  try{await api('/candidates/import',profile,'json',20000,{submitted});}
   catch(error){if(error.message.startsWith('422:'))candidateError(error.message,submitted);throw error;}
-  drafts.accept(submitted);
-  await render();tell('Candidate evidence validated and activated. Prior session matches were invalidated.');
+  tell('Candidate evidence validated and activated. Prior session matches were invalidated.');
 }
 const actions={
   'refresh':async()=>{await reload();await render();tell('Registry refreshed from the local API.');},
@@ -194,9 +222,9 @@ const actions={
   'sample-source':()=>{const job=requireJob();document.querySelector('#source-input').value=state.fixtures.sources[job.job_id];document.querySelector('#source-format').value='text';recordEditor();tell('Authored synthetic source loaded. Save a snapshot to continue.');},
   'discard-draft':()=>{drafts.discard(editorKey());restoreEditors();syncBusy();tell('Draft discarded. The editor now shows its saved values.');},
   'corpus':async()=>{await api('/jobs/import',{jobs:state.fixtures.jobs});for(const [i,job]of state.fixtures.jobs.entries()){tell(`Processing authored fixtures ${i+1}/${state.fixtures.jobs.length}…`);await api(`/jobs/${job.job_id}/snapshots`,{text:state.fixtures.sources[job.job_id]});await api(`/jobs/${job.job_id}/extract`,{});state.matches.delete(job.job_id);}await reload();await render();tell('20 synthetic postings imported, snapshotted, and extracted with fixture replay.');},
-  'fetch':async()=>{const job=requireJob();try{const result=await api(`/jobs/${encodeURIComponent(job.job_id)}/fetch`,{},'json',65000);state.matches.delete(job.job_id);state.activeEvidence=null;await reload();await render();tell(`${job.job_id}: URL source saved as Snapshot #${result.snapshot_id}. SHA-256 ${result.content_hash}. Unsaved manual drafts are preserved. Acquisition history records every attempt.`);}catch(error){await reload();await render();throw new Error(`${job.job_id}: ${error.message} Use the manual source editor for this posting. Prior snapshots, runs and drafts are preserved.`);}},
+  'fetch':async()=>{const job=requireJob();try{const result=await api(`/jobs/${encodeURIComponent(job.job_id)}/fetch`,{},'json',65000);tell(`${job.job_id}: URL source saved as Snapshot #${result.snapshot_id}. SHA-256 ${result.content_hash}. Unsaved manual drafts are preserved. Acquisition history records every attempt.`);}catch(error){throw new Error(`${job.job_id}: ${error.message} Use the manual source editor for this posting. Prior snapshots, runs and drafts are preserved.`);}},
   'provider-status':async()=>{await refreshConfiguration();tell(`Provider status: ${state.config.readiness}. Prior sources and results remain available.`);},
-  'extract':async()=>{const job=requireJob();await api(`/jobs/${encodeURIComponent(job.job_id)}/extract`,{configuration:document.querySelector('#extract-config').value},'json',providerTimeout());state.activeEvidence=null;state.matches.delete(job.job_id);await reload();await render();tell('Extraction saved. Every source span passed the grounding guard.');},
+  'extract':async()=>{const job=requireJob();await api(`/jobs/${encodeURIComponent(job.job_id)}/extract`,{configuration:document.querySelector('#extract-config').value},'json',providerTimeout());tell('Extraction saved. Every source span passed the grounding guard.');},
   'highlight':(element)=>{state.activeEvidence=Number(element.dataset.index);const job=requireJob(),fact=element.dataset.fact,evidence=fact?(fact.startsWith('filter-')?job.extraction.filters?.[Number(fact.slice(7))]?.evidence:job.extraction[fact]?.evidence):job.extraction.requirements[state.activeEvidence]?.evidence;document.querySelector('#evidence-source').innerHTML=highlighted(job.snapshot.clean_text,evidence);document.querySelector('#evidence-source').scrollIntoView({behavior:'smooth',block:'center'});tell('Exact source quote highlighted using Unicode code-point offsets.');},
   'load-revisions':async()=>{const id=document.querySelector('#profile-lookup').value.trim();state.revisions=(await api(`/candidates/${encodeURIComponent(id)}/revisions`)).revisions;await render();tell(state.revisions.length?'Select a saved revision to activate it.':'No saved revisions for this profile ID.');},
   'sample-candidate':()=>{document.querySelector('#candidate-input').value=pretty(state.fixtures.candidate);recordEditor();syncCandidateCompleteness();tell('Synthetic candidate loaded. Validate and save to activate it.');},
@@ -213,10 +241,10 @@ const actions={
 };
 main.addEventListener('click',event=>{const element=event.target.closest('[data-action]');if(element&&actions[element.dataset.action])void run(()=>actions[element.dataset.action](element));});
 main.addEventListener('submit',event=>{event.preventDefault();void run(async()=>{
-  if(event.target.id==='import-form'){const submitted=drafts.capture(editorKey()),input=submitted.value.content;let body;if(submitted.value.format==='csv')body={csv_text:input};else{let parsed;try{parsed=JSON.parse(input);}catch{throw new Error('Invalid JSON. Paste a JSON jobs array or a jobs object.');}body=Array.isArray(parsed)?{jobs:parsed}:parsed;}const result=await api('/jobs/import',body);drafts.accept(submitted);await reload();await render();tell(`Imported ${result.imported} posting(s); ${result.duplicates} duplicate(s) reused.`);}
-  else if(event.target.id==='source-form'){const job=requireJob(),submitted=drafts.capture(editorKey());const result=await api(`/jobs/${encodeURIComponent(job.job_id)}/snapshots`,{text:submitted.value.text,format:submitted.value.format,source_url:submitted.value.url||null});drafts.accept(submitted);state.matches.delete(job.job_id);state.activeEvidence=null;await reload();await render();tell(`${job.job_id}: Snapshot #${result.snapshot_id} saved. SHA-256 ${result.content_hash}. Current results always reference the latest source.`);}
+  if(event.target.id==='import-form'){const submitted=drafts.capture(editorKey()),input=submitted.value.content;let body;if(submitted.value.format==='csv')body={csv_text:input};else{let parsed;try{parsed=JSON.parse(input);}catch{throw new Error('Invalid JSON. Paste a JSON jobs array or a jobs object.');}body=Array.isArray(parsed)?{jobs:parsed}:parsed;}const result=await api('/jobs/import',body,'json',20000,{submitted});tell(`Imported ${result.imported} posting(s); ${result.duplicates} duplicate(s) reused.`);}
+  else if(event.target.id==='source-form'){const job=requireJob(),submitted=drafts.capture(editorKey());const result=await api(`/jobs/${encodeURIComponent(job.job_id)}/snapshots`,{text:submitted.value.text,format:submitted.value.format,source_url:submitted.value.url||null},'json',20000,{submitted});tell(`${job.job_id}: Snapshot #${result.snapshot_id} saved. SHA-256 ${result.content_hash}. Current results always reference the latest source.`);}
   else if(event.target.id==='profile-form')await saveCandidate();
-  else if(event.target.id==='evaluation-form'){const configurations=[...main.querySelectorAll('input[name="configuration"]:checked')].map(e=>e.value);if(!configurations.length)throw new Error('Select at least one extraction configuration.');rememberEvaluation(await api('/evaluate',{configurations,dataset:document.querySelector('#evaluation-dataset').value},'json',providerTimeout('evaluation')));await render();tell(state.evaluation.status==='partial'?'Evaluation saved with failures. Inspect per-case diagnostics.':state.config.provider==='local'?'Local evaluation completed successfully. Inspect measured results and provenance.':'Evaluation completed successfully. Missing measurements remain unavailable.');}
+  else if(event.target.id==='evaluation-form'){const configurations=[...main.querySelectorAll('input[name="configuration"]:checked')].map(e=>e.value);if(!configurations.length)throw new Error('Select at least one extraction configuration.');await api('/evaluate',{configurations,dataset:document.querySelector('#evaluation-dataset').value},'json',providerTimeout('evaluation'));tell(state.evaluation.status==='partial'?'Evaluation saved with failures. Inspect per-case diagnostics.':state.config.provider==='local'?'Local evaluation completed successfully. Inspect measured results and provenance.':'Evaluation completed successfully. Missing measurements remain unavailable.');}
 });});
 main.addEventListener('input',event=>{if(event.target.id==='job-search'){state.search=event.target.value;document.querySelector('#registry-table').innerHTML=registryRows();}else if(Object.values(editorFields()).includes(event.target.id)){recordEditor();if(event.target.id==='candidate-input')syncCandidateCompleteness();}});
 main.addEventListener('change',event=>{
@@ -231,7 +259,7 @@ main.addEventListener('change',event=>{
 document.querySelector('.skip').addEventListener('click',event=>{event.preventDefault();main.focus();main.scrollIntoView({block:'start'});});
 window.addEventListener('hashchange',()=>{if(!state.config)return;void render().catch(error=>tell(error.message,true));});
 function eligibilityTable(run){return `<p class="meta">Match run #${esc(run.match_run_id)} · Assessment ${esc(run.as_of)}</p>${run.eligibility.length?`<h3>Location & eligibility</h3>${run.eligibility.map(p=>`<article class="requirement"><h4>${esc(p.predicate)}: ${esc(p.value)}</h4>${badge(p.status)}<p>${esc(p.explanation)}</p><div class="quote">${esc(p.requirement_evidence.quote)}</div>${p.candidate_sources.map(r=>`<div class="quote">${esc(r.quote)}</div><p class="meta">${esc(r.source)}</p>`).join('')}</article>`).join('')}`:''}`;}
-async function activateRevision(revision){state.revision=revision;state.profile=revision.profile;state.matches.clear();state.revisions=(await api(`/candidates/${encodeURIComponent(revision.profile_id)}/revisions`)).revisions;localStorage.setItem('jobintel-selected-revision',JSON.stringify({profile_id:revision.profile_id,profile_revision_id:revision.profile_revision_id}));}
+async function activateRevision(revision){const revisions=(await api(`/candidates/${encodeURIComponent(revision.profile_id)}/revisions`)).revisions;state.revision=revision;state.profile=revision.profile;state.matches.clear();state.revisions=revisions;localStorage.setItem('jobintel-selected-revision',JSON.stringify({profile_id:revision.profile_id,profile_revision_id:revision.profile_revision_id}));}
 async function restoreRevision(){const saved=localStorage.getItem('jobintel-selected-revision');if(!saved)return;try{const selection=JSON.parse(saved);await activateRevision(await api(`/candidates/${encodeURIComponent(selection.profile_id)}/revisions/${encodeURIComponent(selection.profile_revision_id)}`));}catch(error){localStorage.removeItem('jobintel-selected-revision');tell(`Saved selection unavailable. ${error.message}`,true);}}
-async function init(){main.innerHTML='<div class="loading">Connecting to the evidence workspace…</div>';try{await refreshConfiguration();if(state.config.actions.samples)state.fixtures=await api('/ui/fixtures');await reload();await restoreRevision();await restoreEvaluation();await render();}catch(error){main.innerHTML=`<section class="panel"><h1>Workspace unavailable</h1><p>${esc(error.message)}</p><p>Start the local API and reload this page.</p></section>`;tell(error.message,true);}}
+async function init(){main.innerHTML='<div class="loading">Connecting to the evidence workspace…</div>';try{await refreshConfiguration();if(state.config.actions.samples)state.fixtures=await api('/ui/fixtures');await reload();await restoreRevision();await restoreEvaluation();await render();if(operations.blocked)await run(()=>operations.check());}catch(error){main.innerHTML=`<section class="panel"><h1>Workspace unavailable</h1><p>${esc(error.message)}</p><p>Start the local API and reload this page.</p></section>`;tell(error.message,true);}}
 void init();

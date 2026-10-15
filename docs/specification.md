@@ -89,6 +89,33 @@ When HTTP fails (timeout, denied, unsupported JS), preserve an acquisition outco
 and offer manual text entry. Browser fallback must be explicit, optional and never
 an anti-bot bypass. One job may have many source snapshots and extraction runs.
 
+### Stored mutation delivery and recovery
+
+The browser assigns every stored mutation a UUID `Idempotency-Key`. Registry,
+snapshot and candidate imports, acquisition, extraction, matching and evaluation
+reserve that identity durably before work. Its request method/path and canonical
+body hash bind reuse; changed content with the same key is a conflict. Domain
+writes and the original HTTP result commit in one transaction. Same-key replay
+returns that result without rerunning the handler or provider. Existing unkeyed
+API requests retain their explicit new-operation behavior; CLI transactions remain
+unchanged.
+
+`GET /operations/{id}` returns not-received, uncertain, committed or rejected state
+and the saved response. A reservation whose final commit cannot be confirmed stays
+uncertain, including after process failure; replay never starts it again. Expected
+rejections are retained, and committed partial evaluation reports keep their failure
+status. Stored completed-handler execution counts describe the idempotency boundary,
+not upstream request counts or model quality. Response lookup is private application
+data, uses no-store responses and never logs payloads or credentials.
+
+The UI reconciles lost delivery before retrying, preserves scoped drafts and stores
+only the pending opaque identity in browser storage. A safe retransmission keeps
+its original request/identity. Reload recovers committed results with reads; an
+unsent request with a lost in-memory body can be explicitly cancelled through
+`POST /operations/{id}/cancel-unsent`. The atomic cancellation tombstone rejects
+late delivery, while an existing reservation cannot be cancelled or restarted.
+No queue, external worker or automatic new provider attempt is introduced.
+
 ## 4. Data ownership and privacy
 
 Public mode: 20 authored synthetic postings are included; v1 accepts 20–30 labelled

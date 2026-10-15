@@ -4,6 +4,7 @@ from uuid import uuid4
 from sqlalchemy import (
     JSON,
     Boolean,
+    CheckConstraint,
     ForeignKey,
     Integer,
     String,
@@ -145,6 +146,25 @@ class EvaluationRun(Base):
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=new_id)
     created_at: Mapped[str] = mapped_column(String(40), default=now)
     payload: Mapped[dict] = mapped_column(JSON)
+
+
+class MutationOperation(Base):
+    __tablename__ = "mutation_operations"
+    __table_args__ = (
+        CheckConstraint(
+            "state IN ('uncertain', 'committed', 'rejected')", name="ck_mutation_operation_state"
+        ),
+    )
+    id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    request_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    method: Mapped[str | None] = mapped_column(String(10), nullable=True)
+    path: Mapped[str | None] = mapped_column(Text, nullable=True)
+    state: Mapped[str] = mapped_column(String(20))
+    created_at: Mapped[str] = mapped_column(String(40), default=now)
+    completed_at: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    http_status: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    result: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    execution_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
 
 def session_factory(url: str):
