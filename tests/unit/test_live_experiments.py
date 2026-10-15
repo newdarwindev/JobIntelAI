@@ -297,7 +297,7 @@ def test_v38_reviewed_fake_cli_keeps_five_unavailable_cases_per_config(tmp_path)
     assert main(["run", "--corpus", str(frozen), "--output", str(output)]) == 1
     report = json.loads((output / "report.json").read_text())
     assert [r["summary"]["failed"] for r in report["results"]] == [5, 5, 5]
-    assert "Fake provider regression only" in (output / "comparison.md").read_text()
+    assert "Регрессия fake provider" in (output / "comparison.md").read_text()
     assert (
         main(
             [

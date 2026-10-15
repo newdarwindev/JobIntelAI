@@ -9,6 +9,7 @@ on:
       - 'data/**'
       - 'tests/**'
       - 'scripts/**'
+      - 'Makefile'
       - 'Dockerfile*'
       - 'docker-compose*.yml'
       - 'docs/web_ui*'
@@ -58,11 +59,7 @@ jobs:
           path: local_data/models
           key: qwen25-15-f16-b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee
       - name: Verify sandbox and normal PostgreSQL desktop/mobile service journeys
-        run: npm run test:ui
-      - name: Collect only successful attempts and update README
-        run: |
-          npm run record:ui
-          npm run check:ui
+        run: make ui-check PYTHON=python
       - name: Remove recorded disposable leases on every outcome
         if: always()
         run: python -m scripts.environment_lifecycle reap --all-disposable

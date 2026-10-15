@@ -1,4 +1,4 @@
-"""Complete real-wire/API/CLI pipeline and simultaneous lease isolation; zero paid calls."""
+"""Полный real-wire/API/CLI путь и изоляция одновременных leases без платных вызовов."""
 
 import argparse
 import json

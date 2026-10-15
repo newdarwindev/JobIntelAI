@@ -1,4 +1,4 @@
-"""Actual pinned CPU inference through the normal PostgreSQL API; no paid calls or replay."""
+"""Реальная закреплённая CPU inference через PostgreSQL API, без платных вызовов/replay."""
 
 import argparse
 import json

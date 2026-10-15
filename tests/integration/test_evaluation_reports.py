@@ -32,7 +32,7 @@ def test_v37_append_only_reports_reload_and_export_on_sqlite_postgres(
         assert len(client.get("/evaluation-runs").json()["evaluation_runs"]) == 2
         main(["evaluate", "--run-id", first["evaluation_run_id"], "--output", str(tmp_path)])
         assert json.loads((tmp_path / "evaluation.json").read_text()) == first
-        assert "20 succeeded, 0 failed" in (tmp_path / "evaluation.txt").read_text()
+        assert "20 успешно, 0 ошибок" in (tmp_path / "evaluation.txt").read_text()
         with client.app.state.session_factory() as session:
             assert session.scalar(select(func.count()).select_from(db.EvaluationRun)) == 2
             assert session.scalar(select(func.count()).select_from(db.ExtractionRun)) == 0
@@ -161,4 +161,4 @@ def test_v37_historical_reports_keep_unavailable_provenance(client):
         run_id = row.id
     stored = client.get(f"/evaluation-runs/{run_id}").json()
     assert stored == {"evaluation_run_id": run_id, **legacy}
-    assert "unavailable succeeded" in human_summary(stored)
+    assert "нет данных успешно" in human_summary(stored)

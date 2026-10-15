@@ -41,7 +41,9 @@ extend-exclude = ["build", "local_data", "results/generated", "work", "node_modu
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "I", "B", "UP", "C4", "PIE", "RUF", "C90"]
+# Русский предлог «с» допустим в строках и документации.
+allowed-confusables = ["с"]
 
 [tool.ruff.lint.mccabe]
-# C901 fails CI for any function above this bound; no per-file complexity exemptions.
+# C901 блокирует CI выше этого порога; исключений сложности по файлам нет.
 max-complexity = 10

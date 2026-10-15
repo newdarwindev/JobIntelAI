@@ -1,108 +1,106 @@
-# Evaluation protocol
+# Методика оценки и экспериментов
 
-`jobintel evaluate` retains the original 20-case fixture regression. Gold and replay
-responses share synthetic definitions, so this mode measures pipeline behavior and
-leaves semantic/abstention measurements null. Exact one-to-one multiset alignment
-penalizes duplicates, preserves ANY/ALL and version/obligation predicates, and
-scores classification/evidence separately. Alias alignment is deliberately strict.
+## Корпус и независимость
 
-## Source-reviewed benchmark
+`fixture` — 20 синтетических вакансий/22 требования; gold и replay происходят из общих
+определений и проверяют pipeline, не качество LLM. `reviewed` — 25 frozen MIT-licensed
+авторских источников, labels/rationales, source hashes, candidate и assessment date в
+[data/evaluation/reviewed-v1.json](../data/evaluation/reviewed-v1.json).
+Разметка написана и проверена по source отдельно от generator/replay/predictions.
+Reviewer — Codex, один автоматизированный review, не human panel или независимый model benchmark.
+20 источников пересекаются с fixture, пять добавляют сложные случаи. Изменение labels
+требует нового review/revision/pin, не регенерации из ответов модели.
 
-`jobintel evaluate --dataset reviewed` selects the frozen
-`data/evaluation/reviewed-v1.json`: 25 MIT-licensed repository-authored cases, source
-hashes, full extraction annotations, per-case rationales, a sourced synthetic
-candidate, fixed assessment date, and manually assigned four-state matches.
-Twenty sources overlap the original regression; five add responsibilities,
-ambiguity, negation and version alternatives. It is a small engineering benchmark,
-not a representative labor-market sample.
+Fixture знает 20 reviewed hashes: остальные пять остаются provider_unavailable.
+Команда сохраняет диагностику и завершается кодом 1. Нельзя заполнять failures из gold.
+Результаты и ограничения: [каталог](../results/README.md).
 
-Annotations were written directly from source clauses and reviewed against the
-specification, separately from generator labels, replay responses and model
-predictions. Metadata records Codex as one automated source reviewer, the method,
-and revision. It does not claim a human panel or independent-model review. The
-fixture generator cannot rewrite these labels. A source-content pin and taxonomy
-hash reject accidental edits; deliberate revisions require a fresh review and pin.
-A future external review should retain its identity and method honestly.
+## Метрики и ошибки
 
-The existing bounded fixture provider recognizes 20 of these snapshots. Five cases
-have no replay response and remain `provider_unavailable` failures. Do not fill
-these failures with gold labels or invent predictions. Tests returning annotations
-through fake transports validate scoring/persistence only. Real measured quality
-requires the separately authorized comparisons in issue #9.
+Каждая доля имеет numerator/denominator; нулевой знаменатель — null. Exact-key multiset
+alignment расходует каждый gold максимум один раз, учитывает operator/branches/versions/
+obligations/production/years, не использует fuzzy matching. Aliases намеренно различаются
+до normalization. Type/evidence оцениваются после alignment.
 
-## Metrics and denominators
+| Показатель | Определение |
+| --- | --- |
+| Precision / recall | Aligned predictions / все predictions; aligned / все gold requirements |
+| F1 | Гармоническое среднее при определённых precision и recall, иначе null |
+| Type accuracy | Верный type / aligned pairs; отдельно MUST/PREFERRED и confusion matrix |
+| Evidence accuracy | Точный gold span / aligned pairs |
+| Unsupported-span rate | Неверные source slices / predicted items; это не semantic hallucination |
+| Semantic unsupported | Неподтверждённые source-аннотациями claims / проверяемые claims; invalid span отдельно |
+| Abstention precision/recall | Верные unknown / все unknown; верные unknown / ожидаемые unknown slots |
+| Matching / false COVERED | Совпадение четырёх состояний; неверный COVERED / все COVERED |
 
-Every rate has explicit numerator/denominator fields; zero denominators yield null.
-The original exact-key metrics also expose counts, a type confusion matrix and
-MUST/PREFERRED accuracy among aligned pairs.
+Semantic review различает продукты, ANY/ALL, типы, positive years/production/version claims.
+Валидная нерелевантная цитата остаётся неподтверждённой. Пропущенный predicate — abstention,
+не positive hallucination. Конечный набор supporting spans не является универсальным entailment judge.
+Filters/responsibilities имеют независимые one-to-one precision/recall. Abstention slots:
+geography/mode/filters, years/production/experience obligation/production obligation каждого
+требования; пропущенное требование также снижает recall. Matching на **gold requirements**
+и sourced candidate изолирует matcher, не измеряет end-to-end matching с generated output.
 
-Reviewed semantic unsupported-claim rate covers requirements, job metadata/filters
-and responsibilities against exhaustive source annotations for that frozen case.
-Taxonomy aliases are canonicalized for semantic review, while distinct products,
-operators, types and positive year/production/version/obligation claims remain
-separate. Omitted predicates are abstentions, not unsupported positive claims.
-Evidence must use the annotated supporting span. A valid but irrelevant quote is
-unsupported; an invalid source span is unreviewable and gets a separate rate.
-This finite annotated catalog is conservative about alternative supporting spans
-and is not an automatic general-purpose entailment judge.
+Quality aggregates относятся к успешным cases; failed/not_attempted стоят рядом. All-failed
+quality — null. Live `/evaluate` останавливает configuration после первой ошибки, другая
+явно выбранная config имеет свою диагностику. API сохраняет report ID и возвращает error
+status, CLI экспортирует до exit 1. Исторические reports/production rows не меняются.
+`jobintel evaluate --run-id ID` и API reads не вызывают provider; UI хранит только ID.
 
-Filter metrics include geography, work mode and typed filters. Responsibility and
-filter precision/recall use independent one-to-one multisets. Abstention slots are
-geography, work mode, filters, and each reviewed requirement's years, production
-predicate, experience obligation and production obligation. Null/UNKNOWN is an
-abstention; an omitted requirement abstains on those slots and is also penalized
-by requirement recall. Precision measures correct abstentions/all abstentions;
-recall and correct-unknown rate measure correct abstentions/expected unknown slots.
+Report содержит dataset/candidate/config/model/prompt/schema/taxonomy/source/code hashes,
+UTC timestamps, predictions, per-case errors/counts. Без Git сохраняется Python source hash,
+а commit/dirty неизвестны. Posting/provider-adapter/evaluation elapsed не равны provider-only
+LLM time. Только фактически возвращённый usage учитывается, включая bounded retries.
+Цена — датированная оценка с model/source/input-output USD rates, не billing reconciliation.
+При неполном usage полный cost=null, известный priced usage показывается отдельно.
 
-Matching agreement compares the deterministic matcher on **gold requirements and
-sourced candidate evidence** with reviewed states. It isolates matching from
-extraction; it is not end-to-end candidate agreement on generated requirements.
-False-COVERED rate is incorrect COVERED decisions/all COVERED decisions. Filters
-and geography join requirement matches; assessment time is frozen. The cases cover
-strong capability with insufficient production and historical production with weak
-current capability.
+## Воспроизведение и инструменты
 
-## Reports, operations and failures
+`make experiment-replay ARGS='--output local_data/experiments/new-run'` выполняет
+fixture freeze → plan → run → rescore на reviewed corpus, сохраняя failures и exit 1.
+`--dataset fixture` даёт исходную 20-case regression. Каталог должен быть новым;
+повтор не перезаписывает output. `make experiment-rescore ARGS='--help'` пересчитывает
+готовый report без ключей, provider и запросов; `make reports` рендерит опубликованные
+русские таблицы из неизменённых JSON. S/V IDs сохраняются в [карте](acceptance_map.json), тестах/issues, UI IDs —
+в [машинной карте](web_ui_workflows.json).
 
-Migrate first. Evaluation appends an `evaluation_runs` record; API and CLI can
-reload the exact historical JSON without another provider call:
+A — schema в prompt, свободный output с независимым аудитом; B — strict output + evidence;
+C — B с deterministic taxonomy normalization. A без grounding не попадает в production.
+B/C делают отдельные запросы на одинаковых snapshots: вариативность ответов мешает
+приписывать разницу только normalization. Нельзя предполагать победу C.
 
-```bash
-jobintel evaluate --output results/generated
-jobintel evaluate --dataset reviewed --output results/generated/reviewed
-# The reviewed fixture command saves diagnostics and exits 1 for its five failures.
-jobintel evaluate --run-id RUN_ID --output results/generated/reloaded
-```
+`make network-experiment ARGS='--provider local'` и `--provider emulator` используют
+существующие scoped services и reviewed subsets. Local: REV-01/23/25, B/C, pinned model,
+8192 context, ≤2048 output. Emulator: REV-01, B/C, contract-schema-v2, ≤8192 output.
+A для этих режимов не поддержан. `--cases` разрешён только при reviewed freezing;
+ generator labels не приобретают independent=true. Reservations используют conservative
+UTF-8 request bounds; это не измеренные tokens. Local cost/CPU power неизвестен,
+emulator tokens/cost/inference time неизвестны. Платные hosted credentials не загружаются.
 
-`POST /evaluate` accepts `dataset`, distinct `configurations`, and optional pricing.
-`GET /evaluation-runs` lists runs; `GET /evaluation-runs/{id}` retrieves one. Browser
-UI06 selects either dataset, shows rates/failures and reloads the selected run after
-refresh, storing only its ID. JSON and a concise `evaluation.txt` summary are
-exported by the CLI. Unknown IDs return 404; all report reads use `no-store`.
+## Платные запросы и публикация
 
-Reports freeze dataset/candidate/configuration/model/prompt/schema/taxonomy hashes,
-source hashes, code provenance, timestamps, predictions, per-case metrics and error
-codes. Provider errors never become successful empty predictions. Live evaluation
-stops a configuration after its first failure and marks the remaining cases
-`not_attempted`; another explicitly selected configuration has its own diagnostics.
-The API returns the provider error status with a saved report ID. CLI exports the
-report before exiting 1. Prior reports and production extraction rows remain intact.
-Aggregate quality metrics cover successful cases only, with failed/not-attempted
-counts beside them; all-failed quality metrics remain null.
-Installed images without Git retain the actual Python source hash and report Git
-commit/dirty metadata as unavailable; provenance collection never requires Git.
+Hosted plan/run — существующий `jobintel experiment`, provider=openai; по умолчанию fake.
+Config JSON требует минимум две A/B/C configurations, explicit model, max_calls,
+max_input_tokens, max_output_tokens, budget_usd, pricing (model/source/date/input-output rates)
+и authorization_reference. Reservation покрывает cases×configs и все token/cost bounds
+до transport/request. Проверяйте актуальные цены. Reference не заменяет отдельного
+разрешения пользователя на расходы. В CI и браузере платные запросы не запускаются.
+Ключ — только secure runtime/secret file, store=false, verified proxy/TLS, fixed hosted endpoint.
 
-Measured posting, provider-adapter and evaluation elapsed times remain distinct
-from unavailable provider-only LLM latency. Fixture tokens/cost are null. Actual
-supplied usage, including bounded retry attempts, is retained. Optional pricing
-requires the selected model, source, date and input/output USD-per-million rates;
-missing usage makes complete usage/cost null while known priced usage is reported
-separately. Pricing is a supplied dated estimate, not a billing reconciliation.
-No paid readiness or evaluation requests run in ordinary CI.
+Quota/rate-limit/network/model-identity/usage-limit failure останавливает последующие slots;
+не начатые остаются not_attempted. Case-local schema/evidence/refusal остаются diagnostics.
+Ошибки не превращаются в empty success, raw output bounded, error bodies/credentials исключены.
+Atomic fsynced checkpoint сохраняет active case. Exit 1 означает сохранённые failures,
+exit 2 — rejected preflight/input. `make experiment-resume` поддерживает только zero-cost
+local/emulator с теми же corpus/config/code: uncertain active slot становится interrupted,
+не повторяется, usage/time неизвестны. Hosted resume не разрешён автоматически.
 
-Boundary regressions map to V20/V33-V37 in `tests/unit/test_reviewed_evaluation.py`
-and `tests/integration/test_evaluation_reports.py`. They check hand-calculated
-counts, aliases, groups, misleading/invalid quotes, duplicates, empty sets,
-abstentions, false coverage, missing usage, pricing, frozen inputs and saved
-failure reporting on migrated SQLite/PostgreSQL. UI06 and every desktop/mobile
-journey must be recorded after relevant edits under AGENTS.md.
+`make experiment-audit` создаёт **неодобренный** draft. Reviewer проверяет каждый raw output,
+prediction, failure, denominator, лицензию и приватность, указывает честную identity/method/
+revision/timezone-aware timestamp после run. Source-label review — отдельная запись.
+Pattern checks не заменяют содержательный review. `make experiment-publish` принимает только
+complete report и одобренный audit его точного hash; stale audit отвергается.
+Публикация сохраняет report/scores/audit/corpus/configuration links. README обновляется
+только внутри LIVE-EXPERIMENTS markers; local/emulator не заменяют hosted section.
+[Issue #9](https://github.com/newdarwindev/JobIntelAI/issues/9) закрывается только реальными
+раздельно разрешёнными hosted измерениями и аудитом, не этим документационным изменением.
