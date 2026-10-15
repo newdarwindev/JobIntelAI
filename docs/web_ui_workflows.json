@@ -249,6 +249,32 @@
         "actual pinned llama.cpp/Qwen CPU model; CLI B/C evidence remains separate",
         "shared owned Compose lease, discovered loopback ports and bounded cleanup"
       ]
+    },
+    {
+      "id": "UI12",
+      "title": "Scoped editor drafts, explicit discard and pending navigation",
+      "spec_sections": [
+        4,
+        5,
+        6,
+        7,
+        9,
+        12
+      ],
+      "scenarios": [
+        "S01",
+        "S08",
+        "S10",
+        "S18",
+        "S33",
+        "V39",
+        "V40"
+      ],
+      "services": [
+        "real migrated sandbox API and fixture replay",
+        "authored acquisition gateway",
+        "delayed delivery of actual API responses and browser connection abort"
+      ]
     }
   ]
 }

@@ -181,6 +181,15 @@ Chromium. The tests use the actual migrated API with the fixture provider. The
 README video manifest records executed successful attempts and their source hash.
 Implementation acceptance for persisted/live behavior is tracked in the linked issues.
 
+UI12 (`e2e/drafts.spec.mjs`) covers issue #39: registry, per-posting source/URL/format
+and revision-scoped candidate drafts through navigation, refresh, matching and
+real API failures. It delays actual response delivery during acquisition, extraction,
+source save, candidate validation and history reads to expose stale callbacks;
+independent drafts survive while saves/discards affect only their own scope.
+Browser storage excludes draft markers and reload restores saved values.
+`unit/editor_drafts.test.mjs` additionally checks late saves/errors after newer edits
+or discard, baseline changes and value isolation. Both viewports record UI12.
+
 Proxy-capability regressions in `unit/test_egress_policy.py` cover complete DNS
 answers, single-use/expired pins, wrong host/scheme, peer mismatch, malformed
 contracts and routing refusals. The real wire matrix runs pinned-proxy and
@@ -195,7 +204,7 @@ running container API in `python -m scripts.responses_smoke`. Authored success,
 refusal, malformed/schema/truncated output, invalid evidence, 429/quota, 5xx, delay
 and connection close verify the strict request contract, bounded retries, safe
 errors and append-only persistence. Stop/start/restart tests verify readiness and
-recovery. UI07 uses that HTTP service for provider failures; all sixteen journeys
+recovery. UI07 uses that HTTP service for provider failures; all eighteen sandbox journeys
 record successful desktop/mobile evidence. No emulator output establishes inference
 quality. Configuration guards prevent forwarding hosted secrets to local endpoints.
 See [the emulator contract](responses_emulator.md).
@@ -216,7 +225,7 @@ Provider-aware UI contract tests in `integration/test_ui_configuration.py` cover
 fixture, emulator, local and explicitly configured hosted options, secret isolation,
 non-demo route isolation and readiness recovery. Hosted HTTP is fake contract
 coverage, without paid calls. `e2e/persistent.spec.mjs` adds UI09–UI11 on desktop
-and mobile to the sixteen sandbox journeys: normal PostgreSQL acquisition/extraction,
+and mobile to the eighteen sandbox journeys: normal PostgreSQL acquisition/extraction,
 exact evidence, candidate revision reload/matching, exports and saved evaluation.
 Actual separate emulator failures and CPU-engine stop/start preserve saved history.
 The runner records the service inventory and actual three-case local outcomes; model
@@ -244,5 +253,5 @@ acquisition, grounded extraction, persisted revision/match, API/CLI export and
 saved authored evaluation; simultaneous independent runs; persistent stop/resume;
 scoped failure/SIGINT/SIGTERM cleanup and an orphan SIGKILL expiry watchdog.
 The container gate is mandatory and makes zero paid calls. Browser recordings
-remain 22 full desktop/mobile journeys; actual model outcomes are reported in
+cover 24 full desktop/mobile journeys; actual model outcomes are reported in
 separate optional CPU measurement evidence, not emulator quality claims.
