@@ -6,6 +6,7 @@ import os
 import subprocess
 import sys
 from contextlib import contextmanager
+from hashlib import sha256
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from time import perf_counter
@@ -127,6 +128,19 @@ def publish(output, rows):
     report = {
         "schema_version": 1,
         "code_provenance": code_provenance(),
+        "input_provenance": {
+            "provider": "fixture",
+            "configuration": "fixture_normalized",
+            "sha256": {
+                name: sha256((ROOT / name).read_bytes()).hexdigest()
+                for name in [
+                    "data/sample_jobs/SYN-01.txt",
+                    "data/provider_responses.json",
+                    "data/taxonomy.json",
+                    "scripts/catalogue_benchmark.py",
+                ]
+            },
+        },
         "execution": "actual migrated SQLite/PostgreSQL, authored fixture replay, no paid calls",
         "comparison": "legacy compatible v1 bulk algorithm and v2 bounded summaries on identical records",
         "rows": rows,
