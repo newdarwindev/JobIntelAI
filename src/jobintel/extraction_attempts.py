@@ -16,8 +16,10 @@ def failure_code(error):
     return "invalid_evidence" if isinstance(error, GroundingError) else "validation_error", False
 
 
-def attempt_extract(service, job_id, configuration):
+def attempt_extract(service, job_id, configuration, *, expected_snapshot_id=None):
     snapshot = service.latest_snapshot(job_id)
+    if expected_snapshot_id is not None:
+        service.check_snapshot(snapshot, expected_snapshot_id)
     if snapshot is None:
         from jobintel.service import Conflict
 

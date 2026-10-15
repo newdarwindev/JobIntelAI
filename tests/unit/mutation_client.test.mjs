@@ -9,6 +9,16 @@ const storage=()=>{
 };
 const saved=(id='opaque-id')=>({operation_id:id,state:'committed',path:'/jobs/a/extract',http_status:200,result:{run_id:'saved-run'},execution_count:1});
 
+test('a session batch can restore its unresolved identity with reads when the local pending key is absent',async()=>{
+  const stored=storage(),calls=[],context={batch:{kind:'extraction',jobId:'JOB-1'}};
+  const client=new MutationClient({storage:stored,fetcher:async(path,options)=>{calls.push(options.method??'GET');return reply(saved());}});
+  client.restorePending('opaque-id',context);
+  assert.equal(client.pending.context,context);assert.equal(client.pending.encoded,null);
+  assert.equal(stored.map.get('jobintel-pending-operation'),'opaque-id');
+  await assert.rejects(client.execute('/jobs/a/extract',{}),/Resolve/);
+  await client.check();assert.deepEqual(calls,['GET']);assert.equal(client.blocked,false);
+});
+
 test('lost committed response is recovered by a read with no second POST',async()=>{
   const calls=[],applied=[],stored=storage();
   const client=new MutationClient({identity:()=> 'opaque-id',storage:stored,apply:async(op,result)=>applied.push(result),fetcher:async(path,options)=>{calls.push([path,options]);if(options.method==='POST')throw new Error('lost');return reply(saved());}});
