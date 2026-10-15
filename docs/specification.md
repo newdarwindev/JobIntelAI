@@ -28,6 +28,29 @@ FastAPI/argparse используют общие сервисы и транза�
 расширение, не обход ограничений доступа. UI использует настоящие мигрированные сервисы;
 его [приёмка](web_ui_spec.md) отделена от качества модели.
 
+### Сохранённые операции и партии
+
+Browser mutation получает UUID Idempotency-Key: method/path/canonical body hash связывают
+повтор с исходным запросом. Reservation создаётся до работы; domain writes и исходный
+HTTP status/body сохраняются одной транзакцией. Повтор key возвращает saved result без
+повторного handler/provider; другой body — conflict. Unkeyed API/CLI сохраняют прежнюю семантику.
+GET /operations/{id} сообщает not-received/uncertain/committed/rejected и saved response,
+no-store. Неопределённый commit, включая process loss, не разрешает повторное выполнение.
+Completed handler counts не равны upstream request counts или качеству модели.
+
+UI сначала согласует потерянный ответ чтением; retransmission сохраняет body/key.
+В storage остаётся только opaque pending ID. Reload восстанавливает saved result;
+POST /operations/{id}/cancel-unsent атомарно запрещает позднюю доставку unsent request,
+но не отменяет существующую reservation. Lookup — приватные данные без payload logs.
+
+Batch фиксирует job/source/run IDs и candidate revision, хранит только ID/state metadata.
+Один явный проход обрабатывает ≤20 unfinished items и останавливается при failure/uncertainty.
+Continuation не повторяет completed items/saved stages; exit обновляет authoritative
+state либо явно показывает недоступность counters. Prior rejections сохраняются после reload.
+Явный source replan меняет только unfinished items; matching требует captured revision.
+Optional expected_snapshot_id guards отвергают stale source до snapshot replacement/provider;
+explicit null при создании означает отсутствие source, omitted сохраняет legacy contract.
+
 ## 4. Данные и доступ
 
 Репозиторий хранит только авторские/лицензированные синтетические примеры. Реальные вакансии,

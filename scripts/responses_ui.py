@@ -1,6 +1,6 @@
 """Test-launcher-only scenario control; absent from normal and demo entrypoints."""
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Query
 
 from jobintel.openai_transport import EMULATOR_MODEL, EMULATOR_TOKEN, HttpOpenAITransport
 from jobintel.providers import selected_provider
@@ -21,7 +21,7 @@ def install(app, base, root):
     )
 
     @app.post("/responses-fixture/{scenario}")
-    def select(scenario: str):
+    def select(scenario: str, timeout: float = Query(1, ge=1, le=5)):
         if scenario == "fixture":
             app.state.provider = fixture
             app.state.configuration = fixture_configuration
@@ -29,6 +29,7 @@ def install(app, base, root):
         if scenario not in SCENARIOS:
             raise HTTPException(422, "unknown authored scenario")
         request(base, "/control", {"scenario": scenario})
+        emulator.transport.timeout = timeout
         app.state.provider = emulator
         app.state.configuration = "openai_normalized_v1"
         return {"execution_mode": "emulator"}

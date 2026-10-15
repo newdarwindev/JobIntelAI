@@ -10,6 +10,7 @@ on:
       - 'tests/**'
       - 'scripts/**'
       - 'Makefile'
+      - 'docs/acceptance_map.json'
       - 'Dockerfile*'
       - 'docker-compose*.yml'
       - 'docs/web_ui*'
@@ -53,12 +54,16 @@ jobs:
         run: |
           node scripts/check_ui_contract.mjs --coverage-only
           npm run test:recordings
+          npm run test:drafts
+          npm run test:mutations
+          npm run test:batches
       - name: Cache checksum-pinned licensed CPU weights
         uses: actions/cache@v4
         with:
           path: local_data/models
           key: qwen25-15-f16-b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee
-      - name: Verify sandbox and normal PostgreSQL desktop/mobile service journeys
+      - name: Shared complete browser checks, recordings and publication parts
+        id: publication
         run: make ui-check PYTHON=python
       - name: Remove recorded disposable leases on every outcome
         if: always()
@@ -79,13 +84,35 @@ jobs:
             work/environments/
           retention-days: 30
           if-no-files-found: error
-      - name: Upload verified README and successful recordings
+      - name: Upload verified publication part 1
         uses: actions/upload-artifact@v4
         with:
-          name: successful-web-ui-recordings
-          path: |
-            README.md
-            docs/ui-recordings/
+          name: successful-web-ui-recordings-1
+          path: work/ui-publication/part-1/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Upload verified publication part 2
+        if: success() && fromJSON(steps.publication.outputs.parts) >= 2
+        uses: actions/upload-artifact@v4
+        with:
+          name: successful-web-ui-recordings-2
+          path: work/ui-publication/part-2/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Upload verified publication part 3
+        if: success() && fromJSON(steps.publication.outputs.parts) >= 3
+        uses: actions/upload-artifact@v4
+        with:
+          name: successful-web-ui-recordings-3
+          path: work/ui-publication/part-3/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Upload verified publication part 4
+        if: success() && fromJSON(steps.publication.outputs.parts) >= 4
+        uses: actions/upload-artifact@v4
+        with:
+          name: successful-web-ui-recordings-4
+          path: work/ui-publication/part-4/
           retention-days: 30
           if-no-files-found: error
       - name: Link evidence in the run summary
@@ -94,8 +121,8 @@ jobs:
           printf '%s\n' \
             '## Complete browser workflow evidence' \
             'Download the diagnostics artifact for the HTML report, videos, screenshots, and failure traces.' \
-            'Only a fully passing suite produces the successful-web-ui-recordings artifact. It contains an updated README and desktop/mobile recordings for every specified journey.' \
-            'UI09/UI10/UI11 run normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual CPU inference. UI01-UI08 retain the explicit synthetic sandbox. Hosted controls use fast contract tests; no paid service is called.' \
+            'Only a fully passing suite produces the successful-web-ui-recordings-* artifacts. They contain an updated README and desktop/mobile recordings for every specified journey.' \
+            'UI09/UI10/UI11 run normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual CPU inference. UI01-UI08 and UI12-UI14 retain the explicit synthetic sandbox. UI12 delays real API response delivery for navigation races; UI13 verifies durable mutation recovery; UI14 verifies partial batch outcomes and bounded continuation, with measured reports for both. Hosted controls use fast contract tests; no paid service is called.' \
             >> "$GITHUB_STEP_SUMMARY"
 
   publish-readme-recordings:
@@ -112,7 +139,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/download-artifact@v4
         with:
-          name: successful-web-ui-recordings
+          pattern: successful-web-ui-recordings-*
+          merge-multiple: true
           path: work/recorded-evidence
       - name: Publish passing videos and README provenance
         env:
@@ -126,10 +154,12 @@ jobs:
           cp work/recorded-evidence/README.md README.md
           mkdir -p docs/ui-recordings
           cp work/recorded-evidence/docs/ui-recordings/* docs/ui-recordings/
+          mkdir -p docs/issue-evidence
+          cp -r work/recorded-evidence/docs/issue-evidence/. docs/issue-evidence/
           node scripts/check_ui_contract.mjs
           git config user.name 'Stefan Novak'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add README.md docs/ui-recordings
+          git add README.md docs/ui-recordings docs/issue-evidence
           if git diff --cached --quiet; then exit 0; fi
           git commit -m 'docs: refresh successful web UI workflow recordings [skip ci]'
           git push origin "HEAD:$DEFAULT_BRANCH"

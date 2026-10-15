@@ -112,7 +112,16 @@ def ui_install():
 
 def ui_check():
     environment = {**os.environ, "UI_PYTHON": sys.executable}
-    for action in ("test:recordings", "test:ui", "record:ui", "check:ui"):
+    for action in (
+        "test:recordings",
+        "test:drafts",
+        "test:mutations",
+        "test:batches",
+        "test:ui",
+        "record:ui",
+        "check:ui",
+        "prepare:ui-artifacts",
+    ):
         run("npm", "run", action, environment=environment)
 
 

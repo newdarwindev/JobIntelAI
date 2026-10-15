@@ -9,11 +9,11 @@ Fixture/emulator — authored coverage, CPU — реальная inference, host
 
 | Экран | Существенная приёмка | Journey IDs |
 | --- | --- | --- |
-| Обзор/реестр | Empty onboarding, atomic CSV/JSON import, typed applied, duplicates/conflicts без частичной записи, поиск/фильтры и переходы | UI01, UI08–UI11 |
-| Источники/извлечение | Ручной text/HTML, URL/manual recovery, immutable source/hash/time, история attempts/runs, stale invalidation, точная Unicode-подсветка, raw/normalized, ANY/ALL, metadata/versions/obligations/responsibilities и provenance export | UI02, UI03, UI07, UI09–UI11 |
-| Кандидат | Strict sourced JSON, явная полнота, immutable revision save/reload/select, четыре состояния, tenure/eligibility и contradiction abstention, separate capability/production, matching/export выбранной revision и extraction | UI04, UI09–UI11 |
-| Аналитика | Persisted n/N и gap denominator, coverage/overlaps, applied/grounded remote, revision selection после refresh, JSON/CSV parity, formula safety, stale/history selection | UI05, UI09–UI11 |
-| Оценка | Поддерживаемые configs из API, reject empty selection, fixture/reviewed datasets, numerator/denominator/null, failures и per-case diagnostics, reload report по ID/после refresh, экспорт режима | UI06, UI09–UI11 |
+| Обзор/реестр | Empty onboarding, atomic CSV/JSON import, typed applied, duplicates/conflicts без частичной записи, поиск/фильтры и переходы | UI01, UI08–UI14 |
+| Источники/извлечение | Ручной text/HTML, URL/manual recovery, immutable source/hash/time, история attempts/runs, stale invalidation, точная Unicode-подсветка, raw/normalized, ANY/ALL, metadata/versions/obligations/responsibilities и provenance export | UI02, UI03, UI07, UI09–UI14 |
+| Кандидат | Strict sourced JSON, явная полнота, immutable revision save/reload/select, четыре состояния, tenure/eligibility и contradiction abstention, separate capability/production, matching/export выбранной revision и extraction | UI04, UI09–UI14 |
+| Аналитика | Persisted n/N и gap denominator, coverage/overlaps, applied/grounded remote, revision selection после refresh, JSON/CSV parity, formula safety, stale/history selection | UI05, UI09–UI14 |
+| Оценка | Поддерживаемые configs из API, reject empty selection, fixture/reviewed datasets, numerator/denominator/null, failures и per-case diagnostics, reload report по ID/после refresh, экспорт режима | UI06, UI09–UI14 |
 
 Все экраны: labelled controls, keyboard access, responsive desktop/mobile, deep links,
 busy/error/empty states и escaped input. HTML не исполняется. Ошибка сохраняет prior usable
@@ -65,3 +65,43 @@ Runner использует существующие owned leases: fresh loopbac
 origin/provider. Persistent volumes и checksum-pinned licensed weights переживают teardown;
 TLS keys/private environments не входят в diagnostics. Незавершённый checkpoint или
 непроверенный rescore не считается успешным browser evidence.
+
+## Drafts, recovery и bounded batches
+
+UI04 синхронизирует JSON complete и checkbox; default false не заменяет явно переданное
+true. Malformed root/nonboolean сохраняет editor и field error без import request;
+reload/revision selection сохраняет MISSING/UNKNOWN.
+
+UI12 проверяет независимые registry, per-job source/URL/format и revision-scoped candidate
+JSON/lookup/completeness drafts. Unsaved notice/discard относится только к своему scope;
+save потребляет только отправленную версию. Acquisition обновляет baseline, сохраняя dirty
+manual draft. Navigation/status refresh/matching/failure не теряют draft. Late response
+не пишет в другой editor и не заменяет новый draft после save/discard. Draft/error bodies
+остаются в памяти, reload читает saved values. Задержка затрагивает доставку настоящих
+acquisition/extraction/source/candidate/history/422 responses, не выдумывает успех.
+
+UI13 проверяет Idempotency-Key recovery всех семи mutations: import, snapshot, candidate,
+fetch, extract, match, evaluate. Not-received допускает тот же request/key; uncertain
+блокирует новые mutations; committed восстанавливается reads. Unsent cancellation после
+reload не позволяет позднему POST исполниться; saved failed evaluation остаётся failed.
+Один key — один completed handler; conflicting body — 409. Проверяются pre-delivery/
+post-commit loss, display/lookup failure, reload, validation rejection и реальная delayed
+Responses service. Test-only timeout 1–5 с не переносится в normal API.
+
+UI14 показывает completed/failed/unattempted/uncertain identities, saved stage/result IDs,
+prior rejected operations и next stage на всех routes. Continuation ≤20 unfinished items
+не повторяет saved stages и completed items, включая потерю ответа и reload. Unfinished
+batch нельзя заменить обычной corpus-кнопкой. Session journal хранит только IDs/config/
+revision/states; source/profile/error bodies читаются в память. Pending recovery остаётся
+привязанным к исходному item. Смена revision блокирует matching до явного восстановления;
+Use current sources перепланирует только unfinished items, сохраняя errors/results.
+
+UI14 проверяет first/middle/last failure extraction/matching, navigation, before-delivery,
+after-commit lookup/display loss, reload, empty/stale source/revision. Три authored jobs
+выбираются fixture-metadata read, все domain mutations настоящие; UI03/UI05 сохраняют
+полный корпус из 20 jobs. Unit gate проверяет лимит на 45 items. UI13/UI14 публикуют
+[mutation](issue-evidence/40/mutation-comparison.md) и [batch](issue-evidence/41/batch-comparison.md)
+сравнения с observation JSON из обоих viewports; manifest проверяет их hashes вместе с видео.
+Missing catalogue counts явно неизвестны, не выдуманы. Publisher сохраняет полный набор
+в ≤4 частях по ≤22 MiB; oversize/missing/excess parts отвергаются, trusted publisher
+объединяет все части. PR/fork остаются read-only.

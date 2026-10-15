@@ -92,10 +92,14 @@ API не аутентифицирован и работает только на 
 
 <!-- UI-RECORDINGS:START -->
 
-Successful browser attempts: **22/22**, recorded 2026-10-12.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38298104772) · commit `3642cde847b189f521ad21fda66b7dc18abeb757`.
-UI01–UI08 use the explicit synthetic sandbox. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
-Source content SHA-256: `86345999ec72a6f877f8521dec909aba298e79cf2e65d6aaf0567add1b3f9389`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Successful browser attempts: **28/28**, recorded 2026-10-12.
+Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38312031669) · commit `dfca80099bb64af736db436556546f9f08de1493`.
+UI01–UI08 and UI12–UI14 use the explicit synthetic sandbox; UI12 delays real API responses for navigation races, UI13 verifies durable mutation recovery, and UI14 demonstrates partial batch outcomes and safe continuation. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
+Source content SHA-256: `2df4acda6f4e4b1fca56f2c5397f11f01efd23ac54976934c809bfbd7bc5c59d`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+
+[Measured batch outcome comparison](docs/issue-evidence/41/batch-comparison.md) · [Batch observation JSON](docs/issue-evidence/41/batch-comparison.json).
+
+[Measured mutation recovery comparison](docs/issue-evidence/40/mutation-comparison.md) · [Observation JSON](docs/issue-evidence/40/mutation-comparison.json).
 
 | Complete workflow | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -110,5 +114,8 @@ Source content SHA-256: `86345999ec72a6f877f8521dec909aba298e79cf2e65d6aaf0567ad
 | UI09 · Normal PostgreSQL fixture pipeline and unsupported-input recovery | [Watch](docs/ui-recordings/UI09-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI09-mobile-chromium.webm) |
 | UI10 · Normal PostgreSQL Responses contract pipeline and provider failure history | [Watch](docs/ui-recordings/UI10-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI10-mobile-chromium.webm) |
 | UI11 · Normal PostgreSQL CPU inference, measured evaluation and readiness recovery | [Watch](docs/ui-recordings/UI11-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI11-mobile-chromium.webm) |
+| UI12 · Scoped editor drafts, explicit discard and pending navigation | [Watch](docs/ui-recordings/UI12-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI12-mobile-chromium.webm) |
+| UI13 · Durable mutation identity, lost-response recovery and safe replay | [Watch](docs/ui-recordings/UI13-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI13-mobile-chromium.webm) |
+| UI14 · Partial corpus batches, retained outcomes and bounded continuation | [Watch](docs/ui-recordings/UI14-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI14-mobile-chromium.webm) |
 
 <!-- UI-RECORDINGS:END -->

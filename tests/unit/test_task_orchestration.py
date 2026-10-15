@@ -68,7 +68,13 @@ def test_ui_gate_stops_before_publication_on_failed_suite(monkeypatch):
     monkeypatch.setattr(tasks, "run", run)
     with pytest.raises(subprocess.CalledProcessError):
         tasks.ui_check()
-    assert commands == ["test:recordings", "test:ui"]
+    assert commands == [
+        "test:recordings",
+        "test:drafts",
+        "test:mutations",
+        "test:batches",
+        "test:ui",
+    ]
 
 
 def test_offline_preparation_refuses_wrong_target(monkeypatch):

@@ -84,6 +84,8 @@ class Service:
             raise ValueError("snapshot is empty after cleaning")
         source_url = normalize_url(item.source_url) if item.source_url else job.official_url
         latest = self.latest_snapshot(job_id)
+        if "expected_snapshot_id" in item.model_fields_set:
+            self.check_snapshot(latest, item.expected_snapshot_id)
         if (
             latest
             and latest.raw_text == item.text
@@ -102,6 +104,11 @@ class Service:
         self.session.add(snapshot)
         self.session.flush()
         return snapshot
+
+    @staticmethod
+    def check_snapshot(snapshot, expected_id):
+        if (snapshot.id if snapshot else None) != expected_id:
+            raise Conflict("source selection is stale; review the current source before continuing")
 
     def latest_run(self, snapshot_id):
         return self.session.scalar(
