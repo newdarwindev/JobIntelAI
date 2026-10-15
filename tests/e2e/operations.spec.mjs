@@ -111,7 +111,7 @@ test('UI13 | Durable mutation identity, lost-response recovery and safe replay',
     await openJob(page);let used=false,posts=0,key;
     const observe=request=>{if(new URL(request.url()).pathname==='/jobs/RECOVER/extract'&&request.method()==='POST'){posts++;key=request.headers()['idempotency-key'];}};
     page.on('request',observe);
-    await page.route('**/jobs',async route=>{if(!used&&route.request().method()==='GET'){used=true;await route.abort('connectionclosed');}else await route.continue();});
+    await page.route('**/v2/jobs',async route=>{if(!used&&route.request().method()==='GET'){used=true;await route.abort('connectionclosed');}else await route.continue();});
     await click(page,'Extract requirements');
     await expect(panel(page)).toContainText('display refresh is pending');
     await expect(page.getByRole('button',{name:'Extract requirements',exact:true})).toBeDisabled();

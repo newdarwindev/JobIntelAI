@@ -32,8 +32,20 @@ jobs:
   workflows:
     runs-on: ubuntu-24.04
     timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: jobintel
+          POSTGRES_PASSWORD: ci-only
+          POSTGRES_DB: jobintel_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U jobintel -d jobintel_test"
+          --health-interval 2s --health-timeout 2s --health-retries 30
     env:
       UI_PYTHON: python
+      TEST_DATABASE_URL: postgresql+psycopg://jobintel:ci-only@localhost:5432/jobintel_test
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -62,6 +74,8 @@ jobs:
           key: qwen25-15-f16-b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee
       - name: Verify sandbox and normal PostgreSQL desktop/mobile service journeys
         run: npm run test:ui
+      - name: Measure legacy and bounded catalogues on SQLite and PostgreSQL
+        run: python -m scripts.catalogue_benchmark
       - name: Collect only successful attempts and update README
         id: publication
         run: |
@@ -80,6 +94,7 @@ jobs:
             test-results/
             playwright-report/
             work/ui-results.json
+            docs/issue-evidence/47/
             work/acquisition-browser-diagnostics.json
             work/responses-browser-diagnostics.json
             work/persistent-browser-services.json
@@ -125,7 +140,7 @@ jobs:
             '## Complete browser workflow evidence' \
             'Download the diagnostics artifact for the HTML report, videos, screenshots, and failure traces.' \
             'Only a fully passing suite produces the successful-web-ui-recordings-* artifacts. They contain an updated README and desktop/mobile recordings for every specified journey.' \
-            'UI09/UI10/UI11 run normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual CPU inference. UI01-UI08 and UI12-UI14 retain the explicit synthetic sandbox. UI12 delays real API response delivery for navigation races; UI13 verifies durable mutation recovery; UI14 verifies partial batch outcomes and bounded continuation, with measured reports for both. Hosted controls use fast contract tests; no paid service is called.' \
+            'UI09/UI10/UI11 run normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual CPU inference. UI01-UI08 and UI12-UI15 retain the explicit synthetic sandbox. UI12 delays real API response delivery for navigation races; UI13 verifies durable mutation recovery; UI14 verifies partial batch outcomes and bounded continuation; UI15 verifies bounded registry and saved-history pagination. Measured mutation/batch and catalogue reports retain provenance. Hosted controls use fast contract tests; no paid service is called.' \
             >> "$GITHUB_STEP_SUMMARY"
 
   publish-readme-recordings:

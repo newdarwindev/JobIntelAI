@@ -336,6 +336,31 @@
         "authored three-job fixture selection and unsupported replay input",
         "real stale source/run conflicts and actual delivery/lookup interruption"
       ]
+    },
+    {
+      "id": "UI15",
+      "title": "Bounded registry discovery and saved-history pagination",
+      "spec_sections": [
+        5,
+        6,
+        7,
+        9,
+        11,
+        12,
+        13
+      ],
+      "scenarios": [
+        "S13",
+        "V01",
+        "V26",
+        "V31",
+        "V37",
+        "V39"
+      ],
+      "services": [
+        "actual migrated sandbox API",
+        "bounded v2 metadata catalogues with exact selected detail reads"
+      ]
     }
   ]
 }

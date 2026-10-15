@@ -378,6 +378,11 @@ hallucination, latency, cost), failures and trade-offs without assuming C wins.
 
 ## 12. API contracts
 
+The browser's [versioned bounded catalogue contract](catalogues.md) uses `/v2`
+summary pages and exact selected detail reads. Legacy list/history responses below
+remain compatible for existing clients. Search/filter/cursors never select stale
+extractions or change the complete corpus denominator.
+
 Endpoints use JSON except the explicitly requested CSV export response. The local
 single-user API has no authentication; the authorized mock UI uses these contracts.
 422 = invalid input/schema/evidence; 404 = unknown job; 409 = conflict/prerequisite;
