@@ -256,6 +256,41 @@ Empty success даёт header-only CSV и metadata в companion JSON. Legacy ski
 `/ui/config` сообщает поддерживаемые configs, execution identity, budgets/readiness/actions,
 без secrets/hosted endpoints. Hosted readiness подтверждает конфигурацию, не доступ upstream.
 
+### Ограниченные каталоги и страницы
+
+Навигация браузера использует `/v2`; прежние bulk endpoints сохраняются для API/CLI.
+Списки возвращают `catalogue_version: 2`, `page.limit`, `page.has_more`, `page.next_cursor`.
+По умолчанию 20 записей, `limit=1..100`; cursor непрозрачен и связан с коллекцией,
+владельцем, поиском и фильтром. Неверные параметры, неизвестные query keys и чужой
+cursor дают 422. Cursor содержит IDs, а не bodies; он не является авторизацией.
+
+| Каталог | Ограниченные данные и порядок |
+| --- | --- |
+| `/v2/jobs` | Registry metadata, latest snapshot ID/hash/time, run ID/config/count; job ID по возрастанию |
+| `/v2/jobs/{job}/snapshots` | Metadata и run count; fetched time/ID по убыванию |
+| `/v2/jobs/{job}/acquisition-attempts` | IDs, URLs и typed outcomes; created time/ID по убыванию |
+| `/v2/jobs/{job}/extraction-attempts` | IDs, config и typed outcomes; created time/ID по убыванию |
+| `/v2/jobs/{job}/snapshots/{snapshot}/runs` | ID/config/schema/count; created time/ID по убыванию |
+| `/v2/candidates/{profile}/revisions` | Revision/profile/time; created time/ID по убыванию |
+| `/v2/evaluation-runs` | ID/dataset/status/time; created time/ID по убыванию |
+
+Unique ID разрешает совпадающие timestamps; keyset pages не используют offset.
+Это свежие reads, не frozen DB snapshot: новые backdated records могут появиться позже,
+а source/extraction меняют membership. Refresh первой страницы обнаруживает leading records.
+`q` — literal case-insensitive substring job ID либо normalized company/role; `%`/`_`
+буквальны. `pipeline`: all/Awaiting source/Source ready/Extracted. Общие totals не зависят
+от фильтра/страницы. Empty success входит в extracted; новая source исключает старый run.
+
+Registry выполняет два SELECT независимо от размера корпуса; SQLite дополнительно BEGIN.
+Metadata lists выбирают не более `limit + 1` rows без raw/clean source, profile/prediction
+bodies и вложенных unbounded runs. Точный текущий posting читается через `/jobs/{id}`;
+saved source — `/v2/jobs/{job}/snapshots/{snapshot}`, extraction — `/v2/extraction-runs/{run}`.
+Связь job/snapshot проверяется, unknown/mismatch даёт 404. List не вызывает provider и не пишет БД.
+UI15 проверяет поиск, страницы и точные reads; explicit batch planning перечисляет компактные
+pages отдельно от навигации, сохраняя лимит исполнения 20 и исключение completed operations.
+`make catalogue-check` сравнивает v1/v2 на одинаковом синтетическом корпусе в SQLite/PostgreSQL;
+[измерения](issue-evidence/47/catalogue-performance.md) сохраняют SQL/bytes и source/config hashes.
+
 ## 13. Окружения и CPU
 
 `make env ARGS='--help'` — единый lifecycle fixture/emulator/local. `run` владеет временными
