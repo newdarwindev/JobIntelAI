@@ -40,6 +40,7 @@ make serve
 | Authored acquisition/TLS/proxy smoke | `make acquisition-check` |
 | Подготовка проверенных весов / реальный CPU smoke | `make model-prepare` / `make model-check` |
 | Frozen reviewed fixture experiment и saved rescore | `make experiment-replay ARGS='--output local_data/experiments/new-run'` |
+| Сравнение bounded v2 и legacy reads на SQLite/PostgreSQL | `make catalogue-check` |
 | Русские таблицы из сохранённых результатов | `make reports` |
 | Browser dependencies / полный suite и свежие записи | `make ui-install` / `make ui-check` |
 
@@ -92,14 +93,16 @@ API не аутентифицирован и работает только на 
 
 <!-- UI-RECORDINGS:START -->
 
-Успешные браузерные попытки: **28/28**, записано 2026-10-20.
-Источник: [Запуск GitHub Actions](https://github.com/newdarwindev/JobIntelAI/actions/runs/39440475953) · коммит `e30c2f4667edd14970f843fa15bd7a0811ff2945`.
-UI01–UI08 и UI12–UI14: синтетический sandbox; UI12 проверяет drafts при задержке реальных ответов, UI13 — durable mutation recovery, UI14 — частичные batches и безопасное продолжение. UI09–UI11: PostgreSQL API, fixture, Responses emulator и реальная CPU inference. Ввод авторский; emulator подтверждает только контракт.
-SHA-256 исходного содержимого: `dc134a9714a84967c0e4ac05fe13dc7a32deda88049ea185f0b7599d84cbd5b5`. [Машинные данные происхождения](docs/ui-recordings/manifest.json).
+Успешные браузерные попытки: **30/30**, записано 2026-10-20.
+Источник: [Запуск GitHub Actions](https://github.com/newdarwindev/JobIntelAI/actions/runs/39441877552) · коммит `5384741088d5201efcd9fe63b3dcc75e2e4f6f43`.
+UI01–UI08 и UI12–UI15: синтетический sandbox; UI12 проверяет drafts при задержке реальных ответов, UI13 — durable mutation recovery, UI14 — частичные batches и безопасное продолжение, UI15 — поиск и постраничная история. UI09–UI11: PostgreSQL API, fixture, Responses emulator и реальная CPU inference. Ввод авторский; emulator подтверждает только контракт.
+SHA-256 исходного содержимого: `90ea58bd7c7d24a69f78da5537a307ae6140226d281f610d6e7e11a62b0d591c`. [Машинные данные происхождения](docs/ui-recordings/manifest.json).
 
 [Измеренные исходы batches](docs/issue-evidence/41/batch-comparison.md) · [JSON наблюдений batches](docs/issue-evidence/41/batch-comparison.json).
 
 [Измеренное восстановление mutations](docs/issue-evidence/40/mutation-comparison.md) · [JSON наблюдений](docs/issue-evidence/40/mutation-comparison.json).
+
+[Измерения каталогов](docs/issue-evidence/47/catalogue-performance.md) · [JSON измерений](docs/issue-evidence/47/catalogue-performance.json) · [JSON наблюдений UI15](docs/issue-evidence/47/catalogue-observations.json).
 
 | Полный сценарий | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
@@ -117,5 +120,6 @@ SHA-256 исходного содержимого: `dc134a9714a84967c0e4ac05fe13
 | UI12 · Несохранённые drafts при навигации и поздних ответах | [Смотреть](docs/ui-recordings/UI12-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI12-mobile-chromium.webm) |
 | UI13 · Восстановление сохранённых mutations без повторного исполнения | [Смотреть](docs/ui-recordings/UI13-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI13-mobile-chromium.webm) |
 | UI14 · Частичные batches и ограниченное продолжение | [Смотреть](docs/ui-recordings/UI14-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI14-mobile-chromium.webm) |
+| UI15 · Ограниченный поиск и постраничная история | [Смотреть](docs/ui-recordings/UI15-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI15-mobile-chromium.webm) |
 
 <!-- UI-RECORDINGS:END -->

@@ -10,6 +10,7 @@ model-prepare / model-check — проверенные веса / CPU smoke;
 experiment-replay — freeze/plan/run/rescore без платных запросов;
 experiment-rescore/audit/publish/resume — существующие команды экспериментов;
 network-experiment — B/C через локальную модель или emulator;
+catalogue-check — сравнение v1/v2 на SQLite и собственной временной PostgreSQL;
 reports — русский рендер сохранённых измерений; docs-check — ссылки документации;
 ui-install / ui-check — зависимости браузера / все journeys и проверенные записи.
 """
@@ -110,6 +111,26 @@ def ui_install():
     run("npx", "playwright", "install", "--with-deps", "chromium")
 
 
+def catalogue_check():
+    environment = {
+        **os.environ,
+        "JOBINTEL_PROVIDER": "fixture",
+        "JOBINTEL_CONFIGURATION": "fixture_normalized",
+    }
+    if os.getenv("TEST_DATABASE_URL"):
+        run(sys.executable, "-m", "scripts.catalogue_benchmark", environment=environment)
+        return
+    from scripts.task_postgres import database
+
+    with database() as (_lease, url):
+        run(
+            sys.executable,
+            "-m",
+            "scripts.catalogue_benchmark",
+            environment={**environment, "TEST_DATABASE_URL": url},
+        )
+
+
 def ui_check():
     environment = {**os.environ, "UI_PYTHON": sys.executable}
     for action in (
@@ -122,6 +143,8 @@ def ui_check():
         "check:ui",
         "prepare:ui-artifacts",
     ):
+        if action == "record:ui":
+            catalogue_check()
         run("npm", "run", action, environment=environment)
 
 
@@ -134,6 +157,7 @@ def main():
         "prepare-offline": prepare_offline,
         "ui-install": ui_install,
         "ui-check": ui_check,
+        "catalogue-check": catalogue_check,
     }
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter

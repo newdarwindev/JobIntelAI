@@ -99,7 +99,7 @@ test('UI14 | Partial corpus batches, retained outcomes and bounded continuation'
       if(mode==='after_commit_lookup_lost_reload'){
         let failed=false,refreshFailed=false;
         await page.route('**/operations/*',async route=>{if(!failed&&route.request().method()==='GET'){failed=true;await route.abort('connectionclosed');}else await route.continue();});
-        await page.route('**/jobs',async route=>{if(blockRefresh&&!refreshFailed&&route.request().method()==='GET'){refreshFailed=true;await route.abort('connectionclosed');}else await route.continue();});
+        await page.route('**/v2/jobs',async route=>{if(blockRefresh&&!refreshFailed&&route.request().method()==='GET'){refreshFailed=true;await route.abort('connectionclosed');}else await route.continue();});
       }
       await page.route(`**${path}`,async route=>{if(used){await route.continue();return;}used=true;if(mode.startsWith('after_commit')){expect((await route.fetch()).ok()).toBeTruthy();blockRefresh=true;}await route.abort('connectionclosed');});
       await start(kind);const partial=await journal(page,kind);

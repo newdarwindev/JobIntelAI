@@ -2,6 +2,7 @@
 
 import json
 import subprocess
+from contextlib import contextmanager
 
 import pytest
 
@@ -81,3 +82,74 @@ def test_offline_preparation_refuses_wrong_target(monkeypatch):
     monkeypatch.setattr(tasks.platform, "machine", lambda: "aarch64")
     with pytest.raises(ValueError, match="x86_64"):
         tasks.prepare_offline()
+
+
+@pytest.mark.parametrize("fail", [False, True])
+def test_catalogue_measurement_cleans_owned_database_after_command_outcome(monkeypatch, fail):
+    from scripts import task_postgres
+
+    monkeypatch.delenv("TEST_DATABASE_URL", raising=False)
+    states = []
+    url = "postgresql+psycopg://jobintel:ci-only@127.0.0.1:5432/disposable"
+
+    @contextmanager
+    def database():
+        states.append("started")
+        try:
+            yield None, url
+        finally:
+            states.append("cleaned")
+
+    def run(*command, environment):
+        assert command[-1] == "scripts.catalogue_benchmark"
+        assert environment["TEST_DATABASE_URL"] == url
+        assert environment["JOBINTEL_PROVIDER"] == "fixture"
+        assert environment["JOBINTEL_CONFIGURATION"] == "fixture_normalized"
+        if fail:
+            raise subprocess.CalledProcessError(1, command)
+
+    monkeypatch.setattr(task_postgres, "database", database)
+    monkeypatch.setattr(tasks, "run", run)
+    if fail:
+        with pytest.raises(subprocess.CalledProcessError):
+            tasks.catalogue_check()
+    else:
+        tasks.catalogue_check()
+    assert states == ["started", "cleaned"]
+
+
+def test_catalogue_measurement_preserves_explicit_database_ownership(monkeypatch):
+    from scripts import task_postgres
+
+    monkeypatch.setenv("TEST_DATABASE_URL", "postgresql+psycopg://localhost/disposable")
+    monkeypatch.setenv("JOBINTEL_PROVIDER", "openai")
+    monkeypatch.setenv("JOBINTEL_CONFIGURATION", "openai_normalized_v1")
+    calls = []
+
+    def forbidden_database():
+        raise AssertionError("must not claim configured database resources")
+
+    monkeypatch.setattr(task_postgres, "database", forbidden_database)
+
+    def run(*command, environment):
+        calls.append(command)
+        assert environment["TEST_DATABASE_URL"] == "postgresql+psycopg://localhost/disposable"
+        assert environment["JOBINTEL_PROVIDER"] == "fixture"
+        assert environment["JOBINTEL_CONFIGURATION"] == "fixture_normalized"
+
+    monkeypatch.setattr(tasks, "run", run)
+    tasks.catalogue_check()
+    assert len(calls) == 1 and calls[0][-1] == "scripts.catalogue_benchmark"
+
+
+def test_catalogue_measurement_uses_fixture_despite_hosted_environment(monkeypatch):
+    from scripts.catalogue_benchmark import benchmark
+
+    monkeypatch.setenv("JOBINTEL_PROVIDER", "openai")
+    monkeypatch.setenv("JOBINTEL_CONFIGURATION", "openai_normalized_v1")
+    rows = benchmark("sqlite", [1])
+    assert len(rows) == 1
+    assert rows[0]["legacy"]["returned_jobs"] == 1
+    assert rows[0]["bounded"]["returned_jobs"] == 1
+    assert rows[0]["bounded"]["select_statements"] == 2
+    assert not rows[0]["bounded"]["selected_source_body_columns"]
