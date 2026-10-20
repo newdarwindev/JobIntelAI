@@ -1,0 +1,2913 @@
+{
+  "corpus_sha256": "b1d30841e406ced48f382e0c4c05b32e5bd0a39c0c37b9b63e9a9e1c39214c15",
+  "spec_sha256": "6fbcbbc6636836fe16fbdc9eee0665162654d6dc3704e24ccc71027591d12520",
+  "results": [
+    {
+      "configuration": "A",
+      "summary": {
+        "succeeded": 20,
+        "failed": 0,
+        "metric_scope": "successful cases only; failures excluded, never empty predictions",
+        "metrics": {
+          "true_positives": 18,
+          "predicted": 22,
+          "expected": 22,
+          "precision": 0.8181818181818182,
+          "recall": 0.8181818181818182,
+          "f1": 0.8181818181818182,
+          "type_accuracy": 1.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": null,
+          "abstention_quality": null,
+          "counts": {
+            "precision": {
+              "numerator": 18,
+              "denominator": 22
+            },
+            "recall": {
+              "numerator": 18,
+              "denominator": 22
+            },
+            "f1": {
+              "numerator": 36,
+              "denominator": 44
+            },
+            "type_accuracy": {
+              "numerator": 18,
+              "denominator": 18
+            },
+            "evidence_accuracy": {
+              "numerator": 18,
+              "denominator": 18
+            },
+            "unsupported_span_rate": {
+              "numerator": 0,
+              "denominator": 22
+            }
+          },
+          "type_confusion_matrix": {
+            "MUST": {
+              "MUST": 8,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "PREFERRED": {
+              "MUST": 0,
+              "PREFERRED": 4,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "EXPERIENCE": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 2,
+              "OTHER": 0
+            },
+            "OTHER": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 4
+            }
+          },
+          "must_preferred_accuracy": {
+            "numerator": 12,
+            "denominator": 12,
+            "value": 1.0
+          }
+        },
+        "per_case": [
+          {
+            "case_id": "SYN-01",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 0.5,
+              "recall": 0.5,
+              "f1": 0.5,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-02",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-03",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-04",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-05",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-06",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-07",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-08",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 4,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "evidence_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-09",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-10",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-11",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-12",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-13",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-14",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 4,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "evidence_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-15",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-16",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-17",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-18",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 0,
+              "expected": 0,
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": null,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 0
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-19",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-20",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          }
+        ],
+        "tokens": null,
+        "cost_usd": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 20,
+        "elapsed_seconds": 0.0036340020005809492,
+        "reviewed_per_case": null,
+        "not_attempted": 0,
+        "provider_elapsed_seconds": null,
+        "llm_elapsed_seconds": null
+      }
+    },
+    {
+      "configuration": "B",
+      "summary": {
+        "succeeded": 20,
+        "failed": 0,
+        "metric_scope": "successful cases only; failures excluded, never empty predictions",
+        "metrics": {
+          "true_positives": 18,
+          "predicted": 22,
+          "expected": 22,
+          "precision": 0.8181818181818182,
+          "recall": 0.8181818181818182,
+          "f1": 0.8181818181818182,
+          "type_accuracy": 1.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": null,
+          "abstention_quality": null,
+          "counts": {
+            "precision": {
+              "numerator": 18,
+              "denominator": 22
+            },
+            "recall": {
+              "numerator": 18,
+              "denominator": 22
+            },
+            "f1": {
+              "numerator": 36,
+              "denominator": 44
+            },
+            "type_accuracy": {
+              "numerator": 18,
+              "denominator": 18
+            },
+            "evidence_accuracy": {
+              "numerator": 18,
+              "denominator": 18
+            },
+            "unsupported_span_rate": {
+              "numerator": 0,
+              "denominator": 22
+            }
+          },
+          "type_confusion_matrix": {
+            "MUST": {
+              "MUST": 8,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "PREFERRED": {
+              "MUST": 0,
+              "PREFERRED": 4,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "EXPERIENCE": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 2,
+              "OTHER": 0
+            },
+            "OTHER": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 4
+            }
+          },
+          "must_preferred_accuracy": {
+            "numerator": 12,
+            "denominator": 12,
+            "value": 1.0
+          }
+        },
+        "per_case": [
+          {
+            "case_id": "SYN-01",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 0.5,
+              "recall": 0.5,
+              "f1": 0.5,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-02",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-03",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-04",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-05",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-06",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-07",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-08",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 4,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "evidence_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-09",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-10",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-11",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-12",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-13",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-14",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 4,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "evidence_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-15",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-16",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-17",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-18",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 0,
+              "expected": 0,
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": null,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 0
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-19",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-20",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          }
+        ],
+        "tokens": null,
+        "cost_usd": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 20,
+        "elapsed_seconds": 0.004347351999967941,
+        "reviewed_per_case": null,
+        "not_attempted": 0,
+        "provider_elapsed_seconds": null,
+        "llm_elapsed_seconds": null
+      }
+    },
+    {
+      "configuration": "C",
+      "summary": {
+        "succeeded": 20,
+        "failed": 0,
+        "metric_scope": "successful cases only; failures excluded, never empty predictions",
+        "metrics": {
+          "true_positives": 22,
+          "predicted": 22,
+          "expected": 22,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "type_accuracy": 1.0,
+          "evidence_accuracy": 1.0,
+          "unsupported_span_rate": 0.0,
+          "semantic_hallucination_rate": null,
+          "abstention_quality": null,
+          "counts": {
+            "precision": {
+              "numerator": 22,
+              "denominator": 22
+            },
+            "recall": {
+              "numerator": 22,
+              "denominator": 22
+            },
+            "f1": {
+              "numerator": 44,
+              "denominator": 44
+            },
+            "type_accuracy": {
+              "numerator": 22,
+              "denominator": 22
+            },
+            "evidence_accuracy": {
+              "numerator": 22,
+              "denominator": 22
+            },
+            "unsupported_span_rate": {
+              "numerator": 0,
+              "denominator": 22
+            }
+          },
+          "type_confusion_matrix": {
+            "MUST": {
+              "MUST": 9,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "PREFERRED": {
+              "MUST": 0,
+              "PREFERRED": 6,
+              "EXPERIENCE": 0,
+              "OTHER": 0
+            },
+            "EXPERIENCE": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 3,
+              "OTHER": 0
+            },
+            "OTHER": {
+              "MUST": 0,
+              "PREFERRED": 0,
+              "EXPERIENCE": 0,
+              "OTHER": 4
+            }
+          },
+          "must_preferred_accuracy": {
+            "numerator": 15,
+            "denominator": 15,
+            "value": 1.0
+          }
+        },
+        "per_case": [
+          {
+            "case_id": "SYN-01",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 4,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "evidence_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-02",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-03",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-04",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-05",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-06",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-07",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-08",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 4,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "evidence_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-09",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-10",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-11",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-12",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-13",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-14",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 2,
+              "predicted": 2,
+              "expected": 2,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "recall": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "f1": {
+                  "numerator": 4,
+                  "denominator": 4
+                },
+                "type_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "evidence_accuracy": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 2
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-15",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-16",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-17",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-18",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 0,
+              "predicted": 0,
+              "expected": 0,
+              "precision": null,
+              "recall": null,
+              "f1": null,
+              "type_accuracy": null,
+              "evidence_accuracy": null,
+              "unsupported_span_rate": null,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "recall": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "f1": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "type_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "evidence_accuracy": {
+                  "numerator": 0,
+                  "denominator": 0
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 0
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-19",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          },
+          {
+            "case_id": "SYN-20",
+            "status": "succeeded",
+            "error_code": null,
+            "metrics": {
+              "true_positives": 1,
+              "predicted": 1,
+              "expected": 1,
+              "precision": 1.0,
+              "recall": 1.0,
+              "f1": 1.0,
+              "type_accuracy": 1.0,
+              "evidence_accuracy": 1.0,
+              "unsupported_span_rate": 0.0,
+              "semantic_hallucination_rate": null,
+              "abstention_quality": null,
+              "counts": {
+                "precision": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "recall": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "f1": {
+                  "numerator": 2,
+                  "denominator": 2
+                },
+                "type_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "evidence_accuracy": {
+                  "numerator": 1,
+                  "denominator": 1
+                },
+                "unsupported_span_rate": {
+                  "numerator": 0,
+                  "denominator": 1
+                }
+              }
+            }
+          }
+        ],
+        "tokens": null,
+        "cost_usd": null,
+        "known_cost_usd": null,
+        "missing_usage_cases": 20,
+        "elapsed_seconds": 0.006868224999834638,
+        "reviewed_per_case": null,
+        "not_attempted": 0,
+        "provider_elapsed_seconds": null,
+        "llm_elapsed_seconds": null
+      }
+    }
+  ]
+}
