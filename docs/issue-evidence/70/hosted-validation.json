@@ -1,0 +1,112 @@
+{
+  "tested_merge_commit": "13a434331ebf771a94329a74fc85f64a173dbb74",
+  "tested_merge_tree": "ef0b394cd67e88bdaa173ff9d2790f760300281b",
+  "app_source_sha256": "f272aa4f864411c1223e353c78e4e8a821f1130fd70d70c8508b1499f5bd7b7c",
+  "ui_source_sha256": "c94f728e8407953802b5ffcef227e803bd1a0a81294543e7345663f689e0d3fa",
+  "execution": "GitHub Actions; authored fixtures and separate real CPU inference; no paid hosted calls",
+  "runs": {
+    "automated_checks": {
+      "url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39452785523",
+      "conclusion": "success",
+      "quality": "success",
+      "container_api_lifecycle_acquisition_smokes": "success"
+    },
+    "browser": {
+      "url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39452785883",
+      "conclusion": "success",
+      "passing_workflows": 30,
+      "passed_without_retry": 29,
+      "passed_on_retry": 1,
+      "failed_workflows": 0,
+      "skipped": 0,
+      "retried_workflows": [
+        {
+          "id": "UI01",
+          "project": "desktop-chromium",
+          "successful_attempt": 1
+        }
+      ],
+      "initial_retry_diagnostic": "UI01 desktop: expected 409 conflict notice, observed prior duplicate-import notice. Passed on retry; original trace/video retained in CI diagnostics, not published as success.",
+      "diagnostics_artifact": {
+        "id": 12278894874,
+        "sha256": "c2c195e00b63a42ca4662c8500489ff5f18bee082e3e4769d0e54bc94bdc583a"
+      }
+    },
+    "cpu": {
+      "url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39452785719",
+      "conclusion": "success",
+      "service_counts": {
+        "passed": 5,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "reviewed_model_outcomes": [
+        {
+          "case": "reviewed_evaluation_and_reload",
+          "model_succeeded": 1,
+          "model_failed": 2
+        }
+      ],
+      "artifact_sha256": "d67505e00327fd2628ed65df16a1cca0084b24753bac61a9702ae89a92142822"
+    }
+  },
+  "python": [
+    {
+      "python": "3.11",
+      "artifact_sha256": "f5fc6606a6a229ba8e83e12b42144714afeca801703a7cfc243dd0111befaf88",
+      "summary": {
+        "commit": "13a434331ebf771a94329a74fc85f64a173dbb74",
+        "python": "3.11",
+        "run_id": "39452785523",
+        "run_attempt": "1",
+        "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39452785523",
+        "config": "fake providers / synthetic corpus / disposable PostgreSQL",
+        "command": "python scripts/check.py --require-postgres --junitxml work/ci/junit.xml",
+        "exit_code": 0,
+        "tests": 912,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 912
+      }
+    },
+    {
+      "python": "3.12",
+      "artifact_sha256": "7cb7b0c95c84f7d628ce153a1960cd9988cddeb8bb544965e52b3154056b48a1",
+      "summary": {
+        "commit": "13a434331ebf771a94329a74fc85f64a173dbb74",
+        "python": "3.12",
+        "run_id": "39452785523",
+        "run_attempt": "1",
+        "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39452785523",
+        "config": "fake providers / synthetic corpus / disposable PostgreSQL",
+        "command": "python scripts/check.py --require-postgres --junitxml work/ci/junit.xml",
+        "exit_code": 0,
+        "tests": 912,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 912
+      }
+    }
+  ],
+  "publication_archives": [
+    {
+      "part": 1,
+      "artifact_id": 12278719997,
+      "sha256": "763a5dff217d2bbfbe89a04ca1e5b17eca036c3fa4452b2085f6145de307e1c2"
+    },
+    {
+      "part": 2,
+      "artifact_id": 12281050207,
+      "sha256": "e38df638543527500b25c0198831dab925c5bf719e5e896f24ae89b3132b55e4"
+    },
+    {
+      "part": 3,
+      "artifact_id": 12280450498,
+      "sha256": "eeb5d32d86bd09da372999a90b174ea17938add0d9eec5c1d4d7afafbda05c6a"
+    }
+  ],
+  "verification": "All archive digests, 30 individual video byte counts/SHA-256, tested merge identity, current source hashes and README links verified; npm run check:ui passed."
+}

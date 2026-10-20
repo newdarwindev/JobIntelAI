@@ -1,5 +1,5 @@
 {
-  "baseline_commit": "e9d9cdab52658f6db4da18fb12570c5b9bbee3f8",
+  "baseline_commit": "e348949bd47f6b11fcf7917930524d1debcc1f76",
   "measurement": "Physical lines include blanks/comments; branches count If/For/While/ExceptHandler/IfExp/comprehension AST nodes. Tests/docs/build outputs excluded. api.py included to account for interface integration.",
   "python": "3.12.14",
   "transport": "PycURL/7.48.0 libcurl/8.22.0 OpenSSL/3.6.4 zlib/1.3.1 brotli/1.2.0 libpsl/0.21.5 libssh2/1.11.1_DEV nghttp2/1.70.0 ngtcp2/1.25.0 nghttp3/1.18.0 mit-krb5/1.22.2",
@@ -137,25 +137,25 @@
     {
       "file": "src/jobintel/api.py",
       "before": {
-        "lines": 330,
-        "branches": 26,
-        "sha256": "838160dc0ce2e4d005c497c7df544c7ba1b8433a7e7925fb755d36d22c8cd665"
+        "lines": 400,
+        "branches": 28,
+        "sha256": "694d1e5d5e2099cefad76f3cc1cd15ed3b444eebcdfc52b5bf5984735d4ce1fb"
       },
       "after": {
-        "lines": 331,
-        "branches": 26,
-        "sha256": "3781f09d62a36b9cbd13646aec5b8f2bca96a94eccdc5106225d3b5e3b3cb4d0"
+        "lines": 401,
+        "branches": 28,
+        "sha256": "94ff48867981da0af9ad5beb23d2915622e4e8a0ddf13403e49f2e33840364e4"
       }
     }
   ],
   "totals": {
     "before": {
-      "lines": 1733,
-      "branches": 247
+      "lines": 1803,
+      "branches": 249
     },
     "after": {
-      "lines": 1722,
-      "branches": 239
+      "lines": 1792,
+      "branches": 241
     }
   },
   "wheel_sha256": {

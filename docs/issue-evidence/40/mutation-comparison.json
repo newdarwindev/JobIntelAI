@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
   "origin": "github-actions",
-  "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39441877552",
-  "git_sha": "5384741088d5201efcd9fe63b3dcc75e2e4f6f43",
-  "source_hash": "90ea58bd7c7d24a69f78da5537a307ae6140226d281f610d6e7e11a62b0d591c",
+  "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39452785883",
+  "git_sha": "13a434331ebf771a94329a74fc85f64a173dbb74",
+  "source_hash": "c94f728e8407953802b5ffcef227e803bd1a0a81294543e7345663f689e0d3fa",
   "mode": "authored fixture replay and Responses emulator; actual API/DB operations; no paid calls",
   "rows": [
     {
       "project": "desktop-chromium",
       "kind": "registry",
       "scenario": "before_delivery",
-      "operation_id": "c47a572223504ef1a08cfaeab3df38d6",
+      "operation_id": "c303f2c013c34211bd979fdc69e9d5a6",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 200,
@@ -26,7 +26,7 @@
       "project": "desktop-chromium",
       "kind": "snapshot",
       "scenario": "before_delivery",
-      "operation_id": "b528426353cd44e6b87dcff6919a3d7c",
+      "operation_id": "9e4f4d6e109342de98d1fc6aa0b19b3b",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 201,
@@ -36,13 +36,13 @@
       "completed_handler_executions": 1,
       "before_records": 1,
       "after_records": 2,
-      "saved_id": "e6fe3e1f1d8d4a99bde1b1b7ac4ab466"
+      "saved_id": "5b0ecb7968ba470a9d3fb0fed45ce735"
     },
     {
       "project": "desktop-chromium",
       "kind": "candidate",
       "scenario": "before_delivery",
-      "operation_id": "aa9142e366d44b65aba7a682dca4aab8",
+      "operation_id": "0a146c65fe8c4870865524fab2181206",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 201,
@@ -52,13 +52,13 @@
       "completed_handler_executions": 1,
       "before_records": 0,
       "after_records": 1,
-      "saved_id": "1eceeb1400b743118a11aada6c560857"
+      "saved_id": "676a5331eaad4269a61304cd521ae641"
     },
     {
       "project": "desktop-chromium",
       "kind": "extract",
       "scenario": "before_delivery",
-      "operation_id": "8ffa0fdad57f4678bb884faac89fc0d3",
+      "operation_id": "dd68b7dcef2c43ef97dfa4c21d823afa",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 200,
@@ -68,13 +68,13 @@
       "completed_handler_executions": 1,
       "before_records": 1,
       "after_records": 2,
-      "saved_id": "386952e51d034fd3b7701f7a54acf46e"
+      "saved_id": "ab0ea69f9c2241f7bb9517849ba62297"
     },
     {
       "project": "desktop-chromium",
       "kind": "match",
       "scenario": "before_delivery",
-      "operation_id": "fb8635aad8de41fd9cae41dd69f9c41e",
+      "operation_id": "d046b80186134f608e46314fee0e7f3b",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 200,
@@ -84,13 +84,13 @@
       "completed_handler_executions": 1,
       "before_records": null,
       "after_records": null,
-      "saved_id": "7759c07509544ce09d1cb6b7dbb4ef11"
+      "saved_id": "4067a79adadc4ee5b23736298a4df416"
     },
     {
       "project": "desktop-chromium",
       "kind": "evaluate",
       "scenario": "before_delivery",
-      "operation_id": "ef733c5eef6646cdb15d543f0be8594d",
+      "operation_id": "99d712aab4854750a77d9b93b4ae2718",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 200,
@@ -100,13 +100,13 @@
       "completed_handler_executions": 1,
       "before_records": 1,
       "after_records": 2,
-      "saved_id": "1a0806fbca1d4aaca3281c17e48d18c0"
+      "saved_id": "e58cad78e7604aa7ada1697303ded6b5"
     },
     {
       "project": "desktop-chromium",
       "kind": "fetch",
       "scenario": "before_delivery",
-      "operation_id": "5eb9677f3b854b508b1a3f9fea141093",
+      "operation_id": "22e3878afdc84068a4686f6519f32428",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 201,
@@ -116,13 +116,13 @@
       "completed_handler_executions": 1,
       "before_records": 2,
       "after_records": 3,
-      "saved_id": "c4ab8a9f83d74299b64e802622725484"
+      "saved_id": "75992c1736184ba19405e46c3a5ae8d9"
     },
     {
       "project": "desktop-chromium",
       "kind": "registry",
       "scenario": "after_commit",
-      "operation_id": "151015161b704eec9ad74db69d34bf80",
+      "operation_id": "b813eb5e91a84f71ac406eefa2509d7b",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 200,
@@ -138,7 +138,7 @@
       "project": "desktop-chromium",
       "kind": "snapshot",
       "scenario": "after_commit",
-      "operation_id": "6587a738bfac4e7f98a2599d6407998c",
+      "operation_id": "96ed5792cdaf45d6aee66306add07e70",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 201,
@@ -148,13 +148,13 @@
       "completed_handler_executions": 1,
       "before_records": 3,
       "after_records": 4,
-      "saved_id": "e8b0b0d8157e44b6885e36fc91570aa7"
+      "saved_id": "8919fdaa23ce4dbc91ebd71ebe390588"
     },
     {
       "project": "desktop-chromium",
       "kind": "candidate",
       "scenario": "after_commit",
-      "operation_id": "0434d23f20624fb4ad87cc680d52e42f",
+      "operation_id": "fc6a10fa29a147708dd5349f8b2b1e87",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 201,
@@ -164,13 +164,13 @@
       "completed_handler_executions": 1,
       "before_records": 0,
       "after_records": 1,
-      "saved_id": "9d5763f37b6d47719108034ff300c15b"
+      "saved_id": "884cfce08a3c4563b467280655b5826d"
     },
     {
       "project": "desktop-chromium",
       "kind": "extract",
       "scenario": "after_commit",
-      "operation_id": "795acdac3b8a4b7f9eade9c161864613",
+      "operation_id": "86b5cd32b7ca4161acc6e0491471a234",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 200,
@@ -180,13 +180,13 @@
       "completed_handler_executions": 1,
       "before_records": 2,
       "after_records": 3,
-      "saved_id": "0dd07ab748eb433e9942ee7f4dfaf191"
+      "saved_id": "36d204d7bb5b4ac2a7ee77f0b7028ccd"
     },
     {
       "project": "desktop-chromium",
       "kind": "match",
       "scenario": "after_commit",
-      "operation_id": "41e1a53ef6c948cdbd99e603356fbf5f",
+      "operation_id": "7f2f2c3f3a8243b98b54611e3a50edfa",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 200,
@@ -196,13 +196,13 @@
       "completed_handler_executions": 1,
       "before_records": null,
       "after_records": null,
-      "saved_id": "9b98f665ff1f49b7ab9909843c7babb1"
+      "saved_id": "1b50ed31a4fb4c2a8fd18d315b8882b4"
     },
     {
       "project": "desktop-chromium",
       "kind": "evaluate",
       "scenario": "after_commit",
-      "operation_id": "8d694286295f440f8bf7c3be59efc0e8",
+      "operation_id": "a5d3960789074c798fc4d55c518143b9",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 200,
@@ -212,13 +212,13 @@
       "completed_handler_executions": 1,
       "before_records": 2,
       "after_records": 3,
-      "saved_id": "12d6d07748ca48b6a560ad6d82f2ae7d"
+      "saved_id": "215d3d8887964547bb47b2572225c760"
     },
     {
       "project": "desktop-chromium",
       "kind": "fetch",
       "scenario": "after_commit",
-      "operation_id": "3b08fb8c2e1f4c01bdb202da033d1f0c",
+      "operation_id": "bba9a72acbc643d68e90ee906620b9c6",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 201,
@@ -228,13 +228,13 @@
       "completed_handler_executions": 1,
       "before_records": 4,
       "after_records": 5,
-      "saved_id": "15570858bd2b4fe5b63a4945b63898c7"
+      "saved_id": "6b60b04b626f498b88f15d74f38bc0fa"
     },
     {
       "project": "desktop-chromium",
       "kind": "extract",
       "scenario": "display_read_lost",
-      "operation_id": "9c88ff1be1ff43b481abfcbdeca12ce3",
+      "operation_id": "6a36ab39ba08481298ea081ca189bc23",
       "initial_state": "committed/display_pending",
       "final_state": "committed",
       "http_status": 200,
@@ -243,13 +243,13 @@
       "completed_handler_executions": 1,
       "before_records": null,
       "after_records": null,
-      "saved_id": "1d576ce9bf224582b28c2529f78dff34"
+      "saved_id": "3172ae57009247f2bc40739c46cfb642"
     },
     {
       "project": "desktop-chromium",
       "kind": "snapshot",
       "scenario": "unsent_reload_cancel",
-      "operation_id": "b8841ab20ec8422bb58158fd871134bb",
+      "operation_id": "5e9e3d5bdb454b26a645343a14e8aa15",
       "initial_state": "not_received",
       "final_state": "rejected",
       "http_status": 409,
@@ -265,7 +265,7 @@
       "project": "desktop-chromium",
       "kind": "extract",
       "scenario": "provider_in_flight",
-      "operation_id": "98490e066249457f9369cb3b104e09a2",
+      "operation_id": "c21e57565dac47be88bc307937ca023f",
       "initial_state": "uncertain",
       "final_state": "committed",
       "http_status": 200,
@@ -274,13 +274,13 @@
       "completed_handler_executions": 1,
       "before_records": null,
       "after_records": null,
-      "saved_id": "337e94433bea455089b21562a9f6d1b1"
+      "saved_id": "fbb90e40f3b7451986ddd53da6253826"
     },
     {
       "project": "desktop-chromium",
       "kind": "extract",
       "scenario": "lookup_lost_reload",
-      "operation_id": "f2c8cf061e8b45e9a577324c365b03df",
+      "operation_id": "52c2218ad00d4f43b811690148786f65",
       "initial_state": "uncertain",
       "final_state": "committed",
       "http_status": 200,
@@ -289,13 +289,13 @@
       "completed_handler_executions": 1,
       "before_records": 6,
       "after_records": 6,
-      "saved_id": "dc2856a655d740bba8bb940dbc43910b"
+      "saved_id": "37b68a50c69147b8bc675fdd7ff42d08"
     },
     {
       "project": "desktop-chromium",
       "kind": "candidate",
       "scenario": "validation_rejected",
-      "operation_id": "88a9c3180c5b442c8c03237294c9834f",
+      "operation_id": "0d1c4b0ce0664bf5999749bf8843ece1",
       "initial_state": "rejected",
       "final_state": "rejected",
       "http_status": 422,
@@ -310,7 +310,7 @@
       "project": "mobile-chromium",
       "kind": "registry",
       "scenario": "before_delivery",
-      "operation_id": "84d89e0034e14b3ab884af355efec934",
+      "operation_id": "b480b75141ef4f4e8752cd35bbd50b9f",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 200,
@@ -326,7 +326,7 @@
       "project": "mobile-chromium",
       "kind": "snapshot",
       "scenario": "before_delivery",
-      "operation_id": "b0cf3664c0df4bb596557e9ae710709a",
+      "operation_id": "5f0084a1ca0b44689a916216ba461714",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 201,
@@ -336,13 +336,13 @@
       "completed_handler_executions": 1,
       "before_records": 1,
       "after_records": 2,
-      "saved_id": "2ba792cbb0704f50a62c0978dd7a827d"
+      "saved_id": "f6f0e4de77fe46a59a3454fbde3cdea2"
     },
     {
       "project": "mobile-chromium",
       "kind": "candidate",
       "scenario": "before_delivery",
-      "operation_id": "8973ef801d834f759866ec73ccfab104",
+      "operation_id": "964b2006012440ebbfb89515a3dbc060",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 201,
@@ -352,13 +352,13 @@
       "completed_handler_executions": 1,
       "before_records": 0,
       "after_records": 1,
-      "saved_id": "f5494a647e12454e9224b2f9b31f01f1"
+      "saved_id": "6776d43b00454ab4826802be65613885"
     },
     {
       "project": "mobile-chromium",
       "kind": "extract",
       "scenario": "before_delivery",
-      "operation_id": "a1c6e6eb96924878948c906ae85cc4c3",
+      "operation_id": "58f302271b7045fea2f6c0ed937dcf0f",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 200,
@@ -368,13 +368,13 @@
       "completed_handler_executions": 1,
       "before_records": 1,
       "after_records": 2,
-      "saved_id": "29f004030d464be9946e6b6dc56b811b"
+      "saved_id": "61a1fc8e20c74910ab6c622a078a0bac"
     },
     {
       "project": "mobile-chromium",
       "kind": "match",
       "scenario": "before_delivery",
-      "operation_id": "c90f418cf272437e88180ee476e41997",
+      "operation_id": "650d87ba51c2471d9fd900ab967b839e",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 200,
@@ -384,13 +384,13 @@
       "completed_handler_executions": 1,
       "before_records": null,
       "after_records": null,
-      "saved_id": "d3ce4ced63b342879d126a25c258f9be"
+      "saved_id": "66f59686112c47bab008146bf50018a9"
     },
     {
       "project": "mobile-chromium",
       "kind": "evaluate",
       "scenario": "before_delivery",
-      "operation_id": "59e7631676c242029656489a17046dd6",
+      "operation_id": "a426ae18180d489a8d44020f1f48d1ef",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 200,
@@ -400,13 +400,13 @@
       "completed_handler_executions": 1,
       "before_records": 1,
       "after_records": 2,
-      "saved_id": "91d94a135b8a473eb6c49a2ac5c3c949"
+      "saved_id": "29a1e6ce315945859f4a293120e524b3"
     },
     {
       "project": "mobile-chromium",
       "kind": "fetch",
       "scenario": "before_delivery",
-      "operation_id": "b0705fbe92d546659ebd04feb020f5fa",
+      "operation_id": "6472de285bd5466b9f2d1dd72c3782af",
       "initial_state": "not_received",
       "final_state": "committed",
       "http_status": 201,
@@ -416,13 +416,13 @@
       "completed_handler_executions": 1,
       "before_records": 2,
       "after_records": 3,
-      "saved_id": "c8a6616f763c47bb92280559736c4ce2"
+      "saved_id": "a26730ca7f364300a13473526bf097ca"
     },
     {
       "project": "mobile-chromium",
       "kind": "registry",
       "scenario": "after_commit",
-      "operation_id": "b4ee459af9e240e0836bc132957b89c0",
+      "operation_id": "67f56b820b3146318de050d809937585",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 200,
@@ -438,7 +438,7 @@
       "project": "mobile-chromium",
       "kind": "snapshot",
       "scenario": "after_commit",
-      "operation_id": "406af5dd8f16451784bf0e137cc4db4d",
+      "operation_id": "9c39eda1a1e64c4ebb97694b2b8a0cb4",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 201,
@@ -448,13 +448,13 @@
       "completed_handler_executions": 1,
       "before_records": 3,
       "after_records": 4,
-      "saved_id": "08074b5957584084af5ac7b4a6640784"
+      "saved_id": "fdb028530c52402992b47c920a4945c5"
     },
     {
       "project": "mobile-chromium",
       "kind": "candidate",
       "scenario": "after_commit",
-      "operation_id": "57987fa687e64e5f80e6952ac82ace01",
+      "operation_id": "b216c7f5d7894050897b6ce02501bfc0",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 201,
@@ -464,13 +464,13 @@
       "completed_handler_executions": 1,
       "before_records": 0,
       "after_records": 1,
-      "saved_id": "ecba3c8f3a9145258a3ac5170cdab801"
+      "saved_id": "57cc85e5ac704f6ebff8394e0f7cf112"
     },
     {
       "project": "mobile-chromium",
       "kind": "extract",
       "scenario": "after_commit",
-      "operation_id": "c7f9d03663a04bd4889af1c437a0bc0d",
+      "operation_id": "12b79a48963846dc9818bd66c4c4578d",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 200,
@@ -480,13 +480,13 @@
       "completed_handler_executions": 1,
       "before_records": 2,
       "after_records": 3,
-      "saved_id": "6b002aed5f2a4a5a9e5fad35b0a39d82"
+      "saved_id": "a44b731509764b7c99b3b19b3a416813"
     },
     {
       "project": "mobile-chromium",
       "kind": "match",
       "scenario": "after_commit",
-      "operation_id": "e6c2cd694e7743c9974be0dc942f56c9",
+      "operation_id": "bed2664979d2449180fcff3e1ac8b047",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 200,
@@ -496,13 +496,13 @@
       "completed_handler_executions": 1,
       "before_records": null,
       "after_records": null,
-      "saved_id": "4824d55fa0294066afc689186b4cb5a7"
+      "saved_id": "3ae6fecceade45cc9cc592c51eaca2ee"
     },
     {
       "project": "mobile-chromium",
       "kind": "evaluate",
       "scenario": "after_commit",
-      "operation_id": "6700934f435243a6aaec948cfdbcf684",
+      "operation_id": "1a8dc58776e04a2cbe7598ba91c16733",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 200,
@@ -512,13 +512,13 @@
       "completed_handler_executions": 1,
       "before_records": 2,
       "after_records": 3,
-      "saved_id": "aa47a9a0f1834ef794f4231904e9a291"
+      "saved_id": "565eaa3b2de843719a5641b18a77bdcf"
     },
     {
       "project": "mobile-chromium",
       "kind": "fetch",
       "scenario": "after_commit",
-      "operation_id": "668a6c857d3e4da88af2ecdfdd598d78",
+      "operation_id": "53f25444662f450d8f5d649286a1842a",
       "initial_state": "committed",
       "final_state": "committed",
       "http_status": 201,
@@ -528,13 +528,13 @@
       "completed_handler_executions": 1,
       "before_records": 4,
       "after_records": 5,
-      "saved_id": "b632d809e31c41ac8c0f752bf74abb4e"
+      "saved_id": "ea5b5d4645114cb29c9e91694a1e5543"
     },
     {
       "project": "mobile-chromium",
       "kind": "extract",
       "scenario": "display_read_lost",
-      "operation_id": "f414797a455c4bb89e2d42997fedfead",
+      "operation_id": "646d2880cf594e2baf35c6ccaec5584d",
       "initial_state": "committed/display_pending",
       "final_state": "committed",
       "http_status": 200,
@@ -543,13 +543,13 @@
       "completed_handler_executions": 1,
       "before_records": null,
       "after_records": null,
-      "saved_id": "d75f0efa4d874509aec247403e1c0cb1"
+      "saved_id": "fcb50561e86d48cbb4857bd65beed8cb"
     },
     {
       "project": "mobile-chromium",
       "kind": "snapshot",
       "scenario": "unsent_reload_cancel",
-      "operation_id": "e6742ed64ea44e96be5c66ca1ab90217",
+      "operation_id": "f596951a608f4327982bd59accf1e5d1",
       "initial_state": "not_received",
       "final_state": "rejected",
       "http_status": 409,
@@ -565,7 +565,7 @@
       "project": "mobile-chromium",
       "kind": "extract",
       "scenario": "provider_in_flight",
-      "operation_id": "13255dcc0eae491cb4c8e3097352be35",
+      "operation_id": "22a58050ff1346258dee963af491afbd",
       "initial_state": "uncertain",
       "final_state": "committed",
       "http_status": 200,
@@ -574,13 +574,13 @@
       "completed_handler_executions": 1,
       "before_records": null,
       "after_records": null,
-      "saved_id": "8dcb4a2e00204330bfa63e62a927c61e"
+      "saved_id": "e1ed0dc7339b4484b49bf2171df63d6b"
     },
     {
       "project": "mobile-chromium",
       "kind": "extract",
       "scenario": "lookup_lost_reload",
-      "operation_id": "a66904dca6054e7aa8b2c6d0b96a9dd6",
+      "operation_id": "e3f8e3402b964ad5acd232c69593f0fd",
       "initial_state": "uncertain",
       "final_state": "committed",
       "http_status": 200,
@@ -589,13 +589,13 @@
       "completed_handler_executions": 1,
       "before_records": 6,
       "after_records": 6,
-      "saved_id": "7614ca74c526429f81ec706fd071527c"
+      "saved_id": "8beb4e51667a4b6c8d8a3438ad32c3c8"
     },
     {
       "project": "mobile-chromium",
       "kind": "candidate",
       "scenario": "validation_rejected",
-      "operation_id": "de9f21716ff0498d9732b9dfe1cb5e63",
+      "operation_id": "28f3e355575c4948b8c720881a88be60",
       "initial_state": "rejected",
       "final_state": "rejected",
       "http_status": 422,

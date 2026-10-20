@@ -26,8 +26,8 @@ If/For/While/ExceptHandler/IfExp/comprehension. Tests, документация 
 
 | Область | До | После | Что удалено / сохранено |
 | --- | ---: | ---: | --- |
-| Все затронутые acquisition modules и API, строки | 1733 | 1722 | Чистое сокращение 11 строк с учётом нового интерфейса |
-| Те же modules, ветвления | 247 | 239 | На 8 меньше собственных ветвлений |
+| Все затронутые acquisition modules и API, строки | 1803 | 1792 | Чистое сокращение 11 строк с учётом нового интерфейса |
+| Те же modules, ветвления | 249 | 241 | На 8 меньше собственных ветвлений |
 | Новые transport-зависимости | 0 | 1 | PycURL 7.48.0 / libcurl 8.22.0 в проверенном Linux wheel |
 | Новые runtime services | 0 | 0 | Прежние API, DB и optional gateway; новый daemon не нужен |
 
@@ -97,7 +97,7 @@ Gateway egress-v1 сохраняется без изменения проток�
 
 ## Проверки и визуальное доказательство
 
-Локальный `make check-postgres` прошёл **900 tests, 0 failed/errors/skipped** вместе с
+Локальный `make check-postgres` прошёл **912 tests, 0 failed/errors/skipped** вместе с
 quality, migrations, fixture/CLI smoke и release audit. [JUnit](backend-junit.xml) и
 [команда, counts, hash и ограничения](backend-summary.json) сохранены отдельно.
 Явно переданный trust context сохраняет прежнюю изоляцию от environment CA override;
@@ -110,6 +110,17 @@ readiness=false и null origin HTTP status в текущем proxy-only runtime.
 на Docker vfs. Отдельный запуск существующего UI02 с теми же acquisition/emulator fixtures
 прошёл на desktop/mobile (2 passed) с system Chromium 151. Он не заменяет полный hosted
 suite и не используется publisher как полный успешный набор.
+
+[Проверенные hosted результаты](hosted-validation.json): Python 3.11 и 3.12 — по
+**912 passed, 0 failed/errors/skipped**; quality/container/API/acquisition/lifecycle — success.
+Полный browser matrix сохранил **30 успешных recordings**: 29 первичных успехов и один
+успех на retry UI01 desktop. Первая попытка UI01 ожидала 409, но видела прежнее сообщение
+duplicate import; её trace/video оставлены в CI diagnostics. Она не опубликована как успех.
+UI02 прошёл с первой попытки в обоих viewports. CPU service checks — 5 passed; отдельная
+reviewed оценка сохранила 1 успешный и 2 failed model cases, не превращая их в service pass.
+Manifest и все три ZIP parts проверены по SHA-256; текущие source hashes совпадают с
+tested merge `13a434331ebf771a94329a74fc85f64a173dbb74`. Все README links и 30 video hashes
+повторно проверены `npm run check:ui` после получения артефактов.
 
 Boundary checks находятся в `test_acquisition.py`, `test_fetch_transport.py`,
 `test_egress_policy.py`, `test_acquisition_boundary.py` и `test_acquisition_wire.py`.
