@@ -19,6 +19,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+notebooks = ["ipykernel>=6.29,<8", "nbclient>=0.10,<1", "nbformat>=5.10,<6"]
 dev = ["pytest>=8,<9", "ruff>=0.14,<1", "build>=1.2,<2", "shellcheck-py>=0.10,<1", "setuptools>=75", "wheel>=0.45"]
 
 [project.scripts]

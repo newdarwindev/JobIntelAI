@@ -67,6 +67,7 @@ def test_v44_build_excludes_ignored_private_outputs_and_bundles_licensed_fixture
         "LICENSE",
         "alembic.ini",
         "requirements.lock.txt",
+        "requirements-notebooks.lock.txt",
     ]:
         shutil.copy(ROOT / name, source / name)
     for name in ["src", "data", "alembic"]:

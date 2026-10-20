@@ -91,6 +91,8 @@ API не аутентифицирован и работает только на 
 
 ## Успешные записи desktop/mobile
 
+Общий [интерфейс notebook execution](docs/notebooks.md) предоставляет `jobintel notebook plan/run/verify`: fixture, точный saved-report rescore и явно выбранную локальную inference с проверяемыми manifests. Notebook extra устанавливается отдельно; training runner остаётся отдельной задачей.
+
 <!-- UI-RECORDINGS:START -->
 
 Успешные браузерные попытки: **30/30**, записано 2026-10-20.
