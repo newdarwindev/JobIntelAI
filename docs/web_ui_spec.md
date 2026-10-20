@@ -22,11 +22,15 @@ refresh не заменяет text/format. Выбранные profile/revision/e
 private bodies не копируются в browser storage. Revision switch очищает текущие projections,
 matching отправляет inspected run ID; stale — 409, отсутствующий saved revision — явная ошибка.
 
-UI02 проходит реальный production HTTP transport через scoped policy-proxy/origin и
+UI02 проходит реальный production libcurl HTTP transport через scoped policy-proxy/origin и
 verified HTTPS: redirect success, inert script, 403/JS-only, сохранённая attempt history,
 прежний extraction/unsaved manual text, manual recovery и reload. Diagnostics доказывают
-TLS handshake и single-use numeric pin за hostname CONNECT. UI08 проверяет gateway
-capability/readiness и manual capture при unsupported proxy/503. Это не Internet crawling.
+TLS handshake и single-use numeric pin за hostname CONNECT; origin не получает lease,
+cookies, authorization или referrer. Повторное acquisition переиспользует unchanged snapshot
+и сохраняет extraction ID. Journey приостанавливает только owned fixture gateway:
+actual health/fetch возвращают 503/proxy_capability без origin HTTP, draft/run сохраняются,
+manual save/extract работают; finally возобновляет gateway, readiness и URL capture восстанавливаются.
+UI08 проверяет положительный gateway capability/readiness. Это не Internet crawling.
 UI03 проверяет non-BMP offsets, metadata evidence, preferred production и version predicates;
 пока candidate version evidence не поддержан, UI04 показывает UNKNOWN.
 

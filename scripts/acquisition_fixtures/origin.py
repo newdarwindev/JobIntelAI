@@ -54,6 +54,10 @@ class OriginHandler(BaseHTTPRequestHandler):
             kind="http",
             scenario=scenario,
             tls=isinstance(self.connection, ssl.SSLSocket),
+            private_header=any(
+                self.headers.get(name)
+                for name in ("JobIntel-Route", "Authorization", "Cookie", "Referer")
+            ),
             authority=self.headers.get("Host")
             if self.headers.get("Host") in {"example.com", "rebind.example.test"}
             else "refused",

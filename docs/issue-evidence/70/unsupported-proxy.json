@@ -1,0 +1,24 @@
+{
+  "mode": "policy-proxy",
+  "source": "authored SYN-01 at immutable repository commit",
+  "commit": "c1492a9a54c6cb979abc96a743a7a3576d3a0a36",
+  "passed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "readiness": {
+    "ready": false,
+    "mode": "policy-proxy",
+    "error": {
+      "code": "proxy_capability",
+      "message": "URL acquisition: The selected acquisition mode requires a trusted DNS/pinning gateway capability. Use the manual source editor.",
+      "retryable": false,
+      "manual_fallback": true
+    }
+  },
+  "outcome": "proxy_capability",
+  "attempts": 1,
+  "http_status": null,
+  "bytes": null,
+  "body_sha256": null,
+  "case": "unsupported inherited proxy fails before origin traffic"
+}

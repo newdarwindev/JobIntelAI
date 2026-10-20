@@ -24,6 +24,7 @@ from jobintel.evaluation_store import get_report, list_reports, save_report
 from jobintel.export_selection import ExportInput
 from jobintel.exports import ExportService
 from jobintel.extraction_attempts import attempt_extract
+from jobintel.fetch_types import Acquirer
 from jobintel.mutation_middleware import MutationMiddleware
 from jobintel.mutation_operations import (
     cancel_unsent,
@@ -375,7 +376,7 @@ def create_app(
     configuration=None,
     transport=None,
     model=None,
-    acquirer=None,
+    acquirer: Acquirer | None = None,
 ) -> FastAPI:
     root = root or fixture_root()
     app = FastAPI(title="JobIntel AI", version="0.1.0", lifespan=lifespan)
@@ -388,7 +389,7 @@ def create_app(
         acquirer if acquirer is not None else synthetic_acquirer(root) if demo else HttpAcquirer()
     )
     if not demo:
-        app.state.acquisition_mode = getattr(app.state.acquirer.transport, "mode", "injected")
+        app.state.acquisition_mode = app.state.acquirer.mode
     if demo and app.state.provider.name != "fixture":
         raise ValueError("the synthetic demo requires fixture provider")
     app.include_router(router)

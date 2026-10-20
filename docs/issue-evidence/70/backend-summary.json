@@ -1,0 +1,17 @@
+{
+  "tested_commit": "f6cceb31da652fe290f000609271400c7938917d",
+  "execution": "local Python 3.12.14; authored fixtures, fake providers, real controlled HTTP/TLS, disposable SQLite/PostgreSQL; no paid calls",
+  "command": "TEST_DATABASE_URL=<disposable PostgreSQL> make check-postgres ARGS='--junitxml work/issue70/backend-final.xml'",
+  "exit_code": 0,
+  "counts": {
+    "tests": 900,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 900
+  },
+  "junit_sha256": "975e4b94b2128f3f16464d240c39b239b6d3eed76af8aafac10001118fd74087",
+  "quality": "Ruff/format/C901, ShellCheck, checksum-verified actionlint, docs links passed",
+  "release": "fixture drift, SQLite/PostgreSQL migrations, CLI demo/evaluation/exports, wheel/sdist, installed release API smoke passed",
+  "browser_local": "Full suite provisioning exceeded the 32 GiB vfs Docker filesystem before journeys. The same native UI02 workflow was then executed in both desktop/mobile projects using the existing acquisition/emulator fixtures and system Chromium 151: 2 passed, 0 failed/skipped. This partial run is supplemental, not full-suite evidence."
+}

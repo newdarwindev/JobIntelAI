@@ -74,7 +74,7 @@ jobs:
         with:
           path: local_data/models
           key: qwen25-15-f16-b6eaec3509f1d0373d1f4802654c4a7bfcde0768645d2d45e8885f6922b428ee
-      - name: Shared complete browser checks, recordings and publication parts
+      - name: Полный browser suite, libcurl capture, записи и части публикации
         id: publication
         run: make ui-check PYTHON=python
       - name: Remove recorded disposable leases on every outcome

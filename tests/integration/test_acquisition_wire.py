@@ -73,6 +73,7 @@ def test_v02_v06_v10_real_api_snapshot_attempt_and_tls_identity(wire_client, wir
     assert saved["attempts"][-1]["snapshot_id"] == saved["snapshot_id"]
     assert saved["attempts"][-1]["body_sha256"] and saved["attempts"][-1]["decompressed_bytes"] > 0
     assert http_requests(wire) - before == len(saved["attempts"])
+    assert not any(event.get("private_header") for event in wire["origin"].snapshot()["events"])
     assert wire_client.post("/jobs/fetched/extract", json={}).status_code == 200
     assert wire_client.post("/jobs/fetched/fetch").json()["snapshot_id"] == snapshot["id"]
     if scheme == "https":
@@ -118,6 +119,7 @@ def test_v04_v06_v07_real_failures_preserve_prior_run_and_recover(
     report = response.json()
     assert report["detail"]["code"] == code and report["detail"]["manual_fallback"]
     assert report["snapshot_id"] is None and len(report["attempts"]) == count
+    assert report["attempts"][-1]["http_status"] is not None
     assert http_requests(wire) - before == count
     assert wire_client.get("/jobs/fetched").json()["extraction"]["run_id"] == run
     assert row_counts(wire_client) == [1, 1, count]
@@ -194,6 +196,7 @@ def test_v03_v07_untrusted_tls_wrong_hostname_and_proxy_denial_send_no_origin_ht
     "policy,code",
     [
         (FetchPolicy(read_timeout=0.04, attempts=1), "read_timeout"),
+        (FetchPolicy(read_timeout=0.1, attempts=1), "read_timeout"),
         (FetchPolicy(read_timeout=1, total_timeout=0.08, attempts=1), "deadline"),
     ],
 )
@@ -204,6 +207,9 @@ def test_v05_real_slow_chunk_stream_respects_read_and_total_budget(wire_client, 
     started = time.monotonic()
     response = wire_client.post("/jobs/fetched/fetch")
     assert response.status_code == 504 and response.json()["detail"]["code"] == code
+    assert response.json()["attempts"][-1]["http_status"] in {None, 200}
+    if policy.read_timeout == 0.1:
+        assert response.json()["attempts"][-1]["http_status"] == 200
     assert time.monotonic() - started < 2 and row_counts(wire_client) == [0, 0, 1]
 
 
