@@ -93,33 +93,33 @@ API не аутентифицирован и работает только на 
 
 <!-- UI-RECORDINGS:START -->
 
-Successful browser attempts: **30/30**, recorded 2026-10-15.
-Source: [GitHub Actions run](https://github.com/newdarwindev/JobIntelAI/actions/runs/38727794951) · commit `aefc151fc1acbe15e7a09ee8b9db4f865f406271`.
-UI01–UI08 and UI12–UI15 use the explicit synthetic sandbox; UI12 delays real API responses for navigation races, UI13 verifies durable mutation recovery, UI14 demonstrates partial batch outcomes and safe continuation, and UI15 exercises bounded discovery and saved-history pages. UI09–UI11 use normal PostgreSQL APIs with fixture replay, a separate Responses emulator and actual local CPU inference. All inputs are authored; emulator results are contract evidence.
-Source content SHA-256: `08428f1651ed32c95b511669e49458604c9197c7db3b43b6f9666d82e2e6c18c`. [Machine-readable provenance](docs/ui-recordings/manifest.json).
+Успешные браузерные попытки: **30/30**, записано 2026-10-20.
+Источник: [Запуск GitHub Actions](https://github.com/newdarwindev/JobIntelAI/actions/runs/39441877552) · коммит `5384741088d5201efcd9fe63b3dcc75e2e4f6f43`.
+UI01–UI08 и UI12–UI15: синтетический sandbox; UI12 проверяет drafts при задержке реальных ответов, UI13 — durable mutation recovery, UI14 — частичные batches и безопасное продолжение, UI15 — поиск и постраничная история. UI09–UI11: PostgreSQL API, fixture, Responses emulator и реальная CPU inference. Ввод авторский; emulator подтверждает только контракт.
+SHA-256 исходного содержимого: `90ea58bd7c7d24a69f78da5537a307ae6140226d281f610d6e7e11a62b0d591c`. [Машинные данные происхождения](docs/ui-recordings/manifest.json).
 
-[Measured catalogue performance](docs/issue-evidence/47/catalogue-performance.md) · [Measurements JSON](docs/issue-evidence/47/catalogue-performance.json) · [Browser observations](docs/issue-evidence/47/catalogue-observations.json).
+[Измеренные исходы batches](docs/issue-evidence/41/batch-comparison.md) · [JSON наблюдений batches](docs/issue-evidence/41/batch-comparison.json).
 
-[Measured batch outcome comparison](docs/issue-evidence/41/batch-comparison.md) · [Batch observation JSON](docs/issue-evidence/41/batch-comparison.json).
+[Измеренное восстановление mutations](docs/issue-evidence/40/mutation-comparison.md) · [JSON наблюдений](docs/issue-evidence/40/mutation-comparison.json).
 
-[Measured mutation recovery comparison](docs/issue-evidence/40/mutation-comparison.md) · [Observation JSON](docs/issue-evidence/40/mutation-comparison.json).
+[Измерения каталогов](docs/issue-evidence/47/catalogue-performance.md) · [JSON измерений](docs/issue-evidence/47/catalogue-performance.json) · [JSON наблюдений UI15](docs/issue-evidence/47/catalogue-observations.json).
 
-| Complete workflow | Desktop Chromium | Mobile Chromium |
+| Полный сценарий | Desktop Chromium | Mobile Chromium |
 | --- | --- | --- |
-| UI01 · Atomic registry import and discovery | [Watch](docs/ui-recordings/UI01-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI01-mobile-chromium.webm) |
-| UI02 · Source capture, URL fallback and immutable history | [Watch](docs/ui-recordings/UI02-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI02-mobile-chromium.webm) |
-| UI03 · Grounded extraction, aliases and operators | [Watch](docs/ui-recordings/UI03-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI03-mobile-chromium.webm) |
-| UI04 · Candidate evidence and four matching states | [Watch](docs/ui-recordings/UI04-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI04-mobile-chromium.webm) |
-| UI05 · Corpus slices, gaps and safe provenance exports | [Watch](docs/ui-recordings/UI05-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI05-mobile-chromium.webm) |
-| UI06 · Fixture and source-reviewed evaluation diagnostics | [Watch](docs/ui-recordings/UI06-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI06-mobile-chromium.webm) |
-| UI07 · Provider and connection failure recovery | [Watch](docs/ui-recordings/UI07-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI07-mobile-chromium.webm) |
-| UI08 · Keyboard navigation, acquisition readiness, responsive layout and inert input | [Watch](docs/ui-recordings/UI08-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI08-mobile-chromium.webm) |
-| UI09 · Normal PostgreSQL fixture pipeline and unsupported-input recovery | [Watch](docs/ui-recordings/UI09-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI09-mobile-chromium.webm) |
-| UI10 · Normal PostgreSQL Responses contract pipeline and provider failure history | [Watch](docs/ui-recordings/UI10-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI10-mobile-chromium.webm) |
-| UI11 · Normal PostgreSQL CPU inference, measured evaluation and readiness recovery | [Watch](docs/ui-recordings/UI11-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI11-mobile-chromium.webm) |
-| UI12 · Scoped editor drafts, explicit discard and pending navigation | [Watch](docs/ui-recordings/UI12-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI12-mobile-chromium.webm) |
-| UI13 · Durable mutation identity, lost-response recovery and safe replay | [Watch](docs/ui-recordings/UI13-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI13-mobile-chromium.webm) |
-| UI14 · Partial corpus batches, retained outcomes and bounded continuation | [Watch](docs/ui-recordings/UI14-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI14-mobile-chromium.webm) |
-| UI15 · Bounded registry discovery and saved-history pagination | [Watch](docs/ui-recordings/UI15-desktop-chromium.webm) | [Watch](docs/ui-recordings/UI15-mobile-chromium.webm) |
+| UI01 · Атомарный импорт реестра и поиск | [Смотреть](docs/ui-recordings/UI01-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI01-mobile-chromium.webm) |
+| UI02 · Получение источника, ручное восстановление и история | [Смотреть](docs/ui-recordings/UI02-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI02-mobile-chromium.webm) |
+| UI03 · Извлечение с цитатами, aliases и операторы | [Смотреть](docs/ui-recordings/UI03-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI03-mobile-chromium.webm) |
+| UI04 · Свидетельства кандидата и четыре состояния matching | [Смотреть](docs/ui-recordings/UI04-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI04-mobile-chromium.webm) |
+| UI05 · Срезы корпуса, пробелы и безопасный экспорт | [Смотреть](docs/ui-recordings/UI05-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI05-mobile-chromium.webm) |
+| UI06 · Диагностика fixture и source-reviewed оценки | [Смотреть](docs/ui-recordings/UI06-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI06-mobile-chromium.webm) |
+| UI07 · Восстановление после provider/connection failure | [Смотреть](docs/ui-recordings/UI07-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI07-mobile-chromium.webm) |
+| UI08 · Клавиатура, readiness, адаптивность и безопасный ввод | [Смотреть](docs/ui-recordings/UI08-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI08-mobile-chromium.webm) |
+| UI09 · Обычный PostgreSQL fixture pipeline и неподдержанный ввод | [Смотреть](docs/ui-recordings/UI09-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI09-mobile-chromium.webm) |
+| UI10 · Обычный PostgreSQL Responses pipeline и история ошибок | [Смотреть](docs/ui-recordings/UI10-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI10-mobile-chromium.webm) |
+| UI11 · Обычный PostgreSQL CPU inference, оценка и восстановление | [Смотреть](docs/ui-recordings/UI11-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI11-mobile-chromium.webm) |
+| UI12 · Несохранённые drafts при навигации и поздних ответах | [Смотреть](docs/ui-recordings/UI12-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI12-mobile-chromium.webm) |
+| UI13 · Восстановление сохранённых mutations без повторного исполнения | [Смотреть](docs/ui-recordings/UI13-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI13-mobile-chromium.webm) |
+| UI14 · Частичные batches и ограниченное продолжение | [Смотреть](docs/ui-recordings/UI14-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI14-mobile-chromium.webm) |
+| UI15 · Ограниченный поиск и постраничная история | [Смотреть](docs/ui-recordings/UI15-desktop-chromium.webm) | [Смотреть](docs/ui-recordings/UI15-mobile-chromium.webm) |
 
 <!-- UI-RECORDINGS:END -->
