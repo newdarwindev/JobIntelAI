@@ -78,6 +78,16 @@ URL canonicalization сохраняет значимые query/path case/trailin
 
 ## 6. Acquisition и snapshots
 
+`Acquirer` предоставляет `fetch(url) -> FetchResult`, `readiness()` и `mode`; API не
+обращается к внутреннему transport. PycURL/libcurl управляет HTTP/TLS/CONNECT и
+временем жизни соединения. Application policy сохраняет DNS/route admission, redirects,
+retries, общий deadline и строгую проверку content. Автоматические redirects и content
+decoding libcurl отключены; bounded wire buffer не превышает `FetchPolicy.max_bytes`.
+Multi polling проверяет read inactivity до миллисекунд, включая поддерживаемую границу
+0,001 секунды. Gateway RPC также использует libcurl с отдельным 4096-byte limit и
+общим DNS/transfer deadline. Решения о cleaner/gateway и измеренное сокращение — в
+[отчёте замены](issue-evidence/70/acquisition.md).
+
 Ручной text/HTML ограничен 200 000 символами. HTTP принимает credential-free HTTP(S)
 со стандартными портами, валидным IDNA host и без control/whitespace в URL.
 Каждый hop/retry заново проверяет весь DNS answer: private, loopback, link-local,

@@ -1,6 +1,7 @@
 """Bounded acquisition policy and safe outcome types; no upstream error text."""
 
 from dataclasses import dataclass, field
+from typing import Protocol
 
 MESSAGES = {
     "invalid_url": "URL must be credential-free HTTP(S) on a standard port.",
@@ -33,8 +34,9 @@ MESSAGES = {
 
 
 class FetchError(RuntimeError):
-    def __init__(self, code, status=502, retryable=False):
+    def __init__(self, code, status=502, retryable=False, *, http_status=None):
         self.code, self.status, self.retryable = code, status, retryable
+        self.http_status = http_status
         super().__init__(MESSAGES[code])
 
     def detail(self):
@@ -82,3 +84,12 @@ class FetchResult:
     text: str | None = None
     is_html: bool = False
     error: FetchError | None = None
+
+
+class Acquirer(Protocol):
+    @property
+    def mode(self) -> str: ...
+
+    def fetch(self, url: str) -> FetchResult: ...
+
+    def readiness(self) -> dict: ...

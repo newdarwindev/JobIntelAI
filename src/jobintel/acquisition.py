@@ -74,9 +74,13 @@ class HttpAcquirer:
         return result
 
     def readiness(self):
-        if isinstance(self.transport, HttpTransport):
+        if hasattr(self.transport, "readiness"):
             return self.transport.readiness()
         return {"ready": True, "mode": "injected", "destination_check": "per-request"}
+
+    @property
+    def mode(self):
+        return getattr(self.transport, "mode", "injected")
 
     def walk(self, result, current, deadline):
         visited = {current}
@@ -148,6 +152,7 @@ class HttpAcquirer:
                 event.update(status="success", **metadata)
                 return None
         except FetchError as error:
+            event["http_status"] = event["http_status"] or error.http_status
             if self.clock() >= deadline:
                 error = FetchError("deadline", 504, True)
             event.update(status="failed", error_code=error.code, retryable=error.retryable)

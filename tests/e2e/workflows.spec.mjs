@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
+import {spawnSync} from 'node:child_process';
 const data = async path => readFile(new URL(`../../data/${path}`,import.meta.url),'utf8');
 const source = id => data(`sample_jobs/${id}.txt`);
 const candidate = async () => JSON.parse(await data('sample_candidate.json'));
@@ -45,6 +46,7 @@ test('UI01 | Atomic registry import and discovery',async({page,request})=>{
 });
 
 test('UI02 | Source capture, URL fallback and immutable history',async({page,request})=>{
+  test.setTimeout(150000);
   await importSample(page);await inspect(page,'SYN-01');
   await click(page,'Extract requirements');await expect(notice(page)).toContainText('409:');
   await page.getByLabel('Source format').selectOption('html');
@@ -72,8 +74,36 @@ test('UI02 | Source capture, URL fallback and immutable history',async({page,req
   const diagnostics=await (await request.get('/acquisition-fixture-diagnostics')).json();
   expect(diagnostics.origin.events.some(e=>e.kind==='tls'&&e.hostname==='example.com')).toBeTruthy();
   expect(diagnostics.origin.events.some(e=>e.scenario==='/authored-final'&&e.tls&&e.authority==='example.com')).toBeTruthy();
+  expect(diagnostics.origin.events.filter(e=>e.kind==='http').every(e=>e.private_header===false)).toBeTruthy();
   expect(diagnostics.proxy.events.some(e=>e.method==='CONNECT'&&e.pin==='93.184.216.34'&&e.disposition==='forwarded')).toBeTruthy();
   expect(await page.evaluate(()=>window.__fetched)).toBeUndefined();
+  await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
+  await click(page,'Try URL acquisition');await expect(notice(page)).toContainText('URL source saved');
+  const repeated=await (await request.get('/jobs/UI-URL')).json();
+  expect(repeated.snapshot.id).toBe(fetched.snapshot.id);expect(repeated.extraction.run_id).toBeTruthy();
+  const fixtureProject=process.env.UI_FIXTURE_PROJECT;
+  expect(fixtureProject).toMatch(/^jobintel-acquisition-[a-f0-9]{12}$/);
+  const proxyContainer=fixtureProject+'-proxy-1';
+  const beforePause=await (await request.get('/acquisition-fixture-diagnostics')).json();
+  expect(spawnSync('docker',['pause',proxyContainer],{encoding:'utf8'}).status).toBe(0);
+  try{
+    const unavailable=await request.get('/health');expect(unavailable.status()).toBe(503);
+    expect((await unavailable.json()).acquisition).toMatchObject({ready:false,error:{code:'proxy_capability'}});
+    await page.getByLabel('Posting source').fill('Authored unsaved gateway recovery text.');
+    await click(page,'Try URL acquisition');await expect(notice(page)).toContainText('503:');
+    await expect(page.getByLabel('Posting source')).toHaveValue('Authored unsaved gateway recovery text.');
+    expect((await (await request.get('/jobs/UI-URL')).json()).extraction.run_id).toBe(repeated.extraction.run_id);
+    await page.getByText(/URL acquisition history/).click();await expect(page.locator('#acquisition-history')).toContainText('proxy_capability');
+    await page.getByLabel('Posting source').fill(text);await click(page,'Save immutable snapshot');await click(page,'Extract requirements');
+    await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
+    const manualHistory=await (await request.get('/jobs/UI-URL/history')).json();
+    expect(manualHistory.snapshots.flatMap(s=>s.runs).map(r=>r.run_id)).toContain(repeated.extraction.run_id);
+  }finally{expect(spawnSync('docker',['unpause',proxyContainer],{encoding:'utf8'}).status).toBe(0);}
+  await expect.poll(async()=> (await (await request.get('/health')).json()).acquisition.ready).toBe(true);
+  const afterPause=await (await request.get('/acquisition-fixture-diagnostics')).json();
+  const originRequests=diagnostic=>diagnostic.origin.events.filter(e=>e.kind==='http').length;
+  expect(originRequests(afterPause)).toBe(originRequests(beforePause));
+  await click(page,'Try URL acquisition');await expect(notice(page)).toContainText('URL source saved');
   await click(page,'Extract requirements');await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
   for(const [id,path] of [['UI-DENIED','authored-denied'],['UI-JS','authored-js']]){
     await nav(page,'Job registry');await page.getByLabel('Import format').selectOption('json');await page.getByLabel('Registry content').fill(JSON.stringify([{job_id:id,company:`Authored ${id}`,role:'Acquisition recovery',official_url:`https://example.com/${path}`} ]));await click(page,'Import registry');

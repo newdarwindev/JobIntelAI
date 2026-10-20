@@ -48,6 +48,12 @@
         "доверенный policy-proxy с DNS и одноразовыми pins",
         "проверенный scoped test CA",
         "общий owned Compose lease, обнаруженные loopback-порты и ограниченная очистка"
+      ],
+      "transport_checks": [
+        "libcurl: исходная TLS identity и single-use gateway pin",
+        "origin без lease/cookie/authorization/referrer headers",
+        "повторное acquisition сохраняет snapshot/extraction IDs",
+        "owned gateway pause: actual 503, ноль origin HTTP, manual recovery и URL capture после resume"
       ]
     },
     {

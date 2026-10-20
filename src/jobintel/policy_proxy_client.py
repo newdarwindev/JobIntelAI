@@ -1,13 +1,12 @@
 """A declared trusted proxy resolves destinations; ordinary proxies fail closed."""
 
-import http.client
 import json
 import re
-import socket
-import threading
 import time
 from dataclasses import replace
 from urllib.parse import urlsplit
+
+import pycurl
 
 from jobintel.egress_policy import CAPABILITIES, CAPABILITY_PATH, RESOLVE_PATH
 from jobintel.fetch_destinations import DNSResolver, resolve_destination
@@ -22,13 +21,6 @@ class PinResolver:
         return [self.address]
 
 
-def expire(sock):
-    try:
-        sock.shutdown(socket.SHUT_RDWR)
-    except OSError:
-        pass
-
-
 def rpc(proxy, path, timeout, *, payload=None, proxy_resolver=None):
     started = time.monotonic()
     resolver = proxy_resolver or DNSResolver()
@@ -36,40 +28,39 @@ def rpc(proxy, path, timeout, *, payload=None, proxy_resolver=None):
     budget = timeout - (time.monotonic() - started)
     if budget <= 0:
         raise FetchError("proxy_capability", 503)
-    connection = http.client.HTTPConnection(addresses[0], proxy[1], timeout=budget)
-    guard = None
+    host = f"[{addresses[0]}]" if ":" in addresses[0] else addresses[0]
+    body = bytearray()
+
+    def receive(part):
+        if len(body) + len(part) > 4096:
+            return 0
+        body.extend(part)
+        return len(part)
+
     try:
-        connection.connect()
-        budget = timeout - (time.monotonic() - started)
-        if budget <= 0:
-            raise FetchError("proxy_capability", 503)
-        guard = threading.Timer(budget, expire, args=(connection.sock,))
-        guard.daemon = True
-        guard.start()
-        connection.request(
-            "GET" if payload is None else "POST",
-            path,
-            body=json.dumps(payload) if payload is not None else None,
-            headers={"Content-Type": "application/json", "Host": f"{proxy[0]}:{proxy[1]}"},
-        )
-        response = connection.getresponse()
-        data = response.read(4097)
-        if len(data) > 4096:
-            raise FetchError("proxy_capability", 503)
-        value = json.loads(data)
-        if response.status != 200:
+        with pycurl.Curl() as curl:
+            curl.setopt(pycurl.URL, f"http://{host}:{proxy[1]}{path}")
+            curl.setopt(pycurl.PROXY, "")  # This is the selected gateway, never an origin route.
+            curl.setopt(pycurl.TIMEOUT_MS, max(1, int(budget * 1000)))
+            curl.setopt(
+                pycurl.HTTPHEADER,
+                ["Content-Type: application/json", f"Host: {proxy[0]}:{proxy[1]}"],
+            )
+            curl.setopt(pycurl.WRITEFUNCTION, receive)
+            if payload is not None:
+                curl.setopt(pycurl.POSTFIELDS, json.dumps(payload))
+            curl.perform()
+            status = curl.getinfo(pycurl.RESPONSE_CODE)
+        value = json.loads(body)
+        if status != 200:
             return rpc_failure(value)
         if not isinstance(value, dict):
             raise FetchError("proxy_capability", 503)
         return value
     except FetchError:
         raise
-    except (OSError, ValueError, http.client.HTTPException):
+    except (ValueError, pycurl.error):
         raise FetchError("proxy_capability", 503) from None
-    finally:
-        if guard:
-            guard.cancel()
-        connection.close()
 
 
 def rpc_failure(value):

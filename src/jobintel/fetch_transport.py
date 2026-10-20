@@ -1,16 +1,18 @@
-"""Pinned HTTP connections; proxy refusals never cause a direct fallback."""
+"""libcurl owns HTTP/TLS/CONNECT; policy owns destinations, budgets and outcomes."""
 
-import http.client
+import io
 import ipaddress
+import math
 import os
-import socket
 import ssl
-import threading
 import time
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit
 from urllib.request import getproxies, proxy_bypass_environment
 
+import pycurl
+
 from jobintel.egress_policy import ROUTE_HEADER
+from jobintel.fetch_content import remaining_budget
 from jobintel.fetch_destinations import Destination, DNSResolver, resolve_destination
 from jobintel.fetch_types import FetchError
 from jobintel.policy_proxy_client import capability, policy_destination, rpc_failure
@@ -32,140 +34,106 @@ def configured_proxy(destination, proxies):
         or not parsed.hostname
         or parsed.username is not None
         or parsed.password is not None
+        or parsed.path not in {"", "/"}
+        or parsed.query
+        or parsed.fragment
     ):
-        raise FetchError("proxy_unsupported")
-    if parsed.path not in {"", "/"} or parsed.query or parsed.fragment:
         raise FetchError("proxy_unsupported")
     return parsed.hostname, port
 
 
-class PinnedConnection(http.client.HTTPConnection):
-    def __init__(self, destination, policy, remaining, proxy, context, proxy_resolver=None):
-        super().__init__(
-            destination.host, destination.port, timeout=min(policy.connect_timeout, remaining)
-        )
-        self.destination, self.proxy, self.context = destination, proxy, context
-        self.proxy_resolver = proxy_resolver or DNSResolver()
-        self.remaining, self.guard = remaining, None
+class CurlResponse(io.BytesIO):
+    """Bounded wire buffer; libcurl removes chunk framing, never content encoding."""
 
-    def expire(self):
-        try:
-            if self.sock:
-                self.sock.shutdown(socket.SHUT_RDWR)
-        except OSError:
-            pass
+    def __init__(self, policy, peer):
+        super().__init__()
+        self.policy, self.peer = policy, ipaddress.ip_address(peer)
+        self.status, self.headers, self.error = 0, {}, None
+        self.activity = None
 
-    def connect(self):
-        started = time.monotonic()
-        target = self.connection_target()
-        budget = self.remaining - (time.monotonic() - started)
-        if budget <= 0:
-            raise FetchError("deadline", 504, True)
-        self.sock = socket.create_connection(target, min(self.timeout, budget))
-        if not self.proxy and ipaddress.ip_address(
-            self.sock.getpeername()[0]
-        ) != ipaddress.ip_address(self.destination.address):
-            self.close()
-            raise FetchError("blocked_destination", 422)
-        self.guard = threading.Timer(
-            max(0, self.remaining - (time.monotonic() - started)), self.expire
-        )
-        self.guard.daemon = True
-        self.guard.start()
-        if self.proxy and self.destination.scheme == "https":
-            try:
-                self.tunnel()
-            except TimeoutError:
-                raise
-            except OSError:
-                raise FetchError("proxy_denied") from None
-        if self.destination.scheme == "https":
-            self.sock = self.context.wrap_socket(
-                self.sock, server_hostname=self.destination.host, do_handshake_on_connect=False
-            )
-            self.sock.do_handshake()
+    def prerequest(self, remote, *_):
+        if ipaddress.ip_address(remote) != self.peer:
+            self.error = FetchError("blocked_destination", 422)
+            return pycurl.PREREQFUNC_ABORT
+        self.status, self.headers = 0, {}
+        self.activity = time.monotonic()
+        return pycurl.PREREQFUNC_OK
 
-    def connection_target(self):
-        if not self.proxy:
-            return self.destination.address, self.destination.port
-        addresses = self.proxy_resolver.resolve(*self.proxy, self.timeout)
-        return str(ipaddress.ip_address(addresses[0])), self.proxy[1]
+    def header(self, line):
+        if self.activity is not None:
+            self.activity = time.monotonic()
+        if line.startswith(b"HTTP/"):
+            self.status, self.headers = int(line.split()[1]), {}
+        elif b":" in line:
+            key, value = line.decode("iso-8859-1").split(":", 1)
+            self.headers[key.lower()] = value.strip()
+        return len(line)
 
-    def tunnel(self):
-        authority = (
-            f"{self.destination.authority}:443"
-            if self.destination.route
-            else self.destination.pinned_authority
-        )
-        route = f"{ROUTE_HEADER}: {self.destination.route}\r\n" if self.destination.route else ""
-        self.sock.sendall(
-            f"CONNECT {authority} HTTP/1.1\r\nHost: {authority}\r\n{route}\r\n".encode("ascii")
-        )
-        response = http.client.HTTPResponse(self.sock, method="CONNECT")
-        try:
-            response.begin()
-            if response.status != 200:
-                if self.destination.route:
-                    rpc_failure({"code": response.getheader("JobIntel-Egress-Error")})
-                raise FetchError("proxy_denied")
-        finally:
-            response.close()
-
-    def close(self):
-        if self.guard:
-            self.guard.cancel()
-        super().close()
-
-
-class TransportResponse:
-    def __init__(self, connection, response, sock, remaining):
-        self.connection, self.response, self.sock = connection, response, sock
-        self.status = response.status
-        self.headers = {key.lower(): value for key, value in response.getheaders()}
-        self.guard = threading.Timer(max(0, remaining), self.expire)
-        self.guard.daemon = True
-        self.guard.start()
-
-    def expire(self):
-        try:
-            self.sock.shutdown(socket.SHUT_RDWR)
-        except OSError:
-            pass
+    def receive(self, data):
+        self.activity = time.monotonic()
+        if self.status != 200:
+            return 0  # Orchestration inspects status/redirects without consuming failure bodies.
+        if self.tell() + len(data) > self.policy.max_bytes:
+            self.error = FetchError("body_too_large", 413)
+            return 0
+        return self.write(data)
 
     def read(self, size, timeout):
-        if self.response.isclosed():
-            return b""
-        try:
-            self.sock.settimeout(timeout)
-            return self.response.read1(size)
-        except TimeoutError:
-            raise FetchError("read_timeout", 504, True) from None
-        except ssl.SSLError:
-            raise FetchError("tls_error") from None
-        except (OSError, http.client.HTTPException):
-            raise FetchError("network_failure", 502, True) from None
+        return super().read(size)
 
-    def __enter__(self):
-        return self
 
-    def __exit__(self, *_):
-        self.guard.cancel()
-        self.response.close()
-        self.connection.close()
+def transfer(curl, response, deadline):
+    """Multi polling preserves millisecond inactivity bounds without socket/timer owners."""
+    multi = pycurl.CurlMulti()
+    multi.add_handle(curl)
+    try:
+        while True:
+            _, running = multi.perform()
+            budget = remaining_budget(deadline, time.monotonic)
+            if response.error:
+                raise response.error
+            if not running:
+                break
+            if response.activity is not None:
+                idle = response.policy.read_timeout - (time.monotonic() - response.activity)
+                if idle <= 0:
+                    raise FetchError("read_timeout", 504, True)
+                budget = min(budget, idle)
+            multi.select(min(budget, 0.05))
+        _, _, failures = multi.info_read()
+        if failures:
+            curl_failure(curl, response, failures[0][1])
+    finally:
+        multi.remove_handle(curl)
+        multi.close()
+
+
+def curl_failure(curl, response, code):
+    if code == pycurl.E_WRITE_ERROR and response.status not in {0, 200}:
+        return
+    if code == pycurl.E_OPERATION_TIMEDOUT:
+        raise FetchError("connect_timeout", 504, True)
+    if code in {pycurl.E_PEER_FAILED_VERIFICATION, pycurl.E_SSL_CONNECT_ERROR}:
+        raise FetchError("tls_error")
+    if curl.getinfo(pycurl.HTTP_CONNECTCODE) not in {0, 200}:
+        raise FetchError("proxy_denied")
+    raise FetchError("network_failure", 502, True)
 
 
 class HttpTransport:
     def __init__(self, *, proxies=None, context=None, proxy_resolver=None, mode=None):
-        self.proxies = proxies
-        self.proxy_resolver = proxy_resolver
+        self.proxies, self.proxy_resolver = proxies, proxy_resolver or DNSResolver()
         self.mode = mode or os.getenv("JOBINTEL_ACQUISITION_MODE", "auto")
         if self.mode not in {"auto", "direct", "pinned-proxy", "policy-proxy"}:
             raise ValueError("unsupported JOBINTEL_ACQUISITION_MODE")
-        self.context = context or ssl.create_default_context()
-        if context is None and os.getenv("JOBINTEL_ACQUISITION_CA_FILE"):
-            self.context.load_verify_locations(os.environ["JOBINTEL_ACQUISITION_CA_FILE"])
-        if not self.context.check_hostname or self.context.verify_mode != ssl.CERT_REQUIRED:
+        context = context or ssl.create_default_context()
+        if os.getenv("JOBINTEL_ACQUISITION_CA_FILE"):
+            context.load_verify_locations(os.environ["JOBINTEL_ACQUISITION_CA_FILE"])
+        if not context.check_hostname or context.verify_mode != ssl.CERT_REQUIRED:
             raise ValueError("acquisition requires verified TLS")
+        self.ca = "".join(
+            ssl.DER_cert_to_PEM_cert(c) for c in context.get_ca_certs(binary_form=True)
+        )
 
     def selected_proxy(self, destination):
         proxies = getproxies() if self.proxies is None else self.proxies
@@ -177,15 +145,7 @@ class HttpTransport:
         return proxy
 
     def resolve(self, url, resolver, timeout):
-        # Inspect routing before destination DNS; unsupported modes fail before origin traffic.
-        parsed = urlsplit(url)
-        hint = Destination(
-            url,
-            parsed.hostname,
-            parsed.port or (443 if parsed.scheme == "https" else 80),
-            "",
-            parsed.scheme,
-        )
+        hint = self.hint(urlsplit(url).scheme, url)
         proxy = self.selected_proxy(hint)
         if self.mode == "policy-proxy":
             if hint.port != (443 if hint.scheme == "https" else 80):
@@ -193,17 +153,21 @@ class HttpTransport:
             return policy_destination(url, proxy, timeout, self.proxy_resolver)
         return resolve_destination(url, resolver, timeout)
 
+    @staticmethod
+    def hint(scheme, url=None):
+        parsed = urlsplit(url or f"{scheme}://readiness.invalid/")
+        return Destination(
+            parsed.geturl(),
+            parsed.hostname,
+            parsed.port or (443 if scheme == "https" else 80),
+            "",
+            scheme,
+        )
+
     def readiness(self):
         try:
             for scheme in ("http", "https"):
-                hint = Destination(
-                    f"{scheme}://readiness.invalid/",
-                    "readiness.invalid",
-                    443 if scheme == "https" else 80,
-                    "",
-                    scheme,
-                )
-                proxy = self.selected_proxy(hint)
+                proxy = self.selected_proxy(self.hint(scheme))
                 if self.mode == "policy-proxy":
                     capability(proxy, 3, self.proxy_resolver)
             return {
@@ -215,75 +179,94 @@ class HttpTransport:
         except FetchError as error:
             return {"ready": False, "mode": self.mode, "error": error.detail()}
 
-    def get(self, destination, policy, remaining):
-        started = time.monotonic()
-        proxy = self.selected_proxy(destination)
-        if (self.mode == "policy-proxy") != bool(destination.route):
-            raise FetchError("proxy_capability", 503)
-        if destination.route and proxy != destination.proxy:
-            raise FetchError("proxy_capability", 503)
-        connection = PinnedConnection(
-            destination, policy, remaining, proxy, self.context, self.proxy_resolver
-        )
-        try:
-            self.connect(connection)
-            sock = connection.sock
-            sock.settimeout(min(policy.read_timeout, remaining))
-            parsed = urlsplit(destination.url)
-            target = urlunsplit(("", "", parsed.path, parsed.query, ""))
-            if proxy and destination.scheme == "http":
-                target = urlunsplit(
-                    (
-                        "http",
-                        destination.authority
-                        if destination.route
-                        else destination.pinned_authority,
-                        parsed.path,
-                        parsed.query,
-                        "",
-                    )
-                )
-            route = {ROUTE_HEADER: destination.route} if destination.route else {}
-            connection.request(
-                "GET",
-                target,
-                headers={
-                    "Host": destination.authority,
-                    "User-Agent": "JobIntelAI/0.1",
-                    "Accept": "text/html, text/plain, application/xhtml+xml",
-                    "Accept-Encoding": "gzip, deflate",
-                    "Connection": "close",
-                    **(route if destination.scheme == "http" else {}),
-                },
-            )
-            response = connection.getresponse()
-            if (
-                destination.route
-                and destination.scheme == "http"
-                and response.getheader("JobIntel-Egress-Error")
-            ):
-                rpc_failure({"code": response.getheader("JobIntel-Egress-Error")})
-            return TransportResponse(
-                connection, response, sock, remaining - (time.monotonic() - started)
-            )
-        except FetchError:
-            connection.close()
-            raise
-        except TimeoutError:
-            connection.close()
-            raise FetchError("read_timeout", 504, True) from None
-        except ssl.SSLError:
-            connection.close()
-            raise FetchError("tls_error") from None
-        except (OSError, http.client.HTTPException):
-            connection.close()
-            raise FetchError("network_failure", 502, True) from None
+    def options(self, curl, destination, policy, deadline, proxy, response):
+        headers = [
+            f"Host: {destination.authority}",
+            "User-Agent: JobIntelAI/0.1",
+            "Accept: text/html, text/plain, application/xhtml+xml",
+            "Accept-Encoding: gzip, deflate",
+            "Connection: close",
+        ]
+        options = {
+            pycurl.URL: destination.url,
+            pycurl.PROXY: "",
+            pycurl.NOPROXY: "",
+            pycurl.FOLLOWLOCATION: 0,
+            pycurl.HTTP_CONTENT_DECODING: 0,
+            pycurl.HTTP_VERSION: pycurl.CURL_HTTP_VERSION_1_1,
+            pycurl.SSL_VERIFYPEER: 1,
+            pycurl.SSL_VERIFYHOST: 2,
+            pycurl.CAINFO_BLOB: self.ca,
+            pycurl.CONNECTTIMEOUT_MS: max(
+                1,
+                math.ceil(
+                    min(policy.connect_timeout, remaining_budget(deadline, time.monotonic)) * 1000
+                ),
+            ),
+            pycurl.PREREQFUNCTION: response.prerequest,
+            pycurl.HEADERFUNCTION: response.header,
+            pycurl.WRITEFUNCTION: response.receive,
+        }
+        if proxy:
+            self.proxy_options(options, headers, destination, response, proxy)
+        else:
+            options[pycurl.RESOLVE] = [
+                f"{destination.host}:{destination.port}:{destination.pinned_authority.rsplit(':', 1)[0]}"
+            ]
+        options[pycurl.HTTPHEADER] = headers
+        for key, value in options.items():
+            curl.setopt(key, value)
 
     @staticmethod
-    def connect(connection):
-        try:
-            connection.connect()
-        except TimeoutError:
-            raise FetchError("connect_timeout", 504, True) from None
-        except ssl.SSLError:
-            raise FetchError("tls_error") from None
+    def proxy_options(options, headers, destination, response, proxy):
+        address = f"[{response.peer}]" if response.peer.version == 6 else str(response.peer)
+        options[pycurl.PROXY] = f"http://{address}:{proxy[1]}"
+        if destination.route:
+            route = f"{ROUTE_HEADER}: {destination.route}"
+            if destination.scheme == "https":
+                options[pycurl.PROXYHEADER] = [route]
+            else:
+                headers.append(route)
+        elif destination.scheme == "https":
+            options[pycurl.CONNECT_TO] = [
+                f"{destination.host}:{destination.port}:{destination.pinned_authority}"
+            ]
+        else:
+            parsed = urlsplit(destination.url)
+            target = f"http://{destination.pinned_authority}{parsed.path or '/'}"
+            options[pycurl.URL] = target + (f"?{parsed.query}" if parsed.query else "")
+            options[pycurl.REQUEST_TARGET] = options[pycurl.URL]
+
+    def get(self, destination, policy, remaining):
+        deadline = time.monotonic() + remaining
+        proxy = self.selected_proxy(destination)
+        if (self.mode == "policy-proxy") != bool(destination.route) or (
+            destination.route and proxy != destination.proxy
+        ):
+            raise FetchError("proxy_capability", 503)
+        peer = (
+            self.proxy_resolver.resolve(*proxy, min(policy.connect_timeout, remaining))[0]
+            if proxy
+            else destination.address
+        )
+        response = CurlResponse(policy, peer)
+        with pycurl.Curl() as curl:
+            self.options(curl, destination, policy, deadline, proxy, response)
+            try:
+                transfer(curl, response, deadline)
+            except FetchError as error:
+                response.close()
+                if destination.route and curl.getinfo(pycurl.HTTP_CONNECTCODE) not in {0, 200}:
+                    rpc_failure({"code": response.headers.get("jobintel-egress-error")})
+                if response.activity is not None:
+                    error.http_status = response.status or None
+                raise
+        if (
+            destination.route
+            and destination.scheme == "http"
+            and response.headers.get("jobintel-egress-error")
+        ):
+            response.close()
+            rpc_failure({"code": response.headers["jobintel-egress-error"]})
+        response.seek(0)
+        return response

@@ -1,0 +1,164 @@
+{
+  "baseline_commit": "e9d9cdab52658f6db4da18fb12570c5b9bbee3f8",
+  "measurement": "Physical lines include blanks/comments; branches count If/For/While/ExceptHandler/IfExp/comprehension AST nodes. Tests/docs/build outputs excluded. api.py included to account for interface integration.",
+  "python": "3.12.14",
+  "transport": "PycURL/7.48.0 libcurl/8.22.0 OpenSSL/3.6.4 zlib/1.3.1 brotli/1.2.0 libpsl/0.21.5 libssh2/1.11.1_DEV nghttp2/1.70.0 ngtcp2/1.25.0 nghttp3/1.18.0 mit-krb5/1.22.2",
+  "files": [
+    {
+      "file": "src/jobintel/fetch_transport.py",
+      "before": {
+        "lines": 289,
+        "branches": 51,
+        "sha256": "967094bf8a6c3491bed5426f4fbcf4bc6df6f1368c5074ba14a5f5e693fd8280"
+      },
+      "after": {
+        "lines": 272,
+        "branches": 46,
+        "sha256": "8961c058ffdff396dece8a6f9e12fd473f6065974a3b66a2c1f62e1c6f842586"
+      }
+    },
+    {
+      "file": "src/jobintel/fetch_destinations.py",
+      "before": {
+        "lines": 132,
+        "branches": 26,
+        "sha256": "442534ad7acbc8b31f561f625112c0b551a7fa41787856bbc94a0fd363984152"
+      },
+      "after": {
+        "lines": 132,
+        "branches": 26,
+        "sha256": "442534ad7acbc8b31f561f625112c0b551a7fa41787856bbc94a0fd363984152"
+      }
+    },
+    {
+      "file": "src/jobintel/egress_proxy.py",
+      "before": {
+        "lines": 202,
+        "branches": 27,
+        "sha256": "9a184da2a44db91b25605f5c677360d4e48a30b85cdc0cbb51b9117bcdb67039"
+      },
+      "after": {
+        "lines": 202,
+        "branches": 27,
+        "sha256": "9a184da2a44db91b25605f5c677360d4e48a30b85cdc0cbb51b9117bcdb67039"
+      }
+    },
+    {
+      "file": "src/jobintel/egress_policy.py",
+      "before": {
+        "lines": 77,
+        "branches": 10,
+        "sha256": "0dc9ce31f04c15e982233056d92c6731d6cb80b93b3f2eaa86f703f1f8708fbc"
+      },
+      "after": {
+        "lines": 77,
+        "branches": 10,
+        "sha256": "0dc9ce31f04c15e982233056d92c6731d6cb80b93b3f2eaa86f703f1f8708fbc"
+      }
+    },
+    {
+      "file": "src/jobintel/policy_proxy_client.py",
+      "before": {
+        "lines": 114,
+        "branches": 17,
+        "sha256": "ea604507f97255670b2122db3b99f7e05ae582f5fc528c40ffaf1a88ef63c447"
+      },
+      "after": {
+        "lines": 105,
+        "branches": 14,
+        "sha256": "c4c789f9543b1152c2874262f8a6fc6e7b2eeeebc5a98a201bdbb39bb5923096"
+      }
+    },
+    {
+      "file": "src/jobintel/fetch_content.py",
+      "before": {
+        "lines": 131,
+        "branches": 26,
+        "sha256": "bc3ba27d71fc307edf074558af0a446664f38bd186e861199c6fbd23746d8ac2"
+      },
+      "after": {
+        "lines": 131,
+        "branches": 26,
+        "sha256": "bc3ba27d71fc307edf074558af0a446664f38bd186e861199c6fbd23746d8ac2"
+      }
+    },
+    {
+      "file": "src/jobintel/acquisition.py",
+      "before": {
+        "lines": 163,
+        "branches": 28,
+        "sha256": "1eb4194774420ba93c04aaef5235543ff9aadb15902f9f071d023cd928bfb812"
+      },
+      "after": {
+        "lines": 168,
+        "branches": 28,
+        "sha256": "ac5e2def3dcef9a729f7c8b3d39174eb5d147861f82089d807bc135f911cb27e"
+      }
+    },
+    {
+      "file": "src/jobintel/fetch_types.py",
+      "before": {
+        "lines": 84,
+        "branches": 4,
+        "sha256": "ac1f57b0e9ebc2b5f46171a54f63bc93da3231f7c1f7a537945f47397d3a17aa"
+      },
+      "after": {
+        "lines": 95,
+        "branches": 4,
+        "sha256": "3496e575c6709d3f5d0e1cb6e0c1a3a270dcfb5e8973eba26ad9c76aa0d7dd7d"
+      }
+    },
+    {
+      "file": "src/jobintel/acquisition_service.py",
+      "before": {
+        "lines": 122,
+        "branches": 15,
+        "sha256": "27421b99f72fb32d90687b1db953dbbefcf69a945ff686ba4318aa41524f13dd"
+      },
+      "after": {
+        "lines": 122,
+        "branches": 15,
+        "sha256": "27421b99f72fb32d90687b1db953dbbefcf69a945ff686ba4318aa41524f13dd"
+      }
+    },
+    {
+      "file": "src/jobintel/snapshots.py",
+      "before": {
+        "lines": 89,
+        "branches": 17,
+        "sha256": "b60396ef1542aaed5928860bc68bd4e50a5ca25d5f40e83fd8936523a90603f1"
+      },
+      "after": {
+        "lines": 89,
+        "branches": 17,
+        "sha256": "b60396ef1542aaed5928860bc68bd4e50a5ca25d5f40e83fd8936523a90603f1"
+      }
+    },
+    {
+      "file": "src/jobintel/api.py",
+      "before": {
+        "lines": 330,
+        "branches": 26,
+        "sha256": "838160dc0ce2e4d005c497c7df544c7ba1b8433a7e7925fb755d36d22c8cd665"
+      },
+      "after": {
+        "lines": 331,
+        "branches": 26,
+        "sha256": "3781f09d62a36b9cbd13646aec5b8f2bca96a94eccdc5106225d3b5e3b3cb4d0"
+      }
+    }
+  ],
+  "totals": {
+    "before": {
+      "lines": 1733,
+      "branches": 247
+    },
+    "after": {
+      "lines": 1724,
+      "branches": 239
+    }
+  },
+  "wheel_sha256": {
+    "pycurl-7.48.0-cp312-cp312-manylinux_2_28_x86_64.whl": "8a5b168d41eea2cf69c522967f5520e8490e117cd217fb8d6e7d7544c81ea51c"
+  }
+}

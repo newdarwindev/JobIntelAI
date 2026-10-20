@@ -13,7 +13,17 @@ from jobintel.fetch_transport import HttpTransport
 from jobintel.fetch_types import FetchError
 from jobintel.policy_proxy_client import capability, policy_destination
 from tests.acquisition_fakes import PUBLIC, URL, Resolver
-from tests.unit.test_fetch_transport import WireSocket
+
+
+class WireSocket:
+    def __init__(self, peer):
+        self.peer, self.closed, self.sent = peer, False, []
+
+    def getpeername(self):
+        return self.peer, 443
+
+    def close(self):
+        self.closed = True
 
 
 @pytest.mark.parametrize(
@@ -149,8 +159,9 @@ def test_scoped_ca_preserves_default_trust_and_tls_verification(monkeypatch):
     monkeypatch.setattr("jobintel.fetch_transport.ssl.create_default_context", lambda: context)
     monkeypatch.setattr(context, "load_verify_locations", lambda filename: loaded.append(filename))
     transport = HttpTransport()
-    assert loaded == ["/authored/ca.pem"] and transport.context.check_hostname
-    assert transport.context.verify_mode == ssl.CERT_REQUIRED
+    assert loaded == ["/authored/ca.pem"]
+    expected = "".join(ssl.DER_cert_to_PEM_cert(c) for c in context.get_ca_certs(binary_form=True))
+    assert transport.ca == expected and "BEGIN CERTIFICATE" in transport.ca
 
 
 def test_unsupported_mode_is_explicit():
