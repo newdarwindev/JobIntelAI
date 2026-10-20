@@ -238,7 +238,9 @@
     "additional_generated_reports": [
       "docs/issue-evidence/40/mutation-comparison.md",
       "docs/issue-evidence/41/batch-comparison.md"
-    ]
+    ],
+    "bytes_before": 249311,
+    "bytes_after": 110722
   },
   "backend": {
     "command": "make check-postgres",
@@ -260,5 +262,142 @@
     "passed": 33,
     "failed": 0,
     "skipped": 0
+  },
+  "ci": {
+    "source_head": "9890ef696a2e6ee700c2fb1beff9b40eb0ca41db",
+    "tested_merge": "7cc99839cd97e2a8c3d9a83a95dfc0ebae3af060",
+    "source_sha256": "dc134a9714a84967c0e4ac05fe13dc7a32deda88049ea185f0b7599d84cbd5b5",
+    "runs": [
+      {
+        "id": 39437770672,
+        "name": "Web UI workflows and recordings",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 112,
+        "jobs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770672/jobs",
+        "logs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770672/logs",
+        "workflow_id": 378409500
+      },
+      {
+        "id": 39437770425,
+        "name": "automated checks",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 129,
+        "jobs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770425/jobs",
+        "logs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770425/logs",
+        "workflow_id": 378313058
+      },
+      {
+        "id": 39437770428,
+        "name": "Local CPU inference",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 50,
+        "jobs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770428/jobs",
+        "logs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770428/logs",
+        "workflow_id": 380790034
+      }
+    ],
+    "backend_matrix": [
+      {
+        "commit": "7cc99839cd97e2a8c3d9a83a95dfc0ebae3af060",
+        "python": "3.12",
+        "run_id": "39437770425",
+        "run_attempt": "1",
+        "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39437770425",
+        "config": "fake providers / synthetic corpus / disposable PostgreSQL",
+        "command": "python scripts/check.py --require-postgres --junitxml work/ci/junit.xml",
+        "exit_code": 0,
+        "tests": 887,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 887
+      },
+      {
+        "commit": "7cc99839cd97e2a8c3d9a83a95dfc0ebae3af060",
+        "python": "3.11",
+        "run_id": "39437770425",
+        "run_attempt": "1",
+        "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39437770425",
+        "config": "fake providers / synthetic corpus / disposable PostgreSQL",
+        "command": "python scripts/check.py --require-postgres --junitxml work/ci/junit.xml",
+        "exit_code": 0,
+        "tests": 887,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 887
+      }
+    ],
+    "final_change_scope": "После проверенного исходного коммита изменены только опубликованные записи, README, генерируемые измерения UI и этот отчёт; исходный hash не меняется."
+  },
+  "browser": {
+    "published_manifest": "docs/ui-recordings/manifest.json",
+    "origin": "github-actions",
+    "git_sha": "7cc99839cd97e2a8c3d9a83a95dfc0ebae3af060",
+    "source_hash": "dc134a9714a84967c0e4ac05fe13dc7a32deda88049ea185f0b7599d84cbd5b5",
+    "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39437770672",
+    "tests": 28,
+    "passed": 28,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "publication_files": 34,
+    "publication_parts": 2,
+    "archive_sha256": [
+      "b9c3170c29a09df2d4cf8939135ec5966cffd4a38365a77ccc73c6f44b3c7c1c",
+      "7f183c198eb979ddb36e7f951db9b2df4e5a1cc4fe3924f6176813477c719e9c"
+    ],
+    "local_independent_run": {
+      "command": "UI_BROWSER_PATH=/usr/bin/chromium make ui-check",
+      "git_sha": "9890ef696a2e6ee700c2fb1beff9b40eb0ca41db",
+      "source_hash": "dc134a9714a84967c0e4ac05fe13dc7a32deda88049ea185f0b7599d84cbd5b5",
+      "tests": 28,
+      "passed": 28,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    "media_validation": {
+      "passed": 28,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "method": "ffprobe metadata and complete ffmpeg decode",
+      "files": [
+        "UI14-desktop-chromium.webm",
+        "UI14-mobile-chromium.webm",
+        "UI12-desktop-chromium.webm",
+        "UI12-mobile-chromium.webm",
+        "UI13-desktop-chromium.webm",
+        "UI13-mobile-chromium.webm",
+        "UI09-desktop-chromium.webm",
+        "UI10-desktop-chromium.webm",
+        "UI11-desktop-chromium.webm",
+        "UI09-mobile-chromium.webm",
+        "UI10-mobile-chromium.webm",
+        "UI11-mobile-chromium.webm",
+        "UI01-desktop-chromium.webm",
+        "UI02-desktop-chromium.webm",
+        "UI03-desktop-chromium.webm",
+        "UI04-desktop-chromium.webm",
+        "UI05-desktop-chromium.webm",
+        "UI06-desktop-chromium.webm",
+        "UI07-desktop-chromium.webm",
+        "UI08-desktop-chromium.webm",
+        "UI01-mobile-chromium.webm",
+        "UI02-mobile-chromium.webm",
+        "UI03-mobile-chromium.webm",
+        "UI04-mobile-chromium.webm",
+        "UI05-mobile-chromium.webm",
+        "UI06-mobile-chromium.webm",
+        "UI07-mobile-chromium.webm",
+        "UI08-mobile-chromium.webm"
+      ]
+    }
   }
 }
