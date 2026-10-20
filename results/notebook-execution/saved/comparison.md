@@ -1,12 +1,14 @@
-Experiment mode: fake; requested model: fake-fixture.
-Created: 2026-10-20T14:40:41.146458+00:00; corpus SHA-256: `b1d30841e406ced48f382e0c4c05b32e5bd0a39c0c37b9b63e9a9e1c39214c15`.
-Configuration SHA-256: `6fbcbbc6636836fe16fbdc9eee0665162654d6dc3704e24ccc71027591d12520`. [Complete report](report.json); [reproduced scores](scores.json).
+Исходный отчёт SHA-256: `7c22c78cc48b16276fecfdefe78e47947a5de809ab533fbdcf9d9b139d5c3f78`.
 
-| Config | Success / cases | Failures | Precision | Recall | Type | Evidence | Semantic unsupported | Correct unknown | Posting seconds | Tokens in/out | Cost USD |
+Режим эксперимента: fake; запрошенная модель: fake-fixture.
+Создан: 2026-10-20T15:57:59.334201+00:00; SHA-256 корпуса: `b1d30841e406ced48f382e0c4c05b32e5bd0a39c0c37b9b63e9a9e1c39214c15`.
+SHA-256 конфигурации: `6fbcbbc6636836fe16fbdc9eee0665162654d6dc3704e24ccc71027591d12520`. Полный отчёт; [Повторно подсчитанные метрики](scores.json).
+
+| Конфигурация | Успех / случаи | Ошибки | Precision | Recall | Тип | Цитата | Неподтверждённые claims | Верный unknown | Секунды на вакансию | Tokens вход/выход | Стоимость USD |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: |
-| A | 20/20 | 0 | 0.8182 | 0.8182 | 1.0000 | 1.0000 | unavailable | unavailable | 0.0036 | unavailable | unavailable |
-| B | 20/20 | 0 | 0.8182 | 0.8182 | 1.0000 | 1.0000 | unavailable | unavailable | 0.0043 | unavailable | unavailable |
-| C | 20/20 | 0 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | unavailable | unavailable | 0.0069 | unavailable | unavailable |
+| A | 20/20 | 0 | 0.8182 | 0.8182 | 1.0000 | 1.0000 | нет данных | нет данных | 0.0034 | нет данных | нет данных |
+| B | 20/20 | 0 | 0.8182 | 0.8182 | 1.0000 | 1.0000 | нет данных | нет данных | 0.0053 | нет данных | нет данных |
+| C | 20/20 | 0 | 1.0000 | 1.0000 | 1.0000 | 1.0000 | нет данных | нет данных | 0.0077 | нет данных | нет данных |
 
-Metrics cover successful cases; failures and raw outputs remain in the complete report. Matching isolates gold requirements and the sourced candidate. Zero denominators and unmeasured usage/cost/provider-only LLM latency remain unavailable.
-Fake provider regression only; no live model quality or purchased usage claim. Raw fixture responses are identical across A/B/C; only C applies normalization.
+Метрики относятся к успешным случаям; ошибки и исходные ответы сохранены в полном отчёте. Matching использует gold-требования и подтверждённые сведения кандидата. Нулевые знаменатели и неизмеренные usage/cost/LLM latency остаются неизвестными.
+Регрессия fake provider: качество live-модели и оплаченный usage не измеряются. Исходные fixture-ответы одинаковы в A/B/C, только C применяет normalization.

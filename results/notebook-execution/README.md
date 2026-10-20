@@ -1,46 +1,30 @@
-# Notebook execution evidence
+# Доказательства notebook execution
 
 Кратко: реальный offline fixture run, точный пересчёт сохранённых scores и отказ
 preflight без создания output. Эти результаты не измеряют качество LLM.
 
-Source commit: `6070290c5ffea5290c0e36798a148d992c6ca19f`; dirty: `False`.
-Python source SHA-256: `3aa7b3f38a69304d6ff65dfe952611d65c6edfbacf1a0a37091c1e0f908335e5`.
+Исходный коммит: `1fa3af8d5247d449e44d9137032af9e3cddcfdf2`; dirty: `True`.
+SHA-256 исходного Python-кода: `c6167d89f5ae8f74edc17ce823f6739185ed24efda446249ff329f65a8d75382`.
 
-| Scenario | Visible outcome | Underlying evidence |
+| Сценарий | Видимый результат | Доказательства |
 | --- | --- | --- |
-| Fixture | succeeded; fake evidence; no measured tokens/cost | [manifest](fixture/manifest.json), [report](fixture/report.json), [comparison](fixture/comparison.md) |
-| Saved report | succeeded; no new inference; scores byte-identical | [manifest](saved/manifest.json), [scores](saved/scores.json) |
-| Bad corpus pin | exit 2, corpus_checksum; no output allocated | [structured outcomes](evidence.json) |
+| Fixture | succeeded; fake evidence; tokens/cost не измерялись | [manifest](fixture/manifest.json), [report](fixture/report.json), [сравнение](fixture/comparison.md) |
+| Сохранённый report | succeeded; без новой inference; scores совпадают побайтово | [manifest](saved/manifest.json), [scores](saved/scores.json) |
+| Неверный corpus pin | exit 2, corpus_checksum; output не создан | [Структурированные исходы](evidence.json) |
 
-| Test result | Passed | Failed | Errors | Skipped |
+| Результат тестов | Passed | Failed | Errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
-| unit12.xml | 31 | 0 | 0 | 0 |
-| unit311.xml | 31 | 0 | 0 | 0 |
-| full12.xml | 757 | 0 | 0 | 154 |
+| pr93-unit.xml | 55 | 0 | 0 | 0 |
 
-The full [machine-readable evidence](evidence.json) retains actual outcomes and
-test counts. Skips are not implementation proof. Fresh-kernel checks run separately
-under Python 3.11/3.12 in Actions and publish `notebook-kernel.json`.
+Полные [машинные данные](evidence.json) сохраняют фактические исходы и counts.
+Skips не доказывают реализацию. Проверки новых kernels отдельно выполняются
+в Actions под Python 3.11/3.12 и публикуют `notebook-kernel.json`.
 
-Reproduce from the repository root into a new output directory:
+Воспроизведение из корня репозитория в новый output directory:
 
 ```bash
 python -m scripts.notebook_execution_evidence --output work/notebook-evidence
 ```
 
-Training execution is a separately implemented capability in issue #81. This
-interface refuses an unavailable training runner before allocating output.
-
-## Fresh-kernel measurements
-
-Both environments executed the real kernel checks from the clean source commit above,
-with database/HTTP access forbidden and exact saved-score reproduction.
-
-| Local environment | Evidence |
-| --- | --- |
-| Python 3.11.16 | [kernel result](kernel311.json), [31-pass JUnit](unit311.xml) |
-| Python 3.12.14 | [kernel result](kernel12.json), [31-pass JUnit](unit12.xml) |
-| Full Python 3.12 checks | [757-pass / 154-skip JUnit](full12.xml) |
-
-Local skipped tests are not acceptance evidence. Remote PostgreSQL/container
-verification is tracked in the implementing PR and issue #77.
+Training execution — отдельная реализация в issue #81. Этот интерфейс
+отказывает при недоступном training runner до создания output.

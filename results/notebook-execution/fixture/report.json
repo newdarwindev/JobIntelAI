@@ -2,11 +2,11 @@
   "format_version": 2,
   "mode": "fake",
   "quality_claim": "fake provider plumbing only",
-  "created_at": "2026-10-20T14:40:41.146458+00:00",
+  "created_at": "2026-10-20T15:57:59.334201+00:00",
   "provenance": {
-    "source_sha256": "3aa7b3f38a69304d6ff65dfe952611d65c6edfbacf1a0a37091c1e0f908335e5",
-    "git_commit": "6070290c5ffea5290c0e36798a148d992c6ca19f",
-    "git_dirty": false
+    "source_sha256": "c6167d89f5ae8f74edc17ce823f6739185ed24efda446249ff329f65a8d75382",
+    "git_commit": "1fa3af8d5247d449e44d9137032af9e3cddcfdf2",
+    "git_dirty": true
   },
   "corpus": {
     "format_version": 1,
@@ -1577,7 +1577,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00023193100014395895
+          "elapsed_seconds": 0.00048409200007881736
         },
         {
           "case_id": "SYN-02",
@@ -1655,7 +1655,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00014951100001781015
+          "elapsed_seconds": 9.8565000371309e-05
         },
         {
           "case_id": "SYN-03",
@@ -1733,7 +1733,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001399640000272484
+          "elapsed_seconds": 7.307699979719473e-05
         },
         {
           "case_id": "SYN-04",
@@ -1809,7 +1809,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001267790003112168
+          "elapsed_seconds": 0.00018077599997923244
         },
         {
           "case_id": "SYN-05",
@@ -1891,7 +1891,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00022407500000554137
+          "elapsed_seconds": 0.00019623899970611092
         },
         {
           "case_id": "SYN-06",
@@ -1973,7 +1973,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00018911699999080156
+          "elapsed_seconds": 0.00021546700008912012
         },
         {
           "case_id": "SYN-07",
@@ -2049,7 +2049,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00021486899959199945
+          "elapsed_seconds": 0.00014468300014414126
         },
         {
           "case_id": "SYN-08",
@@ -2171,7 +2171,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00016933500000959611
+          "elapsed_seconds": 0.00015900400012469618
         },
         {
           "case_id": "SYN-09",
@@ -2247,7 +2247,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00012014000003546244
+          "elapsed_seconds": 9.53700000536628e-05
         },
         {
           "case_id": "SYN-10",
@@ -2351,7 +2351,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00017101000003094669
+          "elapsed_seconds": 0.00017741099964041496
         },
         {
           "case_id": "SYN-11",
@@ -2455,7 +2455,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0004055949998473807
+          "elapsed_seconds": 0.00019316399993840605
         },
         {
           "case_id": "SYN-12",
@@ -2551,7 +2551,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00012162000030002673
+          "elapsed_seconds": 0.0001281989998460631
         },
         {
           "case_id": "SYN-13",
@@ -2647,7 +2647,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00012229899994053994
+          "elapsed_seconds": 0.00022892699962540064
         },
         {
           "case_id": "SYN-14",
@@ -2769,7 +2769,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00019796200012933696
+          "elapsed_seconds": 0.00016077700001915218
         },
         {
           "case_id": "SYN-15",
@@ -2873,7 +2873,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00026299000001017703
+          "elapsed_seconds": 0.00016551399949094048
         },
         {
           "case_id": "SYN-16",
@@ -2949,7 +2949,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 9.588800003257347e-05
+          "elapsed_seconds": 9.032300022226991e-05
         },
         {
           "case_id": "SYN-17",
@@ -3025,7 +3025,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00011268800017205649
+          "elapsed_seconds": 0.00019809099921985762
         },
         {
           "case_id": "SYN-18",
@@ -3053,7 +3053,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 4.6376999762287596e-05
+          "elapsed_seconds": 7.137499960663263e-05
         },
         {
           "case_id": "SYN-19",
@@ -3129,7 +3129,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003474280001682928
+          "elapsed_seconds": 0.00015454799995495705
         },
         {
           "case_id": "SYN-20",
@@ -3205,7 +3205,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00018442400005369564
+          "elapsed_seconds": 0.00021856100011063972
         }
       ],
       "summary": {
@@ -4168,13 +4168,13 @@
         "cost_usd": null,
         "known_cost_usd": null,
         "missing_usage_cases": 20,
-        "elapsed_seconds": 0.0036340020005809492,
+        "elapsed_seconds": 0.003434162998019019,
         "reviewed_per_case": null,
         "not_attempted": 0,
         "provider_elapsed_seconds": null,
         "llm_elapsed_seconds": null
       },
-      "records_sha256": "67c5b26e04d0a6271845cc33c75e744ee92c43455b4a7273279f25981be012c3"
+      "records_sha256": "e693397c6e5ac570ba0bc178a7027af80ef39c04d8936e1304331af4c374411e"
     },
     {
       "configuration": "B",
@@ -4707,7 +4707,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00012234199994054507
+          "elapsed_seconds": 0.00016131699976540403
         },
         {
           "case_id": "SYN-02",
@@ -4785,7 +4785,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00018550899994806969
+          "elapsed_seconds": 0.0003161750000799657
         },
         {
           "case_id": "SYN-03",
@@ -4863,7 +4863,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003442080001150316
+          "elapsed_seconds": 0.00040009900021686917
         },
         {
           "case_id": "SYN-04",
@@ -4939,7 +4939,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00033036200011338224
+          "elapsed_seconds": 0.0003325790003145812
         },
         {
           "case_id": "SYN-05",
@@ -5021,7 +5021,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00022264900007940014
+          "elapsed_seconds": 0.0003833840000879718
         },
         {
           "case_id": "SYN-06",
@@ -5103,7 +5103,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.000403741999889462
+          "elapsed_seconds": 0.00024621199918328784
         },
         {
           "case_id": "SYN-07",
@@ -5179,7 +5179,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00022094799987826264
+          "elapsed_seconds": 0.0002532319995225407
         },
         {
           "case_id": "SYN-08",
@@ -5301,7 +5301,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002964299997074704
+          "elapsed_seconds": 0.00021377400025812676
         },
         {
           "case_id": "SYN-09",
@@ -5377,7 +5377,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00017873199976747856
+          "elapsed_seconds": 0.00020363900057418505
         },
         {
           "case_id": "SYN-10",
@@ -5481,7 +5481,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002183619999414077
+          "elapsed_seconds": 0.00035155699970346177
         },
         {
           "case_id": "SYN-11",
@@ -5585,7 +5585,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00021610000021610176
+          "elapsed_seconds": 0.0002884049999920535
         },
         {
           "case_id": "SYN-12",
@@ -5681,7 +5681,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00015536500040980172
+          "elapsed_seconds": 0.0003427239998927689
         },
         {
           "case_id": "SYN-13",
@@ -5777,7 +5777,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.000160440999934508
+          "elapsed_seconds": 0.00018204699972557137
         },
         {
           "case_id": "SYN-14",
@@ -5899,7 +5899,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00022181600024850923
+          "elapsed_seconds": 0.0003856470002574497
         },
         {
           "case_id": "SYN-15",
@@ -6003,7 +6003,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00019294499998068204
+          "elapsed_seconds": 0.00033254900063184323
         },
         {
           "case_id": "SYN-16",
@@ -6079,7 +6079,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0001610409999557305
+          "elapsed_seconds": 0.00018975999955728184
         },
         {
           "case_id": "SYN-17",
@@ -6155,7 +6155,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00028849599993918673
+          "elapsed_seconds": 0.00018768700010696193
         },
         {
           "case_id": "SYN-18",
@@ -6183,7 +6183,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 8.029399987208308e-05
+          "elapsed_seconds": 0.00011158399956912035
         },
         {
           "case_id": "SYN-19",
@@ -6259,7 +6259,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00016965099985100096
+          "elapsed_seconds": 0.00020810599926335271
         },
         {
           "case_id": "SYN-20",
@@ -6335,7 +6335,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00017791900017982698
+          "elapsed_seconds": 0.0001788139998097904
         }
       ],
       "summary": {
@@ -7298,13 +7298,13 @@
         "cost_usd": null,
         "known_cost_usd": null,
         "missing_usage_cases": 20,
-        "elapsed_seconds": 0.004347351999967941,
+        "elapsed_seconds": 0.005269290998512588,
         "reviewed_per_case": null,
         "not_attempted": 0,
         "provider_elapsed_seconds": null,
         "llm_elapsed_seconds": null
       },
-      "records_sha256": "c77483ea44324bf70c339ee0e44e0ec7965d2eb0da14838abb098f5d21ea718a"
+      "records_sha256": "ff1a5450830d01ddb0618ea9a82e9eb5d9a3a7d3ae65cc4a6b5f4b2c8209b3ee"
     },
     {
       "configuration": "C",
@@ -7841,7 +7841,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00047476100007770583
+          "elapsed_seconds": 0.0003755019997697673
         },
         {
           "case_id": "SYN-02",
@@ -7922,7 +7922,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00017907699975694413
+          "elapsed_seconds": 0.0004125059995203628
         },
         {
           "case_id": "SYN-03",
@@ -8003,7 +8003,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00018622899960973882
+          "elapsed_seconds": 0.00044071800039091613
         },
         {
           "case_id": "SYN-04",
@@ -8081,7 +8081,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00021787000014228397
+          "elapsed_seconds": 0.00038649900034215534
         },
         {
           "case_id": "SYN-05",
@@ -8165,7 +8165,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00028393499997036997
+          "elapsed_seconds": 0.0006067129997973097
         },
         {
           "case_id": "SYN-06",
@@ -8249,7 +8249,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0004185959996902966
+          "elapsed_seconds": 0.00039975799973035464
         },
         {
           "case_id": "SYN-07",
@@ -8327,7 +8327,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00031495600023845327
+          "elapsed_seconds": 0.00026734299990494037
         },
         {
           "case_id": "SYN-08",
@@ -8453,7 +8453,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002511490001779748
+          "elapsed_seconds": 0.0002998610007125535
         },
         {
           "case_id": "SYN-09",
@@ -8531,7 +8531,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003553250003278663
+          "elapsed_seconds": 0.0003150039992760867
         },
         {
           "case_id": "SYN-10",
@@ -8637,7 +8637,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0004039129999000579
+          "elapsed_seconds": 0.00039050499981385656
         },
         {
           "case_id": "SYN-11",
@@ -8743,7 +8743,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00034368300021014875
+          "elapsed_seconds": 0.0006397510005626827
         },
         {
           "case_id": "SYN-12",
@@ -8841,7 +8841,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002789430000120774
+          "elapsed_seconds": 0.00034568899991427315
         },
         {
           "case_id": "SYN-13",
@@ -8939,7 +8939,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002603579996502958
+          "elapsed_seconds": 0.0002973180007757037
         },
         {
           "case_id": "SYN-14",
@@ -9065,7 +9065,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0004548319998320949
+          "elapsed_seconds": 0.0003551930003595771
         },
         {
           "case_id": "SYN-15",
@@ -9171,7 +9171,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0003768279998439539
+          "elapsed_seconds": 0.0005763180006397306
         },
         {
           "case_id": "SYN-16",
@@ -9249,7 +9249,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.000709155000095052
+          "elapsed_seconds": 0.0003427849997024168
         },
         {
           "case_id": "SYN-17",
@@ -9327,7 +9327,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0005392880002546008
+          "elapsed_seconds": 0.0004907310003545717
         },
         {
           "case_id": "SYN-18",
@@ -9355,7 +9355,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.00023997800008146442
+          "elapsed_seconds": 0.00016952900023170514
         },
         {
           "case_id": "SYN-19",
@@ -9433,7 +9433,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002906500003518886
+          "elapsed_seconds": 0.0002679940007510595
         },
         {
           "case_id": "SYN-20",
@@ -9511,7 +9511,7 @@
           "request_id": null,
           "provenance": null,
           "output_text": null,
-          "elapsed_seconds": 0.0002886989996113698
+          "elapsed_seconds": 0.0003383880002729711
         }
       ],
       "summary": {
@@ -10474,20 +10474,20 @@
         "cost_usd": null,
         "known_cost_usd": null,
         "missing_usage_cases": 20,
-        "elapsed_seconds": 0.006868224999834638,
+        "elapsed_seconds": 0.007718105002822995,
         "reviewed_per_case": null,
         "not_attempted": 0,
         "provider_elapsed_seconds": null,
         "llm_elapsed_seconds": null
       },
-      "records_sha256": "248ece3bfbbed3b6f2321112aa4db6f997e53f21ca113e57e64c7c131dd8b97e"
+      "records_sha256": "733c41bc62debd5ab81be7cb2d1ce254cc75c1f6a3c96a3452f5d95b3b6fd8a1"
     }
   ],
   "complete": true,
   "active_case": null,
-  "completed_at": "2026-10-20T14:40:42.250955+00:00",
-  "last_session_elapsed_seconds": 1.1045099739999387,
-  "end_to_end_elapsed_seconds": 1.1045099739999387,
+  "completed_at": "2026-10-20T15:58:00.231536+00:00",
+  "last_session_elapsed_seconds": 0.8973675570005071,
+  "end_to_end_elapsed_seconds": 0.8973675570005071,
   "stopped_after_error": null,
-  "checkpoint_sha256": "ab454e211a354d69a55daeed09c6a65c08979848a5c847b7f9356e25a489c7d3"
+  "checkpoint_sha256": "251265efc3bb2d2bfca1de405e701e899616babacc0a7d776d87dd13e14aa187"
 }

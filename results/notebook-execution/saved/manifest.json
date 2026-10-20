@@ -3,8 +3,8 @@
   "mode": "saved-report",
   "evidence_mode": "fake",
   "status": "succeeded",
-  "created_at": "2026-10-20T14:40:43.213476+00:00",
-  "completed_at": "2026-10-20T14:40:43.284737+00:00",
+  "created_at": "2026-10-20T15:58:00.828855+00:00",
+  "completed_at": "2026-10-20T15:58:00.874520+00:00",
   "parameters": {
     "mode": "saved-report",
     "dataset": "fixture",
@@ -51,11 +51,11 @@
     "timeout_seconds": null
   },
   "parameters_sha256": "627c33482fcd7e5f7fd876bc754fc4eb95b2c1cc1e838a29e6f719b09ae9aec7",
-  "input_sha256": "b5153cb377b4154b3713e3b14d61d5638ca8b5185c43a21ea8d8812e8eec472f",
+  "input_sha256": "7c22c78cc48b16276fecfdefe78e47947a5de809ab533fbdcf9d9b139d5c3f78",
   "code": {
-    "source_sha256": "3aa7b3f38a69304d6ff65dfe952611d65c6edfbacf1a0a37091c1e0f908335e5",
-    "git_commit": "6070290c5ffea5290c0e36798a148d992c6ca19f",
-    "git_dirty": false
+    "source_sha256": "c6167d89f5ae8f74edc17ce823f6739185ed24efda446249ff329f65a8d75382",
+    "git_commit": "1fa3af8d5247d449e44d9137032af9e3cddcfdf2",
+    "git_dirty": true
   },
   "reservation": {
     "calls": 60,
@@ -67,14 +67,14 @@
   "artifacts": [
     {
       "path": "scores.json",
-      "sha256": "114d02e66d2485e582d25834fb8ec6a699c9ae22906bdc95017bba6c405246e2",
-      "bytes": 87051
+      "sha256": "b8b9b6fa6e58414e6b4d3887976cd9be00b9bcf745de2cad0c64416448898ac1",
+      "bytes": 87050
     },
     {
       "path": "comparison.md",
-      "sha256": "dc40cfc3205d5cf2408126dba03b3510b47770cc473eea256c3bf4df6040f302",
-      "bytes": 1346
+      "sha256": "735cb35ec8ef11b6a33fd72bc7cbe047ee80f352819091c1b0d853f1b9713291",
+      "bytes": 2018
     }
   ],
-  "manifest_sha256": "d4be7f363890694710ece582039135fd1caf79b669de7b69ea3d8a53ca435c5a"
+  "manifest_sha256": "842927aa9d54c2c3f916f0b39557d7d0b788142639900d5ac91dd779526136dc"
 }
