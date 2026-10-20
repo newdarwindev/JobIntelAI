@@ -1,0 +1,102 @@
+{
+  "wheel": "pycurl-7.48.0-cp312-cp312-manylinux_2_28_x86_64.whl",
+  "wheel_sha256": "8a5b168d41eea2cf69c522967f5520e8490e117cd217fb8d6e7d7544c81ea51c",
+  "components": [
+    {
+      "file": "pycurl.libs/libbrotlicommon-779a354d.so.1.2.0",
+      "sha256": "bc4c7a9603a34c6eecfdf9c7eb57df6cad38dcdf057d9e08f0c27c38f97b02c9",
+      "bytes": 153841
+    },
+    {
+      "file": "pycurl.libs/libbrotlidec-d7d1c77e.so.1.2.0",
+      "sha256": "69f842cb7eff0ac6066f76e363cbf1924bcf9f97a960666aae521f7e1c1fa3eb",
+      "bytes": 76465
+    },
+    {
+      "file": "pycurl.libs/libcom_err-04a6d4a9.so.3.0",
+      "sha256": "82cc48c7458608fea2de563f666accd7ec3e3751ecde9bc8a5044b1340afde58",
+      "bytes": 27137
+    },
+    {
+      "file": "pycurl.libs/libcrypto-9e1a983b.so.3",
+      "sha256": "b3fcb679724733e99909468ca8f85fefeddc2833a1feded82fd3d66e267d23a9",
+      "bytes": 7841089
+    },
+    {
+      "file": "pycurl.libs/libcurl-1f5c7cda.so.4.8.0",
+      "sha256": "907ab596295c9656fa09228d6f3bceb16726cc3f0dabf03d716d68a66b09d09a",
+      "bytes": 1335065
+    },
+    {
+      "file": "pycurl.libs/libgssapi_krb5-a4ee9013.so.2.2",
+      "sha256": "f7aab9b89468df331ed3e95664d4bbe254413bab6b75c3c2dfb60202673c96d1",
+      "bytes": 405049
+    },
+    {
+      "file": "pycurl.libs/libidn2-4b35c59c.so.0.4.0",
+      "sha256": "d54460d79d61b353700d3052448d88a9b3c791c4bde75394be4f47100fd2751b",
+      "bytes": 211985
+    },
+    {
+      "file": "pycurl.libs/libk5crypto-b981dde7.so.3.1",
+      "sha256": "0d032d9f70298ed1a84c3738f796b93d42a1802750482b099a41647afeeea8d7",
+      "bytes": 225777
+    },
+    {
+      "file": "pycurl.libs/libkrb5-d2bd9c2b.so.3.3",
+      "sha256": "10f426cc31d7ffc4b14b4d8c0e4ffbe1142c2c53886b1f465427d21007a999d4",
+      "bytes": 1061241
+    },
+    {
+      "file": "pycurl.libs/libkrb5support-4c5795d1.so.0.1",
+      "sha256": "7a6f2f0dd42ad1086ed1c03de178e2f29b55ead17b0145f0abbdc3b865f3e579",
+      "bytes": 71081
+    },
+    {
+      "file": "pycurl.libs/libnghttp2-3dab5618.so.14.29.5",
+      "sha256": "d6c3606eeabad7ded9c487f90c978c27a932ca8185951f480d0b357a0f72a526",
+      "bytes": 258385
+    },
+    {
+      "file": "pycurl.libs/libnghttp3-d4b9d539.so.9.9.0",
+      "sha256": "0dc8c5776251bac5574576526440898c8e18473a7891d7ed087e304856908eeb",
+      "bytes": 230361
+    },
+    {
+      "file": "pycurl.libs/libngtcp2-23491f47.so.16.11.0",
+      "sha256": "bdfc0191d39944e87db3657c5865749ac703abd224316bdc3ba83bfc48f83589",
+      "bytes": 445689
+    },
+    {
+      "file": "pycurl.libs/libngtcp2_crypto_ossl-741c35a5.so.0.3.1",
+      "sha256": "fc2c8867af3d28502ac8b3ee34b3010e0c9d20d60f0dc0f8e2b34365b92b99a8",
+      "bytes": 83769
+    },
+    {
+      "file": "pycurl.libs/libpsl-8d3f0618.so.5.3.5",
+      "sha256": "d3cefb10f87f28f8d8ac25368dc1db7976ca0745470b16ad7c78775a4d1f816b",
+      "bytes": 98369
+    },
+    {
+      "file": "pycurl.libs/libsfparse-e1f35c00.so",
+      "sha256": "898e3da243ea996947db0d213f3ee59c4fc80278d4f899b5738d3aebde2ca84e",
+      "bytes": 34929
+    },
+    {
+      "file": "pycurl.libs/libssh2-c5c93677.so.1.0.1",
+      "sha256": "e83692ca1970437d2d400060df6afa788f702f87339c9449cc297d8297bf41ca",
+      "bytes": 380441
+    },
+    {
+      "file": "pycurl.libs/libssl-e79d478f.so.3",
+      "sha256": "77081a88f0cb3f3769dc101a7a5cb068d678651da2887543aacb4dd79929b893",
+      "bytes": 1366529
+    },
+    {
+      "file": "pycurl.libs/libunistring-dfbe0280.so.5.1.0",
+      "sha256": "9763d0912975120767addd2384dfc29f52ca16a2fc1e4d48ea0d7df4edeb71d4",
+      "bytes": 1947089
+    }
+  ],
+  "note": "Bundled file names/sonames identify this exact wheel; they are not inferred upstream release versions. Linked notices are in acquisition.md."
+}

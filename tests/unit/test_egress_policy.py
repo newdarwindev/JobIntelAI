@@ -169,6 +169,15 @@ def test_unsupported_mode_is_explicit():
         HttpTransport(mode="hostname-only")
 
 
+def test_explicit_trust_context_remains_isolated_from_environment_ca(monkeypatch):
+    context = ssl.create_default_context()
+    monkeypatch.setenv(
+        "JOBINTEL_ACQUISITION_CA_FILE", "/nonexistent/ignored-by-explicit-context.pem"
+    )
+    transport = HttpTransport(context=context)
+    assert "BEGIN CERTIFICATE" in transport.ca
+
+
 def test_full_capability_contract_is_required(monkeypatch):
     monkeypatch.setattr("jobintel.policy_proxy_client.rpc", lambda *_args, **_kwargs: CAPABILITIES)
     capability(("proxy", 8080), 3)

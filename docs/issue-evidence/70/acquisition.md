@@ -26,9 +26,9 @@ If/For/While/ExceptHandler/IfExp/comprehension. Tests, документация 
 
 | Область | До | После | Что удалено / сохранено |
 | --- | ---: | ---: | --- |
-| Все затронутые acquisition modules и API, строки | 1733 | 1724 | Чистое сокращение 9 строк с учётом нового интерфейса |
+| Все затронутые acquisition modules и API, строки | 1733 | 1722 | Чистое сокращение 11 строк с учётом нового интерфейса |
 | Те же modules, ветвления | 247 | 239 | На 8 меньше собственных ветвлений |
-| Native transport engines | 0 | 1 | PycURL 7.48.0 / libcurl 8.22.0 в проверенном Linux wheel |
+| Новые transport-зависимости | 0 | 1 | PycURL 7.48.0 / libcurl 8.22.0 в проверенном Linux wheel |
 | Новые runtime services | 0 | 0 | Прежние API, DB и optional gateway; новый daemon не нужен |
 
 Удалены `PinnedConnection`, `TransportResponse`, собственные socket/TLS/CONNECT
@@ -56,6 +56,19 @@ Wheel сохраняет upstream `COPYING-MIT`/`COPYING-LGPL`; приложен
 библиотеки в свой Python wheel. Container dependency installation сохраняет notices
 дистрибутива. Native runtime — новая maintenance/security dependency; выигрыш состоит
 в удалении собственного низкоуровневого клиента, а не в исчезновении сетевой политики.
+
+В [списке native components](native-components.json) сохранены имена, размеры и SHA-256
+каждой bundled библиотеки точного wheel. Soname не выдаётся за upstream release version.
+Дополнительные upstream notices: [Brotli/MIT](https://github.com/google/brotli/blob/master/LICENSE),
+[zlib](https://zlib.net/zlib_license.html), [nghttp2/MIT](https://github.com/nghttp2/nghttp2/blob/master/COPYING),
+[nghttp3/MIT](https://github.com/ngtcp2/nghttp3/blob/main/COPYING),
+[ngtcp2/MIT](https://github.com/ngtcp2/ngtcp2/blob/main/COPYING),
+[sfparse/MIT](https://github.com/nghttp2/sfparse/blob/main/COPYING),
+[libssh2/BSD](https://github.com/libssh2/libssh2/blob/master/COPYING),
+[libpsl/LGPL-2.1+](https://github.com/rockdaboot/libpsl/blob/master/COPYING),
+[libidn2](https://gitlab.com/libidn/libidn2/-/blob/master/COPYING.LESSERv3),
+[libunistring](https://www.gnu.org/software/libunistring/manual/html_node/Licenses.html),
+[Kerberos/GSSAPI/com_err — notices по компонентам](https://web.mit.edu/kerberos/krb5-latest/doc/mitK5license.html).
 
 ## Решения о cleaner и gateway
 

@@ -12,9 +12,9 @@
         "sha256": "967094bf8a6c3491bed5426f4fbcf4bc6df6f1368c5074ba14a5f5e693fd8280"
       },
       "after": {
-        "lines": 272,
+        "lines": 270,
         "branches": 46,
-        "sha256": "8961c058ffdff396dece8a6f9e12fd473f6065974a3b66a2c1f62e1c6f842586"
+        "sha256": "b7a8ce85cd39f688706003f577eb48a0efa6d0a942f32693a2410817f4ce09b4"
       }
     },
     {
@@ -154,7 +154,7 @@
       "branches": 247
     },
     "after": {
-      "lines": 1724,
+      "lines": 1722,
       "branches": 239
     }
   },

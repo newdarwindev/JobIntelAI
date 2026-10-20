@@ -126,14 +126,12 @@ class HttpTransport:
         self.mode = mode or os.getenv("JOBINTEL_ACQUISITION_MODE", "auto")
         if self.mode not in {"auto", "direct", "pinned-proxy", "policy-proxy"}:
             raise ValueError("unsupported JOBINTEL_ACQUISITION_MODE")
-        context = context or ssl.create_default_context()
-        if os.getenv("JOBINTEL_ACQUISITION_CA_FILE"):
-            context.load_verify_locations(os.environ["JOBINTEL_ACQUISITION_CA_FILE"])
-        if not context.check_hostname or context.verify_mode != ssl.CERT_REQUIRED:
+        trust = context or ssl.create_default_context()
+        if context is None and os.getenv("JOBINTEL_ACQUISITION_CA_FILE"):
+            trust.load_verify_locations(os.environ["JOBINTEL_ACQUISITION_CA_FILE"])
+        if not trust.check_hostname or trust.verify_mode != ssl.CERT_REQUIRED:
             raise ValueError("acquisition requires verified TLS")
-        self.ca = "".join(
-            ssl.DER_cert_to_PEM_cert(c) for c in context.get_ca_certs(binary_form=True)
-        )
+        self.ca = "".join(ssl.DER_cert_to_PEM_cert(c) for c in trust.get_ca_certs(binary_form=True))
 
     def selected_proxy(self, destination):
         proxies = getproxies() if self.proxies is None else self.proxies
