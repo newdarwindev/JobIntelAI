@@ -97,6 +97,20 @@ Gateway egress-v1 сохраняется без изменения проток�
 
 ## Проверки и визуальное доказательство
 
+Локальный `make check-postgres` прошёл **900 tests, 0 failed/errors/skipped** вместе с
+quality, migrations, fixture/CLI smoke и release audit. [JUnit](backend-junit.xml) и
+[команда, counts, hash и ограничения](backend-summary.json) сохранены отдельно.
+Явно переданный trust context сохраняет прежнюю изоляцию от environment CA override;
+default context по-прежнему дополняет scoped CA при настройке runtime.
+[Фактический negative smoke](unsupported-proxy.json) получил `proxy_capability`,
+readiness=false и null origin HTTP status в текущем proxy-only runtime.
+Это отказ неподдерживаемого gateway contract, не успешный публичный fetch.
+
+Полный local suite остановился до journeys из-за disk limit при provisioning CPU stack
+на Docker vfs. Отдельный запуск существующего UI02 с теми же acquisition/emulator fixtures
+прошёл на desktop/mobile (2 passed) с system Chromium 151. Он не заменяет полный hosted
+suite и не используется publisher как полный успешный набор.
+
 Boundary checks находятся в `test_acquisition.py`, `test_fetch_transport.py`,
 `test_egress_policy.py`, `test_acquisition_boundary.py` и `test_acquisition_wire.py`.
 Они проверяют actual direct HTTP/TLS, pinned/policy proxies, unexpected peer до GET,
