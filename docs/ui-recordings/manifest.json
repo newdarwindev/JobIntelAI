@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "origin": "github-actions",
-  "recorded_at": "2026-10-20T14:56:15.799Z",
+  "recorded_at": "2026-10-20T16:03:12.672Z",
   "source_hash": "90ea58bd7c7d24a69f78da5537a307ae6140226d281f610d6e7e11a62b0d591c",
-  "git_sha": "5384741088d5201efcd9fe63b3dcc75e2e4f6f43",
-  "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39441877552",
+  "git_sha": "e348949bd47f6b11fcf7917930524d1debcc1f76",
+  "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39452006080",
   "command": "npm run test:ui",
-  "expected": 30,
-  "flaky": 0,
+  "expected": 29,
+  "flaky": 1,
   "failed": 0,
   "records": [
     {
@@ -18,8 +18,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 5159242,
-      "sha256": "ca885878846905d70740ab41066400fa90933418c4adc7d020cfd7aed8de090c"
+      "bytes": 5255934,
+      "sha256": "07a0e6796ea81c638a683119fcf54277fd0441066336795e91964819ae68d535"
     },
     {
       "id": "UI14",
@@ -29,8 +29,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 3313297,
-      "sha256": "156c79e8ddce3ac930a1390dde603f69578b4f6af53b654803eb6cf60c33bfbd"
+      "bytes": 3444432,
+      "sha256": "888d4126cf1dd1eae68cf545ef01eb622d28070c3fc0d57e91fbfd48c55016c6"
     },
     {
       "id": "UI15",
@@ -40,8 +40,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1434275,
-      "sha256": "ad6acae5da55ce3194ccc27158d86765ca69e31d0e3dc7c94873d0487634e66f"
+      "bytes": 1543365,
+      "sha256": "469df7fb34e7728a7ced6d0d8320cb1b37622a985fd809cabffa86a9dc32292a"
     },
     {
       "id": "UI15",
@@ -51,8 +51,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1004858,
-      "sha256": "a666a931e4d4ac5d86a40877f097ff795760c2998698bd079e36c7144084bb06"
+      "bytes": 1067122,
+      "sha256": "f9e2e60037c8eb427b044e2ba0fff4c0996b287de15dc39608aa850299cf826a"
     },
     {
       "id": "UI12",
@@ -62,8 +62,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1524881,
-      "sha256": "b6d686387fc933714a4854262a59a9139571ed93e46ba1e642f230ad876ea0dc"
+      "bytes": 1696338,
+      "sha256": "c7bb8be1d238e304187bb78c4f4dc8974d19e235f23e8714a7ed7a49b2eb5ac0"
     },
     {
       "id": "UI12",
@@ -73,8 +73,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1545783,
-      "sha256": "f671340192b455a9937c31591699f013ebdd818779cc1cd0ab15d153153ee10a"
+      "bytes": 1550511,
+      "sha256": "071acf7580056caa3d780239b74e185646b88d2ed8038719e0dbacb5eebe02ce"
     },
     {
       "id": "UI13",
@@ -84,8 +84,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 2460839,
-      "sha256": "38fd49d71ce739384df16476aba92a0b525afb6477e47caa03cb31ef421d50d2"
+      "bytes": 2437842,
+      "sha256": "e82a2e43a799e1ddbcbdebcae828e953d464e87e122b97924dfb0a1dbeedff7a"
     },
     {
       "id": "UI13",
@@ -95,8 +95,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1814951,
-      "sha256": "f4bf7c6c8534ef5de09164890995df620f52eeae04e21231f8f3e8b5c2066224"
+      "bytes": 1874728,
+      "sha256": "202ae1455080c8d9d21f9f4d5cb70a94f6a4560ae412f46ede8cc760297159df"
     },
     {
       "id": "UI09",
@@ -106,8 +106,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 802940,
-      "sha256": "496fdc800ceca4c4b26ca78074e643800b70dbbf8abf0b105343c24e18181046"
+      "bytes": 824641,
+      "sha256": "35a85357558c69b55a8880ffc33862c3d576e6c74941046275640fc48cd92ef3"
     },
     {
       "id": "UI10",
@@ -117,8 +117,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1088486,
-      "sha256": "b5a0a105cde6bed3f14b704cab8ae4d1c36323ab10ee626e59b21982dc7e0bc0"
+      "bytes": 1135761,
+      "sha256": "7745222ed422a7f24be9fda5ebbd9cdaa7e30668384935b45164ea75de430cfa"
     },
     {
       "id": "UI11",
@@ -128,8 +128,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 3021357,
-      "sha256": "3f7a36ff694b100211890d73138870c9a926146811e389b65b2f7e05159bb34a"
+      "bytes": 3326716,
+      "sha256": "4ab5db095ece2d9f2bcd4648be415046a630ed56ea3861d09d971dad53ba45de"
     },
     {
       "id": "UI09",
@@ -139,8 +139,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 496139,
-      "sha256": "eabcddb45de4042c29f233a9278d243a3c395d7165e7007b84ca9a051580a425"
+      "bytes": 516405,
+      "sha256": "45384e772d1152124ac7e02f876b2b2cdb65882be433f71faca391f0449b7f3d"
     },
     {
       "id": "UI10",
@@ -150,8 +150,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 626798,
-      "sha256": "8a5039c861b0b5fce423d71f347d07b0928380ca8f6fc5f6b16701dc61c95fc7"
+      "bytes": 700890,
+      "sha256": "ac430c1e4cf6bd8eb5a551a2d977dfdca9bad705f9cc90cf99ee903f319c1fc4"
     },
     {
       "id": "UI11",
@@ -161,8 +161,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1958701,
-      "sha256": "d50fe42e7645d588c813ab6f15586effd19a7c45f2caae11d2b39a1bf10ef967"
+      "bytes": 1953801,
+      "sha256": "ef9dc094fbc6b9e90b9695f0a29e84bb67f850244d6247e99889597b3de121a7"
     },
     {
       "id": "UI01",
@@ -172,8 +172,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 835443,
-      "sha256": "1db1409931f5ac51bf03fd25dcf46ce8b87865e17940d2c2f0a782f6e173049f"
+      "bytes": 840879,
+      "sha256": "6d8707a9e61168cccbb2e04fcc972c37dd973b3a4c5a232bccef249eac685634"
     },
     {
       "id": "UI02",
@@ -183,8 +183,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1643668,
-      "sha256": "d4f3ca6d288d61fd3d6c0814358541b082230b07e828b1968560d104ac41270e"
+      "bytes": 1733657,
+      "sha256": "925b170ecf1c5e73aa2c9e6440a17fa8d4b65d027573db6e5a5527d99eecfb50"
     },
     {
       "id": "UI03",
@@ -194,8 +194,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1872156,
-      "sha256": "620858e62e644be5052d84e20d5a5b6863e853b60273df9c0b797b234dede178"
+      "bytes": 1977771,
+      "sha256": "99b7f5c94b3cbf903e709eefd0bc4728e2a3d8770b2385ca024a38b9f0664841"
     },
     {
       "id": "UI04",
@@ -205,8 +205,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 2042220,
-      "sha256": "e866d34ce0e4d26dea4c89e5ccc5aa9a4dd32b82843249308c100c51fc4e0234"
+      "bytes": 2101528,
+      "sha256": "40b78446aad401dc7785c95461ef1750a7c37ab9a753fc0f1bfc6614c5a79a90"
     },
     {
       "id": "UI05",
@@ -216,8 +216,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1613023,
-      "sha256": "9d0c50ddd4591845fa9e7586f62504873380f17113d1a16fdc8d86fcd660526d"
+      "bytes": 1756806,
+      "sha256": "7cfdb011c6b91f97d05753efed926870c29eac84f9725ec1cf0b5675709b8206"
     },
     {
       "id": "UI06",
@@ -227,8 +227,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 853171,
-      "sha256": "538950322852378ba5f39d2f2d960b080e4fe66882e1307c6949f1a7eee24e82"
+      "bytes": 698897,
+      "sha256": "9897bdf4b66cefd49b03492e21b4ef537b63263a4ae6163cd7c1f0d528e11815"
     },
     {
       "id": "UI07",
@@ -238,8 +238,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1459231,
-      "sha256": "d39dba83f8224a06d9cf55a29a549fb75a4e34920ab0a5b36019379390b8e61b"
+      "bytes": 1273439,
+      "sha256": "f74090f71acaa1ca8b61b23492e5b1b6918144d103413e8669dff601d678ab77"
     },
     {
       "id": "UI08",
@@ -249,8 +249,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 656087,
-      "sha256": "1e866fd74a8e1a49c1cc629753fc4c3e2c1f8017b002d4572250e2a278e0068a"
+      "bytes": 680204,
+      "sha256": "ee5f48d3bd693da5ba76022cd06233f74d3be5e6588217b5633ea01ada9f53c7"
     },
     {
       "id": "UI01",
@@ -258,10 +258,10 @@
       "title": "UI01 | Atomic registry import and discovery",
       "file": "UI01-mobile-chromium.webm",
       "status": "passed",
-      "successful_attempt": 0,
+      "successful_attempt": 1,
       "browser_version": "145.0.7632.6",
-      "bytes": 548337,
-      "sha256": "afa0f9c335fecff6e0a56cc745aff08cf0b7b38d5f7119d9d97c489c5b3611d7"
+      "bytes": 604639,
+      "sha256": "9b761330633538f5c05858489b3b5f09981abb31222afe6ba5b47cfebf3332ae"
     },
     {
       "id": "UI02",
@@ -271,8 +271,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1280238,
-      "sha256": "3edaa8063e3c016c381bd0ac4042ab3e49399b57f78bddd6102bd0cb1bafca79"
+      "bytes": 1385705,
+      "sha256": "480da9f01851e6acad96cb5fd34b616dbadd63168ccbc496e4e213f24d54585b"
     },
     {
       "id": "UI03",
@@ -282,8 +282,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1299604,
-      "sha256": "2405b47b66d1c280508eef7154a1a11d57bad78885cca68574bff43b196c5942"
+      "bytes": 1354604,
+      "sha256": "1627ec4120b79c187bc69f92a2e2451d9d3ce6c18b4118b67b42a0360c3ccac5"
     },
     {
       "id": "UI04",
@@ -293,8 +293,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1719067,
-      "sha256": "5492ec10106cb88987f8eadb786e4320bc65964760c5b1f36e827cb4069b4c11"
+      "bytes": 1853857,
+      "sha256": "3e6f5e0ae8ff5939737ed067b3e4d397f0e664eb7273d9b7aff5c318207a6a4f"
     },
     {
       "id": "UI05",
@@ -304,8 +304,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 1358286,
-      "sha256": "a365f662abbfb9aab21154559c8b044099c59b46f383e560ea017d58ee594377"
+      "bytes": 1387674,
+      "sha256": "af616936bd71c7c9375af3923ac0ce722c7b4253cd42184a28457c9818a48e6f"
     },
     {
       "id": "UI06",
@@ -315,8 +315,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 457395,
-      "sha256": "d576cbe0a33b3f4f3deff270a3cdcfde6547928f9810aa20892656a581976ff7"
+      "bytes": 485113,
+      "sha256": "dacc1889f06289bfde1cc58501d64b5ec180e8b2557185c0bf46461566c0aea8"
     },
     {
       "id": "UI07",
@@ -326,8 +326,8 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 822077,
-      "sha256": "2b61a92db84eb8f207ab599d18f5d91819e3332c18e753d978af0823bdaa652b"
+      "bytes": 782889,
+      "sha256": "fd5057462fb192cdbe4780cc5a5886f011ecca73e1cf5606a6eda42d03bf1dfc"
     },
     {
       "id": "UI08",
@@ -337,35 +337,35 @@
       "status": "passed",
       "successful_attempt": 0,
       "browser_version": "145.0.7632.6",
-      "bytes": 506130,
-      "sha256": "495e1ce193d744ab1c23187cf48c0d95281fa6bc070119f138155a6fa17946d7"
+      "bytes": 637786,
+      "sha256": "30766177ab1a0970f2e5f755df3950ff65fa4872997e1914320d7d69b40091c6"
     }
   ],
   "issue_evidence": [
     {
       "file": "docs/issue-evidence/40/mutation-comparison.json",
       "bytes": 19730,
-      "sha256": "819a104222ff7b437b9c14a882962ded49490a1b2a6a9a74e37894079d74b5e1"
+      "sha256": "6f7e126832839d112bdbbd5dbd55d7da2b5243a8272431cab76da9de20381f02"
     },
     {
       "file": "docs/issue-evidence/40/mutation-comparison.md",
       "bytes": 8067,
-      "sha256": "fe3ad5564394507cef2a742778d9a8ae9e1e5008060a00a94ffb18bbe8636134"
+      "sha256": "986ba5dd238a176dfe8e243495315756b09914d86e2f2322aff3fb8dea88a262"
     },
     {
       "file": "docs/issue-evidence/41/batch-comparison.json",
       "bytes": 292722,
-      "sha256": "23c2687fce66f5a2ea968cf082fdaeb2814b350317507754cfd5bf7f3cb86d33"
+      "sha256": "06cd4c40a94327f455dab0c5ce09e1ecd71a2260bc90c7d18481febc3e195ff5"
     },
     {
       "file": "docs/issue-evidence/41/batch-comparison.md",
       "bytes": 12755,
-      "sha256": "fa064de936a1415cc109d6403b633247818a4a58115e821b651cefc40d2f0fa4"
+      "sha256": "b566858ff9a27d53529b98700b088a41afd635e97907fcfcdce6e40962cc8ab1"
     },
     {
       "file": "docs/issue-evidence/47/catalogue-performance.json",
-      "bytes": 7938,
-      "sha256": "2e12289ccf77f4477e97523a88dd5f97e947d575ed3ec420b7aeb09493e118b3"
+      "bytes": 7943,
+      "sha256": "6621dec014d655de2717f1b0d54b3a19257736a105bc6b949ba441e3fc843521"
     },
     {
       "file": "docs/issue-evidence/47/catalogue-performance.md",
@@ -375,7 +375,7 @@
     {
       "file": "docs/issue-evidence/47/catalogue-observations.json",
       "bytes": 23599,
-      "sha256": "ad7eb26a372a2b3b20f50a65b33e625b5a7c55c3e21d4d3937d6609a2c1118cb"
+      "sha256": "e43f6772b27ba9bae99d1d5b6a031d842d9ffad9becf3b3228a8257363e23ccb"
     }
   ]
 }
