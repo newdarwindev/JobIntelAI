@@ -3,8 +3,8 @@
   "mode": "fixture",
   "evidence_mode": "fake",
   "status": "succeeded",
-  "created_at": "2026-10-20T15:57:59.314404+00:00",
-  "completed_at": "2026-10-20T15:58:00.262693+00:00",
+  "created_at": "2026-10-20T16:04:43.037675+00:00",
+  "completed_at": "2026-10-20T16:04:44.008445+00:00",
   "parameters": {
     "mode": "fixture",
     "dataset": "fixture",
@@ -54,7 +54,7 @@
   "input_sha256": "b1d30841e406ced48f382e0c4c05b32e5bd0a39c0c37b9b63e9a9e1c39214c15",
   "code": {
     "source_sha256": "c6167d89f5ae8f74edc17ce823f6739185ed24efda446249ff329f65a8d75382",
-    "git_commit": "1fa3af8d5247d449e44d9137032af9e3cddcfdf2",
+    "git_commit": "c51a97dea5b49db213ce2054140036fbdeaaa87a",
     "git_dirty": true
   },
   "reservation": {
@@ -67,19 +67,19 @@
   "artifacts": [
     {
       "path": "report.json",
-      "sha256": "da52fb6401e709b8c8d32121c9aacdf3f61d08a8cbfd851942c7e558c05fee3c",
-      "bytes": 352835
+      "sha256": "d69d06441efc93d5630ddae3577b75a05dc804af9a5eaebb1d9fff807549b7c3",
+      "bytes": 352826
     },
     {
       "path": "scores.json",
-      "sha256": "b8b9b6fa6e58414e6b4d3887976cd9be00b9bcf745de2cad0c64416448898ac1",
-      "bytes": 87050
+      "sha256": "8cd094013fdcf484a2a589b22d3ed7126cb763c8cb5a680b62499e5e67bb75f9",
+      "bytes": 87051
     },
     {
       "path": "comparison.md",
-      "sha256": "a83fc7d7b1df62b210b5df8ba2eb0062f15104602050359d69bc5e04e7127e29",
+      "sha256": "d9e621f8ec97577576890454b7a0b1f35ddc2781d4427bd7373c018be674fef9",
       "bytes": 1927
     }
   ],
-  "manifest_sha256": "8716e5dfaed01e9d0a89719f8f27e75840c34af38687f6e47b0f086a7aa9b67d"
+  "manifest_sha256": "ac15f40b033fd1764cc8a79fc191579d7f0d175f2631a10355e1682389d9fb55"
 }
