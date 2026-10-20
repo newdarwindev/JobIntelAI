@@ -1,7 +1,7 @@
 # Восстановление mutations: измеренные наблюдения
 
-Источник: [Запуск GitHub Actions](https://github.com/newdarwindev/JobIntelAI/actions/runs/39440475953) · проверенный коммит `e30c2f4667edd14970f843fa15bd7a0811ff2945`.
-SHA-256 исходного содержимого: `dc134a9714a84967c0e4ac05fe13dc7a32deda88049ea185f0b7599d84cbd5b5`. [Машинные наблюдения](mutation-comparison.json).
+Источник: [Запуск GitHub Actions](https://github.com/newdarwindev/JobIntelAI/actions/runs/38727794951) · проверенный коммит `aefc151fc1acbe15e7a09ee8b9db4f865f406271`.
+SHA-256 исходного содержимого: `08428f1651ed32c95b511669e49458604c9197c7db3b43b6f9666d82e2e6c18c`. [Машинные наблюдения](mutation-comparison.json).
 
 Авторский synthetic ввод, реальные API/БД; платные hosted запросы не выполнялись. Эти проверки не измеряют качество модели.
 
@@ -12,42 +12,42 @@ Snapshot/extraction/registry/revision/evaluation counts взяты из API. У 
 | Viewport | Mutation | Граница потери | Исход | Browser POST | Conflicting probes | Завершённые handlers | Записей до → после | Точный saved ID |
 | --- | --- | --- | --- | ---: | ---: | ---: | --- | --- |
 | desktop-chromium | registry | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | Новый результат не сохранён |
-| desktop-chromium | snapshot | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 73dc29f9582a4576bbcb3f2386489b3a |
-| desktop-chromium | candidate | before_delivery | not_received → committed | 2 | 1 | 1 | 0 → 1 | f60275bb05c3429cab60646eb3bb04ec |
-| desktop-chromium | extract | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 6a92aa0db9404fd681f8569a8067d2e2 |
-| desktop-chromium | match | before_delivery | not_received → committed | 2 | 1 | 1 | Не перечислено → Не перечислено | 97931e35fe7c45a8af5e23b403d1867c |
-| desktop-chromium | evaluate | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | f6b80a5091404fb7bce6152f4e4c537d |
-| desktop-chromium | fetch | before_delivery | not_received → committed | 2 | 1 | 1 | 2 → 3 | 89f40fdcd00c4795929b2a30dc445e85 |
+| desktop-chromium | snapshot | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | fbb099dddf1643388705abbf9907853d |
+| desktop-chromium | candidate | before_delivery | not_received → committed | 2 | 1 | 1 | 0 → 1 | 5970adc9ecc846829fc0d33076486079 |
+| desktop-chromium | extract | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | b13aa6f31bb043e1ad4ea998bea06942 |
+| desktop-chromium | match | before_delivery | not_received → committed | 2 | 1 | 1 | Не перечислено → Не перечислено | 311ba6bfba48424daba7e2e9d9767afa |
+| desktop-chromium | evaluate | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | c20ea8c707704f95bcce6cf8a5b835fa |
+| desktop-chromium | fetch | before_delivery | not_received → committed | 2 | 1 | 1 | 2 → 3 | 7181d1ad26b54d3bae8358cfb2dcdd9d |
 | desktop-chromium | registry | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | Новый результат не сохранён |
-| desktop-chromium | snapshot | after_commit | committed → committed | 1 | 1 | 1 | 3 → 4 | 3804b283a1464000b0c215bf0f6c11b2 |
-| desktop-chromium | candidate | after_commit | committed → committed | 1 | 1 | 1 | 0 → 1 | c5f10a603cca4ce4b9a39b3fee0e7091 |
-| desktop-chromium | extract | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | 50bfbb59e9ff47ba959ac000c55ae1d6 |
-| desktop-chromium | match | after_commit | committed → committed | 1 | 1 | 1 | Не перечислено → Не перечислено | f2d60e787f944e2e8f2ba8946e5e454f |
-| desktop-chromium | evaluate | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | f54e56718c044ec8987612073627cf4b |
-| desktop-chromium | fetch | after_commit | committed → committed | 1 | 1 | 1 | 4 → 5 | 887b47fda5b243869076660944f3a4e2 |
-| desktop-chromium | extract | display_read_lost | committed/display_pending → committed | 1 | 0 | 1 | Не перечислено → Не перечислено | 9d4f2ab69c2b4c80ae7acbab4fece5c9 |
+| desktop-chromium | snapshot | after_commit | committed → committed | 1 | 1 | 1 | 3 → 4 | f59c06bcd6834dd88742627d73d20227 |
+| desktop-chromium | candidate | after_commit | committed → committed | 1 | 1 | 1 | 0 → 1 | e44fd99f899f43c89de18c2174c312c4 |
+| desktop-chromium | extract | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | b171f736a62740049bafb1bb5f058204 |
+| desktop-chromium | match | after_commit | committed → committed | 1 | 1 | 1 | Не перечислено → Не перечислено | 041b0ce4b3a64092850d40651b0ebd40 |
+| desktop-chromium | evaluate | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | d688d59e8afb4dbbb9a38d4f32ac73b6 |
+| desktop-chromium | fetch | after_commit | committed → committed | 1 | 1 | 1 | 4 → 5 | 480f96b333dd4d2d8c61d0826280952a |
+| desktop-chromium | extract | display_read_lost | committed/display_pending → committed | 1 | 0 | 1 | Не перечислено → Не перечислено | 642db4d215df42b49057748c68b06f5d |
 | desktop-chromium | snapshot | unsent_reload_cancel | not_received → rejected | 1 | 1 | 0 | 5 → 5 | Новый результат не сохранён |
-| desktop-chromium | extract | provider_in_flight | uncertain → committed | 1 | 0 | 1 | Не перечислено → Не перечислено | fd14515a176440ba9a1c3c927efd07c4 |
-| desktop-chromium | extract | lookup_lost_reload | uncertain → committed | 1 | 0 | 1 | 6 → 6 | c377f88b109e4c1faa81f9118d8325e1 |
+| desktop-chromium | extract | provider_in_flight | uncertain → committed | 1 | 0 | 1 | Не перечислено → Не перечислено | 133b15117149486289362f1af928df43 |
+| desktop-chromium | extract | lookup_lost_reload | uncertain → committed | 1 | 0 | 1 | 6 → 6 | 3bad076128884ae4a3f3d5d6ff5a7197 |
 | desktop-chromium | candidate | validation_rejected | rejected → rejected | 1 | 0 | 0 | 0 → 0 | Новый результат не сохранён |
 | mobile-chromium | registry | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | Новый результат не сохранён |
-| mobile-chromium | snapshot | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 1a97208b6195436a9830d6c4c5305e9c |
-| mobile-chromium | candidate | before_delivery | not_received → committed | 2 | 1 | 1 | 0 → 1 | e477fc9a22694135acd4b086ac97b56d |
-| mobile-chromium | extract | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 5f86fd917dca43d49686563382cc43b4 |
-| mobile-chromium | match | before_delivery | not_received → committed | 2 | 1 | 1 | Не перечислено → Не перечислено | 743023beb93f49a5b4ab6478689af41d |
-| mobile-chromium | evaluate | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | ec09cf9dddc343b6833a8e84ebb92d8b |
-| mobile-chromium | fetch | before_delivery | not_received → committed | 2 | 1 | 1 | 2 → 3 | 001e9bb9f5b1423aaad6ba8a162f1eb2 |
+| mobile-chromium | snapshot | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | dd99c62584f64efab804267e3aa65121 |
+| mobile-chromium | candidate | before_delivery | not_received → committed | 2 | 1 | 1 | 0 → 1 | bcb79ea722194d4e8058921a2b60870d |
+| mobile-chromium | extract | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | f9729a4cb14b480d83ee8cd011f2131d |
+| mobile-chromium | match | before_delivery | not_received → committed | 2 | 1 | 1 | Не перечислено → Не перечислено | 5cc227efa9f04ed0b6ebc54d54fab5f4 |
+| mobile-chromium | evaluate | before_delivery | not_received → committed | 2 | 1 | 1 | 1 → 2 | 0c4fd727efd34e94ac96dc11fb61d241 |
+| mobile-chromium | fetch | before_delivery | not_received → committed | 2 | 1 | 1 | 2 → 3 | e1f20f35970840ac9ee56367fd2415a2 |
 | mobile-chromium | registry | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | Новый результат не сохранён |
-| mobile-chromium | snapshot | after_commit | committed → committed | 1 | 1 | 1 | 3 → 4 | 6b2e425a063f43abafddc7cff9a811e0 |
-| mobile-chromium | candidate | after_commit | committed → committed | 1 | 1 | 1 | 0 → 1 | 51294847e5c24457ab605f819a20478c |
-| mobile-chromium | extract | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | e494e8481cce4161b923a931b5d3faf8 |
-| mobile-chromium | match | after_commit | committed → committed | 1 | 1 | 1 | Не перечислено → Не перечислено | c12e334882a54dc4a91f4fe139fa63c0 |
-| mobile-chromium | evaluate | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | 2384f5a1cf104ec9949ee5aaabb2b931 |
-| mobile-chromium | fetch | after_commit | committed → committed | 1 | 1 | 1 | 4 → 5 | 46a32adfb0cf4ee89f8f9f6e61ce7072 |
-| mobile-chromium | extract | display_read_lost | committed/display_pending → committed | 1 | 0 | 1 | Не перечислено → Не перечислено | e980b059566140398e4bd96814385e0f |
+| mobile-chromium | snapshot | after_commit | committed → committed | 1 | 1 | 1 | 3 → 4 | df29ade7bdc642779efefe0d6c3f794d |
+| mobile-chromium | candidate | after_commit | committed → committed | 1 | 1 | 1 | 0 → 1 | 12a91aa2ac2941c89ac606b9048122a9 |
+| mobile-chromium | extract | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | f5077e657eb545a4be57518fb6a941eb |
+| mobile-chromium | match | after_commit | committed → committed | 1 | 1 | 1 | Не перечислено → Не перечислено | b9ff85428fa54cdd93ec136c0b54e9fd |
+| mobile-chromium | evaluate | after_commit | committed → committed | 1 | 1 | 1 | 2 → 3 | 23b7533c482b48ff95b94619f588161e |
+| mobile-chromium | fetch | after_commit | committed → committed | 1 | 1 | 1 | 4 → 5 | c17ca19122544ff8a87771e55d10945c |
+| mobile-chromium | extract | display_read_lost | committed/display_pending → committed | 1 | 0 | 1 | Не перечислено → Не перечислено | 4649de722c684a73afadcdbf8f87124d |
 | mobile-chromium | snapshot | unsent_reload_cancel | not_received → rejected | 1 | 1 | 0 | 5 → 5 | Новый результат не сохранён |
-| mobile-chromium | extract | provider_in_flight | uncertain → committed | 1 | 0 | 1 | Не перечислено → Не перечислено | 75b184f100b74f3eb55db4190bd6a0cc |
-| mobile-chromium | extract | lookup_lost_reload | uncertain → committed | 1 | 0 | 1 | 6 → 6 | 49945fa9b2ae440c9c4714e2c5005736 |
+| mobile-chromium | extract | provider_in_flight | uncertain → committed | 1 | 0 | 1 | Не перечислено → Не перечислено | f817ad9097ba4bb88323a439c855c2b9 |
+| mobile-chromium | extract | lookup_lost_reload | uncertain → committed | 1 | 0 | 1 | 6 → 6 | b18cd01b41b242c4a0e276cfca501231 |
 | mobile-chromium | candidate | validation_rejected | rejected → rejected | 1 | 0 | 0 | 0 → 0 | Новый результат не сохранён |
 
 [Desktop UI13](../../ui-recordings/UI13-desktop-chromium.webm) · [Mobile UI13](../../ui-recordings/UI13-mobile-chromium.webm)
