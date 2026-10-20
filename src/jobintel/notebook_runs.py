@@ -1,5 +1,6 @@
 """Shared database-independent execution for Python, fresh kernels and the CLI."""
 
+import re
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -149,6 +150,16 @@ def execute_report(request, corpus, spec, report, root, transport):
     return result
 
 
+def notebook_comparison(report, *, saved):
+    available = {"scores.json"} if saved else {"report.json", "scores.json"}
+    body = re.sub(
+        r"\[([^\]]+)\]\(([^)]+)\)",
+        lambda match: match[0] if match[2] in available else match[1],
+        comparison(report),
+    )
+    return f"Исходный отчёт SHA-256: `{digest(report)}`.\n\n{body}" if saved else body
+
+
 def run_notebook(request, *, data_root=Path("data"), transport=None):
     request = NotebookRequest.model_validate(request)
     root = Path(data_root)
@@ -158,7 +169,10 @@ def run_notebook(request, *, data_root=Path("data"), transport=None):
     try:
         report = execute_report(request, corpus, spec, report, root, transport)
         write_json(request.output / "scores.json", rescore(report))
-        (request.output / "comparison.md").write_text(comparison(report), encoding="utf-8")
+        (request.output / "comparison.md").write_text(
+            notebook_comparison(report, saved=request.mode == "saved-report"),
+            encoding="utf-8",
+        )
         value["status"] = (
             "completed_with_failures"
             if any(r["summary"]["failed"] for r in report["results"])

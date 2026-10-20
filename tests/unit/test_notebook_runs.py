@@ -2,6 +2,7 @@
 
 import copy
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -113,6 +114,11 @@ def test_exec03_saved_legacy_reports_without_provider(tmp_path, monkeypatch, pat
     assert result.mode == "saved-report"
     assert result.evidence_mode == read_json(source)["mode"]
     assert not (value.output / "report.json").exists()
+    comparison = (value.output / "comparison.md").read_text()
+    assert result.input_sha256 in comparison
+    assert str(source) not in comparison
+    for target in re.findall(r"\]\(([^)]+)\)", comparison):
+        assert (value.output / target).is_file(), target
     assert verify_manifest(value.output / "manifest.json") == result
 
 
