@@ -32,6 +32,10 @@ def main(argv=None, *, transport=None):
 
 
 def specialized_command(argv):
+    if argv and argv[0] == "notebook":
+        from jobintel.notebook_cli import main as notebook_main
+
+        raise SystemExit(notebook_main(argv[1:]))
     if argv and argv[0] == "analytics":
         from jobintel.analytics_cli import execute as analytics_execute
 

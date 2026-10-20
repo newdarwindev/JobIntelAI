@@ -1,0 +1,17 @@
+{
+  "python": "3.12.14",
+  "code": {
+    "source_sha256": "c6167d89f5ae8f74edc17ce823f6739185ed24efda446249ff329f65a8d75382",
+    "git_commit": "1fa3af8d5247d449e44d9137032af9e3cddcfdf2",
+    "git_dirty": true
+  },
+  "checks": {
+    "fresh_kernel": true,
+    "same_environment": true,
+    "fixture_status": "succeeded",
+    "saved_rescore_equal": true,
+    "preflight_refused": true,
+    "database_and_http_forbidden": true,
+    "corpus_sha256": "b1d30841e406ced48f382e0c4c05b32e5bd0a39c0c37b9b63e9a9e1c39214c15"
+  }
+}

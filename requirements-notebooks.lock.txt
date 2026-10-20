@@ -1,0 +1,223 @@
+alembic==1.20.0
+    # via
+    #   -c requirements.lock.txt
+    #   jobintel-ai (pyproject.toml)
+annotated-doc==0.0.5
+    # via
+    #   -c requirements.lock.txt
+    #   fastapi
+annotated-types==0.8.0
+    # via
+    #   -c requirements.lock.txt
+    #   pydantic
+anyio==4.15.1
+    # via
+    #   -c requirements.lock.txt
+    #   httpx
+    #   starlette
+asttokens==3.0.2
+    # via stack-data
+attrs==26.1.0
+    # via
+    #   jsonschema
+    #   referencing
+beautifulsoup4==4.15.0
+    # via
+    #   -c requirements.lock.txt
+    #   jobintel-ai (pyproject.toml)
+certifi==2026.7.22
+    # via
+    #   -c requirements.lock.txt
+    #   httpcore
+    #   httpx
+click==8.5.0
+    # via
+    #   -c requirements.lock.txt
+    #   uvicorn
+comm==0.2.3
+    # via ipykernel
+debugpy==1.8.22
+    # via ipykernel
+executing==2.3.0
+    # via stack-data
+fastapi==0.142.4
+    # via
+    #   -c requirements.lock.txt
+    #   jobintel-ai (pyproject.toml)
+fastjsonschema==2.22.2
+    # via nbformat
+h11==0.16.0
+    # via
+    #   -c requirements.lock.txt
+    #   httpcore
+    #   uvicorn
+httpcore==1.0.9
+    # via
+    #   -c requirements.lock.txt
+    #   httpx
+httpx==0.28.1
+    # via
+    #   -c requirements.lock.txt
+    #   jobintel-ai (pyproject.toml)
+idna==3.20
+    # via
+    #   -c requirements.lock.txt
+    #   anyio
+    #   httpx
+ipykernel==7.4.0
+    # via jobintel-ai (pyproject.toml)
+ipython==9.17.1
+    # via ipykernel
+ipython-pygments-lexers==1.1.1
+    # via ipython
+jedi==0.20.1
+    # via ipython
+jsonschema==4.26.0
+    # via nbformat
+jsonschema-specifications==2025.9.1
+    # via jsonschema
+jupyter-client==8.10.0
+    # via
+    #   ipykernel
+    #   nbclient
+jupyter-core==5.9.1
+    # via
+    #   ipykernel
+    #   jupyter-client
+    #   nbclient
+    #   nbformat
+mako==1.4.3
+    # via
+    #   -c requirements.lock.txt
+    #   alembic
+markupsafe==3.0.4
+    # via
+    #   -c requirements.lock.txt
+    #   mako
+matplotlib-inline==0.2.2
+    # via
+    #   ipykernel
+    #   ipython
+nbclient==0.11.0
+    # via jobintel-ai (pyproject.toml)
+nbformat==5.11.1
+    # via
+    #   jobintel-ai (pyproject.toml)
+    #   nbclient
+nest-asyncio2==1.7.4
+    # via ipykernel
+opentelemetry-api==1.45.1
+    # via
+    #   -c requirements.lock.txt
+    #   fastapi
+packaging==26.3
+    # via
+    #   -c requirements.lock.txt
+    #   ipykernel
+parso==0.8.7
+    # via jedi
+pexpect==4.9.0
+    # via ipython
+platformdirs==4.13.5
+    # via jupyter-core
+prompt-toolkit==3.0.53
+    # via ipython
+psutil==7.2.2
+    # via ipython
+psycopg==3.3.6
+    # via
+    #   -c requirements.lock.txt
+    #   jobintel-ai (pyproject.toml)
+psycopg-binary==3.3.6
+    # via
+    #   -c requirements.lock.txt
+    #   psycopg
+ptyprocess==0.7.0
+    # via pexpect
+pure-eval==0.2.4
+    # via stack-data
+pydantic==2.13.5
+    # via
+    #   -c requirements.lock.txt
+    #   jobintel-ai (pyproject.toml)
+    #   fastapi
+pydantic-core==2.46.5
+    # via
+    #   -c requirements.lock.txt
+    #   pydantic
+pygments==2.21.0
+    # via
+    #   -c requirements.lock.txt
+    #   ipython
+    #   ipython-pygments-lexers
+python-dateutil==2.9.0.post0
+    # via jupyter-client
+pyzmq==27.2.0
+    # via
+    #   ipykernel
+    #   jupyter-client
+referencing==0.37.0
+    # via
+    #   jsonschema
+    #   jsonschema-specifications
+rpds-py==2026.9.1
+    # via
+    #   jsonschema
+    #   referencing
+six==1.17.0
+    # via python-dateutil
+soupsieve==2.10
+    # via
+    #   -c requirements.lock.txt
+    #   beautifulsoup4
+sqlalchemy==2.1.4
+    # via
+    #   -c requirements.lock.txt
+    #   jobintel-ai (pyproject.toml)
+    #   alembic
+stack-data==0.6.3
+    # via ipython
+starlette==1.7.0
+    # via
+    #   -c requirements.lock.txt
+    #   fastapi
+tornado==6.5.10
+    # via
+    #   ipykernel
+    #   jupyter-client
+traitlets==5.16.1
+    # via
+    #   ipykernel
+    #   ipython
+    #   jupyter-client
+    #   jupyter-core
+    #   matplotlib-inline
+    #   nbclient
+    #   nbformat
+typing-extensions==4.16.0
+    # via
+    #   -c requirements.lock.txt
+    #   alembic
+    #   anyio
+    #   beautifulsoup4
+    #   fastapi
+    #   jupyter-client
+    #   opentelemetry-api
+    #   psycopg
+    #   pydantic
+    #   pydantic-core
+    #   referencing
+    #   sqlalchemy
+    #   starlette
+    #   typing-inspection
+typing-inspection==0.4.4
+    # via
+    #   -c requirements.lock.txt
+    #   fastapi
+    #   pydantic
+uvicorn==0.54.0
+    # via
+    #   -c requirements.lock.txt
+    #   jobintel-ai (pyproject.toml)
+wcwidth==0.9.2
+    # via prompt-toolkit
