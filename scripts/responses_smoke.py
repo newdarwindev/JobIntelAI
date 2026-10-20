@@ -1,4 +1,4 @@
-"""Prove API/PostgreSQL/provider sockets and process recovery without model inference."""
+"""API/PostgreSQL/provider sockets и восстановление процесса без model inference."""
 
 import argparse
 import subprocess

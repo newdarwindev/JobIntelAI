@@ -263,15 +263,23 @@ def run_report(provider, root, configurations, *, dataset="fixture", pricing=Non
     return report
 
 
+def human_mode(mode):
+    labels = {
+        "fixture replay": "Fixture replay: проверка pipeline, не качество LLM",
+        "Responses contract emulator": "Responses emulator: авторский контракт, без inference",
+    }
+    return labels.get(mode.split(" — ")[0], f"Режим исполнения: {mode}")
+
+
 def human_summary(report):
     lines = [
-        f"Evaluation: {report.get('dataset_revision', 'legacy')} ({report['dataset_size']} cases), {report.get('status', 'legacy')}.",
-        report["mode"],
+        f"Оценка: {report.get('dataset_revision', 'legacy')} ({report['dataset_size']} случаев), {report.get('status', 'legacy')}.",
+        human_mode(report["mode"]),
     ]
     for result in report["results"]:
         metrics = result["metrics"]
         lines.append(
-            f"{result['configuration']}: {result.get('succeeded', 'unavailable')} succeeded, {result.get('failed', 'unavailable')} failed; precision={metrics['precision'] if metrics else None}, recall={metrics['recall'] if metrics else None}."
+            f"{result['configuration']}: {result.get('succeeded', 'нет данных')} успешно, {result.get('failed', 'нет данных')} ошибок; precision={metrics['precision'] if metrics else None}, recall={metrics['recall'] if metrics else None}."
         )
         lines.extend(
             f"  {r['case_id']}: {r['error']['code']}"
@@ -283,6 +291,6 @@ def human_summary(report):
             if reviewed and reviewed["semantic_unsupported_claim_rate"]["numerator"]:
                 rate = reviewed["semantic_unsupported_claim_rate"]
                 lines.append(
-                    f"  {record['case_id']}: unsupported reviewed claims {rate['numerator']}/{rate['denominator']}"
+                    f"  {record['case_id']}: неподтверждённые reviewed claims {rate['numerator']}/{rate['denominator']}"
                 )
     return "\n".join(lines) + "\n"

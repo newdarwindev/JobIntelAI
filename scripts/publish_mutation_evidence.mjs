@@ -1,3 +1,4 @@
+import {mutationMarkdown} from './render_ui_evidence.mjs';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
 import {resolve,relative,sep} from 'node:path';
@@ -41,13 +42,4 @@ const runUrl=github?`${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOS
 const evidence={schema_version:1,origin:github?'github-actions':'local-playwright',run_url:runUrl,git_sha:process.env.GITHUB_SHA??execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),source_hash:await uiSourceHash(),mode:'authored fixture replay and Responses emulator; actual API/DB operations; no paid calls',rows};
 const directory='docs/issue-evidence/40';await mkdir(directory,{recursive:true});
 await writeFile(`${directory}/mutation-comparison.json`,JSON.stringify(evidence,null,2)+'\n');
-const display=value=>value===null||value===undefined?'Not enumerated':String(value);
-const rendered=rows.map(row=>`| ${row.project} | ${row.kind} | ${row.scenario} | ${row.initial_state} → ${row.final_state} | ${row.browser_post_requests} | ${row.api_conflict_probes??0} | ${row.completed_handler_executions} | ${display(row.before_records)} → ${display(row.after_records)} | ${row.saved_id??'No new saved result'} |`);
-const lines=['# Mutation recovery — measured browser verification','',`Source: ${github?`[GitHub Actions run](${runUrl})`:'local Playwright run'} · tested commit \`${evidence.git_sha}\`.`,`Source content SHA-256: \`${evidence.source_hash}\`. [Machine-readable observations](mutation-comparison.json).`,'',evidence.mode+'.','',
-  'Each row comes from the passing UI13 attempt, observed browser requests, saved operation lookup and readable API history/catalogues. Before-delivery loss sends two browser POSTs with one identity; after-commit loss recovers with a read. The conflicting-body probe is a separate test API POST and returns 409. Completed keyed handler executions are recorded by the server; they do not measure model quality or internal provider retries.',
-  '', 'Snapshot/extraction/registry/revision/evaluation counts come from their actual API catalogues. Matching has no catalogue, so its row count is explicitly not enumerated; its exact saved match ID and immutable response are verified instead. PostgreSQL/SQLite integration tests additionally count all mutation records directly. Unsent cancellation and validation rejection start zero handlers. Display/status-read recovery adds no POST or saved run.',
-  '', '| Viewport | Mutation | Interrupted boundary | Observed outcome | Browser POSTs | Conflicting test POSTs | Completed handler executions | Saved records before → after | Exact saved identity |','| --- | --- | --- | --- | ---: | ---: | ---: | --- | --- |',...rendered,'',
-  '[Desktop UI13 recording](../../ui-recordings/UI13-desktop-chromium.webm) · [Mobile UI13 recording](../../ui-recordings/UI13-mobile-chromium.webm)','',
-  'Prior snapshot/extraction, candidate revision, match and evaluation records were read back unchanged. The in-flight case uses the separate authored Responses service with a bounded delayed response. Missing outcomes remain uncertain until lookup confirms them; no duplicate execution is scheduled. Only opaque operation identity is persisted in browser storage.',''];
-await writeFile(`${directory}/mutation-comparison.md`,lines.join('\n'));
-console.log(`Published ${rows.length} measured mutation-recovery cases from successful desktop/mobile attempts (${evidence.origin}).`);
+await writeFile(`${directory}/mutation-comparison.md`,mutationMarkdown(evidence));

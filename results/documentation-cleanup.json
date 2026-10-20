@@ -1,0 +1,403 @@
+{
+  "tested": {
+    "source_sha256": "4716526a346bb4ad5032bc1410810f44ceca2571418dcac14fe8189a73164852",
+    "git_commit": "977778664a8207c979509a44210f8d3cf8fee507",
+    "git_dirty": true
+  },
+  "command": "synthetic operational acceptance for issue #58",
+  "checks": [
+    {
+      "check": "postgres_existing_project_refused",
+      "status": "passed"
+    },
+    {
+      "check": "postgres_failure_cleanup",
+      "status": "passed"
+    },
+    {
+      "check": "neighbor_preserved",
+      "status": "passed"
+    },
+    {
+      "check": "postgres_success_cleanup",
+      "status": "passed"
+    },
+    {
+      "check": "postgres_repeat_uses_independent_projects",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_import",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_snapshot",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_extraction",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_control_port_and_failure",
+      "status": "passed"
+    },
+    {
+      "check": "persistent_volume_survives_stop",
+      "status": "passed"
+    },
+    {
+      "check": "persistent_history_survives_restart",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_control_rediscovers_port",
+      "status": "passed"
+    },
+    {
+      "check": "emulator_scoped_reset",
+      "status": "passed"
+    }
+  ],
+  "passed": 13,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "paid_calls": 0,
+  "documentation": {
+    "baseline": "ea47287036273791ffd5fa41265df5711a8b3eb8",
+    "files_before": 27,
+    "original_files_retained": 10,
+    "files_deleted": 17,
+    "lines_before": 3791,
+    "lines_after": 1251,
+    "catalog": [
+      {
+        "path": "AGENTS.md",
+        "before_lines": 169,
+        "after_lines": 99,
+        "decision": "Русский необходимый текст"
+      },
+      {
+        "path": "README.md",
+        "before_lines": 474,
+        "after_lines": 121,
+        "decision": "Русский необходимый текст"
+      },
+      {
+        "path": "docs/acquisition.md",
+        "before_lines": 247,
+        "after_lines": 0,
+        "decision": "specification §6; make acquisition-check"
+      },
+      {
+        "path": "docs/analytics.md",
+        "before_lines": 134,
+        "after_lines": 0,
+        "decision": "specification §10"
+      },
+      {
+        "path": "docs/architecture.md",
+        "before_lines": 38,
+        "after_lines": 0,
+        "decision": "README: единственная диаграмма"
+      },
+      {
+        "path": "docs/ci.md",
+        "before_lines": 165,
+        "after_lines": 0,
+        "decision": "AGENTS; make check/check-postgres/quality"
+      },
+      {
+        "path": "docs/data_model.md",
+        "before_lines": 52,
+        "after_lines": 0,
+        "decision": "specification §2/7; модели и миграции"
+      },
+      {
+        "path": "docs/environments.md",
+        "before_lines": 79,
+        "after_lines": 0,
+        "decision": "specification §13; make env"
+      },
+      {
+        "path": "docs/evaluation.md",
+        "before_lines": 108,
+        "after_lines": 106,
+        "decision": "Русский необходимый текст"
+      },
+      {
+        "path": "docs/experiments.md",
+        "before_lines": 237,
+        "after_lines": 0,
+        "decision": "evaluation; make experiment-*"
+      },
+      {
+        "path": "docs/exports.md",
+        "before_lines": 105,
+        "after_lines": 0,
+        "decision": "specification §10; CLI/OpenAPI"
+      },
+      {
+        "path": "docs/extraction_schema.md",
+        "before_lines": 54,
+        "after_lines": 0,
+        "decision": "specification §7; Pydantic/OpenAPI"
+      },
+      {
+        "path": "docs/implementation_plan.md",
+        "before_lines": 48,
+        "after_lines": 0,
+        "decision": "GitHub issues"
+      },
+      {
+        "path": "docs/local_inference.md",
+        "before_lines": 133,
+        "after_lines": 0,
+        "decision": "specification §13; evaluation; make model-*"
+      },
+      {
+        "path": "docs/privacy_and_copyright.md",
+        "before_lines": 45,
+        "after_lines": 0,
+        "decision": "specification §4; README/AGENTS"
+      },
+      {
+        "path": "docs/responses_emulator.md",
+        "before_lines": 90,
+        "after_lines": 0,
+        "decision": "specification §7/13; make emulator-scenario"
+      },
+      {
+        "path": "docs/source_brief.txt",
+        "before_lines": 442,
+        "after_lines": 442,
+        "decision": "Неизменённый первоисточник"
+      },
+      {
+        "path": "docs/specification.md",
+        "before_lines": 438,
+        "after_lines": 285,
+        "decision": "Русский необходимый текст"
+      },
+      {
+        "path": "docs/testing_scenarios.md",
+        "before_lines": 242,
+        "after_lines": 0,
+        "decision": "acceptance_map.json; тесты/issues"
+      },
+      {
+        "path": "docs/validation.md",
+        "before_lines": 108,
+        "after_lines": 0,
+        "decision": "исторические доказательства в Git/issue #58"
+      },
+      {
+        "path": "docs/web_ui_spec.md",
+        "before_lines": 248,
+        "after_lines": 107,
+        "decision": "Русский необходимый текст"
+      },
+      {
+        "path": "results/README.md",
+        "before_lines": 9,
+        "after_lines": 31,
+        "decision": "Русский необходимый текст"
+      },
+      {
+        "path": "results/experiments/reviewed-fake/comparison.md",
+        "before_lines": 36,
+        "after_lines": 36,
+        "decision": "Русский необходимый текст"
+      },
+      {
+        "path": "results/local-inference/README.md",
+        "before_lines": 33,
+        "after_lines": 0,
+        "decision": "results/README.md; исходные JSON сохранены"
+      },
+      {
+        "path": "results/network-experiments/README.md",
+        "before_lines": 33,
+        "after_lines": 0,
+        "decision": "results/README.md; исходные reports/scores/audits сохранены"
+      },
+      {
+        "path": "results/network-experiments/emulator/comparison.md",
+        "before_lines": 11,
+        "after_lines": 11,
+        "decision": "Русский необходимый текст"
+      },
+      {
+        "path": "results/network-experiments/local/comparison.md",
+        "before_lines": 13,
+        "after_lines": 13,
+        "decision": "Русский необходимый текст"
+      }
+    ],
+    "additional_generated_reports": [
+      "docs/issue-evidence/40/mutation-comparison.md",
+      "docs/issue-evidence/41/batch-comparison.md"
+    ],
+    "bytes_before": 249311,
+    "bytes_after": 110722
+  },
+  "backend": {
+    "command": "make check-postgres",
+    "python": "3.12.14",
+    "tests": 887,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 887
+  },
+  "atomic_installer": {
+    "parallel_runs": 2,
+    "passed": 2,
+    "failed": 0,
+    "checksum_verified": true
+  },
+  "node_unit_gates": {
+    "tests": 33,
+    "passed": 33,
+    "failed": 0,
+    "skipped": 0
+  },
+  "ci": {
+    "source_head": "9890ef696a2e6ee700c2fb1beff9b40eb0ca41db",
+    "tested_merge": "7cc99839cd97e2a8c3d9a83a95dfc0ebae3af060",
+    "source_sha256": "dc134a9714a84967c0e4ac05fe13dc7a32deda88049ea185f0b7599d84cbd5b5",
+    "runs": [
+      {
+        "id": 39437770672,
+        "name": "Web UI workflows and recordings",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 112,
+        "jobs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770672/jobs",
+        "logs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770672/logs",
+        "workflow_id": 378409500
+      },
+      {
+        "id": 39437770425,
+        "name": "automated checks",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 129,
+        "jobs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770425/jobs",
+        "logs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770425/logs",
+        "workflow_id": 378313058
+      },
+      {
+        "id": 39437770428,
+        "name": "Local CPU inference",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 50,
+        "jobs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770428/jobs",
+        "logs_url": "https://api.github.com/repos/newdarwindev/JobIntelAI/actions/runs/39437770428/logs",
+        "workflow_id": 380790034
+      }
+    ],
+    "backend_matrix": [
+      {
+        "commit": "7cc99839cd97e2a8c3d9a83a95dfc0ebae3af060",
+        "python": "3.12",
+        "run_id": "39437770425",
+        "run_attempt": "1",
+        "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39437770425",
+        "config": "fake providers / synthetic corpus / disposable PostgreSQL",
+        "command": "python scripts/check.py --require-postgres --junitxml work/ci/junit.xml",
+        "exit_code": 0,
+        "tests": 887,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 887
+      },
+      {
+        "commit": "7cc99839cd97e2a8c3d9a83a95dfc0ebae3af060",
+        "python": "3.11",
+        "run_id": "39437770425",
+        "run_attempt": "1",
+        "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39437770425",
+        "config": "fake providers / synthetic corpus / disposable PostgreSQL",
+        "command": "python scripts/check.py --require-postgres --junitxml work/ci/junit.xml",
+        "exit_code": 0,
+        "tests": 887,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 887
+      }
+    ],
+    "final_change_scope": "После проверенного исходного коммита изменены только опубликованные записи, README, генерируемые измерения UI и этот отчёт; исходный hash не меняется."
+  },
+  "browser": {
+    "published_manifest": "docs/ui-recordings/manifest.json",
+    "origin": "github-actions",
+    "git_sha": "7cc99839cd97e2a8c3d9a83a95dfc0ebae3af060",
+    "source_hash": "dc134a9714a84967c0e4ac05fe13dc7a32deda88049ea185f0b7599d84cbd5b5",
+    "run_url": "https://github.com/newdarwindev/JobIntelAI/actions/runs/39437770672",
+    "tests": 28,
+    "passed": 28,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "flaky": 0,
+    "publication_files": 34,
+    "publication_parts": 2,
+    "archive_sha256": [
+      "b9c3170c29a09df2d4cf8939135ec5966cffd4a38365a77ccc73c6f44b3c7c1c",
+      "7f183c198eb979ddb36e7f951db9b2df4e5a1cc4fe3924f6176813477c719e9c"
+    ],
+    "local_independent_run": {
+      "command": "UI_BROWSER_PATH=/usr/bin/chromium make ui-check",
+      "git_sha": "9890ef696a2e6ee700c2fb1beff9b40eb0ca41db",
+      "source_hash": "dc134a9714a84967c0e4ac05fe13dc7a32deda88049ea185f0b7599d84cbd5b5",
+      "tests": 28,
+      "passed": 28,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "flaky": 0
+    },
+    "media_validation": {
+      "passed": 28,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "method": "ffprobe metadata and complete ffmpeg decode",
+      "files": [
+        "UI14-desktop-chromium.webm",
+        "UI14-mobile-chromium.webm",
+        "UI12-desktop-chromium.webm",
+        "UI12-mobile-chromium.webm",
+        "UI13-desktop-chromium.webm",
+        "UI13-mobile-chromium.webm",
+        "UI09-desktop-chromium.webm",
+        "UI10-desktop-chromium.webm",
+        "UI11-desktop-chromium.webm",
+        "UI09-mobile-chromium.webm",
+        "UI10-mobile-chromium.webm",
+        "UI11-mobile-chromium.webm",
+        "UI01-desktop-chromium.webm",
+        "UI02-desktop-chromium.webm",
+        "UI03-desktop-chromium.webm",
+        "UI04-desktop-chromium.webm",
+        "UI05-desktop-chromium.webm",
+        "UI06-desktop-chromium.webm",
+        "UI07-desktop-chromium.webm",
+        "UI08-desktop-chromium.webm",
+        "UI01-mobile-chromium.webm",
+        "UI02-mobile-chromium.webm",
+        "UI03-mobile-chromium.webm",
+        "UI04-mobile-chromium.webm",
+        "UI05-mobile-chromium.webm",
+        "UI06-mobile-chromium.webm",
+        "UI07-mobile-chromium.webm",
+        "UI08-mobile-chromium.webm"
+      ]
+    }
+  }
+}

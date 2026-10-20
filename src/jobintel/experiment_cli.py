@@ -1,4 +1,4 @@
-"""Explicit frozen-corpus experiment commands; no database writes or paid CI calls."""
+"""Явные команды frozen-corpus экспериментов, без записи в БД и платных CI-запросов."""
 
 import argparse
 import json
@@ -273,7 +273,7 @@ def main(arguments, *, transport=None):
         # ValidationError details can echo private input; print only a safe class code.
         if isinstance(error, ProviderUnavailable):
             parser.exit(2, f"{error}\n")
-        parser.exit(2, f"Experiment rejected ({type(error).__name__}); see docs/experiments.md.\n")
+        parser.exit(2, f"Experiment rejected ({type(error).__name__}); см. docs/evaluation.md.\n")
     except KeyboardInterrupt:
         parser.exit(1, "Experiment interrupted; the last atomic checkpoint remains incomplete.\n")
 

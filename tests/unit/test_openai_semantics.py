@@ -1,8 +1,7 @@
-"""V13/V14/V19: independently authored semantic contracts via fake transport.
+"""V13/V14/V19: авторские semantic contracts через fake transport.
 
-These exercise preservation, grounding and prompt isolation; live semantic quality
-requires separately authorized reviewed experiments.
-"""
+Проверяется preservation/grounding/prompt isolation; live quality требует
+отдельно разрешённых reviewed экспериментов."""
 
 import json
 from pathlib import Path

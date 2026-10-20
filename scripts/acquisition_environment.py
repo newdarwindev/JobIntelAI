@@ -1,4 +1,4 @@
-"""Manage an isolated authored origin/proxy Compose stack with scoped TLS trust."""
+"""Изолированный авторский origin/proxy Compose с scoped TLS trust."""
 
 import argparse
 import json

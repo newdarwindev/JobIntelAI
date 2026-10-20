@@ -1,4 +1,4 @@
-"""Measure B/C on frozen reviewed inputs using an already-running scoped local service."""
+"""Измерение B/C на frozen reviewed inputs через работающий scoped local service."""
 
 import argparse
 import json

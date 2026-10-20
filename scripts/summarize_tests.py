@@ -1,4 +1,4 @@
-"""Publish synthetic-only JUnit counts and final-commit CI provenance."""
+"""Публикация synthetic JUnit counts и provenance финального commit."""
 
 import argparse
 import json

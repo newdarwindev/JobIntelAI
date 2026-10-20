@@ -1,346 +1,107 @@
-# Mock web UI acceptance specification
+# Приёмка веб-интерфейса
 
-## Scope decision — 2026-10-08
+UI — HTML/CSS/JavaScript FastAPI `/ui/`, без внешних assets. Браузер вызывает настоящие
+мигрированные сервисы; доменные [контракты](specification.md) не подменяются static success.
+Fixture/emulator — authored coverage, CPU — реальная inference, hosted — только при
+отдельном разрешении. Неизвестный fixture hash завершается явно.
 
-The user requested all required web interfaces, mocks, complete GitHub Actions
-browser workflows, successful videos in README.md, and persistent agent rules.
-This explicitly extends the original backend-only v1 scope. The original brief is
-retained. The six screens below expose that backend's contracts; this extension
-does not establish live model quality or complete portfolio experiment release gates.
+## Экраны и ожидаемый результат
 
-The UI is dependency-free HTML/CSS/JavaScript served by FastAPI at `/ui/`. Mocking
-happens at the existing `FixtureProvider` boundary: the browser calls real migrated
-API/services with authored synthetic data. Domain logic is not replaced by static
-success responses. Unknown fixture hashes fail explicitly. The demo launcher runs
-Alembic before serving a disposable SQLite database, binds to loopback, and removes
-the database on exit. Demo fixture/reset routes exist only with `demo=True`; the
-normal API exposes neither. Candidate imports append immutable revisions in the local database. The browser
-stores only the explicitly selected profile/revision IDs and reloads that revision
-after refresh. Individual match display cards are cleared on refresh. The selected
-evaluation run ID also reloads its saved report after refresh; private report bodies
-are not copied into browser storage. Saved match runs remain readable by their IDs.
-Job/snapshot/extraction persistence lasts for the lifetime of the demo server.
-
-## Required interfaces and contracts
-
-| Screen | Required behavior | Journey |
+| Экран | Существенная приёмка | Journey IDs |
 | --- | --- | --- |
-| Overview | Empty onboarding, registry/success/pending counts, complete 20-posting replay, partial batch outcomes, bounded continuation, direct navigation | UI01, UI03, UI08, UI14 |
-| Job registry | CSV/JSON import, typed applied state, atomic conflict/rejection, duplicates, search and pipeline filters, in-memory import drafts and discard | UI01, UI09–UI14 |
-| Source & extraction | Manual text/HTML, bounded URL acquisition/manual recovery, immutable hash/timestamp/URL, source/extraction/attempt history, source-change invalidation, exact Unicode quote highlighting, MUST/PREFERRED/EXPERIENCE/OTHER, ANY/ALL, raw/normalized configurations, separate responsibilities, provenance JSON, per-posting source/URL/format drafts and discard | UI02, UI03, UI07, UI09–UI14 |
-| Candidate evidence | Strict sourced JSON, immutable revision save/reload/select, separate completeness and capability/production axes, dated tenure and exact-scope eligibility, four states, contradiction abstention, ANY/ALL, selected/corpus matches, source-linked backend JSON/CSV export, revision-scoped JSON/lookup/completeness drafts, partial matching outcomes and bounded continuation | UI04, UI09–UI14 |
-| Corpus analytics | Saved latest-source n/N, mutually exclusive coverage and explicit failure overlaps, applied/grounded remote slices, alternatives, distinct-job categories and revision-selected group gaps after refresh, JSON and formula-safe CSV with source/run/profile provenance | UI05, UI09–UI11 |
-| Evaluation lab | Select supported raw/normalized configs from the API, reject empty selection, original 20-case regression and frozen 25-case source-reviewed benchmark, explicit metric counts, semantic/abstention/matching metrics, null unavailable measurements, per-case failures, report reload after refresh and by ID, JSON export | UI06, UI09–UI11, UI13 |
+| Обзор/реестр | Empty onboarding, atomic CSV/JSON import, typed applied, duplicates/conflicts без частичной записи, поиск/фильтры и переходы | UI01, UI08–UI14 |
+| Источники/извлечение | Ручной text/HTML, URL/manual recovery, immutable source/hash/time, история attempts/runs, stale invalidation, точная Unicode-подсветка, raw/normalized, ANY/ALL, metadata/versions/obligations/responsibilities и provenance export | UI02, UI03, UI07, UI09–UI14 |
+| Кандидат | Strict sourced JSON, явная полнота, immutable revision save/reload/select, четыре состояния, tenure/eligibility и contradiction abstention, separate capability/production, matching/export выбранной revision и extraction | UI04, UI09–UI14 |
+| Аналитика | Persisted n/N и gap denominator, coverage/overlaps, applied/grounded remote, revision selection после refresh, JSON/CSV parity, formula safety, stale/history selection | UI05, UI09–UI14 |
+| Оценка | Поддерживаемые configs из API, reject empty selection, fixture/reviewed datasets, numerator/denominator/null, failures и per-case diagnostics, reload report по ID/после refresh, экспорт режима | UI06, UI09–UI14 |
 
-UI06 must identify exported results as fixture replay rather than live model
-quality. The separate `jobintel experiment` CLI preserves `/evaluate` and cannot
-enable paid browser calls. Live A/B/C configuration, budgeting and output audit stay
-in the opt-in CLI; UI06 exports retain fixture identity and unavailable paid usage.
-Local B/C model reports and network-emulator B/C contract reports also stay in the
-CLI. UI10/UI11 preserve their runtime identity and null unmeasured costs after
-shared provider changes; CLI reports cannot become persisted browser evaluations
-or enable paid actions.
-The journey checks the exported mode and null usage/cost. Original regression
-semantic/abstention metrics remain null. The source-reviewed benchmark displays
-reviewed counts, successful-case scope, matching on gold requirements, and five
-unsupported replay inputs as preserved failures. It reloads both reports without
-new extraction requests; fixtures cannot establish live quality.
+Все экраны: labelled controls, keyboard access, responsive desktop/mobile, deep links,
+busy/error/empty states и escaped input. HTML не исполняется. Ошибка сохраняет prior usable
+source/run и несохранённый редактор, не показывает успех с пустыми данными. Provider status
+refresh не заменяет text/format. Выбранные profile/revision/evaluation IDs переживают refresh;
+private bodies не копируются в browser storage. Revision switch очищает текущие projections,
+matching отправляет inspected run ID; stale — 409, отсутствующий saved revision — явная ошибка.
 
-UI03 inspects schema-v2 geography/work-mode/filter values with exact source quotes,
-highlights metadata evidence, exports explicit version comparators with raw wording,
-and verifies that preferred production experience is displayed as preferred.
-Experience obligation is shown separately from requirement type and years.
-UI04 verifies that a versioned requirement remains UNKNOWN until sourced candidate
-version predicates are supported. Missing or ambiguous metadata is shown as unknown.
+UI02 проходит реальный production HTTP transport через scoped policy-proxy/origin и
+verified HTTPS: redirect success, inert script, 403/JS-only, сохранённая attempt history,
+прежний extraction/unsaved manual text, manual recovery и reload. Diagnostics доказывают
+TLS handshake и single-use numeric pin за hostname CONNECT. UI08 проверяет gateway
+capability/readiness и manual capture при unsupported proxy/503. Это не Internet crawling.
+UI03 проверяет non-BMP offsets, metadata evidence, preferred production и version predicates;
+пока candidate version evidence не поддержан, UI04 показывает UNKNOWN.
 
-All screens require visible busy/error/empty states, labelled controls, keyboard
-access, responsive layouts, deep links to postings, and escaped untrusted content.
-Failing mutations preserve the source/prior run, enable retry, and never show a
-success-looking empty result. No third-party assets or hosted scripts are needed.
-HTML is cleaned server-side and is never inserted as executable source markup.
-The Unicode UI regression injects an authored API read fixture with an emoji
-prefix; UI07 provider errors come from the separately running Responses emulator; its browser-to-API connection abort is intercepted locally.
-The rest of the browser pipeline uses the real fixture-backed service.
+UI07 использует отдельный Responses emulator: success, refusal/invalid evidence (422),
+quota/server/malformed/connection close (502), timeout (504), retryability и request counts:
+malformed output — два запроса, остальные failures — один. History сохраняется, success
+восстанавливает работу. Control routes существуют только в launcher. Browser interception
+ограничен Unicode read fixture и browser-to-API connection failure.
 
-UI12 retains unsaved registry content/format, source text/URL/format for each
-posting, and candidate JSON/lookup/completeness for each saved revision (or the
-initial unsaved profile). Navigation, registry refresh, provider status, matching,
-extraction and failed mutations restore the appropriate draft. Switching revisions
-restores that revision's draft without saving it. Each editor displays an unsaved
-notice and a discard control: discard resets only that scope to its latest saved
-values; successful explicit import/save consumes only the submitted draft version.
-URL acquisition updates saved source values and preserves dirty manual drafts.
-Draft bodies and validation errors stay in memory, never localStorage/sessionStorage;
-page reload starts from saved data, as the unsaved notice explains.
+UI09–UI11 используют отдельные нормальные PostgreSQL APIs без demo/reset routes:
+import → verified acquisition → extraction → evidence highlight/export → revision save/reload
+→ match → analytics/export → saved evaluation. UI09 отвергает unseen source без потери
+старого run. UI10 сохраняет реальные emulator failures. UI11 делает CPU inference,
+загружает frozen REV-01/23/25 evaluation со всеми ошибками, останавливает/запускает engine,
+проверяет readiness/recovery и сохранность истории. Model quality отделено от service pass.
+`/ui/config` задаёт supported configs, execution labels, readiness, budgets/actions, без secrets.
+Hosted controls покрыты fake HTTP, что не доказывает доступность платного сервиса.
 
-UI12 delays delivery of actual acquisition, extraction, source-save, candidate-save/422
-and history-read responses while navigating between routes/postings. Underlying
-API operations execute normally and their results are read back from the service;
-the interception does not fabricate successful responses. Late history cannot
-paint a different posting, and callbacks never assign another scope's editor
-fields or validation errors. A browser-to-API connection abort verifies retryable
-failure preservation. `npm run test:drafts` covers stale submission/error versions,
-latest saved baselines, independent scopes and copied values.
+## Покрытие и записи
 
-UI13 verifies a durable identity for each stored mutation: registry import,
-snapshot/candidate import, URL acquisition, extraction, matching and evaluation.
-The browser sends an opaque UUID in `Idempotency-Key`; the API reserves it before
-execution and stores the original result atomically with domain writes. A repeated
-identity replays its saved status/body, and different request content is rejected.
-Legacy API clients without the header continue to explicitly create new operations.
+Единственный список journeys/projects и связь с S/V IDs/секциями спецификации —
+[web_ui_workflows.json](web_ui_workflows.json), executable journeys — [tests/e2e](../tests/e2e).
+Новые flows добавляются в оба источника; нельзя удалять/ослаблять проверки ради сокращения prose.
+Записи покрывают все workflow/project, successful attempt, source/video hashes, timestamp,
+attempt index и честный local/Actions origin в [manifest](ui-recordings/manifest.json).
 
-Lost delivery triggers `GET /operations/{id}` before any retransmission. The UI
-shows pending, not-received, uncertain, committed or rejected outcomes, preserves
-drafts and blocks new stored mutations while unresolved. A not-received request
-can be retransmitted with its original identity and immutable body. An uncertain
-reservation is never rerun; check saved outcome instead. Saved partial evaluations
-still display failures. Failure of a display refresh retains the known committed
-operation and recovers with reads. Navigation remains usable and other editors
-retain their own drafts. Browser storage contains only the unresolved opaque ID;
-reload can restore a saved result. If an unsent request's body is no longer in
-memory, explicit cancellation reserves a rejection so delayed packets cannot run.
+`make ui-check` выполняет все desktop/mobile journeys и публикует только полный успешный
+набор. Failures/traces остаются diagnostics. После финального изменения входов hash gate
+нужны свежие записи. Изменения одной документации/renderer не разрешают обойти этот gate.
+Actions сохраняет artifacts при любом исходе; default-branch trusted upstream publisher
+обновляет README/видео. Fork/PR read-only, без pull_request_target и обхода branch policy.
+Публикация сохраняет Git identity по [AGENTS](../AGENTS.md).
 
-The complete UI13 journey interrupts real delivery before execution and after
-commit for all seven mutation kinds, checks one identity/one completed handler,
-reads old/new records and rejects identity reuse with different content. It also
-demonstrates failed display/status reads, reload, cancellation, validation rejection
-and actual delayed Responses-emulator work in flight. The test-only provider
-control permits a bounded 1–5 second transport timeout; normal APIs have no scenario
-controls. Successful desktop/mobile observations produce a rendered comparison and
-JSON at `docs/issue-evidence/40/`; both artifacts are hashed in the video manifest,
-linked from README and exposed with the recordings in the implementing issue's
-comments. Missing catalogue counts are explicitly not enumerated. Completed keyed
-handler counts do not measure model quality or internal provider retries.
+Runner использует существующие owned leases: fresh loopback ports, bounded deadline,
+явные migrations/readiness, scoped cleanup после failures/signals/SIGKILL, порядок API →
+origin/provider. Persistent volumes и checksum-pinned licensed weights переживают teardown;
+TLS keys/private environments не входят в diagnostics. Незавершённый checkpoint или
+непроверенный rescore не считается успешным browser evidence.
 
-UI14 exposes a batch outcome panel across every route. A captured extraction or
-matching plan lists completed, failed, unattempted and uncertain posting identities,
-next stages, saved snapshot/run/match IDs and prior rejected operation IDs/errors.
-A pass stops at its first failure or unresolved outcome and always attempts an
-authoritative registry refresh. Unavailable counters are explicitly labelled.
-Each continuation attempts at most 20 unfinished items. Completed items and saved
-snapshot stages are excluded, including after a delivery fault or page reload.
-An explicit new batch is separate work; an unfinished batch cannot be overwritten
-by the ordinary corpus button.
+## Drafts, recovery и bounded batches
 
-The session journal contains only identifiers, configuration/revision references
-and states; posting/profile bodies and error messages stay in memory. On reload,
-the UI reads saved errors and attaches the pending operation to its original batch
-item. Recovery remains governed by UI13: unknown outcomes block continuation,
-not-received retry retains its exact request/identity, and committed recovery uses
-reads. The original candidate revision stays fixed. A changed active revision
-blocks matching until explicitly restored; it never silently combines revisions.
-Use current sources explicitly replans only failed/unattempted items from saved
-sources/current extraction IDs, preserving prior errors and completed results.
+UI04 синхронизирует JSON complete и checkbox; default false не заменяет явно переданное
+true. Malformed root/nonboolean сохраняет editor и field error без import request;
+reload/revision selection сохраняет MISSING/UNKNOWN.
 
-Optional expected_snapshot_id guards on snapshot/extraction requests reject a
-stale source before replacement or provider execution. An explicit null snapshot
-creation guard requires that no source exists; omitted guards retain the legacy
-single-item contract. Matching retains its expected_run_id guard.
+UI12 проверяет независимые registry, per-job source/URL/format и revision-scoped candidate
+JSON/lookup/completeness drafts. Unsaved notice/discard относится только к своему scope;
+save потребляет только отправленную версию. Acquisition обновляет baseline, сохраняя dirty
+manual draft. Navigation/status refresh/matching/failure не теряют draft. Late response
+не пишет в другой editor и не заменяет новый draft после save/discard. Draft/error bodies
+остаются в памяти, reload читает saved values. Задержка затрагивает доставку настоящих
+acquisition/extraction/source/candidate/history/422 responses, не выдумывает успех.
 
-The complete UI14 journey selects three jobs through an authored fixture-metadata
-read to cover first/middle/last extraction and matching failures, navigation,
-before-delivery loss, post-commit lookup/display refresh loss, reload, empty plans,
-stale sources and a changed candidate selection. Every domain write/result comes
-from the actual API; unsupported replay inputs and actual stale run/source changes
-produce the failures. No successful domain response is substituted. UI03/UI05
-retain the complete 20-posting flows; unit coverage also verifies the continuation
-bound with 45 items. Successful desktop/mobile attempts publish 32 measured cases
-in a rendered before/partial/resumed comparison and observation JSON under
-`docs/issue-evidence/41/`, hashed in the video manifest and exposed in issue comments.
+UI13 проверяет Idempotency-Key recovery всех семи mutations: import, snapshot, candidate,
+fetch, extract, match, evaluate. Not-received допускает тот же request/key; uncertain
+блокирует новые mutations; committed восстанавливается reads. Unsent cancellation после
+reload не позволяет позднему POST исполниться; saved failed evaluation остаётся failed.
+Один key — один completed handler; conflicting body — 409. Проверяются pre-delivery/
+post-commit loss, display/lookup failure, reload, validation rejection и реальная delayed
+Responses service. Test-only timeout 1–5 с не переносится в normal API.
 
-UI02 calls the actual bounded acquisition/service contract through the production
-HTTP transport in `policy-proxy` mode and isolated Compose origins/gateway.
-The trusted test gateway validates its full authored DNS map, issues a single-use
-pin lease and checks it again before opening the connection. It follows an authored redirect over verified HTTPS,
-persists an HTML source with the known SYN-01 clean hash, extracts it and verifies
-that its script never executes. Authored 403 and JS-only responses save failure
-history while preserving the prior usable source/extraction and unsaved manual
-editor text. Reload retains the attempt IDs, original/requested/final URLs, UTC
-timestamps, status/error codes and snapshot references; manual save/extract recovers.
-`/ui/config` identifies `acquisition_mode=fixture-policy-proxy` for this test launcher,
-`synthetic` for the ordinary offline demo and the configured acquisition mode for the normal API. UI02 checks
-sanitized origin diagnostics for a real TLS handshake and the successful authored
-HTTP request, and gateway diagnostics for the selected numeric pin behind hostname CONNECT. The full
-desktop/mobile suite uses these services; `/acquisition-fixture-diagnostics` is installed
-only by the test launcher and is absent from normal/demo production entrypoints.
-UI08 checks `/health` for verified gateway capabilities and no local destination
-DNS prerequisite. An unsupported policy proxy returns acquisition readiness false
-and HTTP 503; manual capture remains available.
-Real-socket integration tests cover both pinned and policy proxy modes, SSRF/rebinding refusals with zero target HTTP
-requests, TLS trust/hostname refusal, deadlines, streaming/compression/body limits,
-bounded retries and SQLite/PostgreSQL transaction rollback. Fast fake-transport
-regressions remain alongside them. See [acquisition.md](acquisition.md).
-The recordings establish access to authored local services; Internet crawling,
-rendering and anti-bot bypass require separate evidence.
+UI14 показывает completed/failed/unattempted/uncertain identities, saved stage/result IDs,
+prior rejected operations и next stage на всех routes. Continuation ≤20 unfinished items
+не повторяет saved stages и completed items, включая потерю ответа и reload. Unfinished
+batch нельзя заменить обычной corpus-кнопкой. Session journal хранит только IDs/config/
+revision/states; source/profile/error bodies читаются в память. Pending recovery остаётся
+привязанным к исходному item. Смена revision блокирует matching до явного восстановления;
+Use current sources перепланирует только unfinished items, сохраняя errors/results.
 
-Category coverage and candidate gaps come from shared persisted backend selection,
-including after refresh. The gap denominator is jobs with an eligible saved match
-for the explicit revision/current extraction, distinct from successful-extraction N.
-Empty successes count in N and matching an empty extraction counts as a matched job.
-Group identity retains type, ANY/ALL, obligations, years and versions; UNKNOWN stays
-separate from MISSING. UI05 changes candidate revisions without overwriting either
-revision's matches, and verifies identical refreshed backend/download JSON.
-
-UI05 displays mutually exclusive source/extraction coverage buckets, unmatched jobs,
-excluded registry totals and explicit overlapping latest-attempt failure counts.
-It checks authored acquisition/extraction failures and source-change staleness.
-Applied and grounded remote/hybrid/onsite slices recompute every denominator and
-exclude unknown metadata. Corpus JSON uses `/analytics/skills`; CSV still uses the
-shared export service with identical slice/revision selection. Positive-response
-slicing needs a future typed registry field and is outside this optional extension;
-free-form status/notes never imply a positive response. Live experiments are separate.
-See [the analytics contract](analytics.md) for query and bucket semantics.
-
-UI03 compares evidence JSON with the shared API and requires persisted requirement
-IDs. UI04 downloads formula-safe match CSV and verifies equality with the API for
-the selected saved revision. UI05 compares corpus JSON and skills/requirement CSV
-downloads with the shared API, verifies profile/snapshot/run and slice provenance,
-and checks that a selected posting's match export is independent of corpus slices,
-retains persisted match counts after refresh, and excludes stale-source extraction.
-An explicit historical run selection recovers the original source requirements.
-The [export contract](exports.md) documents JSON nulls, CSV transformations and
-legacy skills compatibility. V31–V32 backend tests establish CLI equivalence.
-
-## Executable coverage and evidence
-
-UI01 also submits a different job ID with a case/default-port/fragment variant of
-an existing official URL. The UI shows 409 and the whole batch is absent, including
-its earlier valid row. The saved registry entry remains available after reload (V01).
-
-`web_ui_workflows.json` is the machine-readable workflow inventory. Every ID maps
-to one complete test in `tests/e2e/*.spec.mjs` and runs on desktop Chromium
-and mobile Chromium. Unit/API regressions cover domain edge cases beneath these
-journeys; listing an existing S/V scenario here is traceability, not promotion of
-every target scenario. Passing journeys establish their labelled execution mode and persisted service behavior;
-fixture and emulator results do not establish model quality. No skipped/xfail tests count as delivery.
-
-`npm run test:ui` records **all** attempts. `npm run record:ui` refuses incomplete,
-failed, skipped, unmapped, or video-less suites; it selects only the successful
-attempt for each workflow/project. Videos are copied to stable README-linked paths
-with SHA-256, source-content hash, attempt index, timestamp, and local/Actions origin
-in `docs/ui-recordings/manifest.json`. `npm run check:ui` rejects stale source
-evidence, missing/corrupt videos, missing README links, and coverage mismatch.
-
-The Actions workflow runs every journey on pushes, pull requests, and manual
-dispatch, uploads reports/traces/videos even on failure, and supplies verified
-README evidence only after all journeys pass. Trusted successful default-branch
-pushes automatically commit the README/video refresh; pull requests and forks have
-read-only permissions and downloadable evidence. Publication commits use the Git
-display name `Stefan Novak` and retain the automation email address for provenance.
-Publishing needs repository
-Actions write permission and a default branch allowing bot commits. If branch
-protection rejects the push, the publishing job fails explicitly while the verified
-artifact remains available; apply that artifact through the repository's approved
-PR process. Never use `pull_request_target` to execute untrusted browser tests.
-
-
-UI03 also exports the provider/configuration/schema/taxonomy/source identity and
-null fixture usage. UI07 selects the authored Responses emulator through a test-only
-launcher route, reloads the workbench with OpenAI protocol configurations and a visible
-contract-emulator label, and saves a real HTTP extraction with emulator provenance.
-It then exercises 422 refusal/invalid evidence, 502 quota/server error/malformed output/
-connection close and 504 timeout, checks retryability and actual request counts, and
-verifies that failures preserve the prior extraction. Malformed output makes exactly
-two provider requests; other failures make one. Success recovers without overwriting
-history. The browser connection-abort test remains an interception of browser-to-API
-traffic. Scenario controls are absent from normal/demo entrypoints. UI08 checks
-fixture execution identity; health/report/provenance identify emulator runs separately
-with unavailable LLM usage/cost/time. Backend process and container tests verify
-stop/start/restart recovery on SQLite/PostgreSQL. See [Responses emulator](responses_emulator.md).
-Paid hosted execution needs separate authorization. Actual local model execution has its own measured service evidence.
-
-UI04 saves multiple synthetic revisions, refreshes the page, re-matches the selected
-revision, selects an older revision without overwriting it, and inspects the persisted
-match-run identity. Dated tenure satisfies the years predicate; location evidence is
-shown with the job quote and candidate source. Version predicates remain unsupported.
-The candidate JSON is authoritative for skill completeness. Pasting explicit
-`complete: true` or `false` immediately synchronizes the checkbox; saving preserves
-that value. Toggling the checkbox edits the JSON declaration without changing a
-saved revision until the user saves. An omitted declaration uses the schema default
-`false`. Malformed JSON, non-object roots and non-boolean completeness are rejected
-with a labelled field error, retained editor text and no candidate import request.
-Backend schema errors likewise appear beside the editor without saving a revision.
-UI04 pastes complete/incomplete profiles without manually setting the checkbox,
-edits it in both directions, reloads/selects immutable revisions, and verifies that
-absent skill evidence changes between MISSING and UNKNOWN with the saved declaration.
-Revision selection clears current projections. Matching sends the selected revision
-ID and inspected extraction ID; stale extraction selections fail with 409 and preserve
-history. Missing saved revisions are reported; the browser never silently selects a
-newest revision after a saved selection disappears.
-
-UI08 verifies that the recorded sandbox advertises fixture HTTP acquisition, fixture
-extraction, its explicit fixture configuration and no live LLM execution. Container
-runtime checks separately exercise the normal persistent PostgreSQL app across
-stop/recreation: saved records and exports survive, while `/ui/fixtures` and
-`/ui/reset` remain absent. The demo Compose profile deliberately exposes those routes.
-The OpenAI profile's mounted-key readiness check uses only a synthetic key and
-makes no upstream request; it does not establish paid-service availability. Runtime
-build/profile/trust inputs participate in the recording source hash.
-
-`/ui/config` version 1 is the public capability contract: execution label/mode,
-model identity, supported raw/normalized configuration IDs, selected default,
-readiness, request time budgets and available actions. Browser controls and sidebar/header execution labels derive
-options, identity and budgets from this response and send only supported IDs. Fixture and
-emulator labels distinguish authored replay from actual local CPU inference and
-explicit hosted OpenAI. Hosted readiness is unverified until a separately authorized
-call; a fake HTTP contract test covers hosted controls without making a paid call.
-No hosted credentials or endpoints are returned. Unavailable local/emulator services
-disable extraction/evaluation, preserve manual capture and historical results, and
-recover through Refresh provider status. Failure/status refresh updates availability
-without replacing unsaved source text or the selected import format. Engine time and tokens appear only when
-supplied; replay/emulator measurements stay unavailable.
-
-UI09–UI11 use separate normal APIs on scoped migrated PostgreSQL databases, with
-`demo=False`, no sample/reset controls and no fixture/reset routes. The runner starts
-an authored HTTP/verified HTTPS acquisition gateway, a separate Responses service
-and the checksum-pinned CPU engine. Each desktop/mobile journey imports a new job,
-acquires and saves a snapshot, extracts, verifies exact exported evidence, highlights
-a quote, saves/reloads a candidate revision, matches, exports and reloads analytics
-and evaluation. The fixture journey acquires a known synthetic body under a new job
-ID, then explicitly rejects unseen text while retaining its old run. The emulator
-and local journeys acquire the unseen 19-character `Python is required.` source;
-only the emulator has separately authored output for that source. Fixture replay
-remains unable to answer it. UI10 refusal, invalid evidence and malformed output
-originate in the provider process and preserve the previous run. UI11 actually runs
-CPU inference and reloads the persisted REV-01/REV-23/REV-25 evaluation created by
-that engine, including its failures and imperfect results. It stops/restarts the
-engine, checks readiness/action recovery, and retains extraction history.
-
-The twenty-eight required videos comprise twenty-two explicit sandbox attempts and
-six normal PostgreSQL attempts. Browser interception comprises the Unicode
-rendering read fixture, browser-to-API connection failure, UI14's authored fixture-selection read, and UI12's delayed
-delivery of real responses, plus UI13's loss of real response delivery and
-browser-to-API lookup failure; normal journeys have
-no substituted API responses. Their service inventory, measured local evaluation
-and commit provenance are diagnostic artifacts. Disposable project credentials/DB
-URLs override inherited application settings, teardown removes only their newly
-created volumes, and the verified licensed model cache survives. See
-[local CPU measurement](local_inference.md). Paid hosted browser execution remains
-conditional on explicit authorization and is not included in these recordings.
-Model preparation must retain verified weights and license even when a weight
-download outlasts registry authorization: renew authorization between cache objects.
-This runtime boundary is covered by the cache tests and recording source hash;
-it does not introduce a browser credential flow.
-
-
-The shared environment runner provisions UI09–UI11 with fresh labelled Compose
-leases and Docker-assigned loopback ports. Each journey verifies its disposable
-ownership record, configuration hash, live deadline and distinct API endpoint.
-Acquisition fixtures and the sandbox Responses emulator use the same lifecycle;
-they stop after dependent APIs. A detached expiry watchdog also removes owned
-resources after an abrupt launcher death. SIGINT/SIGTERM and command timeouts
-terminate the browser process group before scoped teardown. Every outcome retains
-sanitized per-service state and mode/source/config provenance in `work/environments/`;
-failed diagnostic collectors cannot prevent other collectors or cleanup. Generated
-TLS material is private runtime data and is excluded from uploaded artifacts.
-Persistent developer sessions and verified model weights remain outside disposable
-cleanup. These controls are runtime evidence, without adding a product credential
-or paid-call flow. See [environment lifecycle](environments.md).
-
-B/C service diagnostics retain counted HTTP attempts and the last atomic checkpoint
-even on fatal errors or interruption. Incomplete/rescore-unverified results remain
-failures with unknown measurements; they cannot become successful browser evidence.
-
-The README publishing job is disabled for fork repositories, including pushes to
-a fork's own default branch. Fork and pull-request workflow execution retains
-read-only permissions; only a trusted upstream default-branch run can publish.
+UI14 проверяет first/middle/last failure extraction/matching, navigation, before-delivery,
+after-commit lookup/display loss, reload, empty/stale source/revision. Три authored jobs
+выбираются fixture-metadata read, все domain mutations настоящие; UI03/UI05 сохраняют
+полный корпус из 20 jobs. Unit gate проверяет лимит на 45 items. UI13/UI14 публикуют
+[mutation](issue-evidence/40/mutation-comparison.md) и [batch](issue-evidence/41/batch-comparison.md)
+сравнения с observation JSON из обоих viewports; manifest проверяет их hashes вместе с видео.
+Missing catalogue counts явно неизвестны, не выдуманы. Publisher сохраняет полный набор
+в ≤4 частях по ≤22 MiB; oversize/missing/excess parts отвергаются, trusted publisher
+объединяет все части. PR/fork остаются read-only.

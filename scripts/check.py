@@ -1,4 +1,4 @@
-"""Run the Python CI checks locally; fail immediately on an underlying command failure."""
+"""Локальные Python CI-проверки; ошибка команды останавливает выполнение."""
 
 import argparse
 import json

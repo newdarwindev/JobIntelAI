@@ -58,7 +58,7 @@ def execute(argv, transport):
     if specialized_command(argv):
         return
     parser = argparse.ArgumentParser(
-        description="JobIntel extraction and offline demo; run migrations first"
+        description="JobIntel extraction и offline demo; сначала выполните миграции"
     )
     parser.add_argument("command", choices=["demo", "evaluate", "export", "extract"])
     parser.add_argument("--output", type=Path, default=Path("results/generated"))

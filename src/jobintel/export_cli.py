@@ -1,4 +1,4 @@
-"""Export saved data without invoking a provider or writing private files into Git."""
+"""Экспорт сохранённых данных без provider и записи приватных файлов в Git."""
 
 import argparse
 import json

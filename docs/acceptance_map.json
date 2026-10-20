@@ -1,0 +1,258 @@
+{
+  "version": 1,
+  "regressions": {
+    "S01": [
+      "unit/test_registry_normalization.py"
+    ],
+    "S02": [
+      "unit/test_registry_normalization.py"
+    ],
+    "S03": [
+      "unit/test_registry_normalization.py"
+    ],
+    "S04": [
+      "unit/test_registry_normalization.py"
+    ],
+    "S05": [
+      "integration/test_api.py"
+    ],
+    "S06": [
+      "integration/test_api.py"
+    ],
+    "S07": [
+      "integration/test_api.py"
+    ],
+    "S08": [
+      "unit/test_grounding.py"
+    ],
+    "S09": [
+      "integration/test_api.py"
+    ],
+    "S10": [
+      "integration/test_api.py"
+    ],
+    "S11": [
+      "unit/test_grounding.py"
+    ],
+    "S12": [
+      "unit/test_grounding.py"
+    ],
+    "S13": [
+      "unit/test_grounding.py"
+    ],
+    "S14": [
+      "unit/test_registry_normalization.py"
+    ],
+    "S15": [
+      "unit/test_registry_normalization.py"
+    ],
+    "S16": [
+      "unit/test_analytics_evaluation.py"
+    ],
+    "S17": [
+      "unit/test_analytics_evaluation.py",
+      "integration/test_api.py"
+    ],
+    "S18": [
+      "unit/test_matching.py"
+    ],
+    "S19": [
+      "unit/test_matching.py"
+    ],
+    "S20": [
+      "unit/test_matching.py"
+    ],
+    "S21": [
+      "unit/test_matching.py"
+    ],
+    "S22": [
+      "unit/test_matching.py"
+    ],
+    "S23": [
+      "unit/test_matching.py"
+    ],
+    "S24": [
+      "unit/test_matching.py"
+    ],
+    "S25": [
+      "unit/test_analytics_evaluation.py"
+    ],
+    "S26": [
+      "unit/test_analytics_evaluation.py"
+    ],
+    "S27": [
+      "unit/test_analytics_evaluation.py"
+    ],
+    "S28": [
+      "unit/test_analytics_evaluation.py"
+    ],
+    "S29": [
+      "unit/test_analytics_evaluation.py"
+    ],
+    "S30": [
+      "unit/test_analytics_evaluation.py"
+    ],
+    "S31": [
+      "integration/test_api.py"
+    ],
+    "S32": [
+      "integration/test_api.py"
+    ],
+    "S33": [
+      "integration/test_api.py"
+    ],
+    "S34": [
+      "integration/test_api.py",
+      "integration/test_acquisition_boundary.py"
+    ],
+    "S35": [
+      "integration/test_postgres.py"
+    ],
+    "S36": [
+      "integration/test_boundaries.py"
+    ],
+    "S37": [
+      "integration/test_boundaries.py"
+    ]
+  },
+  "acceptance_issues": {
+    "V01": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/10"
+    ],
+    "V02": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/3"
+    ],
+    "V03": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/3"
+    ],
+    "V04": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/3"
+    ],
+    "V05": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/3"
+    ],
+    "V06": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/3"
+    ],
+    "V07": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/3"
+    ],
+    "V08": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/3"
+    ],
+    "V09": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/3"
+    ],
+    "V10": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/3"
+    ],
+    "V11": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/3"
+    ],
+    "V12": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/4"
+    ],
+    "V13": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/4"
+    ],
+    "V14": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/4"
+    ],
+    "V15": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/4"
+    ],
+    "V16": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/4"
+    ],
+    "V17": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/4"
+    ],
+    "V18": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/4"
+    ],
+    "V19": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/2",
+      "https://github.com/newdarwindev/JobIntelAI/issues/4"
+    ],
+    "V20": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/8"
+    ],
+    "V21": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/2"
+    ],
+    "V22": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/2"
+    ],
+    "V23": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/2"
+    ],
+    "V24": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/5"
+    ],
+    "V25": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/5"
+    ],
+    "V26": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/5"
+    ],
+    "V27": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/6"
+    ],
+    "V28": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/6"
+    ],
+    "V29": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/6"
+    ],
+    "V30": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/6"
+    ],
+    "V31": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/7"
+    ],
+    "V32": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/7"
+    ],
+    "V33": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/8"
+    ],
+    "V34": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/8"
+    ],
+    "V35": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/8"
+    ],
+    "V36": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/8"
+    ],
+    "V37": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/8"
+    ],
+    "V38": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/9"
+    ],
+    "V39": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/10"
+    ],
+    "V40": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/10"
+    ],
+    "V41": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/10"
+    ],
+    "V42": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/10"
+    ],
+    "V43": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/10"
+    ],
+    "V44": [
+      "https://github.com/newdarwindev/JobIntelAI/issues/10"
+    ],
+    "V45": []
+  },
+  "optional": [
+    "V08",
+    "V45"
+  ]
+}

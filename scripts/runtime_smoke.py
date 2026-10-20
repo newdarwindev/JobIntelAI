@@ -1,4 +1,4 @@
-"""Exercise named dev/demo/OpenAI configuration and persistence without paid calls."""
+"""Проверка dev/demo/OpenAI config и persistence без платных запросов."""
 
 import argparse
 import http.client

@@ -1,4 +1,4 @@
-"""Local synthetic UI sandbox. Migrate an isolated disposable DB before serving."""
+"""Локальный synthetic UI sandbox; отдельная временная БД мигрируется до запуска."""
 
 import argparse
 import json
@@ -20,7 +20,7 @@ def main():
     parser.add_argument(
         "--acquisition-fixtures",
         action="store_true",
-        help="real isolated Compose HTTP/TLS origin and controlled proxy",
+        help="Реальный изолированный Compose HTTP/TLS origin и управляемый proxy",
     )
     args = parser.parse_args()
     if Path.cwd() != ROOT:

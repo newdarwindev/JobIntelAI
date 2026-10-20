@@ -1,4 +1,4 @@
-"""Authored public URL only: production gateway on an authorized managed runner."""
+"""Только авторский публичный URL через gateway на разрешённом runner."""
 
 import argparse
 import hashlib
@@ -64,7 +64,7 @@ def main():
     parser.add_argument(
         "--inherited-proxy",
         action="store_true",
-        help="expect explicit unsupported contract in this runtime",
+        help="Ожидать явный отказ неподдержанного контракта в этом runtime",
     )
     parser.add_argument("--output", type=Path, default=ROOT / "work/acquisition-public.json")
     args = parser.parse_args()

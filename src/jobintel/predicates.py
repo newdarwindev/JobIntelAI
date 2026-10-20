@@ -1,8 +1,7 @@
-"""Conservative source checks for explicit extraction predicates.
+"""Консервативная проверка явных predicates в источнике.
 
-These checks admit a documented English evidence grammar. Unsupported or ambiguous
-wording must be represented as unknown; this is not a general entailment model.
-"""
+Поддержана ограниченная английская grammar evidence; неоднозначное остаётся
+unknown. Это не модель общего семантического entailment."""
 
 import re
 

@@ -1,4 +1,4 @@
-"""Private local candidate import, explicit revision selection and match reads."""
+"""Приватный импорт кандидата, явный выбор revision и чтение match runs."""
 
 import argparse
 import json

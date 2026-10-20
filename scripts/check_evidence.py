@@ -1,4 +1,4 @@
-"""V43: retain actual passing/failing JUnit probes without masking command failure."""
+"""V43: реальные passing/failing JUnit probes без маскировки ошибки команды."""
 
 import argparse
 import json
