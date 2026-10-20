@@ -92,8 +92,9 @@ Runner управляет scoped PostgreSQL APIs, acquisition/emulator/CPU servi
 read-only. При блокировке GitHub publication сохраните проверенные локальные записи и manifest
 в README, назовите реальную причину и не выдавайте local run за Actions.
 
-UI01–UI08 и UI12–UI14 используют временный sandbox. UI12 проверяет scoped drafts при
+UI01–UI08 и UI12–UI15 используют временный sandbox. UI12 проверяет scoped drafts при
 задержке настоящих API responses; UI13 — durable mutation recovery; UI14 — partial batches
-и bounded continuation. Измеренные сравнения UI13/UI14 публикуются вместе с JSON и видео.
+и bounded continuation; UI15 — bounded registry/history/revision/evaluation reads.
+Измеренные сравнения UI13/UI14/UI15 публикуются вместе с JSON и видео.
 Успешная публикация разбивается на ≤4 части по ≤22 MiB без пропусков; каждый файл и
 объединённый набор проверяются. Эта упаковка не ослабляет coverage/provenance gates.

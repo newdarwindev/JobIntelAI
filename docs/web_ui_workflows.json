@@ -339,7 +339,7 @@
     },
     {
       "id": "UI15",
-      "title": "Bounded registry discovery and saved-history pagination",
+      "title": "Ограниченный поиск и постраничная история",
       "spec_sections": [
         5,
         6,

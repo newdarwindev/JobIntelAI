@@ -1,4 +1,4 @@
-"""Compare legacy bulk and bounded v2 reads on disposable synthetic databases."""
+"""Сравнить legacy bulk и bounded v2 reads на временных синтетических БД."""
 
 import argparse
 import json
@@ -100,7 +100,14 @@ def benchmark(kind, sizes):
                 check=True,
                 capture_output=True,
             )
-            with TestClient(create_app(url, ROOT / "data")) as client:
+            with TestClient(
+                create_app(
+                    url,
+                    ROOT / "data",
+                    provider_name="fixture",
+                    configuration="fixture_normalized",
+                )
+            ) as client:
                 previous = 0
                 for size in sizes:
                     populate(client, previous, size)
@@ -146,8 +153,13 @@ def publish(output, rows):
         "rows": rows,
     }
     (output / "catalogue-performance.json").write_text(json.dumps(report, indent=2) + "\n")
+    (output / "catalogue-performance.md").write_text(catalogue_markdown(report))
+
+
+def catalogue_markdown(report):
+    rows = report["rows"]
     table = [
-        "| Database | Jobs | Legacy SQL / bytes | Bounded SQL / bytes | Returned jobs |",
+        "| База | Вакансий | Legacy SQL / bytes | Bounded SQL / bytes | Возвращено вакансий |",
         "| --- | ---: | ---: | ---: | ---: |",
     ]
     for row in rows:
@@ -156,20 +168,20 @@ def publish(output, rows):
             f"| {row['database']} | {row['registered_extracted_jobs']} | {before['sql_statements']} / {before['response_bytes']:,} | {after['sql_statements']} / {after['response_bytes']:,} | {after['returned_jobs']} |"
         )
     lines = [
-        "# Measured registry query and payload comparison",
+        "# Измеренное сравнение запросов и размера ответов реестра",
         "",
         report["execution"],
         "",
-        "[Complete machine-readable measurements and provenance](catalogue-performance.json). The legacy route remains available for compatibility; browser navigation uses v2. Both routes read the same frozen synthetic records within each corpus size. Two SELECTs serve v2 at every size; SQLite additionally emits BEGIN. Source and extraction bodies are absent from the bounded SQL/payload. Local elapsed times are retained in JSON and are not throughput or production-scale claims.",
+        "[Полные измерения и provenance](catalogue-performance.json). Legacy endpoint сохранён для совместимости, навигация использует v2. Для каждого размера алгоритмы читают одинаковые frozen synthetic records. V2 выполняет два SELECT, SQLite дополнительно BEGIN. Bounded SQL/payload не содержит source/extraction bodies. Локальное время сохранено в JSON; это не throughput или production-scale benchmark.",
         "",
         *table,
         "",
-        "Reproduce with `TEST_DATABASE_URL` pointing to a disposable PostgreSQL database: `.venv/bin/python -m scripts.catalogue_benchmark`. A fresh PostgreSQL schema and temporary SQLite database isolate every run; cleanup removes them. All inputs use authored SYN-01 fixture replay. Successful empty/latest-source/history behavior is verified separately by the integration and UI15 journeys.",
+        "Воспроизведение: `make catalogue-check`. Команда создаёт собственную временную PostgreSQL, если disposable TEST_DATABASE_URL не задан. Отдельная PostgreSQL schema и временная SQLite изолируют каждый запуск и удаляются после него. Ввод — авторский SYN-01 fixture replay. Empty success, latest source и history отдельно проверяют integration tests и UI15.",
         "",
-        "[Desktop UI15 recording](../../ui-recordings/UI15-desktop-chromium.webm) · [Mobile UI15 recording](../../ui-recordings/UI15-mobile-chromium.webm)",
+        "[Запись UI15 desktop](../../ui-recordings/UI15-desktop-chromium.webm) · [Запись UI15 mobile](../../ui-recordings/UI15-mobile-chromium.webm)",
         "",
     ]
-    (output / "catalogue-performance.md").write_text("\n".join(lines))
+    return "\n".join(lines)
 
 
 def main():
@@ -183,10 +195,10 @@ def main():
         or args.sizes[0] < 1
         or args.sizes[-1] > 1000
     ):
-        parser.error("sizes must be ascending distinct integers in 1..1000")
+        parser.error("sizes должны быть различными возрастающими целыми в 1..1000")
     rows = [row for kind in ["sqlite", "postgres"] for row in benchmark(kind, args.sizes)]
     publish(args.output, rows)
-    print(f"Published {len(rows)} actual registry comparisons.")
+    print(f"Опубликовано реальных сравнений реестра: {len(rows)}.")
 
 
 if __name__ == "__main__":

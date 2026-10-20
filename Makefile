@@ -3,7 +3,7 @@ ARGS ?=
 PROJECT ?=
 SCENARIO ?= success
 
-.PHONY: help setup migrate demo serve quality check check-postgres prepare-offline env emulator-scenario acquisition-check acquisition-public-check model-prepare model-check experiment-replay experiment-rescore experiment-audit experiment-publish experiment-resume network-experiment reports ui-install ui-check docs-check
+.PHONY: help setup migrate demo serve quality check check-postgres prepare-offline env emulator-scenario acquisition-check acquisition-public-check model-prepare model-check experiment-replay experiment-rescore experiment-audit experiment-publish experiment-resume network-experiment reports catalogue-check ui-install ui-check docs-check
 
 help:
 	$(PYTHON) -m scripts.tasks --help
@@ -49,6 +49,8 @@ network-experiment:
 	$(PYTHON) -m scripts.network_experiments $(ARGS)
 reports:
 	$(PYTHON) -m scripts.task_reports $(ARGS)
+catalogue-check:
+	$(PYTHON) -m scripts.tasks catalogue-check $(ARGS)
 ui-install:
 	$(PYTHON) -m scripts.tasks ui-install
 ui-check:
