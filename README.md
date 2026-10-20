@@ -93,7 +93,7 @@ API не аутентифицирован и работает только на 
 <!-- UI-RECORDINGS:START -->
 
 Успешные браузерные попытки: **28/28**, записано 2026-10-20.
-Источник: [Запуск GitHub Actions](https://github.com/newdarwindev/JobIntelAI/actions/runs/39437770672) · коммит `7cc99839cd97e2a8c3d9a83a95dfc0ebae3af060`.
+Источник: [Запуск GitHub Actions](https://github.com/newdarwindev/JobIntelAI/actions/runs/39440475953) · коммит `e30c2f4667edd14970f843fa15bd7a0811ff2945`.
 UI01–UI08 и UI12–UI14: синтетический sandbox; UI12 проверяет drafts при задержке реальных ответов, UI13 — durable mutation recovery, UI14 — частичные batches и безопасное продолжение. UI09–UI11: PostgreSQL API, fixture, Responses emulator и реальная CPU inference. Ввод авторский; emulator подтверждает только контракт.
 SHA-256 исходного содержимого: `dc134a9714a84967c0e4ac05fe13dc7a32deda88049ea185f0b7599d84cbd5b5`. [Машинные данные происхождения](docs/ui-recordings/manifest.json).
 
