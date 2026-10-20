@@ -51,7 +51,7 @@ def execute(output, temporary):
     )
     refused = cli_request({"output": str(output / "refused"), "corpus_sha256": "0" * 64}, temporary)
     if (fixture.returncode, saved.returncode, refused.returncode) != (0, 0, 2):
-        raise SystemExit("Notebook evidence did not produce the required actual outcomes.")
+        raise SystemExit("Notebook run не дал требуемых фактических исходов.")
     if (output / "refused").exists() or "corpus_checksum" not in refused.stderr:
         raise SystemExit("Preflight refusal allocated output or lost its bounded error code.")
     for name in ["fixture", "saved"]:
@@ -89,39 +89,39 @@ def main():
         f"| {r['file']} | {r['passed']} | {r['failed']} | {r['errors']} | {r['skipped']} |"
         for r in report["tests"]
     )
-    text = f"""# Notebook execution evidence
+    text = f"""# Доказательства notebook execution
 
 Кратко: реальный offline fixture run, точный пересчёт сохранённых scores и отказ
 preflight без создания output. Эти результаты не измеряют качество LLM.
 
-Source commit: `{report["code"]["git_commit"]}`; dirty: `{report["code"]["git_dirty"]}`.
-Python source SHA-256: `{report["code"]["source_sha256"]}`.
+Исходный коммит: `{report["code"]["git_commit"]}`; dirty: `{report["code"]["git_dirty"]}`.
+SHA-256 исходного Python-кода: `{report["code"]["source_sha256"]}`.
 
-| Scenario | Visible outcome | Underlying evidence |
+| Сценарий | Видимый результат | Доказательства |
 | --- | --- | --- |
-| Fixture | succeeded; fake evidence; no measured tokens/cost | [manifest](fixture/manifest.json), [report](fixture/report.json), [comparison](fixture/comparison.md) |
-| Saved report | succeeded; no new inference; scores byte-identical | [manifest](saved/manifest.json), [scores](saved/scores.json) |
-| Bad corpus pin | exit 2, corpus_checksum; no output allocated | [structured outcomes](evidence.json) |
+| Fixture | succeeded; fake evidence; tokens/cost не измерялись | [manifest](fixture/manifest.json), [report](fixture/report.json), [сравнение](fixture/comparison.md) |
+| Сохранённый report | succeeded; без новой inference; scores совпадают побайтово | [manifest](saved/manifest.json), [scores](saved/scores.json) |
+| Неверный corpus pin | exit 2, corpus_checksum; output не создан | [Структурированные исходы](evidence.json) |
 
-| Test result | Passed | Failed | Errors | Skipped |
+| Результат тестов | Passed | Failed | Errors | Skipped |
 | --- | ---: | ---: | ---: | ---: |
 {summary}
 
-The full [machine-readable evidence](evidence.json) retains actual outcomes and
-test counts. Skips are not implementation proof. Fresh-kernel checks run separately
-under Python 3.11/3.12 in Actions and publish `notebook-kernel.json`.
+Полные [машинные данные](evidence.json) сохраняют фактические исходы и counts.
+Skips не доказывают реализацию. Проверки новых kernels отдельно выполняются
+в Actions под Python 3.11/3.12 и публикуют `notebook-kernel.json`.
 
-Reproduce from the repository root into a new output directory:
+Воспроизведение из корня репозитория в новый output directory:
 
 ```bash
 python -m scripts.notebook_execution_evidence --output work/notebook-evidence
 ```
 
-Training execution is a separately implemented capability in issue #81. This
-interface refuses an unavailable training runner before allocating output.
+Training execution — отдельная реализация в issue #81. Этот интерфейс
+отказывает при недоступном training runner до создания output.
 """
     (args.output / "README.md").write_text(text, encoding="utf-8")
-    print(f"Notebook execution evidence: {args.output / 'README.md'}")
+    print(f"Доказательства notebook execution: {args.output / 'README.md'}")
 
 
 if __name__ == "__main__":
