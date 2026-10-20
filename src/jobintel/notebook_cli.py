@@ -1,4 +1,4 @@
-"""Credential-free notebook planning, execution and artifact verification."""
+"""Планирование, запуск notebook execution и проверка artifacts без hosted credentials."""
 
 import argparse
 import json
@@ -22,7 +22,7 @@ def main(arguments):
         manifest = execute(args)
     except (ValueError, OSError, KeyError, TypeError) as error:
         code = error.code if isinstance(error, NotebookRejected) else "invalid_input"
-        parser.exit(2, f"Notebook execution rejected ({code}).\n")
+        parser.exit(2, f"Запуск notebook отклонён ({code}).\n")
     print(json.dumps(manifest.model_dump(mode="json"), indent=2, ensure_ascii=False))
     return 0 if manifest.status in {"planned", "succeeded"} else 1
 

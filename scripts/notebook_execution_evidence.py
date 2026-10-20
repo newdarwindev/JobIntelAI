@@ -1,4 +1,4 @@
-"""Render public EXEC evidence through the same CLI used by notebook callers."""
+"""Сформировать публичные доказательства EXEC через общий notebook CLI."""
 
 import argparse
 import json

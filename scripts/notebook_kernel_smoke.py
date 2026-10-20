@@ -1,4 +1,4 @@
-"""EXEC-01/04/05: execute real fresh-kernel boundaries with no provider or database."""
+"""EXEC-01/04/05: проверить новый kernel без provider и базы данных."""
 
 import argparse
 import json
