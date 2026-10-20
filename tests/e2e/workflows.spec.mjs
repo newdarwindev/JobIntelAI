@@ -7,7 +7,7 @@ const candidate = async () => JSON.parse(await data('sample_candidate.json'));
 const notice = page => page.getByRole('status');
 const click = async (page,name) => {await page.getByRole('button',{name,exact:true}).click();await expect(page.locator('main')).toHaveAttribute('aria-busy','false');};
 const nav = async (page,view) => {await page.getByRole('navigation').getByRole('link',{name:view,exact:true}).click();await expect(page.getByRole('heading',{level:1,name:view,exact:true})).toBeVisible();};
-const inspect = async (page,id) => {await nav(page,'Source & extraction');await page.getByLabel('Selected posting').selectOption(id);await expect(page.getByLabel('Selected posting')).toHaveValue(id);};
+const inspect = async (page,id) => {await nav(page,'Job registry');await page.getByLabel('Search postings').fill(id);const row=page.locator('#registry-table tbody tr').filter({has:page.getByText(id,{exact:true})});await row.getByRole('link',{name:'Inspect →'}).click();await expect(page.getByLabel('Selected posting')).toHaveValue(id);await expect(page.locator('main')).toHaveAttribute('aria-busy','false');};
 async function importSample(page){await nav(page,'Job registry');await click(page,'Load sample registry');await click(page,'Import registry');await expect(notice(page)).toContainText('Imported 20');}
 async function capture(page,id,extract=true){await inspect(page,id);await click(page,'Load synthetic source');await click(page,'Save immutable snapshot');if(extract){await click(page,'Extract requirements');await expect(page.getByText('No current extraction',{exact:true})).toHaveCount(0);}}
 async function saveProfile(page,profile){await nav(page,'Candidate evidence');await page.getByLabel('Candidate JSON',{exact:true}).fill(JSON.stringify(profile,null,2));await expect(page.getByLabel('This profile explicitly declares complete skill coverage')).toHaveJSProperty('checked',profile.complete??false);await click(page,'Validate & save profile');await expect(notice(page)).toContainText('validated and activated');}
@@ -60,7 +60,7 @@ test('UI02 | Source capture, URL fallback and immutable history',async({page,req
   await page.getByLabel('Posting source').fill('Authored changed posting with no known fixture.');await click(page,'Save immutable snapshot');
   await expect(page.getByText('No current extraction',{exact:true})).toBeVisible();
   const after=await (await request.get('/jobs/SYN-01')).json();expect(after.snapshot.id).not.toBe(before.snapshot.id);expect(after.extraction).toBeNull();
-  await page.getByText(/Snapshot & extraction history/).click();await expect(page.locator('#history')).toContainText('Run #');
+  await page.getByText(/Snapshot & extraction history/).click();const history=(await (await request.get('/v2/jobs/SYN-01/snapshots')).json()).items;const withRun=history.find(s=>s.run_count);await click(page,'Inspect snapshot #'+withRun.id);await expect(page.locator('#history')).toContainText('Run #');
   await click(page,'Try URL acquisition');await expect(notice(page)).toContainText('manual source editor');
   await click(page,'Load synthetic source');await click(page,'Save immutable snapshot');await click(page,'Extract requirements');
   await expect(page.getByRole('heading',{name:'Python',exact:true})).toBeVisible();
@@ -162,7 +162,7 @@ test('UI03 | Grounded extraction, aliases and operators',async({page,request})=>
   const unicodeText='🧪 Authored source\nPython is required.';
   const start=Array.from(unicodeText).length-Array.from('Python is required.').length;
   const synthetic={...unicodeExport,job_id:'UI-UNICODE',snapshot:{...unicodeExport.snapshot,clean_text:unicodeText},extraction:{...unicodeExport.extraction,requirements:[{...unicodeExport.extraction.requirements[0],evidence:{start,end:Array.from(unicodeText).length,quote:'Python is required.'}}]}};
-  await page.route('**/jobs',route=>route.fulfill({json:{jobs:[synthetic]}}));await page.route('**/jobs/UI-UNICODE/history',route=>route.fulfill({json:{job_id:'UI-UNICODE',snapshots:[]}}));
+  await page.route('**/v2/jobs*',route=>route.fulfill({json:{jobs:[synthetic],totals:{registered:1,extracted:1,requirements:1},page:{limit:20,has_more:false,next_cursor:null}}}));await page.route('**/jobs/UI-UNICODE',route=>route.fulfill({json:synthetic}));await page.route('**/v2/jobs/UI-UNICODE/*',route=>route.fulfill({json:{items:[],page:{limit:20,has_more:false,next_cursor:null}}}));
   await page.goto('/ui/?read-fixture=unicode#workbench?job=UI-UNICODE');await expect(page.getByLabel('Selected posting')).toHaveValue('UI-UNICODE');await click(page,'Highlight source quote');await expect(page.locator('mark')).toHaveText('Python is required.');
 });
 
@@ -319,7 +319,7 @@ test('UI08 | Keyboard navigation, responsive layout and inert input',async({page
   await page.getByLabel('Import format').selectOption('json');await page.getByLabel('Registry content').fill(JSON.stringify([{job_id:'UI-INERT',company:hostile,role:'Authored inert input'}]));await click(page,'Import registry');
   await expect(page.locator('#registry-table')).toContainText(hostile);expect(await page.evaluate(()=>window.__injected)).toBeUndefined();expect(await page.locator('#registry-table img').count()).toBe(0);
   await page.goto('/ui/#workbench?job=UI-INERT');await expect(page.getByLabel('Selected posting')).toHaveValue('UI-INERT');await page.getByLabel('Posting source').fill('Authored source <script>window.__injected=true</script>');await click(page,'Save immutable snapshot');
-  await page.getByText(/Snapshot & extraction history/).click();await expect(page.locator('#history')).toContainText('<script>');expect(await page.locator('main script').count()).toBe(0);
+  await page.getByText(/Snapshot & extraction history/).click();await page.locator('#history').getByRole('button',{name:/Inspect snapshot/}).first().click();await expect(page.locator('#history')).toContainText('<script>');expect(await page.locator('main script').count()).toBe(0);
   await page.reload();await expect(page.getByLabel('Selected posting')).toHaveValue('UI-INERT');
   expect(await (await request.get('/ui/config')).json()).toMatchObject({contract_version:1,demo:true,provider:'fixture',execution_mode:'fixture',live_llm:false,acquisition_mode:'fixture-policy-proxy',actions:{samples:true,reset:true,extract:true,evaluate:true}});
   const readiness=await (await request.get('/health')).json();expect(readiness.provider).toBe('fixture');expect(readiness.configuration).toBe('fixture_normalized');expect(readiness.live_llm).toBe(false);expect(readiness.acquisition).toMatchObject({ready:true,mode:'policy-proxy',local_destination_dns:false});

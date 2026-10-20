@@ -109,3 +109,20 @@ after-commit lookup/display loss, reload, empty/stale source/revision. Три au
 Missing catalogue counts явно неизвестны, не выдуманы. Publisher сохраняет полный набор
 в ≤4 частях по ≤22 MiB; oversize/missing/excess parts отвергаются, trusted publisher
 объединяет все части. PR/fork остаются read-only.
+
+## Постраничная навигация
+
+UI15 использует 45 authored jobs и по 23 snapshots, runs, revisions и evaluations.
+Registry показывает до 20 summaries, next/previous/first и reloadable search/filter/cursor.
+Выбранный posting вне страницы остаётся доступен; overview показывает общие totals.
+History/revision/evaluation lists хранят cursor IDs и одну страницу, а body читается
+только при явном выборе. Drafts сохраняются при paging и read failure; повторный read
+восстанавливает страницу. Исторический source экранируется, script не исполняется.
+Навигация не вызывает legacy bulk endpoints. Только explicit corpus planning использует
+summary pages по 100 и затем прежний лимит исполнения 20. Новый source исключает старую
+current extraction; immutable history/export остаётся доступен.
+
+Оба viewports публикуют [наблюдения](issue-evidence/47/catalogue-observations.json) и
+[измеренное сравнение](issue-evidence/47/catalogue-performance.md) с полными исходными
+данными и hashes. Recorder проверяет обе страницы доказательств, пределы и provenance;
+их файлы входят в тот же manifest, что все 30 successful recordings.

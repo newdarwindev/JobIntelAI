@@ -38,7 +38,8 @@
       "unit/test_grounding.py"
     ],
     "S13": [
-      "unit/test_grounding.py"
+      "unit/test_grounding.py",
+      "integration/test_catalogue.py"
     ],
     "S14": [
       "unit/test_registry_normalization.py"

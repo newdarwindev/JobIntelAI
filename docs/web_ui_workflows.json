@@ -342,6 +342,31 @@
         "авторская выборка трёх jobs и неподдерживаемый replay input",
         "реальные stale source/run conflicts и прерывание доставки/lookup"
       ]
+    },
+    {
+      "id": "UI15",
+      "title": "Ограниченный поиск и постраничная история",
+      "spec_sections": [
+        5,
+        6,
+        7,
+        9,
+        11,
+        12,
+        13
+      ],
+      "scenarios": [
+        "S13",
+        "V01",
+        "V26",
+        "V31",
+        "V37",
+        "V39"
+      ],
+      "services": [
+        "actual migrated sandbox API",
+        "bounded v2 metadata catalogues with exact selected detail reads"
+      ]
     }
   ]
 }

@@ -199,7 +199,7 @@ test('UI12 | Scoped editor drafts, explicit discard and pending navigation',asyn
 
   await test.step('Late history reads and browser connection failures preserve scoped drafts',async()=>{
     await openJob(page,'DRAFT-B');
-    const history=await holdResponse(page,'/jobs/DRAFT-A/history','GET');
+    const history=await holdResponse(page,'/v2/jobs/DRAFT-A/snapshots?limit=20','GET');
     await page.getByLabel('Selected posting').selectOption('DRAFT-A');expect(await history.ready).toBe(200);
     await nav(page,'Job registry');await openJob(page,'DRAFT-B');history.release();
     await sourceFields(page,b);await expect(page.getByLabel('Selected posting')).toHaveValue('DRAFT-B');

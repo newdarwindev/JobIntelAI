@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "code_provenance": {
+    "source_sha256": "688d7196dbd2015f94047ccabc2c0dab9f631cb75c902397d7d5362031813911",
+    "git_commit": "5384741088d5201efcd9fe63b3dcc75e2e4f6f43",
+    "git_dirty": false
+  },
+  "input_provenance": {
+    "provider": "fixture",
+    "configuration": "fixture_normalized",
+    "sha256": {
+      "data/sample_jobs/SYN-01.txt": "6f13b2017ee21a59e26953947f50473b18dce5b1727b796bd7051c41ac9cb87a",
+      "data/provider_responses.json": "0cd3e391a117a37262615548e06374b28cfd62238ef401d2c71ed92e23ecac16",
+      "data/taxonomy.json": "467b93d3ffdd62a9473840cc37f930231effa8818b0411a9d5bc5dc74b608850",
+      "scripts/catalogue_benchmark.py": "12b61d7e7475b56e471d36a1c223644f484d79545aaee250dc7d9ed84690099a"
+    }
+  },
+  "execution": "actual migrated SQLite/PostgreSQL, authored fixture replay, no paid calls",
+  "comparison": "legacy compatible v1 bulk algorithm and v2 bounded summaries on identical records",
+  "rows": [
+    {
+      "database": "sqlite",
+      "registered_extracted_jobs": 1,
+      "legacy": {
+        "endpoint": "/jobs",
+        "http_status": 200,
+        "sql_statements": 5,
+        "select_statements": 4,
+        "response_bytes": 2392,
+        "returned_jobs": 1,
+        "elapsed_seconds": 0.0235640500000045,
+        "selected_source_body_columns": true
+      },
+      "bounded": {
+        "endpoint": "/v2/jobs?limit=20",
+        "http_status": 200,
+        "sql_statements": 3,
+        "select_statements": 2,
+        "response_bytes": 591,
+        "returned_jobs": 1,
+        "elapsed_seconds": 0.01488757100003113,
+        "selected_source_body_columns": false
+      }
+    },
+    {
+      "database": "sqlite",
+      "registered_extracted_jobs": 10,
+      "legacy": {
+        "endpoint": "/jobs",
+        "http_status": 200,
+        "sql_statements": 32,
+        "select_statements": 31,
+        "response_bytes": 23830,
+        "returned_jobs": 10,
+        "elapsed_seconds": 0.013224680000007538,
+        "selected_source_body_columns": true
+      },
+      "bounded": {
+        "endpoint": "/v2/jobs?limit=20",
+        "http_status": 200,
+        "sql_statements": 3,
+        "select_statements": 2,
+        "response_bytes": 4465,
+        "returned_jobs": 10,
+        "elapsed_seconds": 0.006644690000030096,
+        "selected_source_body_columns": false
+      }
+    },
+    {
+      "database": "sqlite",
+      "registered_extracted_jobs": 20,
+      "legacy": {
+        "endpoint": "/jobs",
+        "http_status": 200,
+        "sql_statements": 62,
+        "select_statements": 61,
+        "response_bytes": 47660,
+        "returned_jobs": 20,
+        "elapsed_seconds": 0.02330359400002635,
+        "selected_source_body_columns": true
+      },
+      "bounded": {
+        "endpoint": "/v2/jobs?limit=20",
+        "http_status": 200,
+        "sql_statements": 3,
+        "select_statements": 2,
+        "response_bytes": 8775,
+        "returned_jobs": 20,
+        "elapsed_seconds": 0.00647452299995166,
+        "selected_source_body_columns": false
+      }
+    },
+    {
+      "database": "sqlite",
+      "registered_extracted_jobs": 100,
+      "legacy": {
+        "endpoint": "/jobs",
+        "http_status": 200,
+        "sql_statements": 302,
+        "select_statements": 301,
+        "response_bytes": 238300,
+        "returned_jobs": 100,
+        "elapsed_seconds": 0.10677720499995758,
+        "selected_source_body_columns": true
+      },
+      "bounded": {
+        "endpoint": "/v2/jobs?limit=20",
+        "http_status": 200,
+        "sql_statements": 3,
+        "select_statements": 2,
+        "response_bytes": 8839,
+        "returned_jobs": 20,
+        "elapsed_seconds": 0.007960593000007066,
+        "selected_source_body_columns": false
+      }
+    },
+    {
+      "database": "sqlite",
+      "registered_extracted_jobs": 500,
+      "legacy": {
+        "endpoint": "/jobs",
+        "http_status": 200,
+        "sql_statements": 1502,
+        "select_statements": 1501,
+        "response_bytes": 1191900,
+        "returned_jobs": 500,
+        "elapsed_seconds": 0.5072265910000624,
+        "selected_source_body_columns": true
+      },
+      "bounded": {
+        "endpoint": "/v2/jobs?limit=20",
+        "http_status": 200,
+        "sql_statements": 3,
+        "select_statements": 2,
+        "response_bytes": 8840,
+        "returned_jobs": 20,
+        "elapsed_seconds": 0.014133965999917564,
+        "selected_source_body_columns": false
+      }
+    },
+    {
+      "database": "postgres",
+      "registered_extracted_jobs": 1,
+      "legacy": {
+        "endpoint": "/jobs",
+        "http_status": 200,
+        "sql_statements": 4,
+        "select_statements": 4,
+        "response_bytes": 2392,
+        "returned_jobs": 1,
+        "elapsed_seconds": 0.023013082000034046,
+        "selected_source_body_columns": true
+      },
+      "bounded": {
+        "endpoint": "/v2/jobs?limit=20",
+        "http_status": 200,
+        "sql_statements": 2,
+        "select_statements": 2,
+        "response_bytes": 591,
+        "returned_jobs": 1,
+        "elapsed_seconds": 0.014136086000007708,
+        "selected_source_body_columns": false
+      }
+    },
+    {
+      "database": "postgres",
+      "registered_extracted_jobs": 10,
+      "legacy": {
+        "endpoint": "/jobs",
+        "http_status": 200,
+        "sql_statements": 31,
+        "select_statements": 31,
+        "response_bytes": 23830,
+        "returned_jobs": 10,
+        "elapsed_seconds": 0.023710563000008733,
+        "selected_source_body_columns": true
+      },
+      "bounded": {
+        "endpoint": "/v2/jobs?limit=20",
+        "http_status": 200,
+        "sql_statements": 2,
+        "select_statements": 2,
+        "response_bytes": 4465,
+        "returned_jobs": 10,
+        "elapsed_seconds": 0.00937276699994527,
+        "selected_source_body_columns": false
+      }
+    },
+    {
+      "database": "postgres",
+      "registered_extracted_jobs": 20,
+      "legacy": {
+        "endpoint": "/jobs",
+        "http_status": 200,
+        "sql_statements": 61,
+        "select_statements": 61,
+        "response_bytes": 47660,
+        "returned_jobs": 20,
+        "elapsed_seconds": 0.04199340399998164,
+        "selected_source_body_columns": true
+      },
+      "bounded": {
+        "endpoint": "/v2/jobs?limit=20",
+        "http_status": 200,
+        "sql_statements": 2,
+        "select_statements": 2,
+        "response_bytes": 8775,
+        "returned_jobs": 20,
+        "elapsed_seconds": 0.009402952999948866,
+        "selected_source_body_columns": false
+      }
+    },
+    {
+      "database": "postgres",
+      "registered_extracted_jobs": 100,
+      "legacy": {
+        "endpoint": "/jobs",
+        "http_status": 200,
+        "sql_statements": 301,
+        "select_statements": 301,
+        "response_bytes": 238300,
+        "returned_jobs": 100,
+        "elapsed_seconds": 0.2000196420000293,
+        "selected_source_body_columns": true
+      },
+      "bounded": {
+        "endpoint": "/v2/jobs?limit=20",
+        "http_status": 200,
+        "sql_statements": 2,
+        "select_statements": 2,
+        "response_bytes": 8839,
+        "returned_jobs": 20,
+        "elapsed_seconds": 0.02376589600009993,
+        "selected_source_body_columns": false
+      }
+    },
+    {
+      "database": "postgres",
+      "registered_extracted_jobs": 500,
+      "legacy": {
+        "endpoint": "/jobs",
+        "http_status": 200,
+        "sql_statements": 1501,
+        "select_statements": 1501,
+        "response_bytes": 1191900,
+        "returned_jobs": 500,
+        "elapsed_seconds": 1.0373994860000266,
+        "selected_source_body_columns": true
+      },
+      "bounded": {
+        "endpoint": "/v2/jobs?limit=20",
+        "http_status": 200,
+        "sql_statements": 2,
+        "select_statements": 2,
+        "response_bytes": 8840,
+        "returned_jobs": 20,
+        "elapsed_seconds": 0.05890871600001901,
+        "selected_source_body_columns": false
+      }
+    }
+  ]
+}
