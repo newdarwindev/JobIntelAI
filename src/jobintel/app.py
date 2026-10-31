@@ -1,6 +1,7 @@
 """One loopback FastAPI process for paste, compare, save, and export."""
 
 import os
+import re
 from pathlib import Path
 from uuid import UUID
 
@@ -124,6 +125,8 @@ def records():
 
 @app.get("/api/records/{record_id}")
 def record(record_id: str):
+    if not re.fullmatch(r"[0-9a-f]{32}", record_id):
+        raise HTTPException(404, "Record not found")
     value = store.get(record_id)
     if not value:
         raise HTTPException(404, "Record not found")

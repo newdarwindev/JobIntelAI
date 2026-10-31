@@ -35,9 +35,13 @@ class Store:
     def connect(self):
         db = sqlite3.connect(self.path, timeout=10)
         db.row_factory = sqlite3.Row
+        db.execute("PRAGMA foreign_keys=ON")
         try:
             yield db
             db.commit()
+        except Exception:
+            db.rollback()
+            raise
         finally:
             db.close()
 
@@ -66,7 +70,12 @@ class Store:
                     "INSERT INTO operations VALUES (?,?,?,?)", (key, body_hash, None, "pending")
                 )
                 record_id = None
-        return self.get(record_id) if record_id else None
+        if record_id:
+            result = self.get(record_id)
+            if not result:
+                raise ValueError("Saved result unavailable; do not retry")
+            return result
+        return None
 
     def reject(self, key: str):
         with self.connect() as db:

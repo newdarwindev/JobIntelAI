@@ -42,5 +42,5 @@ def compare(job: str, candidate: str) -> list[dict]:
             )
         response.raise_for_status()
         return json.loads(response.json()["choices"][0]["message"]["content"])["items"]
-    except (httpx.HTTPError, KeyError, ValueError, TypeError) as exc:
+    except (httpx.HTTPError, KeyError, IndexError, AttributeError, ValueError, TypeError) as exc:
         raise ProviderError("Provider request or response failed") from exc
