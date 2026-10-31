@@ -1,366 +1,58 @@
-import {EditorDrafts} from './drafts.js';
-import {MutationClient,storedMutation} from './operations.js';
-import {CorpusBatches,batchLimit} from './batches.js';
-import {CataloguePages} from './catalogues.js';
-
-const drafts = new EditorDrafts();
-const catalogues = new CataloguePages(api);
-const catalogueResults = new Map();
-const main = document.querySelector('#main');
-const notice = document.querySelector('#notice');
-const operationPanel = document.querySelector('#operation-status');
-const batchPanel = document.querySelector('#batch-status');
-const names = {overview:'Overview', registry:'Job registry', workbench:'Source & extraction', candidate:'Candidate evidence', analytics:'Corpus analytics', evaluation:'Evaluation lab'};
-const state = {jobs:[], totals:{registered:0,extracted:0,requirements:0}, job:null, historySelection:null, evaluationPage:null, fixtures:null, config:null, selected:null, profile:null, revision:null, revisions:[], matches:new Map(), evaluation:null, search:'', status:'all', applied:'all', remote:'all', activeEvidence:null, busy:false, rendering:false, rendered:null, renderId:0};
-const batches = new CorpusBatches({storage:sessionStorage,onChange:updateBatchPanel});
-const operations = new MutationClient({storage:localStorage,onChange:updateOperationPanel,apply:applySavedOperation,readableError});
-if(operations.pending)operations.pending.context={batch:batches.pendingContext(operations.pending.id)};
-const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const pretty = value => JSON.stringify(value, null, 2);
-const badge = (value, cls=value) => `<span class="badge ${esc(cls)}">${esc(value)}</span>`;
-const button = (label, action, primary=false, extra='') => `<button type="button" data-action="${action}" class="${primary?'primary':''}" ${extra}>${label}</button>`;
-const empty = (title, text) => `<div class="empty"><strong>${esc(title)}</strong><p>${esc(text)}</p></div>`;
-const draftControls = label => `${button(`Discard ${label} draft`,'discard-draft',false,'data-discard-draft')}<p class="hint" data-draft-note hidden>Unsaved ${label} draft kept during navigation. Save or discard before reloading this page.</p>`;
-const status = job => job.extraction ? 'Extracted' : job.snapshot ? 'Source ready' : 'Awaiting source';
-const configurationOptions = () => [...state.config.configurations].sort((a,b)=>b.normalize-a.normalize).map(c=>`<option value="${esc(c.id)}" ${c.id===state.config.default_configuration?'selected':''}>${esc(c.label)}</option>`).join('');
-const providerLabel = () => state.config.execution_label;
-const providerTimeout = (operation='extraction') => Math.ceil(state.config.request_limits[`${operation}_seconds`]*1000);
-const providerStatusText = () => `${providerLabel()} · ${state.config.readiness}${state.config.readiness==='unverified'?' · Hosted service has not been probed.':''}`;
-const providerStatus = () => `<p class="hint" id="provider-status">${esc(providerStatusText())}</p>${button('Refresh provider status','provider-status')}`;
-function identifyProvider(config){
-  document.querySelector('.mode-badge').textContent=config.demo&&config.execution_mode==='fixture'?'SYNTHETIC DEMO':config.execution_label.toUpperCase();
-  const note=document.querySelector('.sidebar-note');note.dataset.readiness=config.readiness;
-  const detail=config.execution_mode==='local-inference'?'Actual CPU model inference.':config.execution_mode==='hosted'?'Explicitly configured hosted model; availability unverified.':config.execution_mode==='emulator'?'Authored protocol responses; no model inference.':'Authored synthetic replay; no model inference.';
-  note.innerHTML=`<span class="online-dot"></span> ${esc(config.execution_label)}<small>${esc(detail)}<br>${esc(config.model??config.readiness)}</small>`;
-  const status=document.querySelector('#provider-status');if(status)status.textContent=providerStatusText();
+const $ = id => document.getElementById(id);
+let pending = null;
+function node(tag, text, className) {
+  const el = document.createElement(tag);
+  el.textContent = text;
+  if (className) el.className = className;
+  return el;
 }
-async function refreshConfiguration(){const config=await api('/ui/config');if(config.contract_version!==1||!Array.isArray(config.configurations)||!config.actions||!config.request_limits)throw new Error('Unsupported UI configuration. Update the API and UI together.');state.config=config;identifyProvider(config);}
-const currentJob = () => state.job?.job_id===state.selected?state.job:state.jobs.find(j=>j.job_id===state.selected);
-const currentMatches = job => {
-  const item=state.matches.get(job.job_id);
-  return item && job.extraction && item.run_id===job.extraction.run_id && item.profile_revision_id===state.revision?.profile_revision_id ? item.matches : null;
-};
-const metric = (label, value, note) => `<div class="metric"><div class="label">${esc(label)}</div><div class="value">${esc(value)}</div><small>${esc(note)}</small></div>`;
-function tell(text, error=false){ notice.textContent=text; notice.className=error?'error':''; notice.hidden=false; }
-function readableError(data){
-  if (data.detail?.code) return `${data.detail.message} (${data.detail.retryable?'Retry is available':'Review the failure before retrying'})`;
-  if (typeof data.detail==='string') return data.detail;
-  if (Array.isArray(data.detail)) return data.detail.map(x=>`${x.loc.filter(y=>y!=='body').join('.')}: ${x.msg}`).join('; ');
-  return 'The operation could not be completed.';
-}
-async function api(path, body, format='json',timeout=20000,context=null){
-  if(body!==undefined&&storedMutation(path))return operations.execute(path,body,timeout,context);
-  let response;
-  try {response=await fetch(path,{method:body===undefined?'GET':'POST',headers:body===undefined?{}:{'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(timeout)});}
-  catch {throw new Error('Connection unavailable or timed out. Your source and prior results are preserved. Retry when the local server is ready.');}
-  if(!response.ok){const data=await response.json();const error=new Error(`${response.status}: ${readableError(data)}`);if(data.evaluation_run_id){const {detail,...report}=data;error.report=report;}throw error;}
-  return format==='csv'?response.text():response.json();
-}
-async function reload(){const result=await api('/v2/jobs');state.jobs=result.jobs;state.totals=result.totals;state.selected??=state.jobs[0]?.job_id??null;state.job=null;catalogues.reset();state.historySelection=null;}
-async function allJobSummaries(){const jobs=[];let cursor;do{const result=await api(`/v2/jobs?limit=100${cursor?'&cursor='+encodeURIComponent(cursor):''}`);jobs.push(...result.jobs);cursor=result.page.next_cursor;}while(cursor);return jobs;}
-async function catalogue(path){const result=await catalogues.load(path);catalogueResults.set(path,result);return result;}
-function pageControls(path,page,label){return `<div class="actions section-space" aria-label="${esc(label)} pages">${catalogues.previous(path)?button('Previous '+label,'catalogue-page',false,`data-path="${esc(path)}" data-direction="previous"`):''}${page.has_more?button('Next '+label,'catalogue-page',false,`data-path="${esc(path)}" data-direction="next"`):''}${catalogues.previous(path)?button('First '+label,'catalogue-page',false,`data-path="${esc(path)}" data-direction="first"`):''}<span class="hint">At most ${page.limit} per page</span></div>`;}
-function registryQuery(){const params=route().params;return new URLSearchParams({q:params.get('q')??'',pipeline:params.get('pipeline')??'all',limit:'20',...(params.has('cursor')?{cursor:params.get('cursor')}:{})});}
-function changeRegistry(values){const params=route().params;for(const [key,value]of Object.entries(values)){if(value===null||value==='')params.delete(key);else params.set(key,value);}location.hash=`registry?${params}`;}
-
-function route(){const [view,query]=location.hash.slice(1).split('?');return {view:names[view]?view:'overview',params:new URLSearchParams(query)};}
-function go(view,job){location.hash=`${view}${job?`?job=${encodeURIComponent(job)}`:''}`;}
-function pageHead(view,subtitle,action=''){return `<div class="page-head"><div><div class="eyebrow">JOBINTEL / ${esc(view==='overview'?'YOUR EVIDENCE, CONNECTED':names[view].toUpperCase())}</div><h1>${esc(names[view])}</h1><p>${subtitle}</p></div><div class="actions">${action}</div></div>`;}
-function jobSelector(){return `<div class="job-selector"><label for="selected-job">Selected posting</label><select id="selected-job">${[...(state.job&&!state.jobs.some(j=>j.job_id===state.job.job_id)?[state.job]:[]),...state.jobs].map(j=>`<option value="${esc(j.job_id)}" ${j.job_id===state.selected?'selected':''}>${esc(j.job_id)} · ${esc(j.company)}</option>`).join('')}</select><a href="#registry">Search all registered postings</a></div>`;}
-function overview(){
-  const extracted=state.totals.extracted, pending=state.totals.registered-extracted;
-  return pageHead('overview','Turn job postings into requirements you can trace back to the source.',state.config.actions.samples?button('Load synthetic corpus','corpus',true):'')+
-  `<section class="panel hero"><div class="eyebrow">EVERY REQUIREMENT HAS A SOURCE</div><h2>From posting to proof.</h2><p>Capture the original wording, inspect exact evidence, and compare requirements with explicit candidate records. ${state.config.actions.samples?'Explore the whole pipeline with 20 authored synthetic postings.':'Import a registry and capture a source to begin.'}</p><div class="actions"><a class="button primary" href="#registry">Import your first registry <span aria-hidden="true">→</span></a><a class="button" href="#workbench">Open evidence workbench</a></div></section>`+
-  `<div class="metrics">${metric('Registered postings',state.totals.registered,'Distinct registry jobs')}${metric('Successfully extracted',extracted,'Latest source only · denominator N')}${metric('Pending / excluded',pending,'No successful latest-source extraction')}${metric('Requirements',state.totals.requirements,'ANY groups stay together')}</div>`+
-  `<div class="two-col"><section class="panel"><div class="panel-head"><div><h2>Your evidence pipeline</h2><p class="muted">A small, auditable path from source to decision.</p></div>${badge(providerLabel().toUpperCase())}</div><div class="steps"><div class="step"><span>01 / REGISTER</span><strong>Import a registry</strong><small>Typed CSV or JSON, with duplicate protection.</small></div><div class="step"><span>02 / CAPTURE</span><strong>Freeze the source</strong><small>Immutable text and a SHA-256 content hash.</small></div><div class="step"><span>03 / EXTRACT</span><strong>Inspect evidence</strong><small>Exact quotes, offsets, and ANY / ALL groups.</small></div><div class="step"><span>04 / COMPARE</span><strong>Match & measure</strong><small>Two candidate axes. Explicit n/N counts.</small></div></div><ul class="note-list"><li>Changed sources invalidate the current extraction; history remains intact.</li><li>Missing candidate records stay unknown in an incomplete profile.</li><li>Fixture metrics describe pipeline behavior. Inspect per-case evaluation for model quality.</li></ul></section><section class="panel"><div class="panel-head"><h2>Recent postings</h2><a href="#registry">View registry →</a></div>${state.jobs.length?`<table class="compact-table"><tbody>${state.jobs.slice(0,5).map(j=>`<tr><td><a class="linked" href="#workbench?job=${encodeURIComponent(j.job_id)}">${esc(j.job_id)}</a><small>${esc(j.company)}</small></td><td>${badge(status(j),j.extraction?'ready':'UNKNOWN')}</td></tr>`).join('')}</tbody></table>`:empty('A clear starting point',state.config.actions.samples?'Import the sample registry or load the complete synthetic corpus to explore the evidence trail.':'Import a CSV or JSON registry to begin the evidence trail.')}</section></div>`;
-}
-
-function registryPaging(){const result=state.registry;if(!result)return '';return `<div class="actions section-space" aria-label="Registry pages">${result.page.has_more?button('Next postings','registry-next'):''}${route().params.has('cursor')?button('Previous postings','registry-previous')+button('First postings','registry-first'):''}<span class="hint">${result.jobs.length} shown · at most ${result.page.limit} per page · ${result.totals.registered} registered overall</span></div>`;}
-async function historyPages(job){
-  const base=`/v2/jobs/${encodeURIComponent(job.job_id)}`,snapshotPath=base+'/snapshots',acquisitionPath=base+'/acquisition-attempts';
-  const [snapshots,acquisition]=await Promise.all([catalogue(snapshotPath),catalogue(acquisitionPath)]);
-  let selection=null;
-  if(state.historySelection?.jobId===job.job_id){const snapshot=state.historySelection.snapshot,runsPath=`${snapshotPath}/${snapshot.id}/runs`;selection={snapshot,runsPath,runs:await catalogue(runsPath)};}
-  return {snapshots,snapshotPath,acquisition,acquisitionPath,selection,acquisition_attempts:acquisition.items.map(a=>({...a,attempt_id:a.id,timestamp:a.created_at}))};
-}
-function snapshotHistory(history){
-  if(!history)return '';
-  const selected=history.selection;
-  return `<details id="history"><summary>Snapshot & extraction history (${history.snapshots.items.length} on this page)</summary>${history.snapshots.items.map(s=>`<div class="history-item"><strong class="meta">Snapshot #${esc(s.id)} · ${esc(s.content_hash.slice(0,12))}</strong><p class="hint">${esc(s.fetched_at)} · ${s.run_count} extraction run(s)</p>${button('Inspect snapshot #'+s.id,'snapshot-inspect',false,`data-snapshot="${esc(s.id)}"`)}</div>`).join('')}${pageControls(history.snapshotPath,history.snapshots.page,'snapshots')}${selected?`<section id="selected-snapshot"><h3>Saved snapshot #${esc(selected.snapshot.id)}</h3><p class="meta">SHA-256 ${esc(selected.snapshot.content_hash)}</p><div class="source-text">${esc(selected.snapshot.clean_text)}</div>${selected.runs.items.map(r=>`<p class="meta">Run #${esc(r.id)} · ${esc(r.configuration)} · ${r.requirement_count} requirement(s)</p>`).join('')}${pageControls(selected.runsPath,selected.runs.page,'extraction runs')}</section>`:''}</details>`;
-}
-async function loadRevisionPage(profileId){const path=`/v2/candidates/${encodeURIComponent(profileId)}/revisions`,result=await catalogue(path);state.revisionPage=result;state.revisionPath=path;state.revisionProfile=profileId;state.revisions=result.items.map(r=>({...r,profile_revision_id:r.id}));if(state.revision?.profile_id===profileId&&!state.revisions.some(r=>r.profile_revision_id===state.revision.profile_revision_id))state.revisions.unshift(state.revision);}
-function evaluationCatalogue(){const result=state.evaluationPage;if(!result)return '';return `<section class="panel" id="evaluation-catalogue"><h2>Saved evaluations</h2>${result.items.map(r=>`<div class="history-item"><p>${esc(r.created_at)} · ${esc(r.dataset??'fixture')} · ${esc(r.status??'completed')}</p>${button('Inspect evaluation #'+r.id,'saved-evaluation',false,`data-id="${esc(r.id)}"`)}</div>`).join('')||empty('No saved evaluations','Run an explicit evaluation to retain a report.')}${pageControls('/v2/evaluation-runs',result.page,'evaluations')}</section>`;}
-
-function registryRows(){
-  const jobs=state.registry?.jobs??[];
-  return jobs.length?`<div class="table-wrap"><table><thead><tr><th>POSTING / COMPANY</th><th>ROLE</th><th>APPLIED</th><th>PIPELINE STATE</th><th></th></tr></thead><tbody>${jobs.map(j=>`<tr><td><strong>${esc(j.job_id)}</strong><small>${esc(j.company)}</small></td><td>${esc(j.role)}${j.status?`<small>${esc(j.status)}</small>`:''}</td><td>${j.applied===null?'Unknown':j.applied?'Yes':'No'}</td><td>${badge(status(j),j.extraction?'ready':'UNKNOWN')}</td><td><a class="linked" href="#workbench?job=${encodeURIComponent(j.job_id)}">Inspect →</a></td></tr>`).join('')}</tbody></table></div>`:empty('No matching postings','Import a registry or adjust your search and pipeline filter.');
-}
-function registry(){return pageHead('registry','One registry. Explicit metadata. No guessed application history.')+`<section class="panel"><div class="panel-head"><div><h2>Import postings</h2><p class="muted">A batch is atomic: conflicts leave the entire registry unchanged.</p></div>${state.config.actions.samples?button('Load sample registry','sample-registry'):''}</div><form id="import-form"><div class="field-row"><div><label for="import-format">Import format</label><select id="import-format"><option value="csv">CSV</option><option value="json">JSON</option></select></div><div><p class="hint">CSV headers: job_id, company, role. Optional: official_url, status, applied.</p></div></div><label for="registry-input">Registry content</label><textarea id="registry-input" required placeholder="job_id,company,role,official_url,status,applied"></textarea><div class="actions section-space"><button class="primary" type="submit">Import registry</button><span class="hint">Only authored synthetic inputs are suitable for recordings.</span></div>${draftControls('registry')}</form></section><section class="panel"><div class="panel-head"><h2>Registered postings <span class="muted">(${state.totals.registered})</span></h2>${button('Refresh','refresh')}</div><div class="filter-bar"><div><label for="job-search">Search postings</label><input id="job-search" value="${esc(state.search)}" type="search" placeholder="ID, company, or role"></div><div><label for="pipeline-filter">Pipeline state</label><select id="pipeline-filter">${['all','Awaiting source','Source ready','Extracted'].map(s=>`<option value="${s}" ${s===state.status?'selected':''}>${s==='all'?'All states':s}</option>`).join('')}</select></div></div><div id="registry-table">${registryRows()}</div>${registryPaging()}</section>`;}
-function highlighted(text, evidence){
-  const chars=Array.from(text);if(!evidence)return esc(text);
-  if(chars.slice(evidence.start,evidence.end).join('')!==evidence.quote)return esc(text);
-  return `${esc(chars.slice(0,evidence.start).join(''))}<mark>${esc(evidence.quote)}</mark>${esc(chars.slice(evidence.end).join(''))}`;
-}
-function requirementCard(r,i){return `<article class="requirement"><div class="requirement-head"><div><h3>${esc(r.normalized_skill_or_requirement)}</h3><span class="meta">${esc(r.operator)} · ${esc(r.category)}</span></div>${badge(r.requirement_type)}</div><div class="quote">“${esc(r.evidence.quote)}”</div><div class="meta">[${r.evidence.start}:${r.evidence.end}] · Unicode code points · end exclusive</div><div class="inline-meta"><span class="hint">Production: ${r.production_obligation==='PREFERRED'?'Preferred':r.explicit_production_required===null?'Unknown':r.explicit_production_required?'Required':'Not required'}</span><span class="hint">Years: ${r.years_required?`${r.years_required.minimum}${r.years_required.maximum===null?'+':`–${r.years_required.maximum}`}`:'Unknown'}</span><span class="hint">Experience obligation: ${esc(r.experience_obligation??'UNKNOWN')}</span></div>${(r.version_constraints??[]).map(v=>`<p class="hint">Version: ${esc(v.product)} ${esc({EQ:'=',GTE:'>=',GT:'>',LTE:'<=',LT:'<'}[v.comparator])} ${esc(v.version)} · raw ${esc(v.raw_text)}</p>`).join('')}${button('Highlight source quote','highlight',false,`data-index="${i}" class="small"`)}${r.notes?`<p class="hint">${esc(r.notes)}</p>`:''}</article>`;}
-function metadataFacts(ext){
-  const facts=[['Geography',ext.geography,'geography'],['Work mode',ext.work_mode,'work_mode'],...(ext.filters??[]).map((f,i)=>[f.kind,f,'filter-'+i])];
-  return `<section class="metadata-facts"><h3>Job location & filters</h3>${facts.map(([label,f,key])=>`<p>${esc(label)}: <strong>${esc(f?.value??'Unknown')}</strong></p>${f?`<div class="quote">${esc(f.evidence.quote)}</div><p class="meta">[${f.evidence.start}:${f.evidence.end}] · Unicode code points</p>${button('Highlight '+label+' quote','highlight',false,`data-fact="${key}" class="small"`)}`:''}`).join('')}</section>`;
-}
-function acquisitionHistory(attempts){return `<details id="acquisition-history"><summary>URL acquisition history (${attempts.length})</summary>${attempts.map(a=>`<div class="history-item"><strong>${esc(a.status)} · HTTP ${esc(a.http_status??'unavailable')} · ${esc(a.error_code??'no error')}</strong><p class="meta">Attempt #${esc(a.attempt_id)} · ${esc(a.timestamp)}<br>Original: ${esc(a.original_url)}<br>Requested: ${esc(a.requested_url)}<br>Final: ${esc(a.final_url)}</p>${a.snapshot_id?`<p class="hint">Snapshot #${esc(a.snapshot_id)}</p>`:'<p class="hint">No source replaced. Use manual entry when access or format is unsupported.</p>'}</div>`).join('')}</details>`;}
-function workbench(history,job=currentJob()){
-  if(!job)return pageHead('workbench','Capture a source, then inspect each grounded requirement.')+`<section class="panel">${empty('Import a posting first','Your registry is empty. Start with a synthetic CSV or JSON registry.')}<div class="actions"><a class="button primary" href="#registry">Go to job registry</a></div></section>`;
-  const snap=job.snapshot,ext=job.extraction;
-  return pageHead('workbench',`${esc(job.company)} · ${esc(job.role)}`,`<a class="button" href="#candidate">Compare candidate →</a>`)+jobSelector()+
-  `<div class="two-col equal"><section class="panel"><div class="panel-head"><h2>Source capture</h2>${badge(status(job),ext?'ready':'UNKNOWN')}</div><div class="notice-info">${state.config.acquisition_mode==='fixture-policy-proxy'?'URL acquisition in this sandbox uses authored test pages served through a trusted DNS and pinning gateway over HTTP and verified HTTPS.':state.config.demo?'URL acquisition in this sandbox uses authored synthetic responses and makes no network calls.':'URL acquisition accepts bounded public HTML/text and preserves failure history. Access checks require manual entry.'} ${state.config.provider==='local'?'Local CPU inference accepts new inputs within its documented context limit.':state.config.provider==='openai'?'Structured extraction uses the configured Responses provider.':'Fixture replay extracts only known synthetic content hashes.'}</div><form id="source-form"><label for="source-format">Source format</label><select id="source-format"><option value="text">Plain text</option><option value="html">HTML (clean before snapshot)</option></select><label for="source-url">Source URL (optional)</label><input id="source-url" type="url" value="${esc(snap?.source_url??job.official_url??'')}" placeholder="https://example.com/careers/role"><label for="source-input">Posting source</label><textarea id="source-input" required maxlength="200000" rows="10">${esc(snap?.clean_text??'')}</textarea><div class="actions section-space"><button type="submit" class="primary">Save immutable snapshot</button>${state.fixtures?.sources[job.job_id]?button('Load synthetic source','sample-source'):''}${button('Try URL acquisition','fetch')}</div>${draftControls('source')}</form>${acquisitionHistory(history?.acquisition_attempts??[])}${history?pageControls(history.acquisitionPath,history.acquisition.page,'acquisition attempts'):''}${snap?`<details><summary>Snapshot provenance</summary><div class="meta section-space">Snapshot #${snap.id}<br>SHA-256 ${esc(snap.content_hash)}<br>${esc(snap.fetched_at)} · ${esc(snap.fetch_status)}<br>${esc(snap.source_url??'No URL supplied')}</div></details>`:''}${snapshotHistory(history)}</section>`+
-  `<section class="panel"><div class="panel-head"><div><h2>Grounded requirements</h2><p class="muted">Exact wording, preserved operators, explicit unknowns.</p></div></div><div class="field-row"><div>${providerStatus()}<label for="extract-config">Extraction configuration</label><select id="extract-config">${configurationOptions()}</select></div>${button('Extract requirements','extract',true,'data-provider-action=\"extract\"')}</div><p class="hint">${esc(providerLabel())}. ${state.config.provider==='local'?'The configured CPU model extracts new inputs. Exact evidence validation is required; model errors remain visible.':state.config.execution_mode==='emulator'?'Authored output; no model quality is measured.':state.config.execution_mode==='hosted'?'Requests use the explicitly configured hosted model. Usage is displayed when supplied; service readiness has not been probed.':'Fixture replay accepts only known synthetic hashes. Select a configured provider to extract new inputs.'}</p>${ext?`<p class="meta">Run #${ext.run_id} · ${esc(ext.configuration)} · Snapshot #${snap.id}</p><div class="source-text" id="evidence-source">${highlighted(snap.clean_text,ext.requirements[state.activeEvidence]?.evidence)}</div>${metadataFacts(ext)}${ext.requirements.length?ext.requirements.map(requirementCard).join(''):empty('No candidate requirements','Successful empty extraction counts in the corpus denominator. Responsibilities are separate.')}${ext.responsibilities.length?`<details><summary>Responsibilities (${ext.responsibilities.length})</summary>${ext.responsibilities.map(e=>`<div class="quote">${esc(e.quote)}</div><p class="meta">[${e.start}:${e.end}] · Responsibility, not a candidate MUST</p>`).join('')}</details>`:''}<div class="actions section-space">${button('Export evidence JSON','export-evidence')}</div>`:empty('No current extraction',snap?'Extract this snapshot to inspect grounded requirements. Older runs remain in history.':'Save a source snapshot before extracting requirements.')}</section></div>`;
-}
-function matchTable(job,matches){return `<div class="table-wrap"><table><thead><tr><th>REQUIREMENT</th><th>MATCH</th><th>CANDIDATE EVIDENCE</th></tr></thead><tbody>${matches.map((m,i)=>`<tr><td><strong>${esc(job.extraction.requirements[i]?.normalized_skill_or_requirement??m.skills.join(', '))}</strong><small>${esc(m.operator)} · Requirement #${m.requirement_id}</small></td><td>${badge(m.status)}<small>${esc(m.explanation)}</small></td><td>${m.candidate_sources.length?m.candidate_sources.map(s=>`<div class="quote">${esc(s.quote)}</div><div class="meta">${esc(s.skill)} · ${s.current_capability?`capability ${esc(s.current_capability)} / production ${esc(s.production_evidence)}`:`${esc(s.kind)} ${s.observed_on?`observed ${esc(s.observed_on)}`:`${esc(s.start??'unknown')} → ${esc(s.end??'unknown')}`}`}<br>${esc(s.source)}</div>`).join(''):'<span class="muted">No candidate record</span>'}</td></tr>`).join('')}</tbody></table></div>`;}
-function candidate(){const job=currentJob(),matches=job?currentMatches(job):null;return pageHead('candidate','Current capability and historical production evidence are separate axes.')+`<div class="two-col equal"><section class="panel"><div class="panel-head"><h2>Candidate profile</h2>${state.fixtures?button('Load synthetic candidate','sample-candidate'):''}</div><div class="field-row"><div><label for="profile-lookup">Saved profile ID</label><input id="profile-lookup" value="${esc(state.profile?.profile_id??'')}" placeholder="synthetic-candidate"></div>${button('Load saved revisions','load-revisions')}</div>${state.revisions.length?`<label for="profile-revision">Saved revision</label><select id="profile-revision"><option value="">Select a revision</option>${state.revisions.map(r=>`<option value="${esc(r.profile_revision_id)}" ${r.profile_revision_id===state.revision?.profile_revision_id?'selected':''}>${esc(r.created_at)} · ${esc(r.profile_revision_id)}</option>`).join('')}</select>${state.revisionPage?pageControls(state.revisionPath,state.revisionPage.page,'revisions'):''}`:''}<form id="profile-form"><label for="candidate-input">Candidate JSON</label><textarea id="candidate-input" rows="17" required aria-describedby="candidate-error" aria-invalid="false" placeholder='{"profile_id":"synthetic-candidate","complete":false,"evidence":[]}'>${esc(state.profile?pretty(state.profile):'')}</textarea><p id="candidate-error" class="hint field-error" role="alert" hidden></p><label class="checkbox"><input id="candidate-complete" type="checkbox" ${state.profile?.complete?'checked':''}>This profile explicitly declares complete skill coverage</label><p class="hint">Absent records are UNKNOWN unless completeness is explicitly declared. Tenure uses sourced dated periods; eligibility uses exact scoped statements. Separate completeness controls live in the JSON.</p><div class="actions"><button class="primary" type="submit">Validate & save profile</button></div>${draftControls('candidate')}</form>${state.profile?`<div class="notice-info section-space">Active profile: <strong>${esc(state.profile.profile_id)}</strong><br>Revision #${esc(state.revision?.profile_revision_id)} · ${state.profile.evidence.length} evidence record(s) · ${state.profile.complete?'Explicitly complete':'Incomplete'}</div>`:''}</section><section class="panel"><h2>Evidence matching</h2><p class="muted">Match the latest extracted source. A changed source or saved profile invalidates prior matches in this session.</p>${job?jobSelector():''}<div class="actions">${button('Match selected posting','match',true)}${button('Match extracted corpus','match-corpus')}</div><p class="hint">COVERED · PARTIAL · MISSING · UNKNOWN. ANY accepts one sufficient branch; ALL requires every branch.</p>${matches?`<div class="status-totals">${['COVERED','PARTIAL','MISSING','UNKNOWN'].map(s=>badge(`${s} ${matches.filter(m=>m.status===s).length}`,s)).join('')}</div>${matchTable(job,matches)}${eligibilityTable(state.matches.get(job.job_id))}<div class="actions section-space">${button('Export matches JSON','export-matches')}${button('Export matches CSV','export-matches-csv')}</div>`:empty('No current match','Save a sourced profile, extract a posting, then compare the explicit evidence.')}</section></div>`;}
-function selectedCorpus(){return state.jobs.filter(j=>state.applied==='all'||(state.applied==='yes'?j.applied===true:j.applied===false));}
-function analytics(report){const jobs=report.jobs,gaps=report.gaps,clusters=report.clusters,coverage=report.coverage;return pageHead('analytics','Distinct jobs, explicit denominators, and alternative groups kept intact.',`${button('Export corpus JSON','export-analytics')}${button('Export skills CSV','export-csv')}${button('Export requirements CSV','export-requirements')}`)+`<div class="filter-bar"><div><label for="applied-filter">Application slice</label><select id="applied-filter"><option value="all" ${state.applied==='all'?'selected':''}>All registered postings</option><option value="yes" ${state.applied==='yes'?'selected':''}>Explicitly applied</option><option value="no" ${state.applied==='no'?'selected':''}>Explicitly not applied</option></select></div><div><label for="remote-filter">Work mode slice</label><select id="remote-filter"><option value="all" ${state.remote==='all'?'selected':''}>All work modes</option><option value="yes" ${state.remote==='yes'?'selected':''}>Explicitly remote</option><option value="no" ${state.remote==='no'?'selected':''}>Hybrid or onsite</option></select></div><div><p class="hint">Unknown applied or grounded work-mode metadata is excluded from explicit slices. N is recomputed for each slice.</p></div></div><div class="metrics">${metric('Registered in slice',jobs.length,'Explicit registry metadata')}${metric('Successful latest-source N',report.N,report.denominator)}${metric('Pending / stale',coverage.pending+coverage.stale,`${coverage.pending} waiting · ${coverage.stale} stale`)}${metric('Failed',coverage.failed,'No current usable extraction; see outcome counts')}${metric('Excluded',coverage.excluded,'Outside explicit slices')}${metric('Unmatched',coverage.unmatched,'Successful jobs without a saved match for this revision')}${metric('Matched jobs',gaps.N,state.profile?state.profile.profile_id:'No candidate selected')}</div><section class="panel" id="coverage-accounting"><h2>Coverage accounting</h2><p class="muted">${coverage.registered_selected} registered jobs in this slice · ${coverage.registered_total} overall · ${coverage.excluded} excluded. These source/extraction buckets are mutually exclusive.</p><div class="status-totals">${Object.entries(coverage.buckets).map(([key,value])=>badge(`${key.replaceAll('_',' ')} ${value}`,'UNKNOWN')).join('')}</div><p class="hint">Successful empty extractions count in N. ${coverage.unmatched} successful jobs have no eligible saved match for this revision. Latest failed acquisition attempts: ${coverage.latest_acquisition_failed}; latest failed extraction attempts: ${coverage.latest_extraction_failed}. These attempt counts can overlap usable results and do not replace them.</p></section><div class="two-col"><section class="panel"><div class="panel-head"><h2>Skill frequencies</h2>${badge(`N = ${report.N}`)}</div>${report.skills.length?`<div class="table-wrap"><table><thead><tr><th>SKILL</th><th>n/N</th><th>MUST</th><th>PREFERRED</th><th>EXPERIENCE</th><th>OTHER</th></tr></thead><tbody>${report.skills.map(s=>`<tr><td><strong>${esc(s.skill)}</strong></td><td>${s.n}/${s.N}</td><td>${s.must_n}/${s.N}</td><td>${s.preferred_n}/${s.N}</td><td>${s.experience_n}/${s.N}</td><td>${s.other_n}/${s.N}</td></tr>`).join('')}</tbody></table></div>`:empty('N = 0','No successful extraction of a latest source in this slice. Frequencies are undefined.')}<p class="hint">A job may mention a skill as both MUST and PREFERRED. Counts are corpus frequencies, not suitability scores or market-wide estimates.</p></section><section class="panel"><h2>Category coverage</h2><p class="muted">Each successful job counted once per stored requirement category.</p>${clusters.clusters.length?clusters.clusters.map(c=>`<div class="bar-row"><span>${esc(c.category)}</span><div class="bar"><div style="width:${100*c.n/clusters.N}%"></div></div><strong>${c.n}/${clusters.N}</strong></div>`).join(''):empty('No category counts','Extract the corpus to inspect category coverage.')}<details><summary>Alternative groups (${report.alternatives.length})</summary>${report.alternatives.map(a=>`<div class="requirement"><h3>${esc(a.skills.join(' OR '))}</h3>${badge(a.requirement_type)}<p class="hint">${esc(a.job_id)} · ANY · Branches are excluded from independent skill counts.</p></div>`).join('')}</details></section></div><section class="panel"><div class="panel-head"><div><h2>Candidate requirement-group gaps</h2><p class="muted">Saved match runs · denominator = ${gaps.N} matched jobs in this slice.</p></div><a class="button" href="#candidate">Update candidate & match corpus</a></div>${gaps.N?`<div class="table-wrap"><table><thead><tr><th>REQUIREMENT GROUP</th><th>COVERED</th><th>PARTIAL</th><th>MISSING</th><th>UNKNOWN</th></tr></thead><tbody>${gaps.groups.map(g=>`<tr><td>${esc(g.requirement)}<small>${esc(g.operator)} · ${esc(g.requirement_type)}</small></td>${['COVERED','PARTIAL','MISSING','UNKNOWN'].map(s=>`<td>${g[s]}/${gaps.N}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="hint">States count distinct jobs per requirement group and state. Unknown is separate from a demonstrated gap. Groups retain ANY / ALL, obligation and version predicates.</p>`:empty('No saved candidate gap data','Select a saved candidate revision and match the corpus to compute persistent group gaps.')}</section>`;}
-const pct = value=>value===null?'Unavailable':`${(value*100).toFixed(1)}%`;
-function evaluation(){
-  const report=state.evaluation;
-  return pageHead('evaluation','Compare frozen inputs, inspect failures, and reload saved reports.',report?button('Export evaluation JSON','export-evaluation'):'')+
-  `<section class="panel"><div class="panel-head"><h2>${state.config.provider==='fixture'?'Fixture comparison':`${providerLabel()} evaluation`}</h2>${badge(state.config.execution_mode==='hosted'?'HOSTED MODEL REQUESTS':state.config.provider==='local'?'ACTUAL LOCAL MODEL':'NO LIVE CALLS')}</div><div class="notice-info">${state.config.execution_mode==='hosted'?'Evaluation sends model requests to the configured hosted provider. Review its usage and failures.':state.config.provider==='local'?'Local evaluation runs the CPU model on frozen inputs and retains failures. It may take several minutes.':'Replay results demonstrate pipeline behavior and are not live LLM quality measurements.'} The reviewed dataset has source-only annotations from one automated reviewer. ${state.config.provider==='fixture'?'Five additional cases have no replay response; their failures remain visible.':'Inspect every failed and successful case separately.'}</div><form id="evaluation-form"><label for="evaluation-dataset">Evaluation dataset</label><select id="evaluation-dataset"><option value="fixture" ${report?.dataset!=='reviewed'?'selected':''}>Original fixture regression · 20 cases</option><option value="reviewed" ${report?.dataset==='reviewed'?'selected':''}>Source-reviewed benchmark · 25 cases</option></select><div class="actions">${state.config.configurations.map(c=>`<label class="checkbox"><input type="checkbox" name="configuration" value="${esc(c.id)}" checked>${c.normalize?'Deterministic normalization':esc(c.label)}</label>`).join('')}<button class="primary" type="submit" data-provider-action="evaluate">${state.config.execution_mode==='hosted'?'Run hosted evaluation':state.config.provider==='local'?'Run local evaluation':state.config.execution_mode==='emulator'?'Run contract evaluation':'Run fixture evaluation'}</button></div></form><div class="field-row section-space"><div><label for="evaluation-run-id">Saved evaluation run ID</label><input id="evaluation-run-id" value="${esc(report?.evaluation_run_id??'')}" placeholder="Paste a saved run ID"></div>${button('Load saved evaluation','load-evaluation')}</div></section>`+
-  evaluationCatalogue()+(report?evaluationResults(report):`<section class="panel">${empty('No evaluation has been run','Select a dataset and configurations, or load a saved evaluation.')}</section>`);
-}
-function evaluationResults(report){
-  return `<section class="panel"><div class="panel-head"><h2>${report.mode.startsWith('local CPU')?'Measured local model results':report.mode.startsWith('fixture')?'Measured fixture results':'Measured extraction results'}</h2><span class="meta">Evaluation run #${esc(report.evaluation_run_id)} · ${report.dataset_size} postings · ${esc(report.status)}</span></div><div class="table-wrap"><table><thead><tr><th>CONFIGURATION</th><th>PRECISION</th><th>RECALL</th><th>F1</th><th>TYPE</th><th>EVIDENCE</th><th>UNSUPPORTED SPANS</th></tr></thead><tbody>${report.results.map(r=>`<tr><td><strong>${esc(r.configuration)}</strong><small>${r.succeeded??'Unavailable'} succeeded · ${r.failed??'Unavailable'} failed</small></td><td>${r.metrics?`${r.metrics.true_positives}/${r.metrics.predicted}<small>${pct(r.metrics.precision)}</small>`:'Unavailable'}</td><td>${r.metrics?`${r.metrics.true_positives}/${r.metrics.expected}<small>${pct(r.metrics.recall)}</small>`:'Unavailable'}</td><td>${pct(r.metrics?.f1??null)}</td><td>${pct(r.metrics?.type_accuracy??null)}<small>Aligned-pair denominator</small></td><td>${pct(r.metrics?.evidence_accuracy??null)}<small>Exact gold evidence</small></td><td>${pct(r.metrics?.unsupported_span_rate??null)}</td></tr>`).join('')}</tbody></table></div><div class="two-col equal section-space">${report.results.map(r=>`<div class="requirement"><h3>${esc(r.configuration)} operations</h3><p>${report.mode.startsWith('fixture')?'Replay elapsed':'End-to-end elapsed'}: ${r.elapsed_seconds.toFixed(4)} seconds</p><p>Engine timing: ${r.llm_elapsed_seconds===null||r.llm_elapsed_seconds===undefined?'Unavailable':`${r.llm_elapsed_seconds.toFixed(4)} seconds`}<br>Tokens: ${r.tokens===null?'Unavailable':r.tokens}<br>Estimated cost: ${r.estimated_cost===null?'Unavailable':esc(r.estimated_cost)}<br>Semantic hallucination rate: ${pct(r.metrics?.semantic_hallucination_rate??null)}<br>Abstention quality: ${pct(r.metrics?.abstention_quality??null)}</p><p class="hint">Missing measurements stay unavailable. Elapsed time includes provider and validation work. Engine timing is reported only when supplied by the local engine. Metrics cover successful cases; failure counts remain separate. Matching is assessed on reviewed gold requirements and sourced candidate evidence.</p>${r.metrics?.reviewed_metrics?`<h4>Reviewed metrics</h4>${Object.entries(r.metrics.reviewed_metrics).map(([name,m])=>`<p>${esc(name.replaceAll('_',' '))}: ${m.numerator}/${m.denominator} · ${pct(m.value)}</p>`).join('')}`:''}</div>`).join('')}</div><details open id="evaluation-diagnostics"><summary>Per-case diagnostics</summary>${report.results.map(r=>`<h3>${esc(r.configuration)}</h3>${(r.per_case??[]).map(c=>`<p>${esc(c.case_id)}: ${esc(c.status)}${c.error?` · ${esc(c.error.code)}`:''}${c.reviewed_metrics?` · unsupported reviewed claims ${c.reviewed_metrics.semantic_unsupported_claim_rate.numerator}/${c.reviewed_metrics.semantic_unsupported_claim_rate.denominator}`:''}</p>`).join('')}`).join('')}</details><details><summary>Raw report & provenance</summary><pre class="code-box">${esc(pretty(report))}</pre></details></section>`;
-}
-function rememberEvaluation(report){state.evaluation=report;localStorage.setItem('jobintel-selected-evaluation',report.evaluation_run_id);}
-async function restoreEvaluation(){const id=localStorage.getItem('jobintel-selected-evaluation');if(!id)return;try{state.evaluation=await api(`/evaluation-runs/${encodeURIComponent(id)}`);}catch{localStorage.removeItem('jobintel-selected-evaluation');}}
-async function render(){
-  const id=++state.renderId,{view,params}=route();
-  if(params.has('job'))state.selected=params.get('job');
-  const selected=state.selected,hash=location.hash;
-  state.rendering=true;syncBusy();
-  try{
-    let html,job=currentJob();
-    if(['workbench','candidate'].includes(view)&&selected){job=await api(`/jobs/${encodeURIComponent(selected)}`);if(id!==state.renderId||hash!==location.hash)return;state.job=job;}
-    const context={view,jobId:job?.job_id??null,job,revisionId:state.revision?.profile_revision_id??null,hash};
-    if(view==='workbench')html=workbench(job?await historyPages(job):null,job);
-    else if(view==='registry'){state.search=params.get('q')??'';state.status=params.get('pipeline')??'all';const result=await api(`/v2/jobs?${registryQuery()}`);if(id!==state.renderId||hash!==location.hash)return;state.registry=result;html=registry();}
-    else if(view==='evaluation'){state.evaluationPage=await catalogue('/v2/evaluation-runs');html=evaluation();}
-    else if(view==='analytics')html=analytics(await analyticsReport());
-    else html=({overview,registry,candidate,evaluation})[view]();
-    if(id!==state.renderId||context.hash!==location.hash)return;
-    state.rendered=context;main.innerHTML=html;restoreEditors();
-    document.querySelector('#breadcrumb').textContent=names[view];document.title=`${names[view]} · JobIntel AI`;
-    document.querySelectorAll('nav a').forEach(a=>{const active=a.hash===`#${view}`;a.classList.toggle('active',active);active?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current');});
-  }finally{if(id===state.renderId){state.rendering=false;syncBusy();}}
-}
-function editorKey(context=state.rendered){
-  if(context?.view==='registry')return 'registry';
-  if(context?.view==='workbench'&&context.jobId)return `source:${context.jobId}`;
-  if(context?.view==='candidate')return `candidate:${context.revisionId??'new'}`;
-  return null;
-}
-function editorFields(){
-  if(state.rendered?.view==='registry')return {content:'registry-input',format:'import-format'};
-  if(state.rendered?.view==='workbench'&&state.rendered.jobId)return {text:'source-input',format:'source-format',url:'source-url'};
-  if(state.rendered?.view==='candidate')return {text:'candidate-input',lookup:'profile-lookup'};
-  return {};
-}
-function restoreEditors(){
-  const key=editorKey();if(!key)return;
-  let saved;
-  if(state.rendered.view==='registry')saved={content:'',format:'csv'};
-  else if(state.rendered.view==='workbench'){const job=state.rendered.job;saved={text:job.snapshot?.clean_text??'',format:'text',url:job.snapshot?.source_url??job.official_url??''};}
-  else saved={text:state.profile?pretty(state.profile):'',lookup:state.profile?.profile_id??''};
-  const draft=drafts.sync(key,saved);
-  for(const [name,id]of Object.entries(editorFields()))document.getElementById(id).value=draft.value[name];
-  if(state.rendered.view==='candidate'){
-    if(draft.value.text)syncCandidateCompleteness();
-    else{const checkbox=document.querySelector('#candidate-complete');checkbox.checked=state.profile?.complete??false;checkbox.indeterminate=false;checkbox.dataset.invalidInput='false';candidateError();}
-    if(draft.error)candidateError(draft.error);
+function show(record) {
+  $('output').hidden = false;
+  $('meta').textContent = `Saved ${record.created_at} · job SHA-256 ${record.job_sha256} · candidate SHA-256 ${record.candidate_sha256} · model ${record.model}`;
+  $('download').href = `/api/records/${record.id}/export`;
+  $('items').replaceChildren();
+  for (const item of record.result) {
+    const box = node('article', '', 'item');
+    box.append(node('h3', item.requirement), node('div', item.status, `tag ${item.status.toLowerCase()}`));
+    box.append(node('p', item.reason), node('strong', 'Job source'), node('blockquote', item.job.quote));
+    if (item.candidate) box.append(node('strong', 'Candidate source'), node('blockquote', item.candidate.quote));
+    $('items').append(box);
   }
-  syncDraftNotice();
+  window.location.hash = record.id;
 }
-function recordEditor(){
-  const key=editorKey();if(!key)return;
-  const value=Object.fromEntries(Object.entries(editorFields()).map(([name,id])=>[name,document.getElementById(id).value]));
-  drafts.change(key,value);syncDraftNotice();syncBusy();
+async function history() {
+  const response = await fetch('/api/records');
+  const rows = await response.json();
+  $('history').replaceChildren();
+  if (!rows.length) $('history').append(node('p', 'No saved comparisons yet.'));
+  for (const row of rows) {
+    const button = node('button', `${new Date(row.created_at).toLocaleString()} · ${row.result.length} requirements`);
+    button.onclick = () => show(row);
+    $('history').append(button);
+  }
 }
-function syncDraftNotice(){const note=main.querySelector('[data-draft-note]');if(note)note.hidden=!drafts.dirty(editorKey());}
-function syncBusy(){main.setAttribute('aria-busy',String(state.busy||state.rendering));main.querySelectorAll('button,input,select,textarea').forEach(b=>b.disabled=state.busy||state.rendering||b.dataset.invalidInput==='true'||(b.hasAttribute('data-discard-draft')&&!drafts.dirty(editorKey()))||Boolean(b.dataset.providerAction&&!state.config.actions[b.dataset.providerAction])||(operations.blocked&&mutationControl(b))||(b.dataset.action==='corpus'&&batches.remaining('extraction').length>0)||(b.dataset.action==='match-corpus'&&batches.remaining('matching').length>0));operationPanel.querySelectorAll('button').forEach(b=>b.disabled=state.busy||state.rendering);batchPanel.querySelectorAll('button').forEach(b=>b.disabled=state.busy||state.rendering||operations.blocked);}
-function mutationControl(element){return ['corpus','fetch','extract','match','match-corpus'].includes(element.dataset.action)||(element.type==='submit'&&['import-form','source-form','profile-form','evaluation-form'].includes(element.closest('form')?.id));}
-function operationLabel(path){if(!path)return 'saved request';if(path==='/jobs/import')return 'registry import';if(path==='/candidates/import')return 'candidate import';if(path==='/evaluate')return 'evaluation';const parts=path.split('/');return `${parts.at(-1)} for ${decodeURIComponent(parts[2]??'posting')}`;}
-function updateOperationPanel(outcome){
-  batches.observe(operations.pending?.context?.batch,outcome,readableError);
-  const labels={pending:'Pending — waiting for the server',uncertain:'Outcome uncertain — check before new work',not_received:'Not received — retry the same operation',committed:outcome.http_status>=400?'Committed — report saved with failures':'Committed — saved outcome confirmed',rejected:'Rejected — original outcome retained'};
-  const explanation=outcome.display_pending?'Saved outcome confirmed; display refresh is pending. Check saved outcome again without repeating the mutation.':outcome.state==='uncertain'?'Work may still be running or delivery may have failed. No repeat request is sent automatically.':outcome.state==='not_received'?'The server has no reservation for this identity. Retry uses the original request and identity; cancellation prevents any late packet from executing.':outcome.state==='pending'?'This operation has its own recovery identity. Navigation remains available.':'Saved identities and history remain authoritative. Starting new work uses a new operation identity.';
-  operationPanel.hidden=false;operationPanel.dataset.state=outcome.state;
-  operationPanel.innerHTML=`<h2>${esc(labels[outcome.state])}</h2><p>${esc(operationLabel(outcome.path))} · ${esc(explanation)}</p><p class="meta">Operation ${esc(outcome.operation_id)}</p>${operations.blocked?`<div class="actions"><button type="button" data-recovery="check">Check saved outcome</button>${operations.canRetry?'<button type="button" data-recovery="retry">Retry same operation</button>':''}${operations.canCancel?'<button type="button" data-recovery="cancel">Cancel unsent operation</button>':''}</div>`:''}`;
-  syncBusy();
-}
-function updateBatchPanel(){
-  batchPanel.hidden=batches.entries.size===0;
-  batchPanel.innerHTML=[...batches.entries.values()].map(batch=>{
-    const counts=batches.counts(batch),remaining=batches.remaining(batch.kind).length;
-    const summary=`${counts.completed} completed · ${counts.failed} failed · ${counts.unattempted} unattempted · ${counts.uncertain} uncertain · ${counts.running} running`;
-    const rows=batch.items.map(item=>`<tr data-batch-job="${esc(item.jobId)}" data-state="${esc(item.state)}"><td><a class="linked" href="#workbench?job=${encodeURIComponent(item.jobId)}">${esc(item.jobId)}</a></td><td>${esc(item.state)}<small>${esc(item.stage)}</small></td><td>${esc(item.resultId??'No completed result')}<small>Snapshot ${esc(item.snapshotId??'not saved')} · extraction ${esc(item.expectedRunId??'not selected')}</small></td><td>${item.error?`<p class="error">${esc(item.error)}</p>`:''}${item.attempts.map(a=>`<small>${esc(a.stage)} · ${esc(a.state)} · HTTP ${esc(a.http_status??'unavailable')}<br>Operation ${esc(a.operation_id)}${a.error?`<br>${esc(a.error)}`:''}</small>`).join('')}</td></tr>`).join('');
-    const registry=batch.registry.state==='completed'?'':`<p>Registry preparation: ${esc(batch.registry.state)}. ${esc(batch.registry.error??'No item execution until registry preparation succeeds.')}</p>${batch.registry.attempts.map(a=>`<p class="meta">Operation ${esc(a.operation_id)} · ${esc(a.state)} · HTTP ${esc(a.http_status??'unavailable')}</p>`).join('')}`;
-    return `<article data-batch-kind="${esc(batch.kind)}" data-running="${batch.running}"><h2>${batch.kind==='extraction'?'Extraction':'Matching'} batch outcomes</h2><p class="batch-counts">${summary}</p><p class="hint">At most ${batchLimit} remaining items per continuation. Completed items and saved stages are excluded. Captured source/run IDs and errors remain in this session across navigation and reload.</p>${batch.selection.profile_revision_id?`<p class="meta">Candidate ${esc(batch.selection.profile_id)} · revision ${esc(batch.selection.profile_revision_id)}</p>`:''}${registry}${batch.error?`<p class="error">${esc(batch.error)}</p>`:''}${batch.refreshError?`<p class="error">Authoritative counters unavailable: ${esc(batch.refreshError)}. Refresh before relying on displayed counts.</p>`:''}${remaining?`<div class="actions"><button data-batch-action="resume" data-batch-kind="${esc(batch.kind)}">Continue remaining ${batch.kind}</button><button data-batch-action="replan" data-batch-kind="${esc(batch.kind)}">Use current sources for remaining ${batch.kind}</button>${batch.kind==='matching'?'<button data-batch-action="restore" data-batch-kind="matching">Restore batch candidate revision</button>':''}</div><p class="hint">Continue retains the captured inputs. Use current sources explicitly updates only the failed/unattempted subset; prior errors and completed results stay visible. A matching batch retains its original candidate revision.</p>`:''}<details ${!batch.running&&remaining?'open':''}><summary>Posting outcomes (${batch.items.length})</summary><div class="table-wrap"><table><thead><tr><th>POSTING</th><th>OUTCOME / NEXT STAGE</th><th>SAVED IDENTITY</th><th>RETAINED ATTEMPTS / ERRORS</th></tr></thead><tbody>${rows}</tbody></table></div></details>${batch.items.length===0?'<p>No eligible items. No mutation request was sent.</p>':''}</article>`;
-  }).join('');
-  syncBusy();
-}
-async function refreshBatchState(){await reload();await render();}
-function requireBatchRevision(batch){if(batch.kind==='matching'&&batch.items.length&&state.revision?.profile_revision_id!==batch.selection.profile_revision_id)throw new Error('Candidate selection changed. Restore the captured batch revision before continuing.');}
-async function continueBatch(kind){
-  const batch=await batches.run(kind,{blocked:()=>operations.blocked,prepare:async batch=>{
-    requireBatchRevision(batch);batch.error=null;
-    if(kind==='extraction'&&batch.registry.state!=='completed'){
-      if(!batch.items.length){batch.registry.state='completed';batches.changed();return;}
-      const ids=new Set(batch.items.map(item=>item.jobId));
-      await api('/jobs/import',{jobs:state.fixtures.jobs.filter(job=>ids.has(job.job_id))},'json',20000,{batch:batches.context(kind,null,'registry')});
-    }
-  },process:async(item,batch)=>{
-    const path=`/jobs/${encodeURIComponent(item.jobId)}`;
-    if(kind==='extraction'){
-      if(item.stage==='snapshot')await api(`${path}/snapshots`,{text:state.fixtures.sources[item.jobId],expected_snapshot_id:item.expectedSnapshotId},'json',20000,{batch:batches.context(kind,item.jobId,'snapshot')});
-      await api(`${path}/extract`,{configuration:batch.selection.configuration,expected_snapshot_id:item.snapshotId},'json',providerTimeout(),{batch:batches.context(kind,item.jobId,'extract')});
-    }else{
-      requireBatchRevision(batch);
-      if(!item.expectedRunId)throw new Error('No current extraction. Review current sources for the remaining items before continuing.');
-      await api(`${path}/match`,{profile_id:batch.selection.profile_id,profile_revision_id:batch.selection.profile_revision_id,expected_run_id:item.expectedRunId},'json',20000,{batch:batches.context(kind,item.jobId,'match')});
-    }
-  },refresh:refreshBatchState});
-  const counts=batches.counts(batch),complete=batches.remaining(kind).length===0&&batch.registry.state==='completed';
-  if(complete&&counts.completed===0)tell('Empty batch: no eligible items; no mutation request was sent.');
-  else if(complete)tell(kind==='matching'?`Matched ${counts.completed} current extracted jobs. Group gaps are available in corpus analytics.`:`${counts.completed} synthetic postings imported, snapshotted, and extracted with fixture replay.`);
-  else tell(`${kind==='extraction'?'Extraction':'Matching'} batch stopped: ${counts.completed} completed, ${counts.failed} failed, ${counts.unattempted} unattempted, ${counts.uncertain} uncertain. Review the retained outcomes before continuing.`,true);
-}
-async function startExtractionBatch(){
-  await reload();const byId=new Map((await allJobSummaries()).map(job=>[job.job_id,job]));
-  batches.start('extraction',state.fixtures.jobs.map(job=>({jobId:job.job_id,stage:'snapshot',expectedSnapshotId:byId.get(job.job_id)?.snapshot?.id??null})),{configuration:state.config.default_configuration});
-  return continueBatch('extraction');
-}
-async function startMatchingBatch(){
-  await reload();const jobs=(await allJobSummaries()).filter(job=>job.extraction);
-  if(jobs.length)requireProfile();
-  batches.start('matching',jobs.map(job=>({jobId:job.job_id,stage:'match',snapshotId:job.snapshot.id,expectedRunId:job.extraction.run_id})),state.revision?{profile_id:state.revision.profile_id,profile_revision_id:state.revision.profile_revision_id}:{});
-  return continueBatch('matching');
-}
-batchPanel.addEventListener('click',event=>{
-  const button=event.target.closest('[data-batch-action]');if(!button)return;
-  void run(async()=>{
-    const kind=button.dataset.batchKind,batch=batches.get(kind);
-    if(button.dataset.batchAction==='resume')await continueBatch(kind);
-    else if(button.dataset.batchAction==='restore'){
-      await activateRevision(await api(`/candidates/${encodeURIComponent(batch.selection.profile_id)}/revisions/${batch.selection.profile_revision_id}`));await render();tell('Captured batch candidate revision restored. Continue only the remaining items.');
-    }else{
-      requireBatchRevision(batch);await reload();batches.replan(kind,await allJobSummaries());await render();tell('Current source/run IDs selected for the remaining items. Completed items are excluded; continue explicitly to execute.');
-    }
-  });
+$('form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const body = {job: $('job').value, candidate: $('candidate').value, reference_url: $('url').value || null};
+  const serialized = JSON.stringify(body);
+  if (!pending || pending.body !== serialized) pending = {body: serialized, key: crypto.randomUUID()};
+  $('submit').disabled = true;
+  $('status').textContent = 'Comparing…';
+  $('status').className = 'muted';
+  try {
+    const response = await fetch('/api/compare', {method:'POST', headers:{'Content-Type':'application/json', 'Idempotency-Key':pending.key}, body:serialized});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Comparison failed');
+    pending = null;
+    show(data);
+    await history();
+    $('status').textContent = 'Saved.';
+  } catch (error) {
+    $('status').textContent = `${error.message}. If the request may have reached the server, check Recent comparisons before retrying.`;
+    $('status').className = 'error';
+  } finally { $('submit').disabled = false; }
 });
-async function applySavedOperation(operation,outcome){
-  const path=operation.path,submitted=operation.context?.submitted,success=outcome.http_status<400;
-  await reload();
-  if(success){
-    if(path==='/candidates/import')await activateRevision(outcome.result);
-    else if(path==='/evaluate')rememberEvaluation(outcome.result);
-    else if(path?.endsWith('/match'))state.matches.set(decodeURIComponent(path.split('/')[2]),outcome.result);
-    else if(/^\/jobs\/[^/]+\/(snapshots|extract|fetch)$/.test(path??'')){state.matches.delete(decodeURIComponent(path.split('/')[2]));state.activeEvidence=null;}
-    if(submitted)drafts.accept(submitted);
-  }else{
-    if(outcome.result?.evaluation_run_id){const {detail,...report}=outcome.result;rememberEvaluation(report);}
-    if(path==='/candidates/import'&&outcome.http_status===422&&submitted)candidateError(`422: ${readableError(outcome.result)}`,submitted);
-  }
-  await render();
-}
-operationPanel.addEventListener('click',event=>{const action=event.target.closest('[data-recovery]')?.dataset.recovery;if(action)void run(async()=>{await operations[action]();tell(action==='cancel'?'Unsent operation cancelled. New work can now use a new identity.':'Saved operation outcome reconciled without starting another attempt.');});});
-async function run(fn){if(state.busy||state.rendering)return;state.busy=true;syncBusy();notice.hidden=true;try{await fn();}catch(error){if(error.report){rememberEvaluation(error.report);await render();}try{await refreshConfiguration();}catch{}tell(error.message,true);}finally{state.busy=false;syncBusy();}}
-function requireJob(){const job=state.rendered?.job??currentJob();if(!job)throw new Error('Import a posting first.');return job;}
-function requireProfile(){if(!state.profile)throw new Error('Validate and save candidate evidence first.');return state.profile;}
-function download(name,data,type='application/json'){const blob=new Blob([typeof data==='string'?data:pretty(data)+'\n'],{type});const link=document.createElement('a');const url=URL.createObjectURL(blob);link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);tell(`Downloaded ${name}.`);}
-function exportSelection(){return {applied:state.applied==='all'?null:state.applied==='yes',remote:state.remote==='all'?null:state.remote==='yes',...(state.revision?{profile_id:state.revision.profile_id,profile_revision_id:state.revision.profile_revision_id}:{})};}
-async function analyticsReport(){const selection=exportSelection(),query=new URLSearchParams();for(const [key,value]of Object.entries(selection))if(value!==null)query.set(key,String(value));return api(`/analytics/skills?${query}`);}
-async function exportSaved(kind,name,format='json',selection={}){const data=await api('/exports',{kind,format,...selection},format);download(name,data,format==='csv'?'text/csv':'application/json');}
-async function doMatch(job){requireProfile();return api(`/jobs/${encodeURIComponent(job.job_id)}/match`,{profile_id:state.profile.profile_id,profile_revision_id:state.revision.profile_revision_id,expected_run_id:job.extraction?.run_id??'unavailable'});}
-function parseCandidateJSON(text){
-  let profile;
-  try{profile=JSON.parse(text);}catch{throw new Error('Invalid candidate JSON. Check the profile and evidence records.');}
-  if(!profile||typeof profile!=='object'||Array.isArray(profile))throw new Error('Candidate JSON must be a profile object.');
-  if(Object.hasOwn(profile,'complete')&&typeof profile.complete!=='boolean')throw new Error('complete must be true or false.');
-  return profile;
-}
-function candidateError(message='',submitted){
-  const key=submitted?.key??editorKey();
-  if(!drafts.setError(key,message,submitted?.version)||key!==editorKey()||state.rendered?.view!=='candidate')return;
-  const editor=document.querySelector('#candidate-input'),error=document.querySelector('#candidate-error');
-  if(!editor||!error)return;
-  editor.setAttribute('aria-invalid',String(Boolean(message)));
-  error.textContent=message;error.hidden=!message;
-}
-function syncCandidateCompleteness(){
-  const checkbox=document.querySelector('#candidate-complete');
-  try{
-    const profile=parseCandidateJSON(document.querySelector('#candidate-input').value);
-    checkbox.checked=profile.complete??false;checkbox.indeterminate=false;checkbox.dataset.invalidInput='false';candidateError();
-  }catch(error){
-    checkbox.indeterminate=true;checkbox.dataset.invalidInput='true';candidateError(error.message);
-  }
-  syncBusy();
-}
-async function saveCandidate(){
-  const submitted=drafts.capture(editorKey());
-  let profile;
-  try{profile=parseCandidateJSON(submitted.value.text);}catch(error){candidateError(error.message,submitted);throw error;}
-  try{await api('/candidates/import',profile,'json',20000,{submitted});}
-  catch(error){if(error.message.startsWith('422:'))candidateError(error.message,submitted);throw error;}
-  tell('Candidate evidence validated and activated. Prior session matches were invalidated.');
-}
-const actions={
-  'catalogue-page':async element=>{const path=element.dataset.path,entry=catalogues.entry(path),prior={index:entry.index,cursors:[...entry.cursors]};try{catalogues.move(path,element.dataset.direction,catalogueResults.get(path).page);if(path===state.revisionPath)await loadRevisionPage(state.revisionProfile);await render();}catch(error){Object.assign(entry,prior);throw error;}if(path.includes('/snapshots')||path.includes('/acquisition'))document.querySelector(path.endsWith('/acquisition-attempts')?'#acquisition-history':'#history')?.setAttribute('open','');},
-  'registry-next':()=>changeRegistry({cursor:state.registry.page.next_cursor}),
-  'registry-first':()=>changeRegistry({cursor:null}),
-  'registry-previous':()=>history.back(),
-  'snapshot-inspect':async element=>{const job=requireJob(),id=element.dataset.snapshot;const snapshot=await api(`/v2/jobs/${encodeURIComponent(job.job_id)}/snapshots/${id}`);if(route().params.get('job')!==job.job_id&&state.selected!==job.job_id)return;state.historySelection={jobId:job.job_id,snapshot};await render();document.querySelector('#history')?.setAttribute('open','');},
-  'saved-evaluation':async element=>{rememberEvaluation(await api(`/evaluation-runs/${element.dataset.id}`));await render();tell('Saved evaluation loaded without provider requests.');},
-  'refresh':async()=>{await reload();await render();tell('Registry refreshed from the local API.');},
-  'sample-registry':()=>{document.querySelector('#registry-input').value=document.querySelector('#import-format').value==='csv'?state.fixtures.csv:pretty(state.fixtures.jobs);recordEditor();tell('Authored synthetic registry loaded into the editor.');},
-  'sample-source':()=>{const job=requireJob();document.querySelector('#source-input').value=state.fixtures.sources[job.job_id];document.querySelector('#source-format').value='text';recordEditor();tell('Authored synthetic source loaded. Save a snapshot to continue.');},
-  'discard-draft':()=>{drafts.discard(editorKey());restoreEditors();syncBusy();tell('Draft discarded. The editor now shows its saved values.');},
-  'corpus':startExtractionBatch,
-  'fetch':async()=>{const job=requireJob();try{const result=await api(`/jobs/${encodeURIComponent(job.job_id)}/fetch`,{},'json',65000);tell(`${job.job_id}: URL source saved as Snapshot #${result.snapshot_id}. SHA-256 ${result.content_hash}. Unsaved manual drafts are preserved. Acquisition history records every attempt.`);}catch(error){throw new Error(`${job.job_id}: ${error.message} Use the manual source editor for this posting. Prior snapshots, runs and drafts are preserved.`);}},
-  'provider-status':async()=>{await refreshConfiguration();tell(`Provider status: ${state.config.readiness}. Prior sources and results remain available.`);},
-  'extract':async()=>{const job=requireJob();await api(`/jobs/${encodeURIComponent(job.job_id)}/extract`,{configuration:document.querySelector('#extract-config').value},'json',providerTimeout());tell('Extraction saved. Every source span passed the grounding guard.');},
-  'highlight':(element)=>{state.activeEvidence=Number(element.dataset.index);const job=requireJob(),fact=element.dataset.fact,evidence=fact?(fact.startsWith('filter-')?job.extraction.filters?.[Number(fact.slice(7))]?.evidence:job.extraction[fact]?.evidence):job.extraction.requirements[state.activeEvidence]?.evidence;document.querySelector('#evidence-source').innerHTML=highlighted(job.snapshot.clean_text,evidence);document.querySelector('#evidence-source').scrollIntoView({behavior:'smooth',block:'center'});tell('Exact source quote highlighted using Unicode code-point offsets.');},
-  'load-revisions':async()=>{const id=document.querySelector('#profile-lookup').value.trim();await loadRevisionPage(id);await render();tell(state.revisions.length?'Select a saved revision to activate it.':'No saved revisions for this profile ID.');},
-  'sample-candidate':()=>{document.querySelector('#candidate-input').value=pretty(state.fixtures.candidate);recordEditor();syncCandidateCompleteness();tell('Synthetic candidate loaded. Validate and save to activate it.');},
-  'match':async()=>{const job=requireJob();const result=await doMatch(job);await render();tell(`Matched ${result.matches.length} requirement(s) against ${result.profile_id}.`);},
-  'match-corpus':startMatchingBatch,
-  'export-evidence':()=>{const job=requireJob();return exportSaved('evidence',`${job.job_id}-evidence.json`,'json',{job_ids:[job.job_id]});},
-  'export-matches':()=>{const job=requireJob();requireProfile();return exportSaved('matches',`${job.job_id}-matches.json`,'json',{...exportSelection(),applied:null,remote:null,job_ids:[job.job_id]});},
-  'export-matches-csv':()=>{const job=requireJob();requireProfile();return exportSaved('matches',`${job.job_id}-matches.csv`,'csv',{...exportSelection(),applied:null,remote:null,job_ids:[job.job_id]});},
-  'export-analytics':async()=>download('jobintel-corpus.json',await analyticsReport()),
-  'export-csv':()=>exportSaved('skills','jobintel-skills.csv','csv',exportSelection()),
-  'export-requirements':()=>exportSaved('requirements','jobintel-requirements.csv','csv',exportSelection()),
-  'export-evaluation':()=>download('jobintel-evaluation.json',state.evaluation),
-  'load-evaluation':async()=>{const id=document.querySelector('#evaluation-run-id').value.trim();if(!id)throw new Error('Enter a saved evaluation run ID.');rememberEvaluation(await api(`/evaluation-runs/${encodeURIComponent(id)}`));await render();tell('Saved evaluation loaded without provider requests.');}
-};
-main.addEventListener('click',event=>{const element=event.target.closest('[data-action]');if(element&&actions[element.dataset.action])void run(()=>actions[element.dataset.action](element));});
-main.addEventListener('submit',event=>{event.preventDefault();void run(async()=>{
-  if(event.target.id==='import-form'){const submitted=drafts.capture(editorKey()),input=submitted.value.content;let body;if(submitted.value.format==='csv')body={csv_text:input};else{let parsed;try{parsed=JSON.parse(input);}catch{throw new Error('Invalid JSON. Paste a JSON jobs array or a jobs object.');}body=Array.isArray(parsed)?{jobs:parsed}:parsed;}const result=await api('/jobs/import',body,'json',20000,{submitted});tell(`Imported ${result.imported} posting(s); ${result.duplicates} duplicate(s) reused.`);}
-  else if(event.target.id==='source-form'){const job=requireJob(),submitted=drafts.capture(editorKey());const result=await api(`/jobs/${encodeURIComponent(job.job_id)}/snapshots`,{text:submitted.value.text,format:submitted.value.format,source_url:submitted.value.url||null},'json',20000,{submitted});tell(`${job.job_id}: Snapshot #${result.snapshot_id} saved. SHA-256 ${result.content_hash}. Current results always reference the latest source.`);}
-  else if(event.target.id==='profile-form')await saveCandidate();
-  else if(event.target.id==='evaluation-form'){const configurations=[...main.querySelectorAll('input[name="configuration"]:checked')].map(e=>e.value);if(!configurations.length)throw new Error('Select at least one extraction configuration.');await api('/evaluate',{configurations,dataset:document.querySelector('#evaluation-dataset').value},'json',providerTimeout('evaluation'));tell(state.evaluation.status==='partial'?'Evaluation saved with failures. Inspect per-case diagnostics.':state.config.provider==='local'?'Local evaluation completed successfully. Inspect measured results and provenance.':'Evaluation completed successfully. Missing measurements remain unavailable.');}
-});});
-main.addEventListener('input',event=>{if(event.target.id==='job-search'){state.search=event.target.value;clearTimeout(state.searchTimer);state.searchTimer=setTimeout(()=>{if(route().view==='registry')changeRegistry({q:state.search,cursor:null});},250);}else if(Object.values(editorFields()).includes(event.target.id)){recordEditor();if(event.target.id==='candidate-input')syncCandidateCompleteness();}});
-main.addEventListener('change',event=>{
-  if(event.target.id==='selected-job'){state.selected=event.target.value;state.activeEvidence=null;go(route().view,state.selected);}
-  else if(event.target.id==='candidate-complete'){const profile=parseCandidateJSON(document.querySelector('#candidate-input').value);profile.complete=event.target.checked;document.querySelector('#candidate-input').value=pretty(profile);recordEditor();syncCandidateCompleteness();}
-  else if(event.target.id==='profile-revision'&&event.target.value){const revision=state.revisions.find(r=>r.profile_revision_id===event.target.value);void run(async()=>{await activateRevision(await api(`/candidates/${encodeURIComponent(revision.profile_id)}/revisions/${revision.profile_revision_id}`));await render();tell('Saved revision selected. Re-match to assess this evidence.');});}
-  else if(event.target.id==='pipeline-filter'){state.status=event.target.value;clearTimeout(state.searchTimer);changeRegistry({q:state.search,pipeline:state.status,cursor:null});}
-  else if(event.target.id==='applied-filter'){state.applied=event.target.value;void run(render);}
-  else if(event.target.id==='remote-filter'){state.remote=event.target.value;void run(render);}
-  else if(Object.values(editorFields()).includes(event.target.id))recordEditor();
-});
-document.querySelector('.skip').addEventListener('click',event=>{event.preventDefault();main.focus();main.scrollIntoView({block:'start'});});
-window.addEventListener('hashchange',()=>{clearTimeout(state.searchTimer);if(!state.config)return;void render().catch(error=>tell(error.message,true));});
-function eligibilityTable(run){return `<p class="meta">Match run #${esc(run.match_run_id)} · Assessment ${esc(run.as_of)}</p>${run.eligibility.length?`<h3>Location & eligibility</h3>${run.eligibility.map(p=>`<article class="requirement"><h4>${esc(p.predicate)}: ${esc(p.value)}</h4>${badge(p.status)}<p>${esc(p.explanation)}</p><div class="quote">${esc(p.requirement_evidence.quote)}</div>${p.candidate_sources.map(r=>`<div class="quote">${esc(r.quote)}</div><p class="meta">${esc(r.source)}</p>`).join('')}</article>`).join('')}`:''}`;}
-async function activateRevision(revision){await loadRevisionPage(revision.profile_id);const revisions=state.revisions;state.revision=revision;state.profile=revision.profile;state.matches.clear();state.revisions=revisions;localStorage.setItem('jobintel-selected-revision',JSON.stringify({profile_id:revision.profile_id,profile_revision_id:revision.profile_revision_id}));}
-async function restoreRevision(){const saved=localStorage.getItem('jobintel-selected-revision');if(!saved)return;try{const selection=JSON.parse(saved);await activateRevision(await api(`/candidates/${encodeURIComponent(selection.profile_id)}/revisions/${encodeURIComponent(selection.profile_revision_id)}`));}catch(error){localStorage.removeItem('jobintel-selected-revision');tell(`Saved selection unavailable. ${error.message}`,true);}}
-async function init(){main.innerHTML='<div class="loading">Connecting to the evidence workspace…</div>';try{await refreshConfiguration();if(state.config.actions.samples)state.fixtures=await api('/ui/fixtures');await reload();await restoreRevision();await restoreEvaluation();await render();await batches.restoreErrors(api,readableError);updateBatchPanel();if(!operations.blocked){const id=batches.unresolvedOperation();if(id)operations.restorePending(id,{batch:batches.pendingContext(id)});}if(operations.blocked)await run(()=>operations.check());}catch(error){main.innerHTML=`<section class="panel"><h1>Workspace unavailable</h1><p>${esc(error.message)}</p><p>Start the local API and reload this page.</p></section>`;tell(error.message,true);}}
-void init();
+history().then(() => {
+  if (location.hash.length > 1) fetch(`/api/records/${encodeURIComponent(location.hash.slice(1))}`)
+    .then(r => r.ok ? r.json() : null).then(r => { if (r) show(r); });
+}).catch(() => {$('history').textContent = 'Could not load saved comparisons.';});

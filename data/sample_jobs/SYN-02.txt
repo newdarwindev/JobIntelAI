@@ -1,3 +1,0 @@
-Synthetic company 02 — Backend / AI Engineer
-This fictional posting is authored for a public engineering demo.
-Experience with AWS or Azure is required.

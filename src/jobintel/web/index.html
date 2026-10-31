@@ -1,36 +1,3 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Auditable job requirements and candidate evidence, demonstrated with synthetic fixtures.">
-  <title>JobIntel AI · Evidence workspace</title>
-  <link rel="stylesheet" href="styles.css">
-  <script type="module" src="app.js"></script>
-</head>
-<body>
-  <a class="skip" href="#main">Skip to content</a>
-  <aside class="sidebar">
-    <a class="brand" href="#overview"><span class="brand-icon">Ji</span><span>JobIntel<span class="brand-ai"> AI</span><small>EVIDENCE WORKSPACE</small></span></a>
-    <div class="nav-label">YOUR WORKSPACE</div>
-    <nav aria-label="Main navigation">
-      <a href="#overview"><span aria-hidden="true">◈</span>Overview</a>
-      <a href="#registry"><span aria-hidden="true">▤</span>Job registry</a>
-      <a href="#workbench"><span aria-hidden="true">⌕</span>Source & extraction</a>
-      <a href="#candidate"><span aria-hidden="true">◎</span>Candidate evidence</a>
-      <a href="#analytics"><span aria-hidden="true">▥</span>Corpus analytics</a>
-      <a href="#evaluation"><span aria-hidden="true">◇</span>Evaluation lab</a>
-    </nav>
-    <div class="sidebar-note"><span class="online-dot"></span> Connecting<small>Loading provider execution details.</small></div>
-    <div class="sidebar-bottom">No evidence. No claim.</div>
-  </aside>
-  <div class="workspace">
-    <header class="topbar"><span>Workspace <span class="crumb">/</span> <strong id="breadcrumb">Overview</strong></span><span class="mode-badge">SYNTHETIC DEMO</span></header>
-    <div id="notice" role="status" aria-live="polite" hidden></div>
-    <section id="operation-status" class="operation-status" aria-label="Saved operation status" aria-live="polite" hidden></section>
-    <section id="batch-status" class="operation-status batch-status" aria-label="Corpus batch outcomes" aria-live="polite" hidden></section>
-    <main id="main" tabindex="-1" aria-busy="false"></main>
-    <footer>JobIntel AI <span>Evidence-grounded requirements · Local, single-user tooling</span></footer>
-  </div>
-</body>
-</html>
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JobIntel AI</title><style>
+:root{font:16px system-ui;color:#172133;background:#f4f6fa}*{box-sizing:border-box}body{margin:0}header{background:#142c48;color:white;padding:1.2rem max(1rem,calc((100vw - 1100px)/2))}h1{margin:0;font-size:1.5rem}main{max-width:1100px;margin:auto;padding:1rem}section{background:white;border:1px solid #d9e1ed;border-radius:12px;padding:1.2rem;margin:1rem 0;box-shadow:0 2px 8px #132b4710}.grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}label{display:block;font-weight:650;margin-bottom:.4rem}textarea,input{width:100%;font:inherit;border:1px solid #9ba9bb;border-radius:7px;padding:.65rem}textarea{min-height:230px;resize:vertical}button,.button{background:#1264a3;color:white;border:0;border-radius:7px;padding:.7rem 1.1rem;font:inherit;cursor:pointer;text-decoration:none;display:inline-block}button:disabled{opacity:.55;cursor:wait}.muted{color:#526174}.error{color:#9c2020}.item{border-top:1px solid #dae1eb;padding:1rem 0}.tag{font-weight:700;color:#8a4b00}.tag.supported{color:#126b43}blockquote{margin:.4rem 0;padding:.5rem .8rem;background:#f1f5fa;border-left:3px solid #6195bf;white-space:pre-wrap}#history button{display:block;background:none;color:#1264a3;text-align:left;padding:.4rem}a{color:#1264a3}@media(max-width:700px){.grid{grid-template-columns:1fr}textarea{min-height:180px}}
+</style><header><h1>JobIntel AI</h1><div>Grounded comparison for a local, single user workspace</div></header><main><section><h2>New comparison</h2><p class="muted">Paste a job and candidate evidence. Comparison uses the configured hosted model and may send both texts to it. Only use data you have permission to send. Missing evidence stays UNKNOWN.</p><form id="form"><div class="grid"><div><label for="job">Job text</label><textarea id="job" required minlength="20" maxlength="200000"></textarea></div><div><label for="candidate">Candidate evidence</label><textarea id="candidate" required minlength="20" maxlength="200000"></textarea></div></div><p><label for="url">Reference URL (optional; stored, never fetched)</label><input id="url" type="url" maxlength="2000"></p><button id="submit">Compare and save</button> <span id="status" role="status"></span></form></section><section id="output" hidden><h2>Saved comparison</h2><p id="meta" class="muted"></p><a id="download" class="button">Export JSON</a><div id="items"></div></section><section><h2>Recent comparisons</h2><div id="history" class="muted">Loading…</div></section></main><script src="/app.js"></script></html>

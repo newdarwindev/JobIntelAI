@@ -1,5 +1,0 @@
-services:
-  model-check:
-    build:
-      context: .
-      dockerfile: Dockerfile.offline

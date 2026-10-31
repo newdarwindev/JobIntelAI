@@ -1,49 +1,23 @@
 [build-system]
 requires = ["setuptools>=75"]
 build-backend = "setuptools.build_meta"
-
 [project]
 name = "jobintel-ai"
-version = "0.1.0"
-description = "Evidence-grounded job requirements intelligence — offline-first scaffold"
+version = "0.2.0"
 requires-python = ">=3.11"
-dependencies = [
-  "fastapi>=0.121,<1",
-  "uvicorn>=0.32,<1",
-  "pydantic>=2.10,<3",
-  "sqlalchemy>=2.0,<3",
-  "alembic>=1.14,<2",
-  "psycopg[binary]>=3.2,<4",
-  "httpx>=0.28,<1",
-  "beautifulsoup4>=4.12,<5",
-]
-
+dependencies = ["fastapi>=0.121,<1", "uvicorn>=0.32,<1", "httpx>=0.28,<1"]
 [project.optional-dependencies]
-dev = ["pytest>=8,<9", "ruff>=0.14,<1", "build>=1.2,<2", "shellcheck-py>=0.10,<1", "setuptools>=75", "wheel>=0.45"]
-
+dev = ["pytest>=8,<9", "ruff>=0.14,<1", "build>=1.2,<2"]
 [project.scripts]
-jobintel = "jobintel.cli:main"
-
+jobintel = "jobintel.app:main"
 [tool.setuptools.packages.find]
 where = ["src"]
-
 [tool.setuptools.package-data]
 jobintel = ["web/*"]
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["postgres: requires TEST_DATABASE_URL pointing to a disposable PostgreSQL database"]
-
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-extend-exclude = ["build", "local_data", "results/generated", "work", "node_modules"]
-
 [tool.ruff.lint]
-select = ["E4", "E7", "E9", "F", "I", "B", "UP", "C4", "PIE", "RUF", "C90"]
-# Русский предлог «с» допустим в строках и документации.
-allowed-confusables = ["с"]
-
-[tool.ruff.lint.mccabe]
-# C901 блокирует CI выше этого порога; исключений сложности по файлам нет.
-max-complexity = 10
+select = ["E4", "E7", "E9", "F", "I", "B", "UP"]

@@ -1,4 +1,0 @@
-services:
-  responses-emulator:
-    build:
-      secrets: [proxy_ca]

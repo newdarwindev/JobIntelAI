@@ -1,3 +1,0 @@
-Synthetic company 15 — Backend / AI Engineer
-This fictional posting is authored for a public engineering demo.
-Golang 1.23+ is required.

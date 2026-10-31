@@ -1,3 +1,0 @@
-Synthetic company 17 — Backend / AI Engineer
-This fictional posting is authored for a public engineering demo.
-Python is preferred, not mandatory.

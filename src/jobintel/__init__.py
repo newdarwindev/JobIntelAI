@@ -1,1 +1,1 @@
-"""JobIntel AI: auditable offline scaffold, with explicit live-service boundaries."""
+"""Local evidence-grounded job comparison."""
