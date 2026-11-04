@@ -1,5 +1,7 @@
 # JobIntel AI
 
+> **Deprecated project.** Development has stopped. This repository is retained for historical reference; existing code, branches, issues, pull requests and evidence are preserved.
+
 Требования вакансий и пробелы кандидата с проверяемыми источниками: исходный snapshot,
 точная цитата, отдельный extraction run, сохранённая candidate revision и честные n/N.
 Локальный FastAPI/CLI и веб-интерфейс; fixture, Responses emulator и настоящая CPU-модель
